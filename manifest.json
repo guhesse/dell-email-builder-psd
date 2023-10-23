@@ -1,0 +1,44 @@
+{
+  "name": "dell-email-builder",
+  "id": "dell-email-builder",
+  "version": "1.0.0",
+  "main": "index.html",
+  "manifestVersion": 5,
+  "requiredPermissions": {
+    "allowCodeGenerationFromStrings": true
+  },
+  "featureFlags": {
+    "enableSWCSupport": true
+  },
+  "entrypoints": [
+    {
+      "type": "panel",
+      "id": "vanilla",
+      "label": {
+        "default": "SWC-UXP React Starter"
+      },
+      "minimumSize": {
+        "width": 230,
+        "height": 200
+      },
+      "maximumSize": {
+        "width": 2000,
+        "height": 2000
+      },
+      "preferredDockedSize": {
+        "width": 230,
+        "height": 300
+      },
+      "preferredFloatingSize": {
+        "width": 230,
+        "height": 300
+      }
+    }
+  ],
+  "host": [
+    {
+      "app": "PS",
+      "minVersion": "24.4.0"
+    }
+  ]
+}
