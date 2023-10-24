@@ -30,6 +30,7 @@ const copyStatics = {
 };
 
 const shared = {
+  devtool: 'eval-cheap-source-map',
   output: {
     path: resolve("dist"), // the bundle output path
     filename: "bundle.js", // the name of the bundle

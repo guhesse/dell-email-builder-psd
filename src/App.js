@@ -20,20 +20,15 @@ import "@spectrum-web-components/theme/scale-medium.js";
 import "@spectrum-web-components/theme/express/scale-medium.js";
 import { Theme } from "@swc-react/theme";
 
+import HeaderSelector from "./HeaderSelector.js";
+
 function App() {
   return (
     <div>
-      <h1>Welcome</h1>
+      <h1>É ISSO MESMO Q VC OUVIU</h1>
+      <h2>isso é react porran</h2>
       <Theme theme="spectrum" scale="medium" color="light">
-        <Menu selects="single">
-          <MenuItem selected>Sample Menu</MenuItem>
-          <MenuDivider></MenuDivider>
-          <MenuItem>Select Option 1</MenuItem>
-          <MenuItem>Select Option 2</MenuItem>
-          <MenuItem>Select Option 3</MenuItem>
-          <MenuItem>Select Option 4</MenuItem>
-          <MenuItem disabled>Disabled Option</MenuItem>
-        </Menu>
+          <HeaderSelector></HeaderSelector >
       </Theme>
     </div>
   );

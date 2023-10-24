@@ -5,10 +5,27 @@
   "main": "index.html",
   "manifestVersion": 5,
   "requiredPermissions": {
-    "allowCodeGenerationFromStrings": true
+    "allowCodeGenerationFromStrings": true,
+    "localFileSystem": "plugin"
   },
   "featureFlags": {
     "enableSWCSupport": true
+  },
+  "permissions": {
+    "launchProcess": {
+      // allows launching files with specified URI schemes         
+      "schemes": [
+        "https",
+        "slack",
+        "adbxd"
+      ],
+      // allows opening files with the specified file extensions          
+      "extensions": [
+        ".pdf",
+        ".xd",
+        ".psd"
+      ],
+    },
   },
   "entrypoints": [
     {
