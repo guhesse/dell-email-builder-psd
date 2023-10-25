@@ -25,8 +25,7 @@ import HeaderSelector from "./HeaderSelector.js";
 function App() {
   return (
     <div>
-      <h1>É ISSO MESMO Q VC OUVIU</h1>
-      <h2>isso é react porran</h2>
+      <h4>Selecione o Header meu broder</h4>
       <Theme theme="spectrum" scale="medium" color="light">
           <HeaderSelector></HeaderSelector >
       </Theme>

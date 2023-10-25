@@ -12,27 +12,29 @@
     "enableSWCSupport": true
   },
   "permissions": {
+    "localFileSystem": [
+      "read",
+      "write"
+    ],
     "launchProcess": {
-      // allows launching files with specified URI schemes         
       "schemes": [
         "https",
         "slack",
-        "adbxd"
+        "adbpsd"
       ],
-      // allows opening files with the specified file extensions          
       "extensions": [
         ".pdf",
         ".xd",
         ".psd"
-      ],
-    },
+      ]
+    }
   },
   "entrypoints": [
     {
       "type": "panel",
       "id": "vanilla",
       "label": {
-        "default": "SWC-UXP React Starter"
+        "default": "Dell Email Builder"
       },
       "minimumSize": {
         "width": 230,
