@@ -1,36 +1,98 @@
-/*
-Copyright 2023 Adobe. All rights reserved.
-This file is licensed to you under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License. You may obtain a copy
-of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under
-the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
-OF ANY KIND, either express or implied. See the License for the specific language
-governing permissions and limitations under the License.
-*/
-
-// import './App.css';
-
-import React from "react";
-import { Menu, MenuItem, MenuDivider } from "@swc-react/menu";
-import "@spectrum-web-components/theme/theme-light.js";
-import "@spectrum-web-components/theme/express/theme-light.js";
-import "@spectrum-web-components/theme/scale-medium.js";
-import "@spectrum-web-components/theme/express/scale-medium.js";
-import { Theme } from "@swc-react/theme";
-
+import React, { useState } from 'react';
 import HeaderSelector from "./HeaderSelector.js";
-import SubjectLineSelector from "./SubjectLineSelector.js";
+import { Theme } from "@swc-react/theme";
+const { core, app } = require('photoshop');
+const { storage } = require('uxp');
+const { batchPlay } = require('photoshop').action;
 
 function App() {
-  
+  const [selectedHeader, setSelectedHeader] = useState(null);
+
+  const handleHeaderSelect = async (header) => {
+    console.log('Header selecionado:', header);
+    const headerFilePath = `assets/${header}.psd`;
+    console.log('Caminho do arquivo:', headerFilePath);
+    const fs = storage.localFileSystem;
+
+    try {
+      const pluginDir = await fs.getPluginFolder();
+      const fileEntry = await pluginDir.getEntry(headerFilePath);
+
+      const targetFunction = async (executionContext) => {
+        try {
+          await app.open(fileEntry);
+          const batchHeaderCopy = [
+            {
+              _obj: "selectAllLayers",
+              _target: [
+                {
+                  _ref: "layer",
+                  _enum: "ordinal",
+                  _value: "targetEnum"
+                }
+              ],
+              _options: {
+                dialogOptions: "dontDisplay"
+              }
+            },
+            {
+              _obj: "copyEvent",
+              _options: {
+                dialogOptions: "dontDisplay"
+              }
+            }
+          ];
+
+          await batchPlay(batchHeaderCopy, {});
+          await app.activeDocument.save();
+          await app.activeDocument.close();
+
+          const activeDocument = app.activeDocument;
+          await activeDocument.paste();
+          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+          const docWidth = activeDocument.width;
+          const docHeight = activeDocument.height;
+          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 330);
+          const offsetY = ((docHeight - docHeight) - (docHeight / 2) + 57);
+          pastedGroup.translate(offsetX, offsetY);
+          await activeDocument.save();
+
+          console.log('Cabeçalho inserido com sucesso!');
+        } catch (error) {
+          console.error('Erro ao inserir o cabeçalho:', error);
+        }
+      };
+
+      const options = {
+        commandName: 'Inserir Cabeçalho',
+        interactive: true,
+      };
+
+      await core.executeAsModal(targetFunction, options);
+    } catch (error) {
+      console.error('Erro ao encontrar o arquivo:', error);
+    }
+  };
+
+  const handleMontarLayoutClick = async () => {
+    try {
+      await handleHeaderSelect(selectedHeader);
+      // Outras funções que você deseja executar podem ser chamadas aqui
+      // await outraFuncao();
+      // await maisUmaFuncao();
+      console.log('Todas as funções foram executadas com sucesso.');
+    } catch (error) {
+      console.error('Erro ao montar o layout:', error);
+    }
+  };
+
   return (
-    <div width="100" style={{paddingLeft: "15px", paddingTop: "10px", width:"100vw"}}>
+    <div width="100" style={{ paddingLeft: "15px", paddingTop: "10px", width: "100vw" }}>
       <Theme theme="spectrum" scale="medium" color="light">
-          <SubjectLineSelector></SubjectLineSelector>
-          <HeaderSelector></HeaderSelector >
-          <sp-button style={{marginTop:"8px"}}>Montar layout</sp-button>
+        <HeaderSelector handleHeaderSelect={setSelectedHeader}></HeaderSelector>
+        <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
+          Montar layout
+        </sp-button>
       </Theme>
     </div>
   );
