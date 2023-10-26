@@ -24,8 +24,7 @@ import HeaderSelector from "./HeaderSelector.js";
 
 function App() {
   return (
-    <div>
-      <h4>Selecione o Header meu broder</h4>
+    <div style={{paddingLeft: "15px", paddingTop: "10px" }}>
       <Theme theme="spectrum" scale="medium" color="light">
           <HeaderSelector></HeaderSelector >
       </Theme>

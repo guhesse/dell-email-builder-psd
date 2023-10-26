@@ -3,6 +3,12 @@ const { core, app } = require('photoshop');
 const { storage } = require('uxp');
 const { batchPlay } = require('photoshop').action; // Importe a função batchPlay
 
+import "@spectrum-web-components/theme/theme-dark.js";
+import "@spectrum-web-components/theme/express/theme-dark.js";
+import "@spectrum-web-components/theme/scale-medium.js";
+import "@spectrum-web-components/theme/express/scale-medium.js";
+import { Theme } from "@swc-react/theme";
+
 export default function HeaderSelector() {
     const [selectedHeader, setSelectedHeader] = useState(null);
 
@@ -60,12 +66,23 @@ export default function HeaderSelector() {
                     // Obtém a camada colada
                     const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
 
-                    // Calcula as coordenadas de deslocamento para o canto superior esquerdo
-                    const offsetX = -pastedGroup.bounds.left - activeDocument.width / 5.5;
-                    const offsetY = -pastedGroup.bounds.top - activeDocument.height / 5;
 
-                    // Move o grupo colado para o ponto (0, 0) do documento (canto superior esquerdo)
+                    // Obtém as dimensões do documento
+                    const docWidth = activeDocument.width;
+                    const docHeight = activeDocument.height;
+
+                    console.log("Altura do Documento:", docHeight);
+                    console.log("Largura do Documento:", docWidth);
+
+                    // Calcula as coordenadas de deslocamento para o canto superior esquerdo do documento
+                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 330) ;
+                    const offsetY = ((docHeight - docHeight) - (docHeight / 2) + 57) ;
+
+
+                    // Move o grupo colado para o ponto (offsetX, offsetY) do documento (canto superior esquerdo)
                     pastedGroup.translate(offsetX, offsetY);
+
+
 
                     // Salva o documento modificado
                     await activeDocument.save();
@@ -91,16 +108,31 @@ export default function HeaderSelector() {
 
     return (
         <>
-            <sp-picker>
-                <sp-menu-item onClick={() => handleHeaderSelect('SB')}>SB</sp-menu-item>
-                <sp-menu-item onClick={() => handleHeaderSelect('CON')}>CON</sp-menu-item>
-                <sp-menu-divider></sp-menu-divider>
-                <sp-menu-item onClick={() => handleHeaderSelect('Alienware')}>Alienware</sp-menu-item>
-                <sp-menu-item onClick={() => handleHeaderSelect('Gaming')}>Gaming</sp-menu-item>
-                <sp-menu-divider></sp-menu-divider>
-                <sp-menu-item onClick={() => handleHeaderSelect('Outlet')}>Outlet</sp-menu-item>
-                <sp-menu-item onClick={() => handleHeaderSelect('Experts')}>Experts</sp-menu-item>
-            </sp-picker>
+            <Theme theme="dark" scale="medium" color="dark">
+                <h4>Selecione o Header meu broder</h4>
+                <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
+                    <sp-picker style={{ width: "45vw", padding: "0 5px" }} id="picker-m" size="m" label="Selection type">
+                        <sp-menu-item onClick={() => handleHeaderSelect('SB')}>SB</sp-menu-item>
+                        <sp-menu-item onClick={() => handleHeaderSelect('CON')}>CON</sp-menu-item>
+                        <sp-menu-divider></sp-menu-divider>
+                        <sp-menu-item onClick={() => handleHeaderSelect('Alienware')}>Alienware</sp-menu-item>
+                        <sp-menu-item onClick={() => handleHeaderSelect('Gaming')}>Gaming</sp-menu-item>
+                        <sp-menu-divider></sp-menu-divider>
+                        <sp-menu-item onClick={() => handleHeaderSelect('Outlet')}>Outlet</sp-menu-item>
+                        <sp-menu-item onClick={() => handleHeaderSelect('Experts')}>Experts</sp-menu-item>
+                    </sp-picker>
+                    <sp-picker style={{ width: "45vw", padding: "0 5px" }} id="picker-m" size="m" label="Selection type">
+                        <sp-menu-item onClick={() => handleHeaderSelect('SB')}>SB</sp-menu-item>
+                        <sp-menu-item onClick={() => handleHeaderSelect('CON')}>CON</sp-menu-item>
+                        <sp-menu-divider></sp-menu-divider>
+                        <sp-menu-item onClick={() => handleHeaderSelect('Alienware')}>Alienware</sp-menu-item>
+                        <sp-menu-item onClick={() => handleHeaderSelect('Gaming')}>Gaming</sp-menu-item>
+                        <sp-menu-divider></sp-menu-divider>
+                        <sp-menu-item onClick={() => handleHeaderSelect('Outlet')}>Outlet</sp-menu-item>
+                        <sp-menu-item onClick={() => handleHeaderSelect('Experts')}>Experts</sp-menu-item>
+                    </sp-picker>
+                </sp-field-group>
+            </Theme>
             {selectedHeader && <p>Selecionado: {selectedHeader}</p>}
         </>
     );
