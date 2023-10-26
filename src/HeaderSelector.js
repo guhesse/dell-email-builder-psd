@@ -109,19 +109,9 @@ export default function HeaderSelector() {
     return (
         <>
             <Theme theme="dark" scale="medium" color="dark">
-                <h4>Selecione o Header meu broder</h4>
+                <p>Header</p>
                 <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
-                    <sp-picker style={{ width: "45vw", padding: "0 5px" }} id="picker-m" size="m" label="Selection type">
-                        <sp-menu-item onClick={() => handleHeaderSelect('SB')}>SB</sp-menu-item>
-                        <sp-menu-item onClick={() => handleHeaderSelect('CON')}>CON</sp-menu-item>
-                        <sp-menu-divider></sp-menu-divider>
-                        <sp-menu-item onClick={() => handleHeaderSelect('Alienware')}>Alienware</sp-menu-item>
-                        <sp-menu-item onClick={() => handleHeaderSelect('Gaming')}>Gaming</sp-menu-item>
-                        <sp-menu-divider></sp-menu-divider>
-                        <sp-menu-item onClick={() => handleHeaderSelect('Outlet')}>Outlet</sp-menu-item>
-                        <sp-menu-item onClick={() => handleHeaderSelect('Experts')}>Experts</sp-menu-item>
-                    </sp-picker>
-                    <sp-picker style={{ width: "45vw", padding: "0 5px" }} id="picker-m" size="m" label="Selection type">
+                    <sp-picker style={{ width: "45vw", padding: "0" }} id="picker-m" size="m" label="Selection type">
                         <sp-menu-item onClick={() => handleHeaderSelect('SB')}>SB</sp-menu-item>
                         <sp-menu-item onClick={() => handleHeaderSelect('CON')}>CON</sp-menu-item>
                         <sp-menu-divider></sp-menu-divider>
@@ -137,3 +127,4 @@ export default function HeaderSelector() {
         </>
     );
 }
+

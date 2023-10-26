@@ -21,12 +21,16 @@ import "@spectrum-web-components/theme/express/scale-medium.js";
 import { Theme } from "@swc-react/theme";
 
 import HeaderSelector from "./HeaderSelector.js";
+import SubjectLineSelector from "./SubjectLineSelector.js";
 
 function App() {
+  
   return (
-    <div style={{paddingLeft: "15px", paddingTop: "10px" }}>
+    <div width="100" style={{paddingLeft: "15px", paddingTop: "10px", width:"100vw"}}>
       <Theme theme="spectrum" scale="medium" color="light">
+          <SubjectLineSelector></SubjectLineSelector>
           <HeaderSelector></HeaderSelector >
+          <sp-button style={{marginTop:"8px"}}>Montar layout</sp-button>
       </Theme>
     </div>
   );
