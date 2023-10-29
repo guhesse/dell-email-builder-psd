@@ -88,131 +88,134 @@ function App() {
   const slValue = subjectLineValues?.slValue;
   const sslValue = subjectLineValues?.sslValue;
 
-  const sslSelect = async (ssl) => {
+  const sslSelect = async () => {
     const sslFilePath = `assets/NON-LAYOUT_CONTENT.psd`;
     const fs = storage.localFileSystem;
 
     try {
-      const pluginDir = await fs.getPluginFolder();
-      const fileEntry = await pluginDir.getEntry(sslFilePath);
+        const pluginDir = await fs.getPluginFolder();
+        const fileEntry = await pluginDir.getEntry(sslFilePath);
 
-      const targetFunction = async (executionContext) => {
-        try {
-          await app.open(fileEntry);
-          const batchSSLChangeAndCopy = [
-            {
-              _obj: "select",
-              _target: [
-                {
-                  _ref: "layer",
-                  _name: "SL"
-                }
-              ],
-              makeVisible: false,
-              layerID: [
-                2125
-              ],
-              _options: {
-                dialogOptions: "dontDisplay"
-              }
-            },
+        const targetFunction = async (executionContext) => {
+            try {
+                await app.open(fileEntry);
+                const batchSSLChangeAndCopy = [
+                    {
+                        _obj: "select",
+                        _target: [
+                            {
+                                _ref: "layer",
+                                _name: "SL"
+                            }
+                        ],
+                        makeVisible: false,
+                        layerID: [
+                            2125
+                        ],
+                        _options: {
+                            dialogOptions: "dontDisplay"
+                        }
+                    },
 
-            {
-              _obj: "set",
-              _target: [
-                {
-                  _ref: "textLayer",
-                  _enum: "ordinal",
-                  _value: "targetEnum"
-                }
-              ],
-              to: {
-                _obj: "textLayer",
-                textKey: `SL PT :  ${getSubjectLineValues().slValue}`,
-              }
-            },
-            {
-              _obj: "select",
-              _target: [
-                {
-                  _ref: "layer",
-                  _name: "SSL"
-                }
-              ],
-              makeVisible: false,
-              layerID: [
-                2125
-              ],
-              _options: {
-                dialogOptions: "dontDisplay"
-              }
-            },
+                    {
+                        _obj: "set",
+                        _target: [
+                            {
+                                _ref: "textLayer",
+                                _enum: "ordinal",
+                                _value: "targetEnum"
+                            }
+                        ],
+                        to: {
+                            _obj: "textLayer",
+                            textKey: `SL PT :  ${slValue}`,
+                        }
+                    },
+                    {
+                        _obj: "select",
+                        _target: [
+                            {
+                                _ref: "layer",
+                                _name: "SSL"
+                            }
+                        ],
+                        makeVisible: false,
+                        layerID: [
+                            2125
+                        ],
+                        _options: {
+                            dialogOptions: "dontDisplay"
+                        }
+                    },
 
-            {
-              _obj: "set",
-              _target: [
-                {
-                  _ref: "textLayer",
-                  _enum: "ordinal",
-                  _value: "targetEnum"
-                }
-              ],
-              to: {
-                _obj: "textLayer",
-                textKey: `SSL :  ${getSubjectLineValues().slValue}`,
-              }
-            },
-            {
-              _obj: "selectAllLayers",
-              _target: [
-                {
-                  _ref: "layer",
-                  _enum: "ordinal",
-                  _value: "targetEnum"
-                }
-              ],
-              _options: {
-                dialogOptions: "dontDisplay"
-              }
-            },
-            {
-              _obj: "copyEvent",
-              _options: {
-                dialogOptions: "dontDisplay"
-              }
+                    {
+                        _obj: "set",
+                        _target: [
+                            {
+                                _ref: "textLayer",
+                                _enum: "ordinal",
+                                _value: "targetEnum"
+                            }
+                        ],
+                        to: {
+                            _obj: "textLayer",
+                            textKey: `SSL :  ${sslValue}`,
+                        }
+                    },
+                    {
+                        _obj: "selectAllLayers",
+                        _target: [
+                            {
+                                _ref: "layer",
+                                _enum: "ordinal",
+                                _value: "targetEnum"
+                            }
+                        ],
+                        _options: {
+                            dialogOptions: "dontDisplay"
+                        }
+                    },
+                    {
+                        _obj: "copyEvent",
+                        _options: {
+                            dialogOptions: "dontDisplay"
+                        }
+                    }
+                ];
+
+                await batchPlay(batchSSLChangeAndCopy, {});
+                await app.activeDocument.save();
+                await app.activeDocument.close();
+
+                const activeDocument = app.activeDocument;
+                await activeDocument.paste();
+                const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+                const docWidth = activeDocument.width;
+                const docHeight = activeDocument.height;
+                const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 325);
+                const offsetY = ((docHeight - docHeight) - (docHeight / 2) + 30);
+                pastedGroup.translate(offsetX, offsetY);
+                await activeDocument.save();
+
+                console.log('SSL inserido com sucesso!');
+            } catch (error) {
+                console.error('Erro ao inserir SSL:', error);
             }
-          ];
+        };
 
-          await batchPlay(batchSSLChangeAndCopy, {});
-          await app.activeDocument.save();
-          await app.activeDocument.close();
+        const options = {
+            commandName: 'Inserir SSL',
+            interactive: true,
+        };
 
-          const activeDocument = app.activeDocument;
-          await activeDocument.paste();
-          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-          const docWidth = activeDocument.width;
-          const docHeight = activeDocument.height;
-          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 325);
-          const offsetY = ((docHeight - docHeight) - (docHeight / 2) + 30);
-          pastedGroup.translate(offsetX, offsetY);
-          await activeDocument.save();
-
-          console.log('SSL inserido com sucesso!');
-        } catch (error) {
-          console.error('Erro ao inserir SSL:', error);
-        }
-      };
-
-      const options = {
-        commandName: 'Inserir SSL',
-        interactive: true,
-      };
-
-      await core.executeAsModal(targetFunction, options);
+        await core.executeAsModal(targetFunction, options);
     } catch (error) {
-      console.error('Erro ao encontrar o arquivo de SSL:', error);
+        console.error('Erro ao encontrar o arquivo de SSL:', error);
     }
-  };
+};
+
+
+  
   // Fim de função de modificar e importar o SSL
 
   const handleMontarLayoutClick = async () => {
@@ -232,8 +235,6 @@ function App() {
     <div width="100" style={{ paddingLeft: "15px", paddingTop: "10px", width: "100vw" }}>
       <Theme theme="spectrum" scale="medium" color="light">
         <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
-        <p>SL: {slValue}</p>
-        <p>SSL: {sslValue}</p>
         <HeaderSelector handleHeaderSelect={setSelectedHeader} />
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
