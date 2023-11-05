@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import HeaderSelector from "./HeaderSelector.js";
 import SubjectLineSelector from './SubjectLineSelector.js';
+import HeroSelector from './HeroSelector.js';
+
 import { Theme } from "@swc-react/theme";
 const { core, app } = require('photoshop');
 const { storage } = require('uxp');
 const { batchPlay } = require('photoshop').action;
 
 var slHeight = ""
+var headerHeight = ""
 
 function App() {
 
@@ -52,8 +55,6 @@ function App() {
 
           const activeDocument = app.activeDocument;
           await activeDocument.paste();
-
-          console.log("Height SL dentro da função:", slHeight)
 
 
           const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
@@ -102,8 +103,7 @@ function App() {
           const secondDocument = app.documents[1];
           const headerWidth = secondDocument.width;
           const headerHeight = secondDocument.height;
-
-
+        
           const batchHeaderCopy = [
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
@@ -146,10 +146,74 @@ function App() {
   // Fim de função de selecionar o Header
 
 
+
+  //Função de selecionar o Hero
+  const [selectedHero, setSelectedHero] = useState(null);
+
+  const handleHeroSelect = async (hero) => {
+    const heroFilePath = `assets/heros/${hero}.psd`;
+    const fs = storage.localFileSystem;
+    try {
+      const pluginDir = await fs.getPluginFolder();
+      const fileEntry = await pluginDir.getEntry(heroFilePath);
+
+
+      const targetFunction = async (executionContext) => {
+        try {
+          await app.open(fileEntry);
+          const secondDocument = app.documents[1];
+          const heroWidth = secondDocument.width;
+          const heroHeight = secondDocument.height;
+
+
+          const batchHeroCopy = [
+            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+          ];
+          await batchPlay(batchHeroCopy, {});
+
+          const activeDocument = app.activeDocument;
+          await activeDocument.paste();
+
+          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+          const docWidth = activeDocument.width;
+          const docHeight = activeDocument.height;
+          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (heroWidth / 2) + 40);
+          const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (heroHeight / 2) + (slHeight + 30));
+          pastedGroup.translate(offsetX, offsetY);
+
+
+          await activeDocument.save();
+
+
+
+          console.log('Hero inserido com sucesso!');
+        } catch (error) {
+          console.error('Erro ao inserir o Hero:', error);
+        }
+      };
+
+      const options = {
+        commandName: 'Inserir Cabeçalho',
+        interactive: true,
+      };
+
+      await core.executeAsModal(targetFunction, options);
+    } catch (error) {
+      console.error('Erro ao encontrar o arquivo do Hero:', error);
+    }
+  };
+  // Fim de função de selecionar o Hero
+
+
+
   const handleMontarLayoutClick = async () => {
     try {
       var slHeight = await sslSelect(); // Obtém slHeight usando sslSelect
       await handleHeaderSelect(selectedHeader, slHeight); // Passa slHeight para handleHeaderSelect
+      await handleHeroSelect(selectedHero);
       // Outras funções que você deseja executar podem ser chamadas aqui
       // await outraFuncao();
       // await maisUmaFuncao();
@@ -167,6 +231,7 @@ function App() {
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
         </sp-button>
+        <HeroSelector handleHeroSelect={setSelectedHero} />
       </Theme>
     </div>
   );
