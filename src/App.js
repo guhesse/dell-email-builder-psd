@@ -102,7 +102,7 @@ function App() {
           await app.open(fileEntry);
           const secondDocument = app.documents[1];
           const headerWidth = secondDocument.width;
-          const headerHeight = secondDocument.height;
+          headerHeight = secondDocument.height;
         
           const batchHeaderCopy = [
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
@@ -122,10 +122,7 @@ function App() {
           const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (headerHeight / 2) + (slHeight + 30));
           pastedGroup.translate(offsetX, offsetY);
 
-
           await activeDocument.save();
-
-
 
           console.log('Header inserido com sucesso!');
         } catch (error) {
@@ -180,9 +177,13 @@ function App() {
           const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
-          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (heroWidth / 2) + 40);
-          const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (heroHeight / 2) + (slHeight + 30));
+          const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
+          const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (slHeight + 30) + (headerHeight));
           pastedGroup.translate(offsetX, offsetY);
+
+          console.log("Altura do SL", slHeight)
+          console.log("Altura do Hero:", heroHeight)
+          console.log("Altura do Header:", headerHeight)
 
 
           await activeDocument.save();
@@ -196,7 +197,7 @@ function App() {
       };
 
       const options = {
-        commandName: 'Inserir Cabeçalho',
+        commandName: 'Inserir Hero',
         interactive: true,
       };
 
