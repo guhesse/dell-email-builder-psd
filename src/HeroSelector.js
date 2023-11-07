@@ -1,7 +1,38 @@
 import React, { useState } from 'react';
 import { Theme } from "@swc-react/theme";
 
-export default function HeroSelector({ handleHeroSelect }) {
+export default function HeroSelector({ handleHeroSelect, onHeroCopyChange}) {
+
+    const [badgeValue, setBadgeValue] = useState("");
+    const [headlineValue, setHeadlineValue] = useState("");
+    const [subHeadlineValue, setSubHeadlineValue] = useState("");
+
+    const handleBadgeChange = (event) => {
+        setBadgeValue(event.target.value);
+        onHeroCopyChange({
+            badgeValue,
+            headlineValue,
+            subHeadlineValue
+        });
+    };
+
+    const handleHeadlineChange = (event) => {
+        setHeadlineValue(event.target.value);
+        onHeroCopyChange({
+            badgeValue,
+            headlineValue,
+            subHeadlineValue
+        });
+    };
+    const handleSubHeadlineChange = (event) => {
+        setSubHeadlineValue(event.target.value);
+        onHeroCopyChange({
+            badgeValue,
+            headlineValue,
+            subHeadlineValue
+        });
+    };
+
     const [selectedHero, setSelectedHero] = useState(null);
 
     const handleHeroClick = (hero) => {
@@ -12,6 +43,32 @@ export default function HeroSelector({ handleHeroSelect }) {
     return (
         <>
             <Theme theme="dark" scale="medium" color="dark">
+                <div>
+                    <sp-field-label for="badge-field">Badge</sp-field-label>
+                    <sp-textfield
+                        style={{ width: "100%" }}
+                        id="badge-field"
+                        placeholder="Insira o Badge"
+                        value={badgeValue}
+                        onInput={handleBadgeChange}
+                    ></sp-textfield>
+                    <sp-field-label for="badge-field">Headline</sp-field-label>
+                    <sp-textfield
+                        style={{ width: "100%" }}
+                        id="haedline-field"
+                        placeholder="Insira o Headline"
+                        value={headlineValue}
+                        onInput={handleHeadlineChange}
+                    ></sp-textfield>
+                    <sp-field-label for="badge-field">SubHeadline</sp-field-label>
+                    <sp-textfield
+                        style={{ width: "100%" }}
+                        id="subheadline-field"
+                        placeholder="Insira o SubHeadline"
+                        value={subHeadlineValue}
+                        onInput={handleSubHeadlineChange}
+                    ></sp-textfield>
+                </div>
                 <p>Hero</p>
                 <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
                     <sp-picker style={{ width: "45vw", padding: "0" }} id="picker-m" size="m" label="Selection type">

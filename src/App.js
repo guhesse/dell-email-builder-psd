@@ -10,6 +10,7 @@ const { batchPlay } = require('photoshop').action;
 
 var slHeight = ""
 var headerHeight = ""
+var heroHeight = ""
 
 function App() {
 
@@ -103,7 +104,8 @@ function App() {
           const secondDocument = app.documents[1];
           const headerWidth = secondDocument.width;
           headerHeight = secondDocument.height;
-        
+
+
           const batchHeaderCopy = [
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
@@ -120,6 +122,7 @@ function App() {
           const docHeight = activeDocument.height;
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (headerWidth / 2) + 40);
           const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (headerHeight / 2) + (slHeight + 30));
+
           pastedGroup.translate(offsetX, offsetY);
 
           await activeDocument.save();
@@ -147,6 +150,17 @@ function App() {
   //Função de selecionar o Hero
   const [selectedHero, setSelectedHero] = useState(null);
 
+  const [heroCopyValues, setHeroCopyValues] = useState(null);
+
+  const handleHeroCopyChange = (values) => {
+    setHeroCopyValues(values);
+  };
+
+  const badgeValue = heroCopyValues?.badgeValue;
+  const headlineValue = heroCopyValues?.headlineValue;
+  const subHeadlineValue = heroCopyValues?.subHeadlineValue;
+
+
   const handleHeroSelect = async (hero) => {
     const heroFilePath = `assets/heros/${hero}.psd`;
     const fs = storage.localFileSystem;
@@ -160,10 +174,30 @@ function App() {
           await app.open(fileEntry);
           const secondDocument = app.documents[1];
           const heroWidth = secondDocument.width;
-          const heroHeight = secondDocument.height;
+          heroHeight = secondDocument.height;
 
+          let heroPaddingTop = ""
+
+          if (heroHeight > 1000) {
+            heroPaddingTop = ((heroHeight - 1000) / 2);
+          } else {
+            heroPaddingTop = 0; // Atribui 0 se headerHeight for menor ou igual a 1000
+          };
 
           const batchHeroCopy = [
+
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${badgeValue}`, } },
+
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Headline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${headlineValue}`, } },
+
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Subheadline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${subHeadlineValue}`, } },
+
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
@@ -178,17 +212,21 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
           const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
-          const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (slHeight + 30) + (headerHeight));
+
+          let offsetModules = ((slHeight + 30) + (headerHeight)); //- (heroPaddingTop) / 2
+
+          const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
+          console.log("Offset Y:", offsetY)
+          console.log("Offset Modules", offsetModules)
           pastedGroup.translate(offsetX, offsetY);
 
-          console.log("Altura do SL", slHeight)
-          console.log("Altura do Hero:", heroHeight)
-          console.log("Altura do Header:", headerHeight)
 
+          console.log("Hero Padding:", heroPaddingTop)
+          console.log("Altura do SL", slHeight)
+          console.log("Altura do Header:", headerHeight)
+          console.log("Altura do Hero:", heroHeight)
 
           await activeDocument.save();
-
-
 
           console.log('Hero inserido com sucesso!');
         } catch (error) {
@@ -213,8 +251,8 @@ function App() {
   const handleMontarLayoutClick = async () => {
     try {
       var slHeight = await sslSelect(); // Obtém slHeight usando sslSelect
-      await handleHeaderSelect(selectedHeader, slHeight); // Passa slHeight para handleHeaderSelect
-      await handleHeroSelect(selectedHero);
+      var headerHeight = await handleHeaderSelect(selectedHeader, slHeight); // Passa slHeight para handleHeaderSelect
+      await handleHeroSelect(selectedHero, slHeight, headerHeight);
       // Outras funções que você deseja executar podem ser chamadas aqui
       // await outraFuncao();
       // await maisUmaFuncao();
@@ -229,10 +267,10 @@ function App() {
       <Theme theme="spectrum" scale="medium" color="light">
         <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
         <HeaderSelector handleHeaderSelect={setSelectedHeader} />
+        <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
         </sp-button>
-        <HeroSelector handleHeroSelect={setSelectedHero} />
       </Theme>
     </div>
   );
