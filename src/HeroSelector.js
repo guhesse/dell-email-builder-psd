@@ -46,7 +46,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange}) {
                 <div>
                     <sp-field-label for="badge-field">Badge</sp-field-label>
                     <sp-textfield
-                        style={{ width: "100%" }}
+                        style={{ width: "90vw" }}
                         id="badge-field"
                         placeholder="Insira o Badge"
                         value={badgeValue}
@@ -54,7 +54,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange}) {
                     ></sp-textfield>
                     <sp-field-label for="badge-field">Headline</sp-field-label>
                     <sp-textfield
-                        style={{ width: "100%" }}
+                        style={{ width: "90vw" }}
                         id="haedline-field"
                         placeholder="Insira o Headline"
                         value={headlineValue}
@@ -62,7 +62,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange}) {
                     ></sp-textfield>
                     <sp-field-label for="badge-field">SubHeadline</sp-field-label>
                     <sp-textfield
-                        style={{ width: "100%" }}
+                        style={{ width: "90vw" }}
                         id="subheadline-field"
                         placeholder="Insira o SubHeadline"
                         value={subHeadlineValue}
