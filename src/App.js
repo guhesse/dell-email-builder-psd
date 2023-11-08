@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import HeaderSelector from "./HeaderSelector.js";
 import SubjectLineSelector from './SubjectLineSelector.js';
 import HeroSelector from './HeroSelector.js';
+import AccentColorSelector from './AccentColorSelector.js';
 
 import { Theme } from "@swc-react/theme";
 const { core, app } = require('photoshop');
@@ -266,6 +267,7 @@ function App() {
     <div width="100" style={{ paddingLeft: "15px", paddingTop: "10px", width: "100vw" }}>
       <Theme theme="spectrum" scale="medium" color="light">
         <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
+        <AccentColorSelector />
         <HeaderSelector handleHeaderSelect={setSelectedHeader} />
         <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>

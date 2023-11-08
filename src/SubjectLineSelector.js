@@ -24,7 +24,7 @@ return (
     <div>
         <sp-field-label for="sl-field">SL</sp-field-label>
         <sp-textfield
-            style={{ width: "100%" }}
+            style={{ width: "90vw" }}
             id="sl-field"
             placeholder="Insira o SL"
             value={slValue}
@@ -32,7 +32,7 @@ return (
         ></sp-textfield>
         <sp-field-label for="ssl-field">SSL</sp-field-label>
         <sp-textfield
-            style={{ width: "100%" }}
+            style={{ width: "90vw" }}
             id="ssl-field"
             placeholder="Insira o SSL"
             value={sslValue}

@@ -1328,6 +1328,11 @@
   resolved "https://registry.npmjs.org/@csstools/normalize.css/-/normalize.css-9.0.1.tgz"
   integrity sha512-6It2EVfGskxZCQhuykrfnALg7oVeiI6KclWSmGDqB0AiInVrTGB9Jp9i4/Ad21u9Jde/voVQz6eFX/eSg/UsPA==
 
+"@ctrl/tinycolor@^3.3.3":
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-3.6.1.tgz#b6c75a56a1947cc916ea058772d666a2c8932f31"
+  integrity sha512-SITSV6aIXsuVNV3f3O0f2n/cgyEDWoSqtZMYiAmcsYHydcKrOz3gUxB/iXd/Qf08+IZX4KpgNbvUdMBmWz+kcA==
+
 "@discoveryjs/json-ext@0.5.7", "@discoveryjs/json-ext@^0.5.0":
   version "0.5.7"
   resolved "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz"
@@ -1695,7 +1700,7 @@
   dependencies:
     "@spectrum-web-components/base" "^0.7.2"
 
-"@spectrum-web-components/base@0.7.5", "@spectrum-web-components/base@^0.5.8", "@spectrum-web-components/base@^0.6.0", "@spectrum-web-components/base@^0.7.0", "@spectrum-web-components/base@^0.7.2", "@spectrum-web-components/base@^0.7.3", "@spectrum-web-components/base@^0.7.4", "@spectrum-web-components/base@^0.7.5":
+"@spectrum-web-components/base@0.7.5", "@spectrum-web-components/base@^0.39.4", "@spectrum-web-components/base@^0.5.8", "@spectrum-web-components/base@^0.6.0", "@spectrum-web-components/base@^0.7.0", "@spectrum-web-components/base@^0.7.2", "@spectrum-web-components/base@^0.7.3", "@spectrum-web-components/base@^0.7.4", "@spectrum-web-components/base@^0.7.5":
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/@spectrum-web-components/base/-/base-0.7.5.tgz#64686e456a1334a199bdcd2af2927f2397e09ffe"
   integrity sha512-LCUg1mDYwg8rh2tETbAjcg0LGYqOLJc6PVWR0YZKjnIl2htRy2gr0ftEyx7Jx5MWAkPQgA662DYVilIno6ryAw==
@@ -1759,6 +1764,34 @@
   integrity sha512-HlU6eU2HjH7R+5fMXrITfM1FdcO7hqa9VLujXizihYzuj480rm+3ZYY8IR6gWhjri5BxgMi+kBJmeTZQVPXK0w==
   dependencies:
     "@spectrum-web-components/base" "^0.7.5"
+
+"@spectrum-web-components/color-handle@^0.39.4":
+  version "0.39.4"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/color-handle/-/color-handle-0.39.4.tgz#6b61add5f9430e90a8c758f8d065255d9c56e6c1"
+  integrity sha512-X21QBa7IYyLpZB/O7icBWRCcSe8YVGqVTQ8uoy4w1A2+uUCavYogtiTxHDCr3mtHIZ0Fx2B10YCXlz+Mxp+joQ==
+  dependencies:
+    "@spectrum-web-components/base" "^0.39.4"
+    "@spectrum-web-components/color-loupe" "^0.39.4"
+    "@spectrum-web-components/opacity-checkerboard" "^0.39.4"
+
+"@spectrum-web-components/color-loupe@^0.39.4":
+  version "0.39.4"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/color-loupe/-/color-loupe-0.39.4.tgz#7d02836edec6aa07830c86f29a440da9ea5ebb0c"
+  integrity sha512-ruh90fMKF/xsg2urLSs8TWcbJXJfmxHDzvon8TrrcHEaltm63TBZTgYVDV+JN8PQOEvqOTCkL/W9B0ngQpu2Mw==
+  dependencies:
+    "@spectrum-web-components/base" "^0.39.4"
+    "@spectrum-web-components/opacity-checkerboard" "^0.39.4"
+
+"@spectrum-web-components/color-wheel@^0.39.4":
+  version "0.39.4"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/color-wheel/-/color-wheel-0.39.4.tgz#21fd82f27058fcec4e07a37e4cf2bf5205e49832"
+  integrity sha512-3J0H0/z5Jp4ryx09xQQevf5P03OwRWNCPvFwC+tHbpqIWQM814t0Rrkg1jgUdxdUlf7/vPjwp5pKMA4JwhXSOQ==
+  dependencies:
+    "@ctrl/tinycolor" "^3.3.3"
+    "@spectrum-web-components/base" "^0.39.4"
+    "@spectrum-web-components/color-handle" "^0.39.4"
+    "@spectrum-web-components/reactive-controllers" "^0.39.4"
+    "@spectrum-web-components/shared" "^0.39.4"
 
 "@spectrum-web-components/dialog@0.11.12":
   version "0.11.12"
@@ -1904,6 +1937,13 @@
   dependencies:
     "@spectrum-web-components/base" "^0.7.5"
 
+"@spectrum-web-components/opacity-checkerboard@^0.39.4":
+  version "0.39.4"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/opacity-checkerboard/-/opacity-checkerboard-0.39.4.tgz#3273891a390c302da16e26ac07413e01a3ed76b4"
+  integrity sha512-ktfDw4GFRP6ge2kkANZu6n2bDe2y1LSVUtfeYBmc9nHNIit4i2YiWsYWsYMneAFNL8PLpyMgiwx/W3+DH90a2A==
+  dependencies:
+    "@spectrum-web-components/base" "^0.39.4"
+
 "@spectrum-web-components/overlay@^0.18.4", "@spectrum-web-components/overlay@^0.18.9":
   version "0.18.11"
   resolved "https://registry.yarnpkg.com/@spectrum-web-components/overlay/-/overlay-0.18.11.tgz#78b63db4f2ba0bee2d3fe667050bf4622768be15"
@@ -1958,7 +1998,14 @@
   dependencies:
     lit "^2.5.0"
 
-"@spectrum-web-components/shared@0.15.4", "@spectrum-web-components/shared@^0.15.0", "@spectrum-web-components/shared@^0.15.3", "@spectrum-web-components/shared@^0.15.4", "@spectrum-web-components/shared@^0.15.5":
+"@spectrum-web-components/reactive-controllers@^0.39.4":
+  version "0.39.4"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/reactive-controllers/-/reactive-controllers-0.39.4.tgz#9d213badd64923ed54980eec1b179f3da69258e1"
+  integrity sha512-gDE+pl+6PCnvNYVFFS0/mp2piPotgcyotjcA0A+CDFoQaShWiMQiQ0ryEC/eVDyxVFjoTRsnHrmsYqIMMgncGA==
+  dependencies:
+    lit "^2.5.0"
+
+"@spectrum-web-components/shared@0.15.4", "@spectrum-web-components/shared@^0.15.0", "@spectrum-web-components/shared@^0.15.3", "@spectrum-web-components/shared@^0.15.4", "@spectrum-web-components/shared@^0.15.5", "@spectrum-web-components/shared@^0.39.4":
   version "0.15.4"
   resolved "https://registry.yarnpkg.com/@spectrum-web-components/shared/-/shared-0.15.4.tgz#988f760383a69e9b995badc7a3014fa578e1cbf0"
   integrity sha512-AFsJUp0pjyM79R1r6QdIfS2co1fr3aw9tbTOgNjd3NTFnH/CacmzUGz/vIDuzv/soZ59xFslHl+pncgQ+pqokQ==
