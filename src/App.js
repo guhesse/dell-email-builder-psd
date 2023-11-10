@@ -14,19 +14,24 @@ var slHeight = ""
 var headerHeight = ""
 var heroHeight = ""
 
+var redValue = ""
+var greenValue = ""
+var blueValue = ""
+
 function App() {
 
   // Seleciona a Accent Color e a define
 
   const [selectedColorValues, setSelectedColorValues] = useState(null);
-
-  useEffect(() => {
-    const accentColor = selectedColorValues?.rgbValues;
-    console.log('handleAccentColorChange:', accentColor);
-  }, [selectedColorValues]);
-
+  
   const handleAccentColorChange = (values) => {
     setSelectedColorValues(values);
+
+    if (values) {
+      redValue = values.rgbValues.r;
+      greenValue = values.rgbValues.g;
+      blueValue = values.rgbValues.b;
+    }
   };
 
   async function clearAllLayers() {
@@ -273,6 +278,18 @@ function App() {
           } else {
             heroPaddingTop = 0; // Atribui 0 se headerHeight for menor ou igual a 1000
           };
+
+          const batchChangeColor = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" }, },
+            {
+              _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },],
+              to: {
+                _obj: "textStyle", color: { _obj: "RGBColor", red: redValue, grain: greenValue, blue: blueValue },
+              }, _options: { dialogOptions: "dontDisplay" },
+            },
+          ];
+
+          await batchPlay(batchChangeColor, {});
 
           const batchHeroCopy = [
 
