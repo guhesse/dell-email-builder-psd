@@ -15,29 +15,65 @@ var heroHeight = ""
 
 function App() {
 
+  async function clearAllLayers() {
+    const targetFunction = async (executionContext) => {
+    try {
+
+      const batchClearAllLayers = [
+        {_obj: "selectAllLayers", _target: [{_ref: "layer",_enum: "ordinal",_value: "targetEnum"}], _options: {dialogOptions: "dontDisplay"}},
+        {_obj: "delete",_target: [{_ref: "layer",_enum: "ordinal",_value: "targetEnum"}], layerID: [3155,3156,3157],_options: { dialogOptions: "dontDisplay"}}]
+      
+        // Ajuste para "wait" para aguardar a conclusão do comando
+        await batchPlay(batchClearAllLayers, {});
+
+        console.log('Layer deletadas com sucesso!');
+      } catch (error) {
+        console.error('Não foi possível deletar os as layers', error);
+      }
+    }
+
+    const options = {
+      commandName: 'Deletar todas as camadas',
+      interactive: true,
+    };
+
+    await core.executeAsModal(targetFunction, options);
+  };
+
   async function fitToScreen() {
     const targetFunction = async (executionContext) => {
       try {
-        const batchZoomFit = [
+
+        const batchDefineBaseBackground = [
           {
-            _obj: "select",
-            _target: [
-              {
-                _ref: "menuItemClass",
-                _enum: "menuItemType",
-                _value: "fitOnScreen",
-              },
-            ],
-            _options: {
-              dialogOptions: "dontDisplay",
-            },
-          },
-        ];
+            _obj: "set",_target: [{ _ref: "color",_property: "backgroundColor"}],
+            to: {              _obj: "HSBColorClass",hue: {_unit: "angleUnit",_value: 0},saturation: 0,brightness: 100},source:"photoshopPicker", _options: {dialogOptions: "dontDisplay"}
+          }
+        ]
+
+        await batchPlay(batchDefineBaseBackground, {});
+
+        const batchCropDocument = [
+
+          { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
+          { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
+          {
+            _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 5000.223315669948 }, right: { _unit: "pixelsUnit", _value: 650 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" }
+          }
+        ]
+
+        await batchPlay(batchCropDocument, {});
+
+        const batchZoomFit = [
+
+          {
+            _obj: "select", _target: [{ _ref: "menuItemClass", _enum: "menuItemType", _value: "fitOnScreen", },], _options: { ialogOptions: "dontDisplay", },
+          },];
+
+
 
         // Ajuste para "wait" para aguardar a conclusão do comando
-        await batchPlay(batchZoomFit, {
-          modalBehavior: "wait",
-        });
+        await batchPlay(batchZoomFit, {});
 
         console.log('Zoom ajustado para "Fit on Screen" com sucesso!');
       } catch (error) {
@@ -45,15 +81,14 @@ function App() {
       }
     }
 
-
-
     const options = {
-      commandName: 'Ajustar documento',
+      commandName: 'Ajuste de documento pré montagem',
       interactive: true,
     };
 
     await core.executeAsModal(targetFunction, options);
   };
+
 
   //Função de moficar e importar o SSL
 
@@ -291,6 +326,7 @@ function App() {
 
   const handleMontarLayoutClick = async () => {
     try {
+      await clearAllLayers();
       await fitToScreen();
       var slHeight = await sslSelect(); // Obtém slHeight usando sslSelect
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight); // Passa slHeight para handleHeaderSelect

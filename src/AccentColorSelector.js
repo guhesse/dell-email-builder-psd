@@ -71,7 +71,7 @@ export default function AccentColorSelector() {
         <>
             <Theme theme="dark" scale="medium" color="dark">
                 <div style={{ display: "flex", gap: "0", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", width: "100vw" }}>
-                    <span style={{ backgroundColor: coresRGB[selectedColor], width: "50px", height: "50px", borderRadius: "8px", border:"white 1px solid" }}></span>
+                    <span style={{ backgroundColor: coresRGB[selectedColor], width: "40px", height: "40px", borderRadius: "5px", border:"white 1px solid" }}></span>
                     <sp-field-group style={{ width: "45vw", display: "flex", flexDirection: "column", padding: "10", gap: "5px" }}>
                         <p>Accent Color</p>
                         <sp-picker value="White" style={{ width: "100%" }} id="picker-m" size="m" label="Selection type">
