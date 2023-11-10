@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import HeaderSelector from "./HeaderSelector.js";
 import SubjectLineSelector from './SubjectLineSelector.js';
 import HeroSelector from './HeroSelector.js';
@@ -14,6 +14,46 @@ var headerHeight = ""
 var heroHeight = ""
 
 function App() {
+
+  async function fitToScreen() {
+    const targetFunction = async (executionContext) => {
+      try {
+        const batchZoomFit = [
+          {
+            _obj: "select",
+            _target: [
+              {
+                _ref: "menuItemClass",
+                _enum: "menuItemType",
+                _value: "fitOnScreen",
+              },
+            ],
+            _options: {
+              dialogOptions: "dontDisplay",
+            },
+          },
+        ];
+
+        // Ajuste para "wait" para aguardar a conclusão do comando
+        await batchPlay(batchZoomFit, {
+          modalBehavior: "wait",
+        });
+
+        console.log('Zoom ajustado para "Fit on Screen" com sucesso!');
+      } catch (error) {
+        console.error('Não foi possível ajustar o zoom para "Fit on Screen":', error);
+      }
+    }
+
+
+
+    const options = {
+      commandName: 'Ajustar documento',
+      interactive: true,
+    };
+
+    await core.executeAsModal(targetFunction, options);
+  };
 
   //Função de moficar e importar o SSL
 
@@ -251,6 +291,7 @@ function App() {
 
   const handleMontarLayoutClick = async () => {
     try {
+      await fitToScreen();
       var slHeight = await sslSelect(); // Obtém slHeight usando sslSelect
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight); // Passa slHeight para handleHeaderSelect
       await handleHeroSelect(selectedHero, slHeight, headerHeight);
