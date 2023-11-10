@@ -9,20 +9,34 @@ const { core, app } = require('photoshop');
 const { storage } = require('uxp');
 const { batchPlay } = require('photoshop').action;
 
+
 var slHeight = ""
 var headerHeight = ""
 var heroHeight = ""
 
 function App() {
 
+  // Seleciona a Accent Color e a define
+
+  const [selectedColorValues, setSelectedColorValues] = useState(null);
+
+  useEffect(() => {
+    const accentColor = selectedColorValues?.rgbValues;
+    console.log('handleAccentColorChange:', accentColor);
+  }, [selectedColorValues]);
+
+  const handleAccentColorChange = (values) => {
+    setSelectedColorValues(values);
+  };
+
   async function clearAllLayers() {
     const targetFunction = async (executionContext) => {
-    try {
+      try {
 
-      const batchClearAllLayers = [
-        {_obj: "selectAllLayers", _target: [{_ref: "layer",_enum: "ordinal",_value: "targetEnum"}], _options: {dialogOptions: "dontDisplay"}},
-        {_obj: "delete",_target: [{_ref: "layer",_enum: "ordinal",_value: "targetEnum"}], layerID: [3155,3156,3157],_options: { dialogOptions: "dontDisplay"}}]
-      
+        const batchClearAllLayers = [
+          { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+          { _obj: "delete", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], layerID: [3155, 3156, 3157], _options: { dialogOptions: "dontDisplay" } }]
+
         // Ajuste para "wait" para aguardar a conclusão do comando
         await batchPlay(batchClearAllLayers, {});
 
@@ -46,8 +60,8 @@ function App() {
 
         const batchDefineBaseBackground = [
           {
-            _obj: "set",_target: [{ _ref: "color",_property: "backgroundColor"}],
-            to: {              _obj: "HSBColorClass",hue: {_unit: "angleUnit",_value: 0},saturation: 0,brightness: 100},source:"photoshopPicker", _options: {dialogOptions: "dontDisplay"}
+            _obj: "set", _target: [{ _ref: "color", _property: "backgroundColor" }],
+            to: { _obj: "HSBColorClass", hue: { _unit: "angleUnit", _value: 0 }, saturation: 0, brightness: 100 }, source: "photoshopPicker", _options: { dialogOptions: "dontDisplay" }
           }
         ]
 
@@ -344,7 +358,7 @@ function App() {
     <div width="100" style={{ paddingLeft: "15px", paddingTop: "10px", width: "100vw" }}>
       <Theme theme="spectrum" scale="medium" color="light">
         <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
-        <AccentColorSelector />
+        <AccentColorSelector onAccentColorChange={handleAccentColorChange} />
         <HeaderSelector handleHeaderSelect={setSelectedHeader} />
         <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>

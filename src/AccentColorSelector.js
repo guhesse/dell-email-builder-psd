@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Theme } from "@swc-react/theme";
 
-export default function AccentColorSelector() {
+export default function AccentColorSelector({ onAccentColorChange }) {
     const cores = {
         white: { r: 254, g: 254, b: 254 },
         quartz: { r: 238, g: 238, b: 238 },
@@ -35,7 +35,14 @@ export default function AccentColorSelector() {
 
     const handleColorClick = (color) => {
         setSelectedColor(color);
-        // Faça o que quiser com a cor selecionada
+        const selectedColorInfo = {
+            colorName: color,
+            rgbValues: cores[color],
+        };
+        // Certifique-se de que `onAccentColorChange` está definido antes de chamá-lo
+        if (onAccentColorChange) {
+            onAccentColorChange(selectedColorInfo);
+        }
     };
 
     const coresRGB = {
@@ -70,15 +77,18 @@ export default function AccentColorSelector() {
     return (
         <>
             <Theme theme="dark" scale="medium" color="dark">
-                <div style={{ display: "flex", gap: "0", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", width: "100vw" }}>
-                    <span style={{ backgroundColor: coresRGB[selectedColor], width: "40px", height: "40px", borderRadius: "5px", border:"white 1px solid" }}></span>
-                    <sp-field-group style={{ width: "45vw", display: "flex", flexDirection: "column", padding: "10", gap: "5px" }}>
+                <div style={{ display: "flex", gap: "0", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", width: "90vw" }}>
+                    <span style={{ backgroundColor: coresRGB[selectedColor], width: "40px", height: "40px", borderRadius: "5px", border: "white 1px solid" }}></span>
+                    <sp-field-group style={{ width: "80vw", display: "flex", flexDirection: "column", padding: "10", gap: "5px" }}>
                         <p>Accent Color</p>
-                        <sp-picker value="White" style={{ width: "100%" }} id="picker-m" size="m" label="Selection type">
-                            {Object.keys(cores).map(cor => (
-                                <sp-menu-item key={cor} onClick={() => handleColorClick(cor)}>
-                                    {cor.charAt(0).toUpperCase() + cor.slice(1)}
-                                </sp-menu-item>
+                        <sp-picker style={{ display: "flex", flexDirection: "row", width: "100%" }} value={selectedColor.charAt(0).toUpperCase() + selectedColor.slice(1)} id="picker-m" size="m" label="Selection type">
+                            {Object.keys(cores).map((cor) => (
+                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleColorClick(cor)}>
+                                    <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginLeft: "8px", }}></span>
+                                    <sp-menu-item style={{ width: "80%" }}>
+                                        {cor.charAt(0).toUpperCase() + cor.slice(1)}
+                                    </sp-menu-item>
+                                </div>
                             ))}
                         </sp-picker>
                     </sp-field-group>
