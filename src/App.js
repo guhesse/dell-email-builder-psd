@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import HeaderSelector from "./HeaderSelector.js";
 import SubjectLineSelector from './SubjectLineSelector.js';
-import HeroSelector from './HeroSelector.js';
 import AccentColorSelector from './AccentColorSelector.js';
+import HeroSelector from './HeroSelector.js';
+import PluginSelector from './PluginSelector.js';
 
 import { Theme } from "@swc-react/theme";
 const { core, app } = require('photoshop');
@@ -378,6 +379,7 @@ function App() {
         <AccentColorSelector onAccentColorChange={handleAccentColorChange} />
         <HeaderSelector handleHeaderSelect={setSelectedHeader} />
         <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
+        <PluginSelector />
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
         </sp-button>
