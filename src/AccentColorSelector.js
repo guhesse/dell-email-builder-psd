@@ -81,15 +81,18 @@ export default function AccentColorSelector({ onAccentColorChange }) {
                     <span style={{ backgroundColor: coresRGB[selectedColor], width: "40px", height: "40px", borderRadius: "5px", border: "white 1px solid" }}></span>
                     <sp-field-group style={{ width: "80vw", display: "flex", flexDirection: "column", padding: "10", gap: "5px" }}>
                         <p>Accent Color</p>
-                        <sp-picker style={{ display: "flex", flexDirection: "row", width: "100%" }} value={selectedColor.charAt(0).toUpperCase() + selectedColor.slice(1)} id="picker-m" size="m" label="Selection type">
-                            {Object.keys(cores).map((cor) => (
-                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleColorClick(cor)}>
-                                    <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginLeft: "8px", }}></span>
-                                    <sp-menu-item style={{ width: "80%" }}>
-                                        {cor.charAt(0).toUpperCase() + cor.slice(1)}
-                                    </sp-menu-item>
-                                </div>
-                            ))}
+                        <sp-picker placeholder={selectedColor.charAt(0).toUpperCase() + selectedColor.slice(1)} style={{ display: "flex", flexDirection: "row", width: "100%" }} value={selectedColor.charAt(0).toUpperCase() + selectedColor.slice(1)} id="picker-m" size="m" label="Selection type">
+                            <sp-menu>
+                                {Object.keys(cores).map((cor) => (
+                                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleColorClick(cor)}>
+
+                                        <sp-menu-item style={{ width: "100%", alignItems: "center" }}>
+                                            <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", padding: "0px 10px 0px 0px", }}></span>
+                                            {cor.charAt(0).toUpperCase() + cor.slice(1)}
+                                        </sp-menu-item>
+                                    </div>
+                                ))}
+                            </sp-menu>
                         </sp-picker>
                     </sp-field-group>
                 </div>
