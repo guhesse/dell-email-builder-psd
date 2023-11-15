@@ -14,6 +14,7 @@ const { batchPlay } = require('photoshop').action;
 var slHeight = ""
 var headerHeight = ""
 var heroHeight = ""
+var pluginHeight = ""
 
 var redValue = ""
 var greenValue = ""
@@ -321,17 +322,10 @@ function App() {
           const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
 
           let offsetModules = ((slHeight + 30) + (headerHeight)); //- (heroPaddingTop) / 2
-
           const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
           console.log("Offset Y:", offsetY)
           console.log("Offset Modules", offsetModules)
           pastedGroup.translate(offsetX, offsetY);
-
-
-          console.log("Hero Padding:", heroPaddingTop)
-          console.log("Altura do SL", slHeight)
-          console.log("Altura do Header:", headerHeight)
-          console.log("Altura do Hero:", heroHeight)
 
           await activeDocument.save();
 
@@ -352,19 +346,6 @@ function App() {
     }
   };
   // Fim de função de selecionar o Hero
-
-
-  // const [selectedHero, setSelectedHero] = useState(null);
-
-  // const [heroCopyValues, setHeroCopyValues] = useState(null);
-
-  // const handleHeroCopyChange = (values) => {
-  //   setHeroCopyValues(values);
-  // };
-
-  // const badgeValue = heroCopyValues?.badgeValue;
-  // const headlineValue = heroCopyValues?.headlineValue;
-  // const subHeadlineValue = heroCopyValues?.subHeadlineValue;
 
 
   //Função de modificar e importar o Plugin
@@ -390,19 +371,26 @@ function App() {
   const rightCopyValue = superChargerCopyValues?.rightCopyValue;
 
 
-  console.log("Plugin Copy:", pluginCopyValue)
-  console.log("Left Supercharger Copy:", leftCopyValue)
-  console.log("Middle Supercharger Copy:", middleCopyValue)
-  console.log("Right Supercharger Copy:", rightCopyValue)
-
   const pluginSelect = async () => {
-    // const pluginFilePath = `assets/NON-LAYOUT_CONTENT.psd`;
-    const superChargerFilePath = `assets/plugins/supercharger.psd`;
+
+    let pluginFilePath = "";
+
+    if (selectedPlugin === 'supercharger') {
+      pluginFilePath = 'assets/plugins/supercharger.psd';
+    } else if (selectedPlugin === 'plugin') {
+      pluginFilePath = 'assets/plugins/plugin.psd';
+    } else {
+      pluginFilePath = null;
+    }
+
     const fs = storage.localFileSystem;
+
+    console.log("Plugin selecionado:", selectedPlugin)
+    console.log("File Path:", pluginFilePath)
 
     try {
       const pluginDir = await fs.getPluginFolder();
-      const fileEntry = await pluginDir.getEntry(superChargerFilePath);
+      const fileEntry = await pluginDir.getEntry(pluginFilePath);
 
 
       const targetFunction = async (executionContext) => {
@@ -410,28 +398,54 @@ function App() {
           await app.open(fileEntry);
 
           const secondDocument = app.documents[1];
-          const slWidth = secondDocument.width;
-          slHeight = secondDocument.height;
+          const pluginWidth = secondDocument.width;
+          pluginHeight = secondDocument.height;
 
-          const batchSuperChargerChange = [
-
-            { _obj: "select", _target: [{ _ref: "layer", _name: "12222" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],  to: { _obj: "textLayer", textKey: ` ${leftCopyValue}`,  } },
-
-            { _obj: "select", _target: [{ _ref: "layer", _name: "2" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: ` ${middleCopyValue}`, } },
-
-            { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: ` ${rightCopyValue}`, } },
-
-
-
-            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+          const batchChangeColor = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redValue, grain: greenValue, blue: blueValue } }, _options: { dialogOptions: "dontDisplay" } }
           ];
-          await batchPlay(batchSuperChargerChange, {});
+
+          await batchPlay(batchChangeColor, {});
+
+          let batchPluginChange = []
+
+          if (selectedPlugin === 'supercharger') {
+            batchPluginChange = [
+
+
+              { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${leftCopyValue}`, } },
+
+              { _obj: "select", _target: [{ _ref: "layer", _name: "2" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${middleCopyValue}`, } },
+
+              { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${rightCopyValue}`, } },
+
+              { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+            ];
+          } else if (selectedPlugin === 'plugin') {
+            batchPluginChange = [
+
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${pluginCopyValue}`, } },
+
+              { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+            ];
+          } else {
+            console.error('Plugin não selecionado')
+            return;
+          }
+
+
+          await batchPlay(batchPluginChange, {});
 
           const activeDocument = app.activeDocument;
           await activeDocument.paste();
@@ -440,8 +454,9 @@ function App() {
           const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
-          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (slWidth / 2));
-          const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (slHeight / 2));
+          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
+          let offsetModules = ((slHeight + 30) + (headerHeight) + (heroHeight + 20)); //- (heroPaddingTop) / 2
+          const offsetY = (0 - (docHeight / 2) + (pluginHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
 
           await activeDocument.save();
@@ -472,8 +487,8 @@ function App() {
       await fitToScreen();
       var slHeight = await sslSelect(); // Obtém slHeight usando sslSelect
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight); // Passa slHeight para handleHeaderSelect
-      await handleHeroSelect(selectedHero, slHeight, headerHeight);
-      await pluginSelect(selectedPlugin);
+      var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight);
+      await pluginSelect(selectedPlugin, heroHeight, slHeight, headerHeight);
 
 
       console.log('Todas as funções foram executadas com sucesso.');

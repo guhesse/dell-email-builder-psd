@@ -75,7 +75,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                         <sp-menu>
                             <sp-menu-item onClick={() => handleHeroClick('hero1-promotion')}>Hero Layout 1 - Promotion 1</sp-menu-item>
                             <sp-menu-item onClick={() => handleHeroClick('hero1-promotion2')}>Hero Layout 1 - Promotion 2</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero1-business')}>Hero Layout 1 - Promotion 2</sp-menu-item>
+                            <sp-menu-item onClick={() => handleHeroClick('hero1-business')}>Hero Layout 1 - Business</sp-menu-item>
                             <sp-menu-item onClick={() => handleHeroClick('hero2-promotion')}>Hero Layout 2 - Promotion</sp-menu-item>
                             <sp-menu-item onClick={() => handleHeroClick('hero2-showcase')}>Hero Layout 2 - Showcase</sp-menu-item>
                             <sp-menu-item onClick={() => handleHeroClick('hero3-promotion')}>Hero Layout 3 - Promotion</sp-menu-item>
