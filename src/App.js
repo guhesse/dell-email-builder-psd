@@ -24,7 +24,7 @@ function App() {
   // Seleciona a Accent Color e a define
 
   const [selectedColorValues, setSelectedColorValues] = useState(null);
-  
+
   const handleAccentColorChange = (values) => {
     setSelectedColorValues(values);
 
@@ -242,7 +242,6 @@ function App() {
   // Fim de função de selecionar o Header
 
 
-
   //Função de selecionar o Hero
   const [selectedHero, setSelectedHero] = useState(null);
 
@@ -355,6 +354,117 @@ function App() {
   // Fim de função de selecionar o Hero
 
 
+  // const [selectedHero, setSelectedHero] = useState(null);
+
+  // const [heroCopyValues, setHeroCopyValues] = useState(null);
+
+  // const handleHeroCopyChange = (values) => {
+  //   setHeroCopyValues(values);
+  // };
+
+  // const badgeValue = heroCopyValues?.badgeValue;
+  // const headlineValue = heroCopyValues?.headlineValue;
+  // const subHeadlineValue = heroCopyValues?.subHeadlineValue;
+
+
+  //Função de modificar e importar o Plugin
+
+  const [selectedPlugin, setSelectedPlugin] = useState(null);
+
+  const [pluginCopyValues, setPluginCopyValues] = useState(null);
+
+  const [superChargerCopyValues, setSuperChargerCopyValues] = useState(null);
+
+  const handlePluginCopyChange = (values) => {
+    setPluginCopyValues(values);
+  };
+
+  const handleSuperChargerCopyChange = (values) => {
+    setSuperChargerCopyValues(values);
+  };
+
+
+  const pluginCopyValue = pluginCopyValues?.pluginCopyValue;
+  const leftCopyValue = superChargerCopyValues?.leftCopyValue;
+  const middleCopyValue = superChargerCopyValues?.middleCopyValue;
+  const rightCopyValue = superChargerCopyValues?.rightCopyValue;
+
+
+  console.log("Plugin Copy:", pluginCopyValue)
+  console.log("Left Supercharger Copy:", leftCopyValue)
+  console.log("Middle Supercharger Copy:", middleCopyValue)
+  console.log("Right Supercharger Copy:", rightCopyValue)
+
+  const pluginSelect = async () => {
+    // const pluginFilePath = `assets/NON-LAYOUT_CONTENT.psd`;
+    const superChargerFilePath = `assets/plugins/supercharger.psd`;
+    const fs = storage.localFileSystem;
+
+    try {
+      const pluginDir = await fs.getPluginFolder();
+      const fileEntry = await pluginDir.getEntry(superChargerFilePath);
+
+
+      const targetFunction = async (executionContext) => {
+        try {
+          await app.open(fileEntry);
+
+          const secondDocument = app.documents[1];
+          const slWidth = secondDocument.width;
+          slHeight = secondDocument.height;
+
+          const batchSuperChargerChange = [
+
+            { _obj: "select", _target: [{ _ref: "layer", _name: "12222" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],  to: { _obj: "textLayer", textKey: ` ${leftCopyValue}`,  } },
+
+            { _obj: "select", _target: [{ _ref: "layer", _name: "2" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: ` ${middleCopyValue}`, } },
+
+            { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: ` ${rightCopyValue}`, } },
+
+
+
+            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+          ];
+          await batchPlay(batchSuperChargerChange, {});
+
+          const activeDocument = app.activeDocument;
+          await activeDocument.paste();
+
+
+          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+          const docWidth = activeDocument.width;
+          const docHeight = activeDocument.height;
+          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (slWidth / 2));
+          const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (slHeight / 2));
+          pastedGroup.translate(offsetX, offsetY);
+
+          await activeDocument.save();
+
+          console.log('Plugin inserido com sucesso!');
+        } catch (error) {
+          console.error('Erro ao inserir plugin:', error);
+        }
+      };
+
+      const options = {
+        commandName: 'Inserir Plugin',
+        interactive: true,
+      };
+
+      await core.executeAsModal(targetFunction, options);
+    } catch (error) {
+      console.error('Erro ao encontrar o arquivo de Plugin:', error);
+    }
+  };
+
+  // Fim de função de modificar e importar o SSL
+
 
   const handleMontarLayoutClick = async () => {
     try {
@@ -363,9 +473,9 @@ function App() {
       var slHeight = await sslSelect(); // Obtém slHeight usando sslSelect
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight); // Passa slHeight para handleHeaderSelect
       await handleHeroSelect(selectedHero, slHeight, headerHeight);
-      // Outras funções que você deseja executar podem ser chamadas aqui
-      // await outraFuncao();
-      // await maisUmaFuncao();
+      await pluginSelect(selectedPlugin);
+
+
       console.log('Todas as funções foram executadas com sucesso.');
     } catch (error) {
       console.error('Erro ao montar o layout:', error);
@@ -379,7 +489,12 @@ function App() {
         <AccentColorSelector onAccentColorChange={handleAccentColorChange} />
         <HeaderSelector handleHeaderSelect={setSelectedHeader} />
         <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
-        <PluginSelector />
+
+        <PluginSelector
+          handlePluginSelect={setSelectedPlugin}
+          onPluginCopyChange={handlePluginCopyChange}
+          onSuperChargerCopyChange={handleSuperChargerCopyChange} />
+
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
         </sp-button>

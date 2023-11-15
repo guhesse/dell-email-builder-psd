@@ -3,6 +3,13 @@ import { Theme } from "@swc-react/theme";
 
 export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
 
+    const [selectedHero, setSelectedHero] = useState(null);
+
+    const handleHeroClick = (hero) => {
+        setSelectedHero(hero);
+        handleHeroSelect(hero); // Executa a função passada pelo pai (handleHeroSelect) com o hero selecionado
+    };
+
     const [badgeValue, setBadgeValue] = useState("");
     const [headlineValue, setHeadlineValue] = useState("");
     const [subHeadlineValue, setSubHeadlineValue] = useState("");
@@ -31,13 +38,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
             headlineValue,
             subHeadlineValue
         });
-    };
-
-    const [selectedHero, setSelectedHero] = useState(null);
-
-    const handleHeroClick = (hero) => {
-        setSelectedHero(hero);
-        handleHeroSelect(hero); // Executa a função passada pelo pai (handleHeroSelect) com o hero selecionado
     };
 
     return (

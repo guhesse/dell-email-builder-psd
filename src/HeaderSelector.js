@@ -20,7 +20,7 @@ export default function HeaderSelector({ handleHeaderSelect }) {
         </sp-menu>
     </sp-picker>
 
-
+0
     return (
         <>
             <Theme theme="dark" scale="medium" color="dark">
