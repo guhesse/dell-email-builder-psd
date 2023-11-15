@@ -103,7 +103,7 @@ function App() {
     }
 
     const options = {
-      commandName: 'Ajuste de documento pré montagem',
+      commandName: 'Ajuste de documento pre montagem',
       interactive: true,
     };
 
@@ -478,7 +478,49 @@ function App() {
     }
   };
 
-  // Fim de função de modificar e importar o SSL
+  // Fim de função de modificar e importar o Plugin
+
+  async function fitToScreenPos() {
+
+    const allModulesSizes = ((slHeight + 30) + headerHeight + (heroHeight + 20) + pluginHeight);
+    
+    const targetFunction = async (executionContext) => {
+      try {
+        const batchCropDocument = [
+
+          { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
+          { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
+          {
+            _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: parseFloat(allModulesSizes)}, right: { _unit: "pixelsUnit", _value: 650 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" }
+          }
+        ]
+
+        await batchPlay(batchCropDocument, {});
+
+        console.log(batchCropDocument[2].to.bottom._value);
+
+        const batchZoomFit = [
+
+          {
+            _obj: "select", _target: [{ _ref: "menuItemClass", _enum: "menuItemType", _value: "fitOnScreen", },], _options: { ialogOptions: "dontDisplay", },
+          },];
+
+        // Ajuste para "wait" para aguardar a conclusão do comando
+        await batchPlay(batchZoomFit, {});
+
+        console.log('Zoom ajustado para "Fit on Screen" Pos com sucesso!');
+      } catch (error) {
+        console.error('Não foi possível ajustar o zoom para "Fit on Screen Pos":', error);
+      }
+    }
+
+    const options = {
+      commandName: 'Ajuste de documento pos montagem',
+      interactive: true,
+    };
+
+    await core.executeAsModal(targetFunction, options);
+  };
 
 
   const handleMontarLayoutClick = async () => {
@@ -488,7 +530,8 @@ function App() {
       var slHeight = await sslSelect(); // Obtém slHeight usando sslSelect
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight); // Passa slHeight para handleHeaderSelect
       var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight);
-      await pluginSelect(selectedPlugin, heroHeight, slHeight, headerHeight);
+      var pluginHeight = await pluginSelect(selectedPlugin, heroHeight, slHeight, headerHeight);
+      await fitToScreenPos(slHeight, headerHeight, heroHeight, pluginHeight);
 
 
       console.log('Todas as funções foram executadas com sucesso.');
