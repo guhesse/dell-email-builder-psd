@@ -15,36 +15,40 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
     const [rightCopyValue, setRightCopyValue] = useState("");
 
     const handlePluginCopyChange = (event) => {
-        setPluginCopyValue(event.target.value);
+        const value = event.target.value;
+        setPluginCopyValue(value);
         onPluginCopyChange({
-            pluginCopyValue
+            pluginCopyValue : value
         });
     };
 
     const handleLeftCopyChange = (event) => {
-        setLeftCopyValue(event.target.value);
+        const value = event.target.value;
+        setLeftCopyValue(value);
         onSuperChargerCopyChange({
-            leftCopyValue,
+            leftCopyValue : value,
             middleCopyValue,
             rightCopyValue
         });
     };
 
     const handleMiddleCopyChange = (event) => {
-        setMiddleCopyValue(event.target.value);
+        const value = event.target.value;
+        setMiddleCopyValue(value);
         onSuperChargerCopyChange({
             leftCopyValue,
-            middleCopyValue,
+            middleCopyValue : value,
             rightCopyValue
         });
     };
 
     const handleRightCopyChange = (event) => {
-        setRightCopyValue(event.target.value);
+        const value = event.target.value;
+        setRightCopyValue(value);
         onSuperChargerCopyChange({
             leftCopyValue,
             middleCopyValue,
-            rightCopyValue
+            rightCopyValue : value
         });
     };
 

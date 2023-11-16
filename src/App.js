@@ -61,7 +61,7 @@ function App() {
     await core.executeAsModal(targetFunction, options);
   };
 
-  async function fitToScreen() {
+  async function fitToScreenPre() {
     const targetFunction = async (executionContext) => {
       try {
 
@@ -526,7 +526,7 @@ function App() {
   const handleMontarLayoutClick = async () => {
     try {
       await clearAllLayers();
-      await fitToScreen();
+      await fitToScreenPre();
       var slHeight = await sslSelect(); // Obtém slHeight usando sslSelect
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight); // Passa slHeight para handleHeaderSelect
       var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight);

@@ -20,24 +20,26 @@ export default function HeaderSelector({ handleHeaderSelect }) {
         </sp-menu>
     </sp-picker>
 
-0
+
     return (
         <>
             <Theme theme="dark" scale="medium" color="dark">
-                <p>Header</p>
                 <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
-                    <sp-picker style={{ width: "45vw", padding: "0" }} id="picker-m" size="m" label="Selection type" placeholder="Selecione o header">
-                        <sp-menu>
-                            <sp-menu-item onClick={() => handleHeaderClick('SB')}>SB</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeaderClick('CON')}>CON</sp-menu-item>
-                            <sp-menu-divider></sp-menu-divider>
-                            <sp-menu-item onClick={() => handleHeaderClick('Alienware')}>Alienware</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeaderClick('Gaming')}>Gaming</sp-menu-item>
-                            <sp-menu-divider></sp-menu-divider>
-                            <sp-menu-item onClick={() => handleHeaderClick('Outlet')}>Outlet</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeaderClick('Experts')}>Experts</sp-menu-item>
-                        </sp-menu>
-                    </sp-picker>
+                    <div>
+                        <sp-field-label for="picker-m" size="m">Header:</sp-field-label>
+                        <sp-picker style={{ width: "45vw", padding: "0" }} id="picker-m" size="m" label="Selection type" placeholder="Selecione o header">
+                            <sp-menu>
+                                <sp-menu-item onClick={() => handleHeaderClick('SB')}>SB</sp-menu-item>
+                                <sp-menu-item disabled onClick={() => handleHeaderClick('CON')}>CON</sp-menu-item>
+                                <sp-menu-divider></sp-menu-divider>
+                                <sp-menu-item onClick={() => handleHeaderClick('Alienware')}>Alienware</sp-menu-item>
+                                <sp-menu-item disabled onClick={() => handleHeaderClick('Gaming')}>Gaming</sp-menu-item>
+                                <sp-menu-divider></sp-menu-divider>
+                                <sp-menu-item disabled onClick={() => handleHeaderClick('Outlet')}>Outlet</sp-menu-item>
+                                <sp-menu-item disabled onClick={() => handleHeaderClick('Experts')}>Experts</sp-menu-item>
+                            </sp-menu>
+                        </sp-picker>
+                    </div>
                 </sp-field-group>
             </Theme>
         </>
