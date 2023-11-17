@@ -4,6 +4,7 @@ import SubjectLineSelector from './SubjectLineSelector.js';
 import AccentColorSelector from './AccentColorSelector.js';
 import HeroSelector from './HeroSelector.js';
 import PluginSelector from './PluginSelector.js';
+import FundingSelector from './FundingSelector.js';
 
 import { Theme } from "@swc-react/theme";
 const { core, app } = require('photoshop');
@@ -483,7 +484,7 @@ function App() {
   async function fitToScreenPos() {
 
     const allModulesSizes = ((slHeight + 30) + headerHeight + (heroHeight + 20) + pluginHeight);
-    
+
     const targetFunction = async (executionContext) => {
       try {
         const batchCropDocument = [
@@ -491,7 +492,7 @@ function App() {
           { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
           { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
           {
-            _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: parseFloat(allModulesSizes)}, right: { _unit: "pixelsUnit", _value: 650 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" }
+            _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: parseFloat(allModulesSizes) }, right: { _unit: "pixelsUnit", _value: 650 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" }
           }
         ]
 
@@ -541,19 +542,27 @@ function App() {
   };
 
   return (
-    <div width="100" style={{ paddingLeft: "15px", paddingTop: "10px", width: "100vw" }}>
+    <div width="100%" style={{ padding: "0px 15px", paddingTop: "10px", width: "100%" }}>
       <Theme theme="spectrum" scale="medium" color="light">
-        <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
-        <AccentColorSelector onAccentColorChange={handleAccentColorChange} />
-        <HeaderSelector handleHeaderSelect={setSelectedHeader} />
-        <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
-
+        <SubjectLineSelector
+          onSubjectLineChange={handleSubjectLineChange} />
+        <AccentColorSelector
+          onAccentColorChange={handleAccentColorChange} />
+        <div style={{display: "flex", flexWrap:"wrap", gap:"10px" }}>
+          <HeaderSelector
+            handleHeaderSelect={setSelectedHeader} />
+          <FundingSelector></FundingSelector>
+        </div>
+        <HeroSelector
+          handleHeroSelect={setSelectedHero}
+          onHeroCopyChange={handleHeroCopyChange} />
         <PluginSelector
           handlePluginSelect={setSelectedPlugin}
           onPluginCopyChange={handlePluginCopyChange}
           onSuperChargerCopyChange={handleSuperChargerCopyChange} />
-
-        <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
+        <sp-button
+          style={{ marginTop: "8px" }}
+          onClick={handleMontarLayoutClick}>
           Montar layout
         </sp-button>
       </Theme>

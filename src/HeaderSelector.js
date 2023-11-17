@@ -11,24 +11,13 @@ export default function HeaderSelector({ handleHeaderSelect }) {
     };
 
 
-    <sp-picker label="Label">
-        <sp-label slot="label">Label</sp-label>
-        <sp-menu slot="options">
-            <sp-menu-item value="value1" selected="true">Value 1</sp-menu-item>
-            <sp-menu-item value="value2">Value 2</sp-menu-item>
-            <sp-menu-item value="value3">Value 3</sp-menu-item>
-        </sp-menu>
-    </sp-picker>
-
-
     return (
         <>
-            <Theme theme="dark" scale="medium" color="dark">
-                <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
+                <sp-field-group width={{base: 'size-3000', L: "single-line-width"}}>
                     <div>
                         <sp-field-label for="picker-m" size="m">Header:</sp-field-label>
-                        <sp-picker style={{ width: "45vw", padding: "0" }} id="picker-m" size="m" label="Selection type" placeholder="Selecione o header">
-                            <sp-menu>
+                        <sp-picker id="picker-m" size="m" label="Selection type" placeholder="Selecione o header">
+                            <sp-menu >
                                 <sp-menu-item onClick={() => handleHeaderClick('SB')}>SB</sp-menu-item>
                                 <sp-menu-item disabled onClick={() => handleHeaderClick('CON')}>CON</sp-menu-item>
                                 <sp-menu-divider></sp-menu-divider>
@@ -41,7 +30,6 @@ export default function HeaderSelector({ handleHeaderSelect }) {
                         </sp-picker>
                     </div>
                 </sp-field-group>
-            </Theme>
         </>
     );
 }
