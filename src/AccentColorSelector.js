@@ -31,22 +31,6 @@ export default function AccentColorSelector({ onAccentColorChange }) {
         burgundy: { r: 105, g: 29, b: 63 }
     };
 
-    const [selectedColor, setSelectedColor] = useState("");
-
-    
-    const handleColorClick = (color) => {
-        setSelectedColor(color);
-        const selectedColorInfo = {
-            colorName: color,
-            rgbValues: cores[color],
-        };
-        // Certifique-se de que `onAccentColorChange` está definido antes de chamá-lo
-        if (onAccentColorChange) {
-            onAccentColorChange(selectedColorInfo);
-        }
-    };
-    
-
     const coresRGB = {
         white: "rgb(254, 254, 254)",
         quartz: "rgb(238, 238, 238)",
@@ -76,13 +60,30 @@ export default function AccentColorSelector({ onAccentColorChange }) {
         burgundy: "rgb(105, 29, 63)",
     };
 
+    let [selectedColor, setSelectedColor] = useState("dellBlue");
+
+    const handleColorClick = (color) => {
+        setSelectedColor(color);
+        const selectedColorInfo = {
+            colorName: color,
+            rgbValues: cores[color],
+        };
+        // Certifique-se de que `onAccentColorChange` está definido antes de chamá-lo
+        if (onAccentColorChange) {
+            onAccentColorChange(selectedColorInfo);
+        }
+    };
+
+    console.log("cor selecionada:", selectedColor)
+
+
     return (
         <>
             <Theme theme="dark" scale="medium" color="dark">
                 <div style={{ display: "flex", gap: "0", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", width: "90vw" }}>
                     <span style={{ backgroundColor: coresRGB[selectedColor], width: "40px", height: "40px", borderRadius: "5px", border: "white 1px solid" }}></span>
                     <sp-field-group style={{ width: "80vw", display: "flex", flexDirection: "column", padding: "10", gap: "5px" }}>
-                    <sp-field-label for="accent-color">Accent Color</sp-field-label>
+                        <sp-field-label for="accent-color">Accent Color</sp-field-label>
                         <sp-picker placeholder="Selecione o Accent Color" style={{ display: "flex", flexDirection: "row", width: "100%" }} id="picker-m" size="m" label="Selection type">
                             <sp-menu>
                                 {Object.keys(cores).map((cor) => (

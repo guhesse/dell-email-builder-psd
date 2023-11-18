@@ -18,7 +18,7 @@ export default function FundingSelector({ handleFundingSelect }) {
                     <sp-field-label for="picker-m" size="m">Funding:</sp-field-label>
                     <sp-picker id="picker-m" size="m" label="Selection type" placeholder="Selecione o funding">
                         <sp-menu>
-                            <sp-menu-item onClick={() => handleFundingClick('null')}>No VF</sp-menu-item>
+                            <sp-menu-item onClick={() => handleFundingClick(null)}>No VF</sp-menu-item>
                             <sp-menu-divider></sp-menu-divider>
                             <sp-menu-group>
 
@@ -44,6 +44,20 @@ export default function FundingSelector({ handleFundingSelect }) {
                     </sp-picker>
                 </div>
             </sp-field-group>
+
+            {selectedFunding !== null && (
+                <>
+                    <div>
+                        <sp-field-label for="badge-field">Funding Copy</sp-field-label>
+                        <sp-textfield
+                            style={{ width: "90vw" }}
+                            id="badge-field"
+                            placeholder="Insira o Funding Copy"
+                        ></sp-textfield>
+                    </div>
+                </>
+            )}
+
         </>
     );
 }

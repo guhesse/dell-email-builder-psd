@@ -50,15 +50,21 @@ function App() {
 
   const [selectedColorValues, setSelectedColorValues] = useState(null);
 
+  const [redValue, setRedValue] = useState(6);
+  const [greenValue, setGreenValue] = useState(114);
+  const [blueValue, setBlueValue] = useState(203);
+
   const handleAccentColorChange = (values) => {
     setSelectedColorValues(values);
 
     if (values) {
-      redValue = values.rgbValues.r;
-      greenValue = values.rgbValues.g;
-      blueValue = values.rgbValues.b;
-    }
+      setRedValue(values.rgbValues.r);
+      setGreenValue(values.rgbValues.g);
+      setBlueValue(values.rgbValues.b);
+    } 
   };
+
+  
 
   async function clearAllLayers() {
     const targetFunction = async (executionContext) => {
@@ -206,9 +212,6 @@ function App() {
   // Fim de função de modificar e importar o SSL
 
 
-  var headerHeight = ""; // Inicialmente, a variável está vazia
-
-
   //Função de selecionar o Header
   const [selectedHeader, setSelectedHeader] = useState(null);
 
@@ -264,6 +267,64 @@ function App() {
   };
 
   // Fim de função de selecionar o Header
+
+  //Função de selecionar o Funding
+  const [selectedFunding, setSelectedFunding] = useState(null);
+
+  const handleFundingSelect = async (funding) => {
+    const fundingFilePath = `assets/fundings/${funding}.psd`;
+    const fs = storage.localFileSystem;
+    try {
+      const pluginDir = await fs.getPluginFolder();
+      const fileEntry = await pluginDir.getEntry(fundingFilePath);
+
+
+      const targetFunction = async (executionContext) => {
+        try {
+          await app.open(fileEntry);
+          const secondDocument = app.documents[1];
+          const fundingWidth = secondDocument.width;
+          fundingHeight = secondDocument.height;
+
+
+
+          const batchHeaderCopy = [
+            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+          ];
+          await batchPlay(batchHeaderCopy, {});
+
+          const activeDocument = app.activeDocument;
+          await activeDocument.paste();
+
+          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+          const docWidth = activeDocument.width;
+          const docHeight = activeDocument.height;
+          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fundingWidth / 2) + 40);
+          const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
+
+          pastedGroup.translate(offsetX, offsetY);
+
+          console.log('Header inserido com sucesso!');
+        } catch (error) {
+          console.error('Erro ao inserir o Header:', error);
+        }
+      };
+
+      const options = {
+        commandName: 'Inserir Cabeçalho',
+        interactive: true,
+      };
+
+      await core.executeAsModal(targetFunction, options);
+    } catch (error) {
+      console.error('Erro ao encontrar o arquivo do Header:', error);
+    }
+  };
+  // Fim de função de selecionar o Funding
+
 
   //Função de selecionar o Hero
   const [selectedHero, setSelectedHero] = useState(null);
@@ -341,7 +402,7 @@ function App() {
           const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
-        
+
 
           if (selectedHeader === null) {
             headerHeight = 0;
@@ -372,64 +433,6 @@ function App() {
     }
   };
   // Fim de função de selecionar o Hero
-
-  //Função de selecionar o Funding
-  const [selectedFunding, setSelectedFunding] = useState(null);
-
-  const handleFundingSelect = async (funding) => {
-    const fundingFilePath = `assets/fundings/${funding}.psd`;
-    const fs = storage.localFileSystem;
-    try {
-      const pluginDir = await fs.getPluginFolder();
-      const fileEntry = await pluginDir.getEntry(fundingFilePath);
-
-
-      const targetFunction = async (executionContext) => {
-        try {
-          await app.open(fileEntry);
-          const secondDocument = app.documents[1];
-          const fundingWidth = secondDocument.width;
-          fundingHeight = secondDocument.height;
-
-
-
-          const batchHeaderCopy = [
-            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-          ];
-          await batchPlay(batchHeaderCopy, {});
-
-          const activeDocument = app.activeDocument;
-          await activeDocument.paste();
-
-          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-          const docWidth = activeDocument.width;
-          const docHeight = activeDocument.height;
-          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fundingWidth / 2) + 40);
-          const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
-
-          pastedGroup.translate(offsetX, offsetY);
-
-          console.log('Header inserido com sucesso!');
-        } catch (error) {
-          console.error('Erro ao inserir o Header:', error);
-        }
-      };
-
-      const options = {
-        commandName: 'Inserir Cabeçalho',
-        interactive: true,
-      };
-
-      await core.executeAsModal(targetFunction, options);
-    } catch (error) {
-      console.error('Erro ao encontrar o arquivo do Header:', error);
-    }
-  };
-  // Fim de função de selecionar o Funding
-
 
   //Função de modificar e importar o Plugin
 
@@ -542,12 +545,12 @@ function App() {
             headerHeight = 0;
           } else {
           }
-      
+
           if (selectedHero === null) {
             heroHeight = 0;
           } else {
           }
-      
+
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
           let offsetModules = ((slHeight + 30) + (headerHeight) + (heroHeight + 20)); //- (heroPaddingTop) / 2
@@ -643,8 +646,8 @@ function App() {
     try {
       await clearAllLayers();
       await fitToScreenPre();
-      var slHeight = await sslSelect(); // Obtém slHeight usando sslSelect
-      var headerHeight = await handleHeaderSelect(selectedHeader, slHeight); // Passa slHeight para handleHeaderSelect
+      var slHeight = await sslSelect();
+      var headerHeight = await handleHeaderSelect(selectedHeader, slHeight);
       var fundingHeight = await handleFundingSelect(selectedFunding, slHeight)
       var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight);
       var pluginHeight = await pluginSelect(selectedPlugin, heroHeight, slHeight, headerHeight);
