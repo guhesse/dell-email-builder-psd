@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 export default function PluginSelector({ handlePluginSelect, onPluginCopyChange, onSuperChargerCopyChange }) {
 
-    const [selectedPlugin, setSelectedPlugin] = useState(null);
+    const [selectedPlugin, setSelectedPlugin] = useState('null');
 
     const handlePluginClick = (plugin) => {
         setSelectedPlugin(plugin); // Executa a função passada pelo pai
@@ -59,7 +59,7 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
             <sp-radio-group label="Medium" name="example">
                 <sp-radio onClick={() => handlePluginClick('plugin')}>Plugin</sp-radio>
                 <sp-radio onClick={() => handlePluginClick('supercharger')}>Supercharger</sp-radio>
-                <sp-radio onClick={() => handlePluginClick('null')}>Nenhum</sp-radio>
+                <sp-radio checked={true} onClick={() => handlePluginClick('null')}>Nenhum</sp-radio>
             </sp-radio-group>
 
             {selectedPlugin === 'plugin' && (

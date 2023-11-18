@@ -12,10 +12,33 @@ const { storage } = require('uxp');
 const { batchPlay } = require('photoshop').action;
 
 
-var slHeight = ""
-var headerHeight = ""
-var heroHeight = ""
-var pluginHeight = ""
+
+var slHeight = ""; // Inicialmente, a variável está vazia
+var headerHeight = ""; // Inicialmente, a variável está vazia
+var fundingHeight = ""; // Inicialmente, a variável está vazia
+var heroHeight = ""; // Inicialmente, a variável está vazia
+var pluginHeight = ""; // Inicialmente, a variável está vazia
+
+if (slHeight === null || slHeight === undefined) {
+  slHeight = 0;
+}
+
+
+if (headerHeight === null || headerHeight === undefined) {
+  headerHeight = 0;
+}
+
+
+if (heroHeight === null || heroHeight === undefined) {
+  heroHeight = 0;
+}
+if (fundingHeight === null || fundingHeight === undefined) {
+  fundingHeight = 0;
+}
+if (pluginHeight === null || pluginHeight === undefined) {
+  fundingHeight = 0;
+}
+
 
 var redValue = ""
 var greenValue = ""
@@ -163,8 +186,6 @@ function App() {
           const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (slHeight / 2));
           pastedGroup.translate(offsetX, offsetY);
 
-          await activeDocument.save();
-
           console.log('SSL inserido com sucesso!');
         } catch (error) {
           console.error('Erro ao inserir SSL:', error);
@@ -185,8 +206,12 @@ function App() {
   // Fim de função de modificar e importar o SSL
 
 
+  var headerHeight = ""; // Inicialmente, a variável está vazia
+
+
   //Função de selecionar o Header
   const [selectedHeader, setSelectedHeader] = useState(null);
+
 
   const handleHeaderSelect = async (header) => {
     const headerFilePath = `assets/${header}.psd`;
@@ -195,14 +220,12 @@ function App() {
       const pluginDir = await fs.getPluginFolder();
       const fileEntry = await pluginDir.getEntry(headerFilePath);
 
-
       const targetFunction = async (executionContext) => {
         try {
           await app.open(fileEntry);
           const secondDocument = app.documents[1];
           const headerWidth = secondDocument.width;
           headerHeight = secondDocument.height;
-
 
           const batchHeaderCopy = [
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
@@ -223,8 +246,6 @@ function App() {
 
           pastedGroup.translate(offsetX, offsetY);
 
-          await activeDocument.save();
-
           console.log('Header inserido com sucesso!');
         } catch (error) {
           console.error('Erro ao inserir o Header:', error);
@@ -241,8 +262,8 @@ function App() {
       console.error('Erro ao encontrar o arquivo do Header:', error);
     }
   };
-  // Fim de função de selecionar o Header
 
+  // Fim de função de selecionar o Header
 
   //Função de selecionar o Hero
   const [selectedHero, setSelectedHero] = useState(null);
@@ -320,21 +341,25 @@ function App() {
           const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
-          const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
+        
 
+          if (selectedHeader === null) {
+            headerHeight = 0;
+          } else {
+          }
+
+          const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
           let offsetModules = ((slHeight + 30) + (headerHeight)); //- (heroPaddingTop) / 2
           const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
-          console.log("Offset Y:", offsetY)
-          console.log("Offset Modules", offsetModules)
           pastedGroup.translate(offsetX, offsetY);
 
-          await activeDocument.save();
 
           console.log('Hero inserido com sucesso!');
         } catch (error) {
           console.error('Erro ao inserir o Hero:', error);
         }
       };
+
 
       const options = {
         commandName: 'Inserir Hero',
@@ -347,6 +372,63 @@ function App() {
     }
   };
   // Fim de função de selecionar o Hero
+
+  //Função de selecionar o Funding
+  const [selectedFunding, setSelectedFunding] = useState(null);
+
+  const handleFundingSelect = async (funding) => {
+    const fundingFilePath = `assets/fundings/${funding}.psd`;
+    const fs = storage.localFileSystem;
+    try {
+      const pluginDir = await fs.getPluginFolder();
+      const fileEntry = await pluginDir.getEntry(fundingFilePath);
+
+
+      const targetFunction = async (executionContext) => {
+        try {
+          await app.open(fileEntry);
+          const secondDocument = app.documents[1];
+          const fundingWidth = secondDocument.width;
+          fundingHeight = secondDocument.height;
+
+
+
+          const batchHeaderCopy = [
+            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+          ];
+          await batchPlay(batchHeaderCopy, {});
+
+          const activeDocument = app.activeDocument;
+          await activeDocument.paste();
+
+          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+          const docWidth = activeDocument.width;
+          const docHeight = activeDocument.height;
+          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fundingWidth / 2) + 40);
+          const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
+
+          pastedGroup.translate(offsetX, offsetY);
+
+          console.log('Header inserido com sucesso!');
+        } catch (error) {
+          console.error('Erro ao inserir o Header:', error);
+        }
+      };
+
+      const options = {
+        commandName: 'Inserir Cabeçalho',
+        interactive: true,
+      };
+
+      await core.executeAsModal(targetFunction, options);
+    } catch (error) {
+      console.error('Erro ao encontrar o arquivo do Header:', error);
+    }
+  };
+  // Fim de função de selecionar o Funding
 
 
   //Função de modificar e importar o Plugin
@@ -386,9 +468,6 @@ function App() {
 
     const fs = storage.localFileSystem;
 
-    console.log("Plugin selecionado:", selectedPlugin)
-    console.log("File Path:", pluginFilePath)
-
     try {
       const pluginDir = await fs.getPluginFolder();
       const fileEntry = await pluginDir.getEntry(pluginFilePath);
@@ -401,6 +480,8 @@ function App() {
           const secondDocument = app.documents[1];
           const pluginWidth = secondDocument.width;
           pluginHeight = secondDocument.height;
+
+
 
           const batchChangeColor = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
@@ -455,12 +536,23 @@ function App() {
           const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
+
+
+          if (selectedHeader === null) {
+            headerHeight = 0;
+          } else {
+          }
+      
+          if (selectedHero === null) {
+            heroHeight = 0;
+          } else {
+          }
+      
+
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
           let offsetModules = ((slHeight + 30) + (headerHeight) + (heroHeight + 20)); //- (heroPaddingTop) / 2
           const offsetY = (0 - (docHeight / 2) + (pluginHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
-
-          await activeDocument.save();
 
           console.log('Plugin inserido com sucesso!');
         } catch (error) {
@@ -483,7 +575,27 @@ function App() {
 
   async function fitToScreenPos() {
 
-    const allModulesSizes = ((slHeight + 30) + headerHeight + (heroHeight + 20) + pluginHeight);
+    if (selectedHeader === null) {
+      headerHeight = 0;
+    } else {
+    }
+
+    if (selectedHero === null) {
+      heroHeight = 0;
+    } else {
+    }
+
+    if (selectedPlugin === null) {
+      pluginHeight = 0;
+    } else {
+    }
+
+    console.log("Altura do header:", headerHeight)
+    console.log("Altura do Hero:", heroHeight)
+    console.log("Altura do Plugin:", pluginHeight)
+
+
+    const allModulesSizes = slHeight + 30 + headerHeight + (heroHeight + 20) + pluginHeight;
 
     const targetFunction = async (executionContext) => {
       try {
@@ -524,16 +636,19 @@ function App() {
   };
 
 
+
   const handleMontarLayoutClick = async () => {
+
+
     try {
       await clearAllLayers();
       await fitToScreenPre();
       var slHeight = await sslSelect(); // Obtém slHeight usando sslSelect
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight); // Passa slHeight para handleHeaderSelect
-      var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight);
+      var fundingHeight = await handleFundingSelect(selectedFunding, slHeight)
+      var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight);
       var pluginHeight = await pluginSelect(selectedPlugin, heroHeight, slHeight, headerHeight);
       await fitToScreenPos(slHeight, headerHeight, heroHeight, pluginHeight);
-
 
       console.log('Todas as funções foram executadas com sucesso.');
     } catch (error) {
@@ -548,10 +663,10 @@ function App() {
           onSubjectLineChange={handleSubjectLineChange} />
         <AccentColorSelector
           onAccentColorChange={handleAccentColorChange} />
-        <div style={{display: "flex", flexWrap:"wrap", gap:"10px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
           <HeaderSelector
             handleHeaderSelect={setSelectedHeader} />
-          <FundingSelector></FundingSelector>
+          <FundingSelector handleFundingSelect={setSelectedFunding} ></FundingSelector>
         </div>
         <HeroSelector
           handleHeroSelect={setSelectedHero}
