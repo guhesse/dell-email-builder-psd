@@ -2,12 +2,22 @@ import React, { useState } from 'react';
 import { Theme } from "@swc-react/theme";
 
 
-export default function FundingSelector({ handleFundingSelect }) {
+export default function FundingSelector({ handleFundingSelect, onFundingCopyChange }) {
     const [selectedFunding, setSelectedFunding] = useState(null);
 
     const handleFundingClick = (funding) => {
         setSelectedFunding(funding);
         handleFundingSelect(funding); // Executa a função passada pelo pai (handleHeaderSelect) com o header selecionado
+    };
+
+    const [fundingCopyValue, setFundingCopyValue] = useState(""); // State to store SL value
+
+    const handleFundingCopyChange = (event) => {
+        const value = event.target.value;
+        setFundingCopyValue(value);
+        onFundingCopyChange({
+            fundingCopyValue: value
+        });
     };
 
 
@@ -48,11 +58,13 @@ export default function FundingSelector({ handleFundingSelect }) {
             {selectedFunding !== null && (
                 <>
                     <div>
-                        <sp-field-label for="badge-field">Funding Copy</sp-field-label>
+                        <sp-field-label for="funding-copy-field">Funding Copy</sp-field-label>
                         <sp-textfield
                             style={{ width: "90vw" }}
-                            id="badge-field"
+                            id="funding-copy-field"
                             placeholder="Insira o Funding Copy"
+                            value={fundingCopyValue}
+                            onInput={handleFundingCopyChange}
                         ></sp-textfield>
                     </div>
                 </>

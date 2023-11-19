@@ -61,10 +61,9 @@ function App() {
       setRedValue(values.rgbValues.r);
       setGreenValue(values.rgbValues.g);
       setBlueValue(values.rgbValues.b);
-    } 
+    }
   };
 
-  
 
   async function clearAllLayers() {
     const targetFunction = async (executionContext) => {
@@ -269,7 +268,18 @@ function App() {
   // Fim de função de selecionar o Header
 
   //Função de selecionar o Funding
+
+  const [fundingCopyValues, setFundingCopyValues] = useState(null);
   const [selectedFunding, setSelectedFunding] = useState(null);
+
+  const handleFundingCopyChange = (values) => {
+    setFundingCopyValues(values);
+  };
+
+  const fundingCopyValue = fundingCopyValues?.fundingCopyValue;
+
+  console.log("Funding Copy:", fundingCopyValue)
+
 
   const handleFundingSelect = async (funding) => {
     const fundingFilePath = `assets/fundings/${funding}.psd`;
@@ -277,6 +287,8 @@ function App() {
     try {
       const pluginDir = await fs.getPluginFolder();
       const fileEntry = await pluginDir.getEntry(fundingFilePath);
+
+      console.log("Funding Path:", fundingFilePath)
 
 
       const targetFunction = async (executionContext) => {
@@ -287,14 +299,92 @@ function App() {
           fundingHeight = secondDocument.height;
 
 
+          const batchFundingCopy = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+            {
+              _obj: "set",
+              _target: [
+                {
+                  _ref: "textLayer",
+                  _enum: "ordinal",
+                  _value: "targetEnum"
+                }
+              ],
+              to: {
+                _obj: "textLayer",
+                textKey: fundingCopyValue + "\r" + "Visualize no navegador.",
+                textStyleRange: [
+                  {
+                    _obj: "textStyleRange",
+                    from: 0,
+                    to: fundingCopyValue.length,
+                    textStyle: {
+                      _obj: "textStyle",
+                      fontPostScriptName: "ArialMT",
+                      fontName: "Arial",
+                      fontStyleName: "Regular",
+                      size: {
+                        _unit: "pointsUnit",
+                        _value: 2.4208344268798827
+                      },
+                      impliedFontSize: {
+                        _unit: "pointsUnit",
+                        _value: 2.4208344268798827
+                      },
+                      color: {
+                        _obj: "RGBColor",
+                        red: 86,
+                        green: 86,
+                        blue: 86 // Estilo para o texto até o fundingCopyValue
+                      }
+                    }
+                  },
+                  {
+                    _obj: "textStyleRange",
+                    from: fundingCopyValue.length + 1, // Adicionamos 2 para contar o "\r"
+                    to: fundingCopyValue.length + 1 + "Visualize no navegador.".length,
+                    textStyle: {
+                      _obj: "textStyle",
+                      fontPostScriptName: "ArialMT",
+                      fontName: "Arial",
+                      fontStyleName: "Regular",
+                      size: {
+                        _unit: "pointsUnit",
+                        _value: 2.4208344268798827
+                      },
+                      impliedFontSize: {
+                        _unit: "pointsUnit",
+                        _value: 2.4208344268798827
+                      },
+                      baselineShift: {
+                        _unit: "pointsUnit",
+                        _value: -1.9999999237060546
+                      },
+                      impliedBaselineShift: {
+                        _unit: "pointsUnit",
+                        _value: -1.9999999237060546
+                      },
+                      color: {
+                        _obj: "RGBColor",
+                        red: 6,
+                        green: 114,
+                        blue: 203 // Estilo para o texto após o fundingCopyValue
+                      }
+                    }
+                  }
+                ]
+              },
+              _isCommand: true
+            },
 
-          const batchHeaderCopy = [
+
+
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
           ];
-          await batchPlay(batchHeaderCopy, {});
+          await batchPlay(batchFundingCopy, {});
 
           const activeDocument = app.activeDocument;
           await activeDocument.paste();
@@ -302,7 +392,7 @@ function App() {
           const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
-          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fundingWidth / 2) + 40);
+          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 515);
           const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
 
           pastedGroup.translate(offsetX, offsetY);
@@ -404,13 +494,8 @@ function App() {
           const docHeight = activeDocument.height;
 
 
-          if (selectedHeader === null) {
-            headerHeight = 0;
-          } else {
-          }
-
           const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
-          let offsetModules = ((slHeight + 30) + (headerHeight)); //- (heroPaddingTop) / 2
+          let offsetModules = ((slHeight + 30) + (fundingHeight)); //- (heroPaddingTop) / 2
           const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
 
@@ -484,8 +569,6 @@ function App() {
           const pluginWidth = secondDocument.width;
           pluginHeight = secondDocument.height;
 
-
-
           const batchChangeColor = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redValue, grain: greenValue, blue: blueValue } }, _options: { dialogOptions: "dontDisplay" } }
@@ -541,19 +624,8 @@ function App() {
           const docHeight = activeDocument.height;
 
 
-          if (selectedHeader === null) {
-            headerHeight = 0;
-          } else {
-          }
-
-          if (selectedHero === null) {
-            heroHeight = 0;
-          } else {
-          }
-
-
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
-          let offsetModules = ((slHeight + 30) + (headerHeight) + (heroHeight + 20)); //- (heroPaddingTop) / 2
+          let offsetModules = ((slHeight + 30) + (fundingHeight) + (heroHeight + 20)); //- (heroPaddingTop) / 2
           const offsetY = (0 - (docHeight / 2) + (pluginHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
 
@@ -593,12 +665,7 @@ function App() {
     } else {
     }
 
-    console.log("Altura do header:", headerHeight)
-    console.log("Altura do Hero:", heroHeight)
-    console.log("Altura do Plugin:", pluginHeight)
-
-
-    const allModulesSizes = slHeight + 30 + headerHeight + (heroHeight + 20) + pluginHeight;
+    const allModulesSizes = slHeight + 30 + fundingHeight + (heroHeight + 20) + pluginHeight;
 
     const targetFunction = async (executionContext) => {
       try {
@@ -649,9 +716,9 @@ function App() {
       var slHeight = await sslSelect();
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight);
       var fundingHeight = await handleFundingSelect(selectedFunding, slHeight)
-      var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight);
-      var pluginHeight = await pluginSelect(selectedPlugin, heroHeight, slHeight, headerHeight);
-      await fitToScreenPos(slHeight, headerHeight, heroHeight, pluginHeight);
+      var heroHeight = await handleHeroSelect(selectedHero, slHeight, fundingHeight, fundingHeight);
+      var pluginHeight = await pluginSelect(selectedPlugin, heroHeight, slHeight, fundingHeight);
+      await fitToScreenPos(slHeight, fundingHeight, heroHeight, pluginHeight);
 
       console.log('Todas as funções foram executadas com sucesso.');
     } catch (error) {
@@ -669,7 +736,11 @@ function App() {
         <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
           <HeaderSelector
             handleHeaderSelect={setSelectedHeader} />
-          <FundingSelector handleFundingSelect={setSelectedFunding} ></FundingSelector>
+          <FundingSelector
+            handleFundingSelect={setSelectedFunding}
+            onFundingCopyChange={handleFundingCopyChange}>
+
+          </FundingSelector>
         </div>
         <HeroSelector
           handleHeroSelect={setSelectedHero}

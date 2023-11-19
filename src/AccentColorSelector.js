@@ -74,9 +74,6 @@ export default function AccentColorSelector({ onAccentColorChange }) {
         }
     };
 
-    console.log("cor selecionada:", selectedColor)
-
-
     return (
         <>
             <Theme theme="dark" scale="medium" color="dark">
