@@ -1,0 +1,53 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: normal;
+            align-content: stretch;
+            width: 100%;
+            height: 100%;
+        }
+
+        .flex-items:nth-child(1) {
+            display: inline-grid;
+            /* (1) */
+            grid-template-columns: repeat(auto-fit, 100px);
+            /* 100px = column width - (2) */
+            min-width: 50vw;
+            background-color: lightcoral;
+        }
+
+        .flex-items {
+            display: inline-grid;
+            /* (1) */
+            grid-template-columns: repeat(auto-fit, 100px);
+            /* 100px = column width - (2) */
+            min-width: 50vw;
+            background-color: lightgreen;
+        }
+    </style>
+
+    <div class="flex-container">
+        <div class="flex-items">aaaa</div>
+        <div class="flex-items">vvvvv</div>
+        <div class="flex-items">cccc</div>
+    </div>
+</body>
+
+</html>

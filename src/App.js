@@ -278,9 +278,6 @@ function App() {
 
   const fundingCopyValue = fundingCopyValues?.fundingCopyValue;
 
-  console.log("Funding Copy:", fundingCopyValue)
-
-
   const handleFundingSelect = async (funding) => {
     const fundingFilePath = `assets/fundings/${funding}.psd`;
     const fs = storage.localFileSystem;
@@ -430,6 +427,30 @@ function App() {
   const subHeadlineValue = heroCopyValues?.subHeadlineValue;
 
 
+  function formatHeadlineCopy(text) {
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  }
+
+  function limitCharsPerLine(text, limit) {
+    const words = text.split(' ');
+    let currentLine = '';
+    let result = '';
+  
+    for (const word of words) {
+      if ((currentLine + word).length <= limit) {
+        currentLine += (currentLine === '' ? '' : ' ') + word;
+      } else {
+        result += (result === '' ? '' : '\r') + currentLine;
+        currentLine = word;
+      }
+    }
+  
+    result += (result === '' ? '' : '\r') + currentLine;
+  
+    return result;
+  }
+
+
   const handleHeroSelect = async (hero) => {
     const heroFilePath = `assets/heros/${hero}.psd`;
     const fs = storage.localFileSystem;
@@ -463,6 +484,10 @@ function App() {
             },
           ];
 
+          const formattedHeadlineValue = limitCharsPerLine(headlineValue ? formatHeadlineCopy(headlineValue) : '', 20);
+          const formattedSubHeadlineValue = limitCharsPerLine(subHeadlineValue || '', 40);
+        
+
           await batchPlay(batchChangeColor, {});
 
           const batchHeroCopy = [
@@ -471,20 +496,35 @@ function App() {
 
             { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${badgeValue}`, } },
 
+            { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Badge" },], },
+
             { _obj: "select", _target: [{ _ref: "layer", _name: "Headline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
 
-            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${headlineValue}`, } },
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${formattedHeadlineValue}`, } },
+
+            { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Headline" },], },
 
             { _obj: "select", _target: [{ _ref: "layer", _name: "Subheadline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
 
-            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${subHeadlineValue}`, } },
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${formattedSubHeadlineValue}`, } },
+
+            { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Subheadline" },], },
 
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
           ];
-          await batchPlay(batchHeroCopy, {});
+          // await batchPlay(batchHeroCopy, {});
+
+          const result = await batchPlay(batchHeroCopy, {});
+          const boundingBoxBadge = result[2].boundingBox;
+          const boundingBoxHeadline = result[5].boundingBox;
+          const boundingBoxSubHeadline = result[8].boundingBox;
+          console.log("Bounding box do Badge", boundingBoxBadge);
+          console.log("Bounding box do Headline", boundingBoxHeadline);
+          console.log("Bounding box do Headline", boundingBoxSubHeadline);
+
 
           const activeDocument = app.activeDocument;
           await activeDocument.paste();
@@ -494,11 +534,16 @@ function App() {
           const docHeight = activeDocument.height;
 
 
+          if (selectedFunding === null) {
+            fundingHeight = 0;
+          } else {
+          }
+
+
           const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
           let offsetModules = ((slHeight + 30) + (fundingHeight)); //- (heroPaddingTop) / 2
           const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
-
 
           console.log('Hero inserido com sucesso!');
         } catch (error) {
@@ -623,6 +668,16 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
+          if (selectedFunding === null) {
+            fundingHeight = 0;
+          } else {
+          }
+
+          if (selectedHero === null) {
+            heroHeight = 0;
+          } else {
+          }
+
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
           let offsetModules = ((slHeight + 30) + (fundingHeight) + (heroHeight + 20)); //- (heroPaddingTop) / 2
@@ -649,6 +704,11 @@ function App() {
   // Fim de função de modificar e importar o Plugin
 
   async function fitToScreenPos() {
+
+    if (selectedFunding === null) {
+      fundingHeight = 0;
+    } else {
+    }
 
     if (selectedHeader === null) {
       headerHeight = 0;
