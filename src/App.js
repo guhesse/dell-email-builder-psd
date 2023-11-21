@@ -299,83 +299,9 @@ function App() {
           const batchFundingCopy = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
             {
-              _obj: "set",
-              _target: [
-                {
-                  _ref: "textLayer",
-                  _enum: "ordinal",
-                  _value: "targetEnum"
-                }
-              ],
-              to: {
-                _obj: "textLayer",
-                textKey: fundingCopyValue + "\r" + "Visualize no navegador.",
-                textStyleRange: [
-                  {
-                    _obj: "textStyleRange",
-                    from: 0,
-                    to: fundingCopyValue.length,
-                    textStyle: {
-                      _obj: "textStyle",
-                      fontPostScriptName: "ArialMT",
-                      fontName: "Arial",
-                      fontStyleName: "Regular",
-                      size: {
-                        _unit: "pointsUnit",
-                        _value: 2.4208344268798827
-                      },
-                      impliedFontSize: {
-                        _unit: "pointsUnit",
-                        _value: 2.4208344268798827
-                      },
-                      color: {
-                        _obj: "RGBColor",
-                        red: 86,
-                        green: 86,
-                        blue: 86 // Estilo para o texto até o fundingCopyValue
-                      }
-                    }
-                  },
-                  {
-                    _obj: "textStyleRange",
-                    from: fundingCopyValue.length + 1, // Adicionamos 2 para contar o "\r"
-                    to: fundingCopyValue.length + 1 + "Visualize no navegador.".length,
-                    textStyle: {
-                      _obj: "textStyle",
-                      fontPostScriptName: "ArialMT",
-                      fontName: "Arial",
-                      fontStyleName: "Regular",
-                      size: {
-                        _unit: "pointsUnit",
-                        _value: 2.4208344268798827
-                      },
-                      impliedFontSize: {
-                        _unit: "pointsUnit",
-                        _value: 2.4208344268798827
-                      },
-                      baselineShift: {
-                        _unit: "pointsUnit",
-                        _value: -1.9999999237060546
-                      },
-                      impliedBaselineShift: {
-                        _unit: "pointsUnit",
-                        _value: -1.9999999237060546
-                      },
-                      color: {
-                        _obj: "RGBColor",
-                        red: 6,
-                        green: 114,
-                        blue: 203 // Estilo para o texto após o fundingCopyValue
-                      }
-                    }
-                  }
-                ]
-              },
-              _isCommand: true
+              _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+              to: { _obj: "textLayer", textKey: fundingCopyValue + "\r" + "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: fundingCopyValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, color: { _obj: "RGBColor", red: 86, green: 86, blue: 86 } } }, { _obj: "textStyleRange", from: fundingCopyValue.length + 1, to: fundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true
             },
-
-
-
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
@@ -435,7 +361,7 @@ function App() {
     const words = text.split(' ');
     let currentLine = '';
     let result = '';
-  
+
     for (const word of words) {
       if ((currentLine + word).length <= limit) {
         currentLine += (currentLine === '' ? '' : ' ') + word;
@@ -444,9 +370,9 @@ function App() {
         currentLine = word;
       }
     }
-  
+
     result += (result === '' ? '' : '\r') + currentLine;
-  
+
     return result;
   }
 
@@ -476,55 +402,210 @@ function App() {
 
           const batchChangeColor = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" }, },
-            {
-              _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },],
-              to: {
-                _obj: "textStyle", color: { _obj: "RGBColor", red: redValue, grain: greenValue, blue: blueValue },
-              }, _options: { dialogOptions: "dontDisplay" },
-            },
+            { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: redValue, grain: greenValue, blue: blueValue }, }, _options: { dialogOptions: "dontDisplay" }, },
           ];
 
           const formattedHeadlineValue = limitCharsPerLine(headlineValue ? formatHeadlineCopy(headlineValue) : '', 20);
           const formattedSubHeadlineValue = limitCharsPerLine(subHeadlineValue || '', 40);
-        
 
           await batchPlay(batchChangeColor, {});
 
-          const batchHeroCopy = [
-
+          const ChangeHeroCopy = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-
             { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${badgeValue}`, } },
-
             { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Badge" },], },
-
             { _obj: "select", _target: [{ _ref: "layer", _name: "Headline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-
             { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${formattedHeadlineValue}`, } },
-
-            { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Headline" },], },
-
             { _obj: "select", _target: [{ _ref: "layer", _name: "Subheadline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-
             { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${formattedSubHeadlineValue}`, } },
+          ];
 
+          const resultBoundingBoxBadge = await batchPlay(ChangeHeroCopy, {});
+          const boundingBoxBadge = resultBoundingBoxBadge[2].boundingBox;
+          const headlinePadding = 30;
+          const newHeadlinePosition = boundingBoxBadge.height._value + headlinePadding;
+
+          const offsetHeadline = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Headline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "move", _target: [{ _ref: "layer", _name: "Headline", }], makeVisible: false, layerID: [2125], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newHeadlinePosition, } }, _options: { dialogOptions: "dontDisplay" }, },
+            { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Headline" },], },];
+
+          const resultHeadlineBoundingBox = await batchPlay(offsetHeadline, {});
+          const boundingBoxHeadline = resultHeadlineBoundingBox[2].boundingBox;
+          const subheadlinePadding = headlinePadding + 30;
+          const newSubheadlinePosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + subheadlinePadding;
+
+          console.log("new subheadlineposition:", newSubheadlinePosition)
+
+          const offsetSubheadline = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Subheadline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "move", _target: [{ _ref: "layer", _name: "Subheadline", }], makeVisible: false, layerID: [2125], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newSubheadlinePosition, } }, _options: { dialogOptions: "dontDisplay" }, },
             { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Subheadline" },], },
+          ];
 
+          const resultSubheadlineBoundingBox = await batchPlay(offsetSubheadline, {});
+          const boundingBoxSubheadline = resultSubheadlineBoundingBox[2].boundingBox;
+          const productPadding = subheadlinePadding + 40;
+          const newProductPosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + boundingBoxSubheadline.height._value + productPadding;
+
+          const offsetProduct = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Product" }], makeVisible: false, layerID: [9790], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Specs / Text / Carbon" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [9780, 9781, 9782, 9783, 9784, 9787, 9788, 9789, 9785, 9790], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Product" }], makeVisible: false, layerID: [9834], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "move", _target: [{ _ref: "layer", _name: "Product", }], makeVisible: false, layerID: [9834], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newProductPosition, } }, _options: { dialogOptions: "dontDisplay" }, },
+            { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Product" },], },
+          ];
+
+          const resultProductBoundingBox = await batchPlay(offsetProduct, {});
+          const boundingBoxProduct = resultProductBoundingBox[5].bounds;
+          const ctaPadding = productPadding + 30;
+          const newCtaPosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + boundingBoxSubheadline.height._value + boundingBoxProduct.height._value + ctaPadding;
+
+          const offsetCta = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [9833], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Button / Outline / Carbon" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [9821, 9822, 9823, 9825, 9826, 9827, 9828, 9830, 9831, 9832, 9833], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [9845], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "move", _target: [{ _ref: "layer", _name: "CTA", }], makeVisible: false, layerID: [9845], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newCtaPosition, } }, _options: { dialogOptions: "dontDisplay" }, },
+            { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "CTA" },], },
+          ];
+
+          const resultCtaBoundingBox = await batchPlay(offsetCta, {});
+          const boundingBoxCta = resultCtaBoundingBox[5].bounds;
+          const finalCropValue = boundingBoxCta.bottom._value + 20;
+
+          const finalCrop = [
+            {
+              _obj: "make",
+              _target: [
+                {
+                  _ref: "contentLayer"
+                }
+              ],
+              using: {
+                _obj: "contentLayer",
+                type: {
+                  _obj: "solidColorLayer",
+                  color: {
+                    _obj: "RGBColor",
+                    red: 255,
+                    grain: 255,
+                    blue: 255
+                  }
+                },
+                shape: {
+                  _obj: "rectangle",
+                  unitValueQuadVersion: 1,
+                  top: {
+                    _unit: "pixelsUnit",
+                    _value: 0
+                  },
+                  left: {
+                    _unit: "pixelsUnit",
+                    _value: 0
+                  },
+                  bottom: {
+                    _unit: "pixelsUnit",
+                    _value: finalCropValue
+                  },
+                  right: {
+                    _unit: "pixelsUnit",
+                    _value: 600
+                  },
+                  topRight: {
+                    _unit: "pixelsUnit",
+                    _value: 0
+                  },
+                  topLeft: {
+                    _unit: "pixelsUnit",
+                    _value: 0
+                  },
+                  bottomLeft: {
+                    _unit: "pixelsUnit",
+                    _value: 0
+                  },
+                  bottomRight: {
+                    _unit: "pixelsUnit",
+                    _value: 0
+                  }
+                },
+              },
+              layerID: 9901,
+              _options: {
+                dialogOptions: "dontDisplay"
+              }
+            },
+            {
+              _obj: "select",
+              _target: [
+                {
+                  _ref: "layer",
+                  _name: "Rectangle 1"
+                }
+              ],
+              makeVisible: false,
+              layerID: [
+                9891
+              ],
+              _options: {
+                dialogOptions: "dontDisplay"
+              }
+            },
+            {
+              _obj: "set",
+              _target: [
+                {
+                  _ref: "layer",
+                  _enum: "ordinal",
+                  _value: "targetEnum"
+                }
+              ],
+              to: {
+                _obj: "layer",
+                name: "Background"
+              },
+              _options: {
+                dialogOptions: "dontDisplay"
+              }
+            },
+            {
+              _obj: "move",
+              _target: [
+                {
+                  _ref: "layer",
+                  _enum: "ordinal",
+                  _value: "targetEnum"
+                }
+              ],
+              to: {
+                _ref: "layer",
+                _index: 0
+              },
+              adjustment: false,
+              version: 5,
+              layerID: [
+                9891
+              ],
+              _options: {
+                dialogOptions: "dontDisplay"
+              }
+            },
+            { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
+          ]
+
+          await batchPlay(finalCrop, {});
+
+          const copyAllHero = [
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-          ];
-          // await batchPlay(batchHeroCopy, {});
+          ]
 
-          const result = await batchPlay(batchHeroCopy, {});
-          const boundingBoxBadge = result[2].boundingBox;
-          const boundingBoxHeadline = result[5].boundingBox;
-          const boundingBoxSubHeadline = result[8].boundingBox;
-          console.log("Bounding box do Badge", boundingBoxBadge);
-          console.log("Bounding box do Headline", boundingBoxHeadline);
-          console.log("Bounding box do Headline", boundingBoxSubHeadline);
-
+          await batchPlay(copyAllHero, {});
 
           const activeDocument = app.activeDocument;
           await activeDocument.paste();
@@ -538,8 +619,9 @@ function App() {
             fundingHeight = 0;
           } else {
           }
+          
 
-
+          console.log("slheihgt", slHeight)
           const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
           let offsetModules = ((slHeight + 30) + (fundingHeight)); //- (heroPaddingTop) / 2
           const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
@@ -739,8 +821,6 @@ function App() {
         ]
 
         await batchPlay(batchCropDocument, {});
-
-        console.log(batchCropDocument[2].to.bottom._value);
 
         const batchZoomFit = [
 
