@@ -95,10 +95,7 @@ function App() {
       try {
 
         const batchDefineBaseBackground = [
-          {
-            _obj: "set", _target: [{ _ref: "color", _property: "backgroundColor" }],
-            to: { _obj: "HSBColorClass", hue: { _unit: "angleUnit", _value: 0 }, saturation: 0, brightness: 100 }, source: "photoshopPicker", _options: { dialogOptions: "dontDisplay" }
-          }
+          { _obj: "set", _target: [{ _ref: "color", _property: "backgroundColor" }], to: { _obj: "HSBColorClass", hue: { _unit: "angleUnit", _value: 0 }, saturation: 0, brightness: 100 }, source: "photoshopPicker", _options: { dialogOptions: "dontDisplay" } }
         ]
 
         await batchPlay(batchDefineBaseBackground, {});
@@ -107,9 +104,7 @@ function App() {
 
           { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
           { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-          {
-            _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 5000.223315669948 }, right: { _unit: "pixelsUnit", _value: 650 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" }
-          }
+          { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 5000.223315669948 }, right: { _unit: "pixelsUnit", _value: 650 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
         ]
 
         await batchPlay(batchCropDocument, {});
@@ -152,7 +147,7 @@ function App() {
   const sslValue = subjectLineValues?.sslValue;
 
   const sslSelect = async () => {
-    const sslFilePath = `assets/NON-LAYOUT_CONTENT.psd`;
+    const sslFilePath = `assets/sl-ssl/SL & SSL.psd`;
     const fs = storage.localFileSystem;
 
     try {
@@ -216,7 +211,7 @@ function App() {
 
 
   const handleHeaderSelect = async (header) => {
-    const headerFilePath = `assets/${header}.psd`;
+    const headerFilePath = `assets/headers/${header}.psd`;
     const fs = storage.localFileSystem;
     try {
       const pluginDir = await fs.getPluginFolder();
@@ -298,15 +293,13 @@ function App() {
 
           const batchFundingCopy = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-            {
-              _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
-              to: { _obj: "textLayer", textKey: fundingCopyValue + "\r" + "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: fundingCopyValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, color: { _obj: "RGBColor", red: 86, green: 86, blue: 86 } } }, { _obj: "textStyleRange", from: fundingCopyValue.length + 1, to: fundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true
-            },
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: fundingCopyValue + "\r" + "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: fundingCopyValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, color: { _obj: "RGBColor", red: 86, green: 86, blue: 86 } } }, { _obj: "textStyleRange", from: fundingCopyValue.length + 1, to: fundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
           ];
+
           await batchPlay(batchFundingCopy, {});
 
           const activeDocument = app.activeDocument;
@@ -467,122 +460,10 @@ function App() {
           const finalCropValue = boundingBoxCta.bottom._value + 20;
 
           const finalCrop = [
-            {
-              _obj: "make",
-              _target: [
-                {
-                  _ref: "contentLayer"
-                }
-              ],
-              using: {
-                _obj: "contentLayer",
-                type: {
-                  _obj: "solidColorLayer",
-                  color: {
-                    _obj: "RGBColor",
-                    red: 255,
-                    grain: 255,
-                    blue: 255
-                  }
-                },
-                shape: {
-                  _obj: "rectangle",
-                  unitValueQuadVersion: 1,
-                  top: {
-                    _unit: "pixelsUnit",
-                    _value: 0
-                  },
-                  left: {
-                    _unit: "pixelsUnit",
-                    _value: 0
-                  },
-                  bottom: {
-                    _unit: "pixelsUnit",
-                    _value: finalCropValue
-                  },
-                  right: {
-                    _unit: "pixelsUnit",
-                    _value: 600
-                  },
-                  topRight: {
-                    _unit: "pixelsUnit",
-                    _value: 0
-                  },
-                  topLeft: {
-                    _unit: "pixelsUnit",
-                    _value: 0
-                  },
-                  bottomLeft: {
-                    _unit: "pixelsUnit",
-                    _value: 0
-                  },
-                  bottomRight: {
-                    _unit: "pixelsUnit",
-                    _value: 0
-                  }
-                },
-              },
-              layerID: 9901,
-              _options: {
-                dialogOptions: "dontDisplay"
-              }
-            },
-            {
-              _obj: "select",
-              _target: [
-                {
-                  _ref: "layer",
-                  _name: "Rectangle 1"
-                }
-              ],
-              makeVisible: false,
-              layerID: [
-                9891
-              ],
-              _options: {
-                dialogOptions: "dontDisplay"
-              }
-            },
-            {
-              _obj: "set",
-              _target: [
-                {
-                  _ref: "layer",
-                  _enum: "ordinal",
-                  _value: "targetEnum"
-                }
-              ],
-              to: {
-                _obj: "layer",
-                name: "Background"
-              },
-              _options: {
-                dialogOptions: "dontDisplay"
-              }
-            },
-            {
-              _obj: "move",
-              _target: [
-                {
-                  _ref: "layer",
-                  _enum: "ordinal",
-                  _value: "targetEnum"
-                }
-              ],
-              to: {
-                _ref: "layer",
-                _index: 0
-              },
-              adjustment: false,
-              version: 5,
-              layerID: [
-                9891
-              ],
-              _options: {
-                dialogOptions: "dontDisplay"
-              }
-            },
-            { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
           ]
@@ -613,7 +494,7 @@ function App() {
             fundingHeight = 0;
           } else {
           }
-          
+
 
           console.log("slheihgt", slHeight)
           const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
@@ -701,17 +582,12 @@ function App() {
 
           if (selectedPlugin === 'supercharger') {
             batchPluginChange = [
-
-
               { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${leftCopyValue}`, } },
-
               { _obj: "select", _target: [{ _ref: "layer", _name: "2" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${middleCopyValue}`, } },
-
               { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${rightCopyValue}`, } },
-
               { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
               { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
@@ -719,10 +595,8 @@ function App() {
             ];
           } else if (selectedPlugin === 'plugin') {
             batchPluginChange = [
-
               { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${pluginCopyValue}`, } },
-
               { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
               { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
@@ -806,21 +680,16 @@ function App() {
     const targetFunction = async (executionContext) => {
       try {
         const batchCropDocument = [
-
           { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
           { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-          {
-            _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: parseFloat(allModulesSizes) }, right: { _unit: "pixelsUnit", _value: 650 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" }
-          }
+          { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: parseFloat(allModulesSizes) }, right: { _unit: "pixelsUnit", _value: 650 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
         ]
 
         await batchPlay(batchCropDocument, {});
 
         const batchZoomFit = [
 
-          {
-            _obj: "select", _target: [{ _ref: "menuItemClass", _enum: "menuItemType", _value: "fitOnScreen", },], _options: { ialogOptions: "dontDisplay", },
-          },];
+          { _obj: "select", _target: [{ _ref: "menuItemClass", _enum: "menuItemType", _value: "fitOnScreen", },], _options: { ialogOptions: "dontDisplay", }, },];
 
         // Ajuste para "wait" para aguardar a conclusão do comando
         await batchPlay(batchZoomFit, {});
@@ -867,15 +736,12 @@ function App() {
           onSubjectLineChange={handleSubjectLineChange} />
         <AccentColorSelector
           onAccentColorChange={handleAccentColorChange} />
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-          <HeaderSelector
-            handleHeaderSelect={setSelectedHeader} />
-          <FundingSelector
-            handleFundingSelect={setSelectedFunding}
-            onFundingCopyChange={handleFundingCopyChange}>
-
-          </FundingSelector>
-        </div>
+        <HeaderSelector
+          handleHeaderSelect={setSelectedHeader} />
+        <FundingSelector
+          handleFundingSelect={setSelectedFunding}
+          onFundingCopyChange={handleFundingCopyChange}>
+        </FundingSelector>
         <HeroSelector
           handleHeroSelect={setSelectedHero}
           onHeroCopyChange={handleHeroCopyChange} />
