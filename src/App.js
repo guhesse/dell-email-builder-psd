@@ -389,16 +389,7 @@ function App() {
         try {
           await app.open(fileEntry);
           const secondDocument = app.documents[1];
-          const heroWidth = secondDocument.width;
-          heroHeight = secondDocument.height;
 
-          let heroPaddingTop = ""
-
-          if (heroHeight > 1000) {
-            heroPaddingTop = ((heroHeight - 1000) / 2);
-          } else {
-            heroPaddingTop = 0; // Atribui 0 se headerHeight for menor ou igual a 1000
-          };
 
           const batchChangeColor = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" }, },
@@ -597,6 +588,9 @@ function App() {
           ]
 
           await batchPlay(finalCrop, {});
+
+          const heroWidth = secondDocument.width;
+          heroHeight = secondDocument.height;
 
           const copyAllHero = [
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
