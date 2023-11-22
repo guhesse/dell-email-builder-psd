@@ -422,7 +422,7 @@ function App() {
           ];
 
 
-          
+
           const formattedHeadlineValue = limitCharsPerLine(headlineValue ? formatHeadlineCopy(headlineValue) : '', 20);
           const formattedSubHeadlineValue = limitCharsPerLine(subHeadlineValue || '', 40);
 
@@ -595,6 +595,12 @@ function App() {
       const pluginDir = await fs.getPluginFolder();
       const fileEntry = await pluginDir.getEntry(pluginFilePath);
 
+      const formattedPluginCopyValue = limitCharsPerLine(pluginCopyValue || '', 50);
+      const formattedleftCopyValue = limitCharsPerLine(leftCopyValue || '', 13);
+      const formattedMiddleCopyValue = limitCharsPerLine(middleCopyValue || '', 13);
+      const formattedRightCopyValue = limitCharsPerLine(rightCopyValue || '', 13);
+
+
 
       const targetFunction = async (executionContext) => {
         try {
@@ -616,11 +622,14 @@ function App() {
           if (selectedPlugin === 'supercharger') {
             batchPluginChange = [
               { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${leftCopyValue}`, } },
+              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedleftCopyValue } },
               { _obj: "select", _target: [{ _ref: "layer", _name: "2" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${middleCopyValue}`, } },
+              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedMiddleCopyValue } },
               { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${rightCopyValue}`, } },
+              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedRightCopyValue } },
+              { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [3402], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: true, _options: { dialogOptions: "dontDisplay" } },
               { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
               { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
@@ -629,7 +638,10 @@ function App() {
           } else if (selectedPlugin === 'plugin') {
             batchPluginChange = [
               { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${pluginCopyValue}`, } },
+              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedPluginCopyValue } },
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3333], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersH" }, alignToCanvas: true, _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: true, _options: { dialogOptions: "dontDisplay" } },
               { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
               { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
