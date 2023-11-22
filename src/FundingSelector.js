@@ -31,7 +31,6 @@ export default function FundingSelector({ handleFundingSelect, onFundingCopyChan
                             <sp-menu-item onClick={() => handleFundingClick(null)}>No VF</sp-menu-item>
                             <sp-menu-divider></sp-menu-divider>
                             <sp-menu-group>
-
                                 <sp-menu-item onClick={() => handleFundingClick('win11')}>Windows 11</sp-menu-item>
                                 <sp-menu-item disabled onClick={() => handleFundingClick('ms365')}>Microsoft 365</sp-menu-item>
                                 <sp-menu-item disabled onClick={() => handleFundingClick('msserver')}>Microsoft Server</sp-menu-item>

@@ -5,6 +5,7 @@ import AccentColorSelector from './AccentColorSelector.js';
 import HeroSelector from './HeroSelector.js';
 import PluginSelector from './PluginSelector.js';
 import FundingSelector from './FundingSelector.js';
+import FpoSelector from './fpoSelector.js';
 
 import { Theme } from "@swc-react/theme";
 const { core, app } = require('photoshop');
@@ -13,22 +14,19 @@ const { batchPlay } = require('photoshop').action;
 
 
 
-var slHeight = ""; // Inicialmente, a variável está vazia
-var headerHeight = ""; // Inicialmente, a variável está vazia
-var fundingHeight = ""; // Inicialmente, a variável está vazia
-var heroHeight = ""; // Inicialmente, a variável está vazia
-var pluginHeight = ""; // Inicialmente, a variável está vazia
+var slHeight = "";
+var headerHeight = "";
+var fundingHeight = "";
+var heroHeight = "";
+var pluginHeight = "";
+var fpoHeight = ""
 
 if (slHeight === null || slHeight === undefined) {
   slHeight = 0;
 }
-
-
 if (headerHeight === null || headerHeight === undefined) {
   headerHeight = 0;
 }
-
-
 if (heroHeight === null || heroHeight === undefined) {
   heroHeight = 0;
 }
@@ -36,7 +34,30 @@ if (fundingHeight === null || fundingHeight === undefined) {
   fundingHeight = 0;
 }
 if (pluginHeight === null || pluginHeight === undefined) {
-  fundingHeight = 0;
+  pluginHeight = 0;
+}
+
+if (fpoHeight === null || fpoHeight === undefined) {
+  fpoHeight = 0;
+}
+
+function limitCharsPerLine(text, limit) {
+  const words = text.split(' ');
+  let currentLine = '';
+  let result = '';
+
+  for (const word of words) {
+    if ((currentLine + word).length <= limit) {
+      currentLine += (currentLine === '' ? '' : ' ') + word;
+    } else {
+      result += (result === '' ? '' : '\r') + currentLine;
+      currentLine = word;
+    }
+  }
+
+  result += (result === '' ? '' : '\r') + currentLine;
+
+  return result;
 }
 
 
@@ -271,7 +292,7 @@ function App() {
     setFundingCopyValues(values);
   };
 
-  const fundingCopyValue = fundingCopyValues?.fundingCopyValue;
+  const fundingCopyValue = fundingCopyValues?.fundingCopyValue || '';
 
   const handleFundingSelect = async (funding) => {
     const fundingFilePath = `assets/fundings/${funding}.psd`;
@@ -280,27 +301,56 @@ function App() {
       const pluginDir = await fs.getPluginFolder();
       const fileEntry = await pluginDir.getEntry(fundingFilePath);
 
-      console.log("Funding Path:", fundingFilePath)
-
 
       const targetFunction = async (executionContext) => {
         try {
           await app.open(fileEntry);
           const secondDocument = app.documents[1];
-          const fundingWidth = secondDocument.width;
+          // const fundingWidth = secondDocument.width;
           fundingHeight = secondDocument.height;
 
+          const formattedfundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 25);
 
-          const batchFundingCopy = [
-            { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: fundingCopyValue + "\r" + "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: fundingCopyValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, color: { _obj: "RGBColor", red: 86, green: 86, blue: 86 } } }, { _obj: "textStyleRange", from: fundingCopyValue.length + 1, to: fundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
+          let batchFundingCopy;
+
+          if (fundingCopyValue === '') {
+            batchFundingCopy = [
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: formattedfundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
+              { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Funding Copy" },], },
+            ]
+          } else {
+            batchFundingCopy = [
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedfundingCopyValue + "\r" + "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: formattedfundingCopyValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, color: { _obj: "RGBColor", red: 86, green: 86, blue: 86 } } }, { _obj: "textStyleRange", from: formattedfundingCopyValue.length + 1, to: fundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
+              { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Funding Copy" },], },
+            ]
+          };
+
+          const resultFundingTextBoundingBox = await batchPlay(batchFundingCopy, {});
+          const boundingBoxFundingText = resultFundingTextBoundingBox[2].bounds;
+          const finalCropValue = boundingBoxFundingText.bottom._value;
+
+          const finalCrop = [
+            { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 200 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 200 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
+          ]
+          await batchPlay(finalCrop, {});
+
+          const selectAndCopy = [
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-          ];
+          ]
+          await batchPlay(selectAndCopy, {});
 
-          await batchPlay(batchFundingCopy, {});
+
+
 
           const activeDocument = app.activeDocument;
           await activeDocument.paste();
@@ -350,24 +400,6 @@ function App() {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   }
 
-  function limitCharsPerLine(text, limit) {
-    const words = text.split(' ');
-    let currentLine = '';
-    let result = '';
-
-    for (const word of words) {
-      if ((currentLine + word).length <= limit) {
-        currentLine += (currentLine === '' ? '' : ' ') + word;
-      } else {
-        result += (result === '' ? '' : '\r') + currentLine;
-        currentLine = word;
-      }
-    }
-
-    result += (result === '' ? '' : '\r') + currentLine;
-
-    return result;
-  }
 
 
   const handleHeroSelect = async (hero) => {
@@ -389,6 +421,8 @@ function App() {
             { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: redValue, grain: greenValue, blue: blueValue }, }, _options: { dialogOptions: "dontDisplay" }, },
           ];
 
+
+          
           const formattedHeadlineValue = limitCharsPerLine(headlineValue ? formatHeadlineCopy(headlineValue) : '', 20);
           const formattedSubHeadlineValue = limitCharsPerLine(subHeadlineValue || '', 40);
 
@@ -419,7 +453,6 @@ function App() {
           const subheadlinePadding = headlinePadding + 30;
           const newSubheadlinePosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + subheadlinePadding;
 
-          console.log("new subheadlineposition:", newSubheadlinePosition)
 
           const offsetSubheadline = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Subheadline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
@@ -653,6 +686,93 @@ function App() {
 
   // Fim de função de modificar e importar o Plugin
 
+  // Função de importar o FPO
+
+  const [selectedFpoValue, setSelectedFpoValue] = useState(null);
+  const [selectedFpoSegment, setSelectedFpoSegment] = useState("sb");
+
+  const handleFpoSelect = async () => {
+    try {
+
+      const fs = storage.localFileSystem;
+      const pluginDir = await fs.getPluginFolder();
+
+      let fpoFilePath;
+
+      for (let i = 1; i <= selectedFpoValue; i++) {
+        fpoFilePath = `assets/fpo/${selectedFpoSegment}/${i}.psd`;
+      }
+
+      const fileEntry = await pluginDir.getEntry(fpoFilePath)
+      console.log("File Path do FPO", fpoFilePath)
+
+      const targetFunction = async (executionContext) => {
+        try {
+          await app.open(fileEntry);
+          const secondDocument = app.documents[1];
+          const fpoWidth = secondDocument.width;
+          fpoHeight = secondDocument.height;
+
+          const batchFPO = [
+            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+          ];
+
+
+          await batchPlay(batchFPO, {});
+
+          const activeDocument = app.activeDocument;
+          await activeDocument.paste();
+
+          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+          const docWidth = activeDocument.width;
+          const docHeight = activeDocument.height;
+
+          if (selectedFunding === null) {
+            fundingHeight = 0;
+          } else {
+          }
+
+          if (selectedHero === null) {
+            heroHeight = 0;
+          } else {
+          }
+
+          if (selectedPlugin === null) {
+            pluginHeight = 0;
+          } else {
+
+          }
+
+          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fpoWidth / 2) + 25);
+          let offsetModules = ((slHeight + 30) + (fundingHeight) + (heroHeight + 20) + (pluginHeight));
+          const offsetY = (0 - (docHeight / 2) + (fpoHeight / 2) + (offsetModules));
+
+          pastedGroup.translate(offsetX, offsetY);
+
+          console.log('FPO inserido com sucesso!');
+        } catch (error) {
+          console.error('Erro ao inserir o FPO:', error);
+        }
+      };
+
+      const options = {
+        commandName: 'Inserir FPO',
+        interactive: true,
+      };
+
+      await core.executeAsModal(targetFunction, options);
+    } catch (error) {
+      console.error('Erro ao encontrar o arquivo do FPO:', error);
+    }
+  };
+
+
+
+  // Fim de função de importar o FPO
+
   async function fitToScreenPos() {
 
     if (selectedFunding === null) {
@@ -675,7 +795,12 @@ function App() {
     } else {
     }
 
-    const allModulesSizes = slHeight + 30 + fundingHeight + (heroHeight + 20) + pluginHeight;
+    if (selectedFpoValue === null) {
+      fpoHeight = 0;
+    } else {
+    }
+
+    const allModulesSizes = slHeight + 30 + fundingHeight + (heroHeight + 20) + pluginHeight + fpoHeight;
 
     const targetFunction = async (executionContext) => {
       try {
@@ -717,11 +842,12 @@ function App() {
       await clearAllLayers();
       await fitToScreenPre();
       var slHeight = await sslSelect();
-      var headerHeight = await handleHeaderSelect(selectedHeader, slHeight);
+      await handleHeaderSelect(selectedHeader, slHeight);
       var fundingHeight = await handleFundingSelect(selectedFunding, slHeight)
-      var heroHeight = await handleHeroSelect(selectedHero, slHeight, fundingHeight, fundingHeight);
-      var pluginHeight = await pluginSelect(selectedPlugin, heroHeight, slHeight, fundingHeight);
-      await fitToScreenPos(slHeight, fundingHeight, heroHeight, pluginHeight);
+      var heroHeight = await handleHeroSelect(selectedHero, slHeight, fundingHeight);
+      var pluginHeight = await pluginSelect(selectedPlugin, slHeight, fundingHeight, heroHeight);
+      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, fundingHeight, heroHeight, pluginHeight);
+      await fitToScreenPos(slHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
 
       console.log('Todas as funções foram executadas com sucesso.');
     } catch (error) {
@@ -732,26 +858,17 @@ function App() {
   return (
     <div width="100%" style={{ padding: "0px 15px", paddingTop: "10px", width: "100%" }}>
       <Theme theme="spectrum" scale="medium" color="light">
-        <SubjectLineSelector
-          onSubjectLineChange={handleSubjectLineChange} />
-        <AccentColorSelector
-          onAccentColorChange={handleAccentColorChange} />
-        <HeaderSelector
-          handleHeaderSelect={setSelectedHeader} />
-        <FundingSelector
-          handleFundingSelect={setSelectedFunding}
-          onFundingCopyChange={handleFundingCopyChange}>
-        </FundingSelector>
-        <HeroSelector
-          handleHeroSelect={setSelectedHero}
-          onHeroCopyChange={handleHeroCopyChange} />
-        <PluginSelector
-          handlePluginSelect={setSelectedPlugin}
-          onPluginCopyChange={handlePluginCopyChange}
-          onSuperChargerCopyChange={handleSuperChargerCopyChange} />
-        <sp-button
-          style={{ marginTop: "8px" }}
-          onClick={handleMontarLayoutClick}>
+        <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
+        <AccentColorSelector onAccentColorChange={handleAccentColorChange} />
+        <HeaderSelector handleHeaderSelect={setSelectedHeader} />
+        <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange}> </FundingSelector>
+        <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
+        <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} onSuperChargerCopyChange={handleSuperChargerCopyChange} />
+        <FpoSelector
+          handleFpoValueSelected={setSelectedFpoValue}
+          handleFpoSegmentSelected={setSelectedFpoSegment}
+        />
+        <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
         </sp-button>
       </Theme>
