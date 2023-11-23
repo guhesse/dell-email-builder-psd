@@ -6,6 +6,7 @@ import HeroSelector from './HeroSelector.js';
 import PluginSelector from './PluginSelector.js';
 import FundingSelector from './FundingSelector.js';
 import FpoSelector from './fpoSelector.js';
+import BannerSelector from './BannerSelector.js';
 
 import { Theme } from "@swc-react/theme";
 const { core, app } = require('photoshop');
@@ -13,33 +14,31 @@ const { storage } = require('uxp');
 const { batchPlay } = require('photoshop').action;
 
 
-
 var slHeight = "";
 var headerHeight = "";
 var fundingHeight = "";
 var heroHeight = "";
 var pluginHeight = "";
-var fpoHeight = ""
+var fpoHeight = "";
+var bannerHeight = "";
 
-if (slHeight === null || slHeight === undefined) {
-  slHeight = 0;
-}
-if (headerHeight === null || headerHeight === undefined) {
-  headerHeight = 0;
-}
-if (heroHeight === null || heroHeight === undefined) {
-  heroHeight = 0;
-}
-if (fundingHeight === null || fundingHeight === undefined) {
-  fundingHeight = 0;
-}
-if (pluginHeight === null || pluginHeight === undefined) {
-  pluginHeight = 0;
-}
 
-if (fpoHeight === null || fpoHeight === undefined) {
-  fpoHeight = 0;
-}
+// if (headerHeight === null || headerHeight === undefined) {
+//   headerHeight = 0;
+// }
+// if (heroHeight === null || heroHeight === undefined) {
+//   heroHeight = 0;
+// }
+// if (fundingHeight === null || fundingHeight === undefined) {
+//   fundingHeight = 0;
+// }
+// if (pluginHeight === null || pluginHeight === undefined) {
+//   pluginHeight = 0;
+// }
+// if (fpoHeight === null || fpoHeight === undefined) {
+//   fpoHeight = 0;
+// }
+
 
 function limitCharsPerLine(text, limit) {
   const words = text.split(' ');
@@ -59,7 +58,6 @@ function limitCharsPerLine(text, limit) {
 
   return result;
 }
-
 
 var redValue = ""
 var greenValue = ""
@@ -155,7 +153,6 @@ function App() {
     await core.executeAsModal(targetFunction, options);
   };
 
-
   //Função de moficar e importar o SSL
 
   const [subjectLineValues, setSubjectLineValues] = useState(null);
@@ -183,6 +180,8 @@ function App() {
           const secondDocument = app.documents[1];
           const slWidth = secondDocument.width;
           slHeight = secondDocument.height;
+
+          console.log('slHeight', slHeight)
 
           const batchSSLChangeAndCopy = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "SL" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
@@ -230,7 +229,6 @@ function App() {
   //Função de selecionar o Header
   const [selectedHeader, setSelectedHeader] = useState(null);
 
-
   const handleHeaderSelect = async (header) => {
     const headerFilePath = `assets/headers/${header}.psd`;
     const fs = storage.localFileSystem;
@@ -261,6 +259,7 @@ function App() {
           const docHeight = activeDocument.height;
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (headerWidth / 2) + 40);
           const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (headerHeight / 2) + (slHeight + 30));
+
 
           pastedGroup.translate(offsetX, offsetY);
 
@@ -300,7 +299,6 @@ function App() {
     try {
       const pluginDir = await fs.getPluginFolder();
       const fileEntry = await pluginDir.getEntry(fundingFilePath);
-
 
       const targetFunction = async (executionContext) => {
         try {
@@ -349,17 +347,16 @@ function App() {
           ]
           await batchPlay(selectAndCopy, {});
 
-
-
-
           const activeDocument = app.activeDocument;
           await activeDocument.paste();
+
 
           const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 515);
           const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
+
 
           pastedGroup.translate(offsetX, offsetY);
 
@@ -395,11 +392,9 @@ function App() {
   const headlineValue = heroCopyValues?.headlineValue;
   const subHeadlineValue = heroCopyValues?.subHeadlineValue;
 
-
   function formatHeadlineCopy(text) {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   }
-
 
 
   const handleHeroSelect = async (hero) => {
@@ -420,7 +415,6 @@ function App() {
             { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" }, },
             { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: redValue, grain: greenValue, blue: blueValue }, }, _options: { dialogOptions: "dontDisplay" }, },
           ];
-
 
 
           const formattedHeadlineValue = limitCharsPerLine(headlineValue ? formatHeadlineCopy(headlineValue) : '', 20);
@@ -490,7 +484,7 @@ function App() {
 
           const resultCtaBoundingBox = await batchPlay(offsetCta, {});
           const boundingBoxCta = resultCtaBoundingBox[5].bounds;
-          const finalCropValue = boundingBoxCta.bottom._value + 20;
+          const finalCropValue = boundingBoxCta.bottom._value + 30;
 
           const finalCrop = [
             { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
@@ -522,14 +516,12 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
+          if (selectedFunding === null) { fundingHeight = 0; }
+          else { }
 
-          if (selectedFunding === null) {
-            fundingHeight = 0;
-          } else {
-          }
+          if (selectedHeader === null) { headerHeight = 0; }
+          else { }
 
-
-          console.log("slheihgt", slHeight)
           const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
           let offsetModules = ((slHeight + 30) + (fundingHeight)); //- (heroPaddingTop) / 2
           const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
@@ -540,7 +532,6 @@ function App() {
           console.error('Erro ao inserir o Hero:', error);
         }
       };
-
 
       const options = {
         commandName: 'Inserir Hero',
@@ -570,12 +561,10 @@ function App() {
     setSuperChargerCopyValues(values);
   };
 
-
   const pluginCopyValue = pluginCopyValues?.pluginCopyValue;
   const leftCopyValue = superChargerCopyValues?.leftCopyValue;
   const middleCopyValue = superChargerCopyValues?.middleCopyValue;
   const rightCopyValue = superChargerCopyValues?.rightCopyValue;
-
 
   const pluginSelect = async () => {
 
@@ -599,8 +588,6 @@ function App() {
       const formattedleftCopyValue = limitCharsPerLine(leftCopyValue || '', 13);
       const formattedMiddleCopyValue = limitCharsPerLine(middleCopyValue || '', 13);
       const formattedRightCopyValue = limitCharsPerLine(rightCopyValue || '', 13);
-
-
 
       const targetFunction = async (executionContext) => {
         try {
@@ -652,30 +639,25 @@ function App() {
             return;
           }
 
-
           await batchPlay(batchPluginChange, {});
 
           const activeDocument = app.activeDocument;
           await activeDocument.paste();
-
-
           const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if (selectedFunding === null) {
-            fundingHeight = 0;
-          } else {
-          }
+          if (selectedFunding === null) { fundingHeight = 0; }
+          else { }
 
-          if (selectedHero === null) {
-            heroHeight = 0;
-          } else {
-          }
+          if (selectedHeader === null) { headerHeight = 0; }
+          else { }
 
+          if (selectedHero === null) { heroHeight = 0; }
+          else { }
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
-          let offsetModules = ((slHeight + 30) + (fundingHeight) + (heroHeight + 20)); //- (heroPaddingTop) / 2
+          let offsetModules = (slHeight + 30) + (fundingHeight) + (heroHeight); 
           const offsetY = (0 - (docHeight / 2) + (pluginHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
 
@@ -705,19 +687,13 @@ function App() {
 
   const handleFpoSelect = async () => {
     try {
-
       const fs = storage.localFileSystem;
       const pluginDir = await fs.getPluginFolder();
-
       let fpoFilePath;
-
       for (let i = 1; i <= selectedFpoValue; i++) {
         fpoFilePath = `assets/fpo/${selectedFpoSegment}/${i}.psd`;
       }
-
       const fileEntry = await pluginDir.getEntry(fpoFilePath)
-      console.log("File Path do FPO", fpoFilePath)
-
       const targetFunction = async (executionContext) => {
         try {
           await app.open(fileEntry);
@@ -742,24 +718,20 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if (selectedFunding === null) {
-            fundingHeight = 0;
-          } else {
-          }
+          if (selectedFunding === null) { fundingHeight = 0; }
+          else { }
 
-          if (selectedHero === null) {
-            heroHeight = 0;
-          } else {
-          }
+          if (selectedHeader === null) { headerHeight = 0; }
+          else { }
 
-          if (selectedPlugin === null) {
-            pluginHeight = 0;
-          } else {
+          if (selectedHero === null) { heroHeight = 0; }
+          else { }
 
-          }
+          if (selectedPlugin === null) { pluginHeight = 0; }
+          else { }
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fpoWidth / 2) + 25);
-          let offsetModules = ((slHeight + 30) + (fundingHeight) + (heroHeight + 20) + (pluginHeight));
+          let offsetModules = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight;
           const offsetY = (0 - (docHeight / 2) + (fpoHeight / 2) + (offsetModules));
 
           pastedGroup.translate(offsetX, offsetY);
@@ -781,38 +753,156 @@ function App() {
     }
   };
 
-
-
   // Fim de função de importar o FPO
+
+
+  // Início da função de importar o Banner
+
+  const [selectedBannerPosition, setSelectedBannerPosition] = useState(null);
+
+  const [bannerHeadlineValues, setBannerHeadlineValues] = useState('');
+
+  const [bannerCopyValues, setBannerCopyValues] = useState('');
+
+  const handleBannerHeadlineChange = (values) => {
+    setBannerHeadlineValues(values);
+  };
+
+  const handleBannerCopyChange = (values) => {
+    setBannerCopyValues(values);
+  };
+
+  const bannerHeadlineValue = bannerHeadlineValues?.bannerHeadlineValue;
+  const bannerCopyValue = bannerCopyValues?.bannerCopyValue;
+
+  const formattedBannerHeadlineValue = limitCharsPerLine(bannerHeadlineValue || '', 27);
+  const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 50);
+
+  const handleBannerSelect = async () => {
+    try {
+
+      const fs = storage.localFileSystem;
+      const pluginDir = await fs.getPluginFolder();
+
+      let bannerFilePath;
+
+      if (selectedBannerPosition === 'left') {
+        bannerFilePath = 'assets/banners/left.psd';
+      } else if (selectedBannerPosition === 'right') {
+        bannerFilePath = 'assets/banners/right.psd';
+      } else {
+        bannerFilePath = null;
+      }
+
+      const fileEntry = await pluginDir.getEntry(bannerFilePath)
+      console.log("File Path do Banner", bannerFilePath)
+
+      const targetFunction = async (executionContext) => {
+        try {
+          await app.open(fileEntry);
+          const secondDocument = app.documents[1];
+          const bannerWidth = secondDocument.width;
+          bannerHeight = secondDocument.height;
+
+
+          const batchChangeBannerCopy = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Headline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedBannerHeadlineValue } },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedBannerCopyValue } },
+          ];
+
+          await batchPlay(batchChangeBannerCopy, {});
+
+          const finalCrop = [
+            { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 190 }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 190 }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
+          ]
+
+          await batchPlay(finalCrop, {});
+
+          const batchBannerCopyAndPaste = [
+            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+          ]
+
+          await batchPlay(batchBannerCopyAndPaste, {});
+
+
+          const activeDocument = app.activeDocument;
+          await activeDocument.paste();
+
+          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+          const docWidth = activeDocument.width;
+          const docHeight = activeDocument.height;
+
+          if (selectedFunding === null) { fundingHeight = 0; }
+          else { }
+
+          if (selectedHeader === null) { headerHeight = 0; }
+          else { }
+
+          if (selectedHero === null) { heroHeight = 0; }
+          else { }
+
+          if (selectedPlugin === null) { pluginHeight = 0; }
+          else { }
+
+          if (selectedFpoValue === null) { fpoHeight = 0; }
+          else { }
+
+          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (bannerWidth / 2) + 25);
+          let offsetModules = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight;
+          const offsetY = (0 - (docHeight / 2) + (bannerHeight / 2) + offsetModules);
+
+          pastedGroup.translate(offsetX, offsetY);
+
+          console.log('Banner inserido com sucesso!');
+        } catch (error) {
+          console.error('Erro ao inserir o Banner:', error);
+        }
+      };
+
+      const options = {
+        commandName: 'Inserir Banner',
+        interactive: true,
+      };
+
+      await core.executeAsModal(targetFunction, options);
+    } catch (error) {
+      console.error('Erro ao encontrar o arquivo do Banner:', error);
+    }
+  };
+
+  // Fim da função de importar o Banner
 
   async function fitToScreenPos() {
 
-    if (selectedFunding === null) {
-      fundingHeight = 0;
-    } else {
-    }
+    if (selectedFunding === null) { fundingHeight = 0; }
+    else { }
 
-    if (selectedHeader === null) {
-      headerHeight = 0;
-    } else {
-    }
+    if (selectedHeader === null) { headerHeight = 0; }
+    else { }
 
-    if (selectedHero === null) {
-      heroHeight = 0;
-    } else {
-    }
+    if (selectedHero === null) { heroHeight = 0; }
+    else { }
 
-    if (selectedPlugin === null) {
-      pluginHeight = 0;
-    } else {
-    }
+    if (selectedPlugin === null) { pluginHeight = 0; }
+    else { }
 
-    if (selectedFpoValue === null) {
-      fpoHeight = 0;
-    } else {
-    }
+    if (selectedFpoValue === null) { fpoHeight = 0; }
+    else { }
 
-    const allModulesSizes = slHeight + 30 + fundingHeight + (heroHeight + 20) + pluginHeight + fpoHeight;
+    if (selectedBannerPosition === null) { bannerHeight = 0; }
+    else { }
+
+    const allModulesSizes = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight;
 
     const targetFunction = async (executionContext) => {
       try {
@@ -849,7 +939,6 @@ function App() {
 
   const handleMontarLayoutClick = async () => {
 
-
     try {
       await clearAllLayers();
       await fitToScreenPre();
@@ -859,7 +948,8 @@ function App() {
       var heroHeight = await handleHeroSelect(selectedHero, slHeight, fundingHeight);
       var pluginHeight = await pluginSelect(selectedPlugin, slHeight, fundingHeight, heroHeight);
       var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, fundingHeight, heroHeight, pluginHeight);
-      await fitToScreenPos(slHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
+      var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
+      await fitToScreenPos(slHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight);
 
       console.log('Todas as funções foram executadas com sucesso.');
     } catch (error) {
@@ -876,10 +966,8 @@ function App() {
         <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange}> </FundingSelector>
         <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
         <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} onSuperChargerCopyChange={handleSuperChargerCopyChange} />
-        <FpoSelector
-          handleFpoValueSelected={setSelectedFpoValue}
-          handleFpoSegmentSelected={setSelectedFpoSegment}
-        />
+        <FpoSelector handleFpoValueSelected={setSelectedFpoValue} handleFpoSegmentSelected={setSelectedFpoSegment} />
+        <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerHeadlineChange={handleBannerHeadlineChange} onBannerCopyChange={handleBannerCopyChange}></BannerSelector>
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
         </sp-button>
