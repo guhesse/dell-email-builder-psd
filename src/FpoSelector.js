@@ -39,9 +39,9 @@ export default function FpoSelector({ handleFpoValueSelected, handleFpoSegmentSe
                         <sp-picker placeholder="Seguimento do FPO" style={{ width: "45vw", padding: "0" }} id="picker-m" size="m" label="Selection type">
                             <sp-menu>
                                 <sp-menu-item onClick={() => handleFpoSegmentClick('sb')}>SB</sp-menu-item>
-                                <sp-menu-item onClick={() => handleFpoSegmentClick('isg')}>ISG</sp-menu-item>
-                                <sp-menu-item onClick={() => handleFpoSegmentClick('gaming')}>Gaming</sp-menu-item>
-                                <sp-menu-item onClick={() => handleFpoSegmentClick('alienware')}>Alienware</sp-menu-item>
+                                <sp-menu-item disabled onClick={() => handleFpoSegmentClick('isg')}>ISG</sp-menu-item>
+                                <sp-menu-item disabled onClick={() => handleFpoSegmentClick('gaming')}>Gaming</sp-menu-item>
+                                <sp-menu-item disabled onClick={() => handleFpoSegmentClick('alienware')}>Alienware</sp-menu-item>
                             </sp-menu>
                         </sp-picker>
                     </sp-field-group>

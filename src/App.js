@@ -7,6 +7,7 @@ import PluginSelector from './PluginSelector.js';
 import FundingSelector from './FundingSelector.js';
 import FpoSelector from './fpoSelector.js';
 import BannerSelector from './BannerSelector.js';
+import FooterSelector from './FooterSelector.js';
 
 import { Theme } from "@swc-react/theme";
 const { core, app } = require('photoshop');
@@ -21,6 +22,7 @@ var heroHeight = "";
 var pluginHeight = "";
 var fpoHeight = "";
 var bannerHeight = "";
+var footerHeight = "";
 
 
 // if (headerHeight === null || headerHeight === undefined) {
@@ -181,7 +183,6 @@ function App() {
           const slWidth = secondDocument.width;
           slHeight = secondDocument.height;
 
-          console.log('slHeight', slHeight)
 
           const batchSSLChangeAndCopy = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "SL" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
@@ -802,7 +803,6 @@ function App() {
       }
 
       const fileEntry = await pluginDir.getEntry(bannerFilePath)
-      console.log("File Path do Banner", bannerFilePath)
 
       const targetFunction = async (executionContext) => {
         try {
@@ -869,12 +869,12 @@ function App() {
           await batchPlay(alignCopyVertical, {});
 
           const finalCrop = [
-            { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 190 }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 230 }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
             { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
             { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 190 }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
+            { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 230 }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
           ]
 
           await batchPlay(finalCrop, {});
@@ -936,6 +936,82 @@ function App() {
 
   // Fim da função de importar o Banner
 
+  //Função de selecionar o Footer
+  const [selectedFooter, setSelectedFooter] = useState(null);
+
+  const handleFooterSelect = async (footer) => {
+    const footerFilePath = `assets/footers/${footer}.psd`;
+    const fs = storage.localFileSystem;
+    try {
+      const pluginDir = await fs.getPluginFolder();
+      const fileEntry = await pluginDir.getEntry(footerFilePath);
+
+      const targetFunction = async (executionContext) => {
+        try {
+          await app.open(fileEntry);
+          const secondDocument = app.documents[1];
+          const footerWidth = secondDocument.width;
+          footerHeight = secondDocument.height;
+
+          const footerSelect = [
+            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+          ];
+          await batchPlay(footerSelect, {});
+
+          const activeDocument = app.activeDocument;
+          await activeDocument.paste();
+
+
+          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+          const docWidth = activeDocument.width;
+          const docHeight = activeDocument.height;
+
+          if (selectedFunding === null) { fundingHeight = 0; }
+          else { }
+
+          if (selectedHeader === null) { headerHeight = 0; }
+          else { }
+
+          if (selectedHero === null) { heroHeight = 0; }
+          else { }
+
+          if (selectedPlugin === null) { pluginHeight = 0; }
+          else { }
+
+          if (selectedFpoValue === null) { fpoHeight = 0; }
+          else { }
+
+          if (selectedBannerPosition === null) { bannerHeight = 0 }
+          else { }
+
+          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (footerWidth / 2) + 45);
+          let offsetModules = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight;
+          const offsetY = (docHeight - docHeight) - (docHeight / 2) + (footerHeight / 2) + offsetModules;
+
+          pastedGroup.translate(offsetX, offsetY);
+
+          console.log('Footer inserido com sucesso!');
+        } catch (error) {
+          console.error('Erro ao inserir o Footer:', error);
+        }
+      };
+
+      const options = {
+        commandName: 'Inserir Cabeçalho',
+        interactive: true,
+      };
+
+      await core.executeAsModal(targetFunction, options);
+    } catch (error) {
+      console.error('Erro ao encontrar o arquivo do Footer:', error);
+    }
+  };
+
+  // Fim de função de selecionar o Header
+
   async function fitToScreenPos() {
 
     if (selectedFunding === null) { fundingHeight = 0; }
@@ -956,7 +1032,10 @@ function App() {
     if (selectedBannerPosition === null) { bannerHeight = 0; }
     else { }
 
-    const allModulesSizes = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight;
+    if (selectedFooter === null) { footerHeight = 0 }
+    else { }
+
+    const allModulesSizes = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight + footerHeight;
 
     const targetFunction = async (executionContext) => {
       try {
@@ -1003,7 +1082,8 @@ function App() {
       var pluginHeight = await pluginSelect(selectedPlugin, slHeight, fundingHeight, heroHeight);
       var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, fundingHeight, heroHeight, pluginHeight);
       var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
-      await fitToScreenPos(slHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight);
+      var footerHeight = await handleFooterSelect(selectedFooter, slHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
+      await fitToScreenPos(slHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight);
 
       console.log('Todas as funções foram executadas com sucesso.');
     } catch (error) {
@@ -1017,11 +1097,12 @@ function App() {
         <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
         <AccentColorSelector onAccentColorChange={handleAccentColorChange} />
         <HeaderSelector handleHeaderSelect={setSelectedHeader} />
-        <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange}> </FundingSelector>
+        <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
         <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
         <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} onSuperChargerCopyChange={handleSuperChargerCopyChange} />
         <FpoSelector handleFpoValueSelected={setSelectedFpoValue} handleFpoSegmentSelected={setSelectedFpoSegment} />
-        <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerHeadlineChange={handleBannerHeadlineChange} onBannerCopyChange={handleBannerCopyChange} onBannerCtaChange={handleBannerCtaChange}> </BannerSelector>
+        <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerHeadlineChange={handleBannerHeadlineChange} onBannerCopyChange={handleBannerCopyChange} onBannerCtaChange={handleBannerCtaChange} />
+        <FooterSelector handleFooterSelect={setSelectedFooter} />
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
         </sp-button>
