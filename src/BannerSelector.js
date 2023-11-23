@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function BannerSelector({ handleBannerPositionSelected, onBannerHeadlineChange, onBannerCopyChange }) {
+export default function BannerSelector({ handleBannerPositionSelected, onBannerHeadlineChange, onBannerCopyChange, onBannerCtaChange }) {
 
     const [selectedBannerPosition, setSelectedBannerPosition] = useState(null);
 
@@ -26,6 +26,16 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerH
         setBannerCopyValue(value);
         onBannerCopyChange({
             bannerCopyValue: value
+        });
+    };
+
+    const [bannerCtaValue, setBannerCtaValue] = useState("");
+
+    const handleBannerCtaChange = (event) => {
+        const value = event.target.value;
+        setBannerCtaValue(value);
+        onBannerCtaChange({
+            bannerCtaValue: value
         });
     };
 
@@ -61,6 +71,16 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerH
                             placeholder="Insira o Banner Copy"
                             value={bannerCopyValue}
                             onInput={handleBannerCopyChange}
+                        ></sp-textfield>
+                    </div>
+                    <div>
+                        <sp-field-label for="banner-copy-field">CTA:</sp-field-label>
+                        <sp-textfield
+                            style={{ width: "90vw" }}
+                            id="funding-copy-field"
+                            placeholder="Insira o CTA"
+                            value={bannerCtaValue}
+                            onInput={handleBannerCtaChange}
                         ></sp-textfield>
                     </div>
                 </>

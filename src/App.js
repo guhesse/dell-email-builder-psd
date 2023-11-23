@@ -657,7 +657,7 @@ function App() {
           else { }
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
-          let offsetModules = (slHeight + 30) + (fundingHeight) + (heroHeight); 
+          let offsetModules = (slHeight + 30) + (fundingHeight) + (heroHeight);
           const offsetY = (0 - (docHeight / 2) + (pluginHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
 
@@ -764,6 +764,8 @@ function App() {
 
   const [bannerCopyValues, setBannerCopyValues] = useState('');
 
+  const [bannerCtaValues, setBannerCtaValues] = useState('');
+
   const handleBannerHeadlineChange = (values) => {
     setBannerHeadlineValues(values);
   };
@@ -772,11 +774,16 @@ function App() {
     setBannerCopyValues(values);
   };
 
+  const handleBannerCtaChange = (values) => {
+    setBannerCtaValues(values);
+  };
+
   const bannerHeadlineValue = bannerHeadlineValues?.bannerHeadlineValue;
   const bannerCopyValue = bannerCopyValues?.bannerCopyValue;
+  const bannerCtaValue = bannerCtaValues?.bannerCtaValue;
 
   const formattedBannerHeadlineValue = limitCharsPerLine(bannerHeadlineValue || '', 27);
-  const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 50);
+  const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 60);
 
   const handleBannerSelect = async () => {
     try {
@@ -804,15 +811,62 @@ function App() {
           const bannerWidth = secondDocument.width;
           bannerHeight = secondDocument.height;
 
-
           const batchChangeBannerCopy = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Headline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedBannerHeadlineValue } },
             { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedBannerCopyValue } },
+            { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Banner Headline" },], },
           ];
 
-          await batchPlay(batchChangeBannerCopy, {});
+          const resultBoundingBoxBannerHeadline = await batchPlay(batchChangeBannerCopy, {});
+          const boundingBoxBannerHeadline = resultBoundingBoxBannerHeadline[4].boundingBox;
+          const bannerCopyPadding = 16;
+          const newBannerCopyPosition = boundingBoxBannerHeadline.height._value + bannerCopyPadding;
+
+          const offsetBannerCopy = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "move", _target: [{ _ref: "layer", _name: "Banner Copy", }], makeVisible: false, layerID: [2125], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newBannerCopyPosition, } }, _options: { dialogOptions: "dontDisplay" }, },
+            { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Banner Copy" },], },
+          ];
+
+          const resultBannerCopyBoundingBox = await batchPlay(offsetBannerCopy, {});
+          const boundingBoxBannerCopy = resultBannerCopyBoundingBox[2].boundingBox;
+          const ctaPadding = bannerCopyPadding + 18;
+          const newCtaPosition = boundingBoxBannerCopy.height._value + boundingBoxBannerHeadline.height._value + ctaPadding;
+
+          const changeCtaCopy = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: bannerCtaValue } },
+            { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "CTA Copy" },], },
+          ]
+
+          const resultCtaCopyBoundingBox = await batchPlay(changeCtaCopy, {});
+          const boundingBoxCtaCopy = resultCtaCopyBoundingBox[2].boundingBox;
+          const newBorderCta = boundingBoxCtaCopy.width._value + 20
+
+          const resizeCtaBorder = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], makeVisible: false, layerID: [7772], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "transform", _target: [{ _ref: "path", _enum: "ordinal", _value: "targetEnum" }], freeTransformCenterState: { _enum: "quadCenterState", _value: "QCSAverage" }, offset: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0 }, vertical: { _unit: "pixelsUnit", _value: 0 } }, width: { _unit: "pixelsUnit", _value: newBorderCta }, },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [7771], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [7772, 7770, 7771], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+          ]
+
+          await batchPlay(resizeCtaBorder, {});
+
+          const offsetCta = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [9845], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "move", _target: [{ _ref: "layer", _name: "CTA", }], makeVisible: false, layerID: [9845], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newCtaPosition, } }, _options: { dialogOptions: "dontDisplay" }, }
+          ];
+
+          await batchPlay(offsetCta, {});
+
+          const alignCopyVertical = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Copy" }], makeVisible: false, layerID: [7788], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: true, _options: { dialogOptions: "dontDisplay" } }
+          ]
+
+          await batchPlay(alignCopyVertical, {});
 
           const finalCrop = [
             { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 190 }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
@@ -967,7 +1021,7 @@ function App() {
         <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
         <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} onSuperChargerCopyChange={handleSuperChargerCopyChange} />
         <FpoSelector handleFpoValueSelected={setSelectedFpoValue} handleFpoSegmentSelected={setSelectedFpoSegment} />
-        <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerHeadlineChange={handleBannerHeadlineChange} onBannerCopyChange={handleBannerCopyChange}></BannerSelector>
+        <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerHeadlineChange={handleBannerHeadlineChange} onBannerCopyChange={handleBannerCopyChange} onBannerCtaChange={handleBannerCtaChange}> </BannerSelector>
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
         </sp-button>
