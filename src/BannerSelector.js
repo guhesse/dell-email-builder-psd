@@ -4,12 +4,14 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerH
 
     const [selectedBannerPosition, setSelectedBannerPosition] = useState(null);
 
-    const handleBannerPositionClick = (value) => {
-        setSelectedBannerPosition(value);
-        handleBannerPositionSelected(value);
+    const handleBannerPositionClick = (banner) => {
+        setSelectedBannerPosition(banner);
+        handleBannerPositionSelected(banner);
     };
 
-    const [bannerHeadlineValue, setBannerHeadlineValue] = useState(""); // State to store SL value
+    const [bannerHeadlineValue, setBannerHeadlineValue] = useState(""); // Estado que armazena o Valor do Headline do Banner
+    const [bannerCopyValue, setBannerCopyValue] = useState(""); // Estado que armazena o Valor do Copy do Banner
+    const [bannerCtaValue, setBannerCtaValue] = useState(""); // Estado que armazena o Valor do CTA do Banner
 
     const handleBannerHeadlineChange = (event) => {
         const value = event.target.value;
@@ -19,8 +21,6 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerH
         });
     };
 
-    const [bannerCopyValue, setBannerCopyValue] = useState(""); // State to store SL value
-
     const handleBannerCopyChange = (event) => {
         const value = event.target.value;
         setBannerCopyValue(value);
@@ -28,8 +28,6 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerH
             bannerCopyValue: value
         });
     };
-
-    const [bannerCtaValue, setBannerCtaValue] = useState("");
 
     const handleBannerCtaChange = (event) => {
         const value = event.target.value;
@@ -51,13 +49,14 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerH
                     </sp-menu>
                 </sp-picker>
             </sp-field-group>
+
             {selectedBannerPosition !== null && (
                 <>
                     <div>
                         <sp-field-label for="banner-headline-field">Banner Headline:</sp-field-label>
                         <sp-textfield
                             style={{ width: "90vw" }}
-                            id="funding-copy-field"
+                            id="banner-hl-field"
                             placeholder="Insira o Banner Headline"
                             value={bannerHeadlineValue}
                             onInput={handleBannerHeadlineChange}
@@ -67,7 +66,7 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerH
                         <sp-field-label for="banner-copy-field">Banner Copy:</sp-field-label>
                         <sp-textfield
                             style={{ width: "90vw" }}
-                            id="funding-copy-field"
+                            id="banner-copy-field"
                             placeholder="Insira o Banner Copy"
                             value={bannerCopyValue}
                             onInput={handleBannerCopyChange}
@@ -77,7 +76,7 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerH
                         <sp-field-label for="banner-copy-field">CTA:</sp-field-label>
                         <sp-textfield
                             style={{ width: "90vw" }}
-                            id="funding-copy-field"
+                            id="banner-cta-field"
                             placeholder="Insira o CTA"
                             value={bannerCtaValue}
                             onInput={handleBannerCtaChange}

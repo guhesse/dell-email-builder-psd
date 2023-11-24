@@ -3,7 +3,7 @@ import { Theme } from "@swc-react/theme";
 
 
 export default function FundingSelector({ handleFundingSelect, onFundingCopyChange }) {
-    const [selectedFunding, setSelectedFunding] = useState(null);
+    const [selectedFunding, setSelectedFunding] = useState('no-vf');
 
     const handleFundingClick = (funding) => {
         setSelectedFunding(funding);
@@ -28,7 +28,7 @@ export default function FundingSelector({ handleFundingSelect, onFundingCopyChan
                     <sp-field-label for="picker-m" size="m">Funding:</sp-field-label>
                     <sp-picker id="picker-m" size="m" label="Selection type" placeholder="Selecione o funding">
                         <sp-menu>
-                            <sp-menu-item onClick={() => handleFundingClick(null)}>No VF</sp-menu-item>
+                            <sp-menu-item onClick={() => handleFundingClick('no-vf')}>No VF</sp-menu-item>
                             <sp-menu-divider></sp-menu-divider>
                             <sp-menu-group>
                                 <sp-menu-item onClick={() => handleFundingClick('win11')}>Windows 11</sp-menu-item>

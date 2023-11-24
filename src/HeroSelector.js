@@ -10,9 +10,9 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
         handleHeroSelect(hero); // Executa a função passada pelo pai (handleHeroSelect) com o hero selecionado
     };
 
-    const [badgeValue, setBadgeValue] = useState("");
-    const [headlineValue, setHeadlineValue] = useState("");
-    const [subHeadlineValue, setSubHeadlineValue] = useState("");
+    const [badgeValue, setBadgeValue] = useState(""); // Estado que armazena o Valor do Badge
+    const [headlineValue, setHeadlineValue] = useState(""); // Estado que armazena o Valor do Headline
+    const [subHeadlineValue, setSubHeadlineValue] = useState(""); // Estado que armazena o Valor do SubHeadline
 
     const handleBadgeChange = (event) => {
         const value = event.target.value;

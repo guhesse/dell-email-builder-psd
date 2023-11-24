@@ -1,3 +1,5 @@
+// Import de todas as funções 
+
 import React, { useState, useEffect } from 'react';
 import HeaderSelector from "./HeaderSelector.js";
 import SubjectLineSelector from './SubjectLineSelector.js';
@@ -15,6 +17,8 @@ const { storage } = require('uxp');
 const { batchPlay } = require('photoshop').action;
 
 
+// Variáveis das alturas dos módulos
+
 var slHeight = "";
 var headerHeight = "";
 var fundingHeight = "";
@@ -25,22 +29,7 @@ var bannerHeight = "";
 var footerHeight = "";
 
 
-// if (headerHeight === null || headerHeight === undefined) {
-//   headerHeight = 0;
-// }
-// if (heroHeight === null || heroHeight === undefined) {
-//   heroHeight = 0;
-// }
-// if (fundingHeight === null || fundingHeight === undefined) {
-//   fundingHeight = 0;
-// }
-// if (pluginHeight === null || pluginHeight === undefined) {
-//   pluginHeight = 0;
-// }
-// if (fpoHeight === null || fpoHeight === undefined) {
-//   fpoHeight = 0;
-// }
-
+// Função para definir limite de caracter por linha
 
 function limitCharsPerLine(text, limit) {
   const words = text.split(' ');
@@ -61,9 +50,6 @@ function limitCharsPerLine(text, limit) {
   return result;
 }
 
-var redValue = ""
-var greenValue = ""
-var blueValue = ""
 
 function App() {
 
@@ -85,17 +71,19 @@ function App() {
     }
   };
 
+  // Função para deletar todas as camadas antes de colocar os módulos
 
   async function clearAllLayers() {
     const targetFunction = async (executionContext) => {
       try {
 
-        const batchClearAllLayers = [
+        // Deleta todas as camadas
+        const deleteAllLayers = [
           { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-          { _obj: "delete", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], layerID: [3155, 3156, 3157], _options: { dialogOptions: "dontDisplay" } }]
+          { _obj: "delete", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], layerID: [3155, 3156, 3157], _options: { dialogOptions: "dontDisplay" } }
+        ]
 
-        // Ajuste para "wait" para aguardar a conclusão do comando
-        await batchPlay(batchClearAllLayers, {});
+        await batchPlay(deleteAllLayers, {});
 
         console.log('Layer deletadas com sucesso!');
       } catch (error) {
@@ -111,18 +99,23 @@ function App() {
     await core.executeAsModal(targetFunction, options);
   };
 
+  // Fim da função para deletar todas as camadas antes de colocar os módulos
+
+  // Função para aumentar o tamanho do documento e ajustar o zoom para fit to screen
+
   async function fitToScreenPre() {
     const targetFunction = async (executionContext) => {
       try {
 
+        // Define a cor do Background Padrão
         const batchDefineBaseBackground = [
           { _obj: "set", _target: [{ _ref: "color", _property: "backgroundColor" }], to: { _obj: "HSBColorClass", hue: { _unit: "angleUnit", _value: 0 }, saturation: 0, brightness: 100 }, source: "photoshopPicker", _options: { dialogOptions: "dontDisplay" } }
         ]
 
         await batchPlay(batchDefineBaseBackground, {});
 
+        // Aumenta o tamanho do documento
         const batchCropDocument = [
-
           { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
           { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
           { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 5000.223315669948 }, right: { _unit: "pixelsUnit", _value: 650 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
@@ -130,15 +123,11 @@ function App() {
 
         await batchPlay(batchCropDocument, {});
 
+        // Ajusta o zoom para Fit to Screen
         const batchZoomFit = [
+          { _obj: "select", _target: [{ _ref: "menuItemClass", _enum: "menuItemType", _value: "fitOnScreen", },], _options: { ialogOptions: "dontDisplay", }, },
+        ];
 
-          {
-            _obj: "select", _target: [{ _ref: "menuItemClass", _enum: "menuItemType", _value: "fitOnScreen", },], _options: { ialogOptions: "dontDisplay", },
-          },];
-
-
-
-        // Ajuste para "wait" para aguardar a conclusão do comando
         await batchPlay(batchZoomFit, {});
 
         console.log('Zoom ajustado para "Fit on Screen" com sucesso!');
@@ -155,7 +144,10 @@ function App() {
     await core.executeAsModal(targetFunction, options);
   };
 
-  //Função de moficar e importar o SSL
+  // Fim da função para aumentar o tamanho do documento e ajustar o zoom para fit to screen
+
+
+  // Função de moficar e importar o SSL
 
   const [subjectLineValues, setSubjectLineValues] = useState(null);
 
@@ -163,8 +155,8 @@ function App() {
     setSubjectLineValues(values);
   };
 
-  const slValue = subjectLineValues?.slValue;
-  const sslValue = subjectLineValues?.sslValue;
+  const slValue = subjectLineValues?.slValue || '';
+  const sslValue = subjectLineValues?.sslValue || '';
 
   const sslSelect = async () => {
     const sslFilePath = `assets/sl-ssl/SL & SSL.psd`;
@@ -183,22 +175,28 @@ function App() {
           const slWidth = secondDocument.width;
           slHeight = secondDocument.height;
 
-
-          const batchSSLChangeAndCopy = [
+          // Função que troca o texto do SL e SSL
+          const changeSLCopy = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "SL" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `SL PT :  ${slValue}`, } },
             { _obj: "select", _target: [{ _ref: "layer", _name: "SSL" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `SSL :  ${sslValue}`, } },
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `SSL :  ${sslValue}`, } }
+          ];
+
+          await batchPlay(changeSLCopy, {});
+
+          // Função que copia e cola o módulo
+          const selectAndCopy = [
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
           ];
-          await batchPlay(batchSSLChangeAndCopy, {});
+
+          await batchPlay(selectAndCopy, {});
 
           const activeDocument = app.activeDocument;
           await activeDocument.paste();
-
 
           const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
           const docWidth = activeDocument.width;
@@ -226,8 +224,7 @@ function App() {
 
   // Fim de função de modificar e importar o SSL
 
-
-  //Função de selecionar o Header
+  // Função de selecionar o Header
   const [selectedHeader, setSelectedHeader] = useState(null);
 
   const handleHeaderSelect = async (header) => {
@@ -244,13 +241,15 @@ function App() {
           const headerWidth = secondDocument.width;
           headerHeight = secondDocument.height;
 
-          const batchHeaderCopy = [
+          // Seleciona o Header, copia e cola
+          const headerSelect = [
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
           ];
-          await batchPlay(batchHeaderCopy, {});
+
+          await batchPlay(headerSelect, {});
 
           const activeDocument = app.activeDocument;
           await activeDocument.paste();
@@ -260,7 +259,6 @@ function App() {
           const docHeight = activeDocument.height;
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (headerWidth / 2) + 40);
           const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (headerHeight / 2) + (slHeight + 30));
-
 
           pastedGroup.translate(offsetX, offsetY);
 
@@ -283,7 +281,7 @@ function App() {
 
   // Fim de função de selecionar o Header
 
-  //Função de selecionar o Funding
+  // Função de selecionar o Funding
 
   const [fundingCopyValues, setFundingCopyValues] = useState(null);
   const [selectedFunding, setSelectedFunding] = useState(null);
@@ -305,7 +303,6 @@ function App() {
         try {
           await app.open(fileEntry);
           const secondDocument = app.documents[1];
-          // const fundingWidth = secondDocument.width;
           fundingHeight = secondDocument.height;
 
           const formattedfundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 25);
@@ -356,8 +353,14 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 515);
-          const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
 
+          let offsetY;
+
+          if ((selectedFunding === null || selectedFunding === 'no-vf')) {
+            offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight));
+          } else {
+          offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
+        }
 
           pastedGroup.translate(offsetX, offsetY);
 
@@ -380,7 +383,7 @@ function App() {
   // Fim de função de selecionar o Funding
 
 
-  //Função de selecionar o Hero
+  // Função de selecionar o Hero
   const [selectedHero, setSelectedHero] = useState(null);
 
   const [heroCopyValues, setHeroCopyValues] = useState(null);
@@ -389,9 +392,9 @@ function App() {
     setHeroCopyValues(values);
   };
 
-  const badgeValue = heroCopyValues?.badgeValue;
-  const headlineValue = heroCopyValues?.headlineValue;
-  const subHeadlineValue = heroCopyValues?.subHeadlineValue;
+  const badgeValue = heroCopyValues?.badgeValue || '';
+  const headlineValue = heroCopyValues?.headlineValue || '';
+  const subHeadlineValue = heroCopyValues?.subHeadlineValue || '';
 
   function formatHeadlineCopy(text) {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
@@ -517,8 +520,11 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if (selectedFunding === null) { fundingHeight = 0; }
-          else { }
+          if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
+            fundingHeight = 0;
+          } else if (selectedFunding === null || selectedFunding === 'no-vf') {
+            fundingHeight = headerHeight;
+          } else { }
 
           if (selectedHeader === null) { headerHeight = 0; }
           else { }
@@ -550,9 +556,9 @@ function App() {
 
   const [selectedPlugin, setSelectedPlugin] = useState(null);
 
-  const [pluginCopyValues, setPluginCopyValues] = useState(null);
+  const [pluginCopyValues, setPluginCopyValues] = useState('');
 
-  const [superChargerCopyValues, setSuperChargerCopyValues] = useState(null);
+  const [superChargerCopyValues, setSuperChargerCopyValues] = useState('');
 
   const handlePluginCopyChange = (values) => {
     setPluginCopyValues(values);
@@ -562,10 +568,10 @@ function App() {
     setSuperChargerCopyValues(values);
   };
 
-  const pluginCopyValue = pluginCopyValues?.pluginCopyValue;
-  const leftCopyValue = superChargerCopyValues?.leftCopyValue;
-  const middleCopyValue = superChargerCopyValues?.middleCopyValue;
-  const rightCopyValue = superChargerCopyValues?.rightCopyValue;
+  const pluginCopyValue = pluginCopyValues?.pluginCopyValue || '';
+  const leftCopyValue = superChargerCopyValues?.leftCopyValue || '';
+  const middleCopyValue = superChargerCopyValues?.middleCopyValue || '';
+  const rightCopyValue = superChargerCopyValues?.rightCopyValue || '';
 
   const pluginSelect = async () => {
 
@@ -625,9 +631,9 @@ function App() {
             ];
           } else if (selectedPlugin === 'plugin') {
             batchPluginChange = [
-              { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedPluginCopyValue } },
-              { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3333], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersH" }, alignToCanvas: true, _options: { dialogOptions: "dontDisplay" } },
               { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: true, _options: { dialogOptions: "dontDisplay" } },
               { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
@@ -648,8 +654,11 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if (selectedFunding === null) { fundingHeight = 0; }
-          else { }
+          if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
+            fundingHeight = 0;
+          } else if (selectedFunding === null || selectedFunding === 'no-vf') {
+            fundingHeight = headerHeight;
+          } else { }
 
           if (selectedHeader === null) { headerHeight = 0; }
           else { }
@@ -719,8 +728,11 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if (selectedFunding === null) { fundingHeight = 0; }
-          else { }
+          if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
+            fundingHeight = 0;
+          } else if (selectedFunding === null || selectedFunding === 'no-vf') {
+            fundingHeight = headerHeight;
+          } else { }
 
           if (selectedHeader === null) { headerHeight = 0; }
           else { }
@@ -760,11 +772,8 @@ function App() {
   // Início da função de importar o Banner
 
   const [selectedBannerPosition, setSelectedBannerPosition] = useState(null);
-
   const [bannerHeadlineValues, setBannerHeadlineValues] = useState('');
-
   const [bannerCopyValues, setBannerCopyValues] = useState('');
-
   const [bannerCtaValues, setBannerCtaValues] = useState('');
 
   const handleBannerHeadlineChange = (values) => {
@@ -779,9 +788,9 @@ function App() {
     setBannerCtaValues(values);
   };
 
-  const bannerHeadlineValue = bannerHeadlineValues?.bannerHeadlineValue;
-  const bannerCopyValue = bannerCopyValues?.bannerCopyValue;
-  const bannerCtaValue = bannerCtaValues?.bannerCtaValue;
+  const bannerHeadlineValue = bannerHeadlineValues?.bannerHeadlineValue || '';
+  const bannerCopyValue = bannerCopyValues?.bannerCopyValue || '';
+  const bannerCtaValue = bannerCtaValues?.bannerCtaValue || '';
 
   const formattedBannerHeadlineValue = limitCharsPerLine(bannerHeadlineValue || '', 27);
   const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 60);
@@ -896,8 +905,11 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if (selectedFunding === null) { fundingHeight = 0; }
-          else { }
+          if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
+            fundingHeight = 0;
+          } else if (selectedFunding === null || selectedFunding === 'no-vf') {
+            fundingHeight = headerHeight;
+          } else { }
 
           if (selectedHeader === null) { headerHeight = 0; }
           else { }
@@ -969,8 +981,12 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if (selectedFunding === null) { fundingHeight = 0; }
-          else { }
+
+          if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
+            fundingHeight = 0;
+          } else if (selectedFunding === null || selectedFunding === 'no-vf') {
+            fundingHeight = headerHeight;
+          } else { }
 
           if (selectedHeader === null) { headerHeight = 0; }
           else { }
@@ -1014,8 +1030,11 @@ function App() {
 
   async function fitToScreenPos() {
 
-    if (selectedFunding === null) { fundingHeight = 0; }
-    else { }
+    if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
+      fundingHeight = 0;
+    } else if (selectedFunding === null || selectedFunding === 'no-vf') {
+      fundingHeight = headerHeight;
+    } else { }
 
     if (selectedHeader === null) { headerHeight = 0; }
     else { }
@@ -1078,12 +1097,12 @@ function App() {
       var slHeight = await sslSelect();
       await handleHeaderSelect(selectedHeader, slHeight);
       var fundingHeight = await handleFundingSelect(selectedFunding, slHeight)
-      var heroHeight = await handleHeroSelect(selectedHero, slHeight, fundingHeight);
-      var pluginHeight = await pluginSelect(selectedPlugin, slHeight, fundingHeight, heroHeight);
-      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, fundingHeight, heroHeight, pluginHeight);
-      var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
-      var footerHeight = await handleFooterSelect(selectedFooter, slHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
-      await fitToScreenPos(slHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight);
+      var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight);
+      var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, heroHeight);
+      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight);
+      var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
+      var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
+      await fitToScreenPos(slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight);
 
       console.log('Todas as funções foram executadas com sucesso.');
     } catch (error) {
