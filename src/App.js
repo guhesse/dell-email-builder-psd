@@ -10,6 +10,7 @@ import FundingSelector from './FundingSelector.js';
 import FpoSelector from './fpoSelector.js';
 import BannerSelector from './BannerSelector.js';
 import FooterSelector from './FooterSelector.js';
+import BirdseedSelector from './BirdseedSelector.js';
 
 import { Theme } from "@swc-react/theme";
 const { core, app } = require('photoshop');
@@ -949,7 +950,7 @@ function App() {
 
   // Fim da função de importar o Banner
 
-  //Função de selecionar o Footer
+  // Função de selecionar o Footer
   const [selectedFooter, setSelectedFooter] = useState(null);
 
   const handleFooterSelect = async (footer) => {
@@ -1027,7 +1028,41 @@ function App() {
     }
   };
 
-  // Fim de função de selecionar o Header
+  // Fim de função de selecionar o Footer
+
+  // Função de selecionar o Birdseed
+
+  const [selectedBirdseed, setSelectedBirdseed] = useState(null);
+  const [selectedBirdseedCopy, setSelectedBirdseedCopy] = useState(null);
+
+  const [birdseedCopyValues, setBirdseedCopyValues] = useState('');
+
+  const handleBirdseedCopyChange = (values) => {
+    setBirdseedCopyValues(values);
+  };
+
+  const birdseedCopyValue = birdseedCopyValues?.birdseedCopyValue || '';
+
+  const [selectedDay, setSelectedDay] = useState(1);
+  const [selectedMonth, setSelectedMonth] = useState(1);
+  const [selectedYear, setSelectedYear] = useState(2023);
+
+
+  const handleDateChange = ({ selectedDay, selectedMonth, selectedYear }) => {
+    setSelectedDay(selectedDay);
+    setSelectedMonth(selectedMonth);
+    setSelectedYear(selectedYear);
+  };
+
+  console.log("Selected Birdseed", selectedBirdseed)
+  console.log("Birdseed Copy", selectedBirdseedCopy)
+  console.log("Birdseed Copy Value", birdseedCopyValue)
+  console.log(`Data selecionada: Dia ${selectedDay}, Mês ${selectedMonth}, Ano ${selectedYear}`)
+
+
+  // Fim da Função de selecionar o Birdseed
+
+  // Função para ajustar o documento após a colocação dos módulos
 
   async function fitToScreenPos() {
 
@@ -1090,7 +1125,9 @@ function App() {
     await core.executeAsModal(targetFunction, options);
   };
 
+  // Fim da função para ajustar o documento após a colocação dos módulos
 
+  // Execução de todas as funções por botão
 
   const handleMontarLayoutClick = async () => {
 
@@ -1113,6 +1150,8 @@ function App() {
     }
   };
 
+  // UI do Plugin
+
   return (
     <div width="100%" style={{ padding: "0px 15px", paddingTop: "10px", width: "100%" }}>
       <Theme theme="spectrum" scale="medium" color="light">
@@ -1122,9 +1161,10 @@ function App() {
         <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
         <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
         <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} onSuperChargerCopyChange={handleSuperChargerCopyChange} />
-        <FpoSelector handleFpoValueSelected={setSelectedFpoValue} handleFpoSegmentSelected={setSelectedFpoSegment} />
+        <FpoSelector handleFpoValueSelect={setSelectedFpoValue} handleFpoSegmentSelect={setSelectedFpoSegment} />
         <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerHeadlineChange={handleBannerHeadlineChange} onBannerCopyChange={handleBannerCopyChange} onBannerCtaChange={handleBannerCtaChange} />
         <FooterSelector handleFooterSelect={setSelectedFooter} />
+        <BirdseedSelector handleBirdseedSelect={setSelectedBirdseed} handleBirdseedCopy={setSelectedBirdseedCopy} onDateChange={handleDateChange} onBirdseedCopyChange={handleBirdseedCopyChange} />
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
         </sp-button>

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 
-export default function FpoSelector({ handleFpoValueSelected, handleFpoSegmentSelected }) {
+export default function FpoSelector({ handleFpoValueSelect, handleFpoSegmentSelect }) {
 
     const [selectedFpoValue, setSelectedFpoValue] = useState(null);
     const [selectedFpoSegment, setSelectedFpoSegment] = useState('sb');
 
     const handleFpoValueClick = (value) => {
         setSelectedFpoValue(value);
-        handleFpoValueSelected(value);
+        handleFpoValueSelect(value);
     };
 
     const handleFpoSegmentClick = (segment) => {
         setSelectedFpoSegment(segment);
-        handleFpoSegmentSelected(segment);
+        handleFpoSegmentSelect(segment);
     };
 
 
