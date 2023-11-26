@@ -54,7 +54,7 @@ export default function FundingSelector({ handleFundingSelect, onFundingCopyChan
                 </div>
             </sp-field-group>
 
-            {selectedFunding !== null && (
+            {selectedFunding !== 'no-vf' && (
                 <>
                     <div>
                         <sp-field-label for="funding-copy-field">Funding Copy</sp-field-label>

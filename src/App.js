@@ -125,7 +125,7 @@ function App() {
 
         // Ajusta o zoom para Fit to Screen
         const batchZoomFit = [
-          { _obj: "select", _target: [{ _ref: "menuItemClass", _enum: "menuItemType", _value: "fitOnScreen", },], _options: { ialogOptions: "dontDisplay", }, },
+          { _obj: "select", _target: [{ _ref: "menuItemClass", _enum: "menuItemType", _value: "fitOnScreen", },], _options: { dialogOptions: "dontDisplay", }, },
         ];
 
         await batchPlay(batchZoomFit, {});
@@ -359,8 +359,8 @@ function App() {
           if ((selectedFunding === null || selectedFunding === 'no-vf')) {
             offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight));
           } else {
-          offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
-        }
+            offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
+          }
 
           pastedGroup.translate(offsetX, offsetY);
 
@@ -444,7 +444,8 @@ function App() {
           const offsetHeadline = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Headline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "move", _target: [{ _ref: "layer", _name: "Headline", }], makeVisible: false, layerID: [2125], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newHeadlinePosition, } }, _options: { dialogOptions: "dontDisplay" }, },
-            { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Headline" },], },];
+            { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Headline" },], },
+          ];
 
           const resultHeadlineBoundingBox = await batchPlay(offsetHeadline, {});
           const boundingBoxHeadline = resultHeadlineBoundingBox[2].boundingBox;
@@ -1032,9 +1033,11 @@ function App() {
 
     if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
       fundingHeight = 0;
+      headerHeight = 0;
     } else if (selectedFunding === null || selectedFunding === 'no-vf') {
       fundingHeight = headerHeight;
-    } else { }
+    } else {
+    }
 
     if (selectedHeader === null) { headerHeight = 0; }
     else { }
