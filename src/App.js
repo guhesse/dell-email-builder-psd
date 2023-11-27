@@ -28,6 +28,7 @@ var pluginHeight = "";
 var fpoHeight = "";
 var bannerHeight = "";
 var footerHeight = "";
+var birdseedHeight = "";
 
 
 // Função para definir limite de caracter por linha
@@ -319,7 +320,7 @@ function App() {
           } else {
             batchFundingCopy = [
               { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedfundingCopyValue + "\r" + "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: formattedfundingCopyValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, color: { _obj: "RGBColor", red: 86, green: 86, blue: 86 } } }, { _obj: "textStyleRange", from: formattedfundingCopyValue.length + 1, to: fundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
+              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedfundingCopyValue + "\r" + "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: formattedfundingCopyValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } }, { _obj: "textStyleRange", from: formattedfundingCopyValue.length + 1, to: fundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
               { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Funding Copy" },], },
             ]
           };
@@ -365,9 +366,9 @@ function App() {
 
           pastedGroup.translate(offsetX, offsetY);
 
-          console.log('Header inserido com sucesso!');
+          console.log('Funding inserido com sucesso!');
         } catch (error) {
-          console.error('Erro ao inserir o Header:', error);
+          console.error('Erro ao inserir o Funding:', error);
         }
       };
 
@@ -378,7 +379,7 @@ function App() {
 
       await core.executeAsModal(targetFunction, options);
     } catch (error) {
-      console.error('Erro ao encontrar o arquivo do Header:', error);
+      console.error('Erro ao encontrar o arquivo do Funding:', error);
     }
   };
   // Fim de função de selecionar o Funding
@@ -1059,6 +1060,173 @@ function App() {
   console.log("Birdseed Copy Value", birdseedCopyValue)
   console.log(`Data selecionada: Dia ${selectedDay}, Mês ${selectedMonth}, Ano ${selectedYear}`)
 
+  const handleBirdseedSelect = async (birdseed) => {
+    const birdseedFilePath = `assets/birdseeds/${birdseed}.psd`;
+    const fs = storage.localFileSystem;
+    try {
+      const pluginDir = await fs.getPluginFolder();
+      const fileEntry = await pluginDir.getEntry(birdseedFilePath);
+
+      const targetFunction = async (executionContext) => {
+        try {
+          await app.open(fileEntry);
+          const secondDocument = app.documents[1];
+          const birdseedWidth = secondDocument.width;
+          birdseedHeight = secondDocument.height;
+
+
+          let batchBirdseedCopy = [];
+
+          if (selectedBirdseedCopy === "birdseedcopy") {
+
+            const defaultTextSliceOne = `Ofertas válidas até ${selectedDay}/${selectedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa física, seja por aquisição direta e/ou entrega a ordem, que não tenha adquirido equipamentos Dell nos últimos 4 meses, e a 5 unidades para pessoa jurídica ou grupo de empresas com até 500 funcionários registrados. Frete grátis para todo o Brasil. Cálculo do valor do produto sem frete. Nossos notebooks e desktops são construídos especialmente para você. Nada de máquinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPreços referenciados com impostos para consumidores pessoas físicas, comprando com CPF. O preço final aplicável nas vendas para pessoas jurídicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em razão dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas através de cartão de crédito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, através de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
+
+            const defaultTextURLOne = ` www.dell.com.br.\r\r`
+
+            const defaultTextSliceTwo = `Garantia total mínima (legal + contratual) de 1 ano, inclui peças e mão de obra, restrita aos produtos Dell. Na garantia no centro de reparos, o cliente, após contato telefônico com o Suporte Técnico da Dell com diagnóstico remoto, deverá levar o seu equipamento ao centro de reparos localizado em SP ou encaminhar pelos Correios. Na garantia a domicílio/assistência técnica no local, técnicos serão deslocados, se necessário, após consulta telefônica com diagnóstico remoto. Garantia a domícilio não disponível para acessórios. Produtos e softwares de outras marcas estão sujeitos aos termos de garantia dos respectivos fabricantes. Para mais informações sobre Serviços, acesse`
+
+            const defaultTextURLTwo = ` www.dell.com.br/servicos.\r\r`
+
+            const defaultTextSliceThree = `Empresa beneficiada pela Lei da Informática. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport são marcas registradas da © 2023 Dell Inc. Todos os direitos reservados. Microsoft e Windows são marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro, Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane são marcas registradas da Intel Corporation e suas subsidiárias. © 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combinações resultantes são marcas registradas da Advanced Micro Devices, Inc. © 2023 NVIDIA, o logotipo NVIDIA, GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal e Turing são marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros países. \r\r
+
+            Dell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil. `;
+
+            // Concatena o birdseedCopyValue antes do texto padrão
+            const BirdseedCopy = birdseedCopyValue + "\r\r" + defaultTextSliceOne + defaultTextURLOne + defaultTextSliceTwo + defaultTextURLTwo + defaultTextSliceThree;
+
+
+            batchBirdseedCopy = [
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Birdseed Copy" }], makeVisible: false, layerID: [9993], _options: { dialogOptions: "dontDisplay" } },
+
+              {
+                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+
+                to: {
+                  _obj: "textLayer", textKey: BirdseedCopy, textStyleRange: [
+
+                    { _obj: "textStyleRange", from: 0, to: birdseedCopyValue.length + defaultTextSliceOne.length + 2, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+
+                    { _obj: "textStyleRange", from: birdseedCopyValue.length + defaultTextSliceOne.length + 2, to: birdseedCopyValue.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, underline: { _enum: "underline", _value: "underlineOnLeftInVertical" }, underlineOffset: { _unit: "pointsUnit", _value: 0 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } },
+
+                    { _obj: "textStyleRange", from: birdseedCopyValue.length + defaultTextSliceOne.length + defaultTextURLOne.length + 2, to: birdseedCopyValue.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+
+                    { _obj: "textStyleRange", from: birdseedCopyValue.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + 1, to: birdseedCopyValue.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, underline: { _enum: "underline", _value: "underlineOnLeftInVertical" }, underlineOffset: { _unit: "pointsUnit", _value: 0 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } },
+
+                    { _obj: "textStyleRange", from: birdseedCopyValue.length + defaultTextSliceOne.length + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length + 2, to: birdseedCopyValue.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length + defaultTextSliceThree.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+                  ]
+                },
+
+                _isCommand: true
+              },
+
+              { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Birdseed Copy" }], }
+            ];
+
+          } else if (selectedBirdseedCopy === null) {
+
+            const defaultTextSliceOne = `Ofertas válidas até ${selectedDay}/${selectedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa física, seja por aquisição direta e/ou entrega a ordem, que não tenha adquirido equipamentos Dell nos últimos 4 meses, e a 5 unidades para pessoa jurídica ou grupo de empresas com até 500 funcionários registrados. Frete grátis para todo o Brasil. Cálculo do valor do produto sem frete. Nossos notebooks e desktops são construídos especialmente para você. Nada de máquinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPreços referenciados com impostos para consumidores pessoas físicas, comprando com CPF. O preço final aplicável nas vendas para pessoas jurídicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em razão dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas através de cartão de crédito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, através de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
+
+            const defaultTextURLOne = ` www.dell.com.br.\r\r`
+
+            const defaultTextSliceTwo = `Garantia total mínima (legal + contratual) de 1 ano, inclui peças e mão de obra, restrita aos produtos Dell. Na garantia no centro de reparos, o cliente, após contato telefônico com o Suporte Técnico da Dell com diagnóstico remoto, deverá levar o seu equipamento ao centro de reparos localizado em SP ou encaminhar pelos Correios. Na garantia a domicílio/assistência técnica no local, técnicos serão deslocados, se necessário, após consulta telefônica com diagnóstico remoto. Garantia a domícilio não disponível para acessórios. Produtos e softwares de outras marcas estão sujeitos aos termos de garantia dos respectivos fabricantes. Para mais informações sobre Serviços, acesse`
+
+            const defaultTextURLTwo = ` www.dell.com.br/servicos.\r\r`
+
+            const defaultTextSliceThree = `Empresa beneficiada pela Lei da Informática. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport são marcas registradas da © 2023 Dell Inc. Todos os direitos reservados. Microsoft e Windows são marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro, Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane são marcas registradas da Intel Corporation e suas subsidiárias. © 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combinações resultantes são marcas registradas da Advanced Micro Devices, Inc. © 2023 NVIDIA, o logotipo NVIDIA, GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal e Turing são marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros países. \r\r
+
+            Dell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil. `;
+
+            // Concatena o birdseedCopyValue antes do texto padrão
+            const BirdseedCopy = defaultTextSliceOne + defaultTextURLOne + defaultTextSliceTwo + defaultTextURLTwo + defaultTextSliceThree;
+
+
+            batchBirdseedCopy = [
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Birdseed Copy" }], makeVisible: false, layerID: [9993], _options: { dialogOptions: "dontDisplay" } },
+
+              {
+                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+
+                to: {
+                  _obj: "textLayer", textKey: BirdseedCopy, textStyleRange: [
+
+                    { _obj: "textStyleRange", from: 0, to: defaultTextSliceOne.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+
+                    { _obj: "textStyleRange", from: defaultTextSliceOne.length, to: defaultTextSliceOne.length + defaultTextURLOne.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, underline: { _enum: "underline", _value: "underlineOnLeftInVertical" }, underlineOffset: { _unit: "pointsUnit", _value: 0 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } },
+
+                    { _obj: "textStyleRange", from: defaultTextSliceOne.length + defaultTextURLOne.length, to: defaultTextSliceOne.length + defaultTextURLOne.length + defaultTextSliceTwo.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+
+                    { _obj: "textStyleRange", from: defaultTextSliceOne.length + defaultTextURLOne.length + defaultTextSliceTwo.length, to: defaultTextSliceOne.length + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, underline: { _enum: "underline", _value: "underlineOnLeftInVertical" }, underlineOffset: { _unit: "pointsUnit", _value: 0 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } },
+
+                    { _obj: "textStyleRange", from: defaultTextSliceOne.length + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length, to: defaultTextSliceOne.length + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length + defaultTextSliceThree.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+                  ]
+                },
+
+                _isCommand: true
+              },
+
+              { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Birdseed Copy" }], }
+            ];
+
+          }
+          await batchPlay(batchBirdseedCopy, {});
+
+          // const resultFundingTextBoundingBox = await batchPlay(batchFundingCopy, {});
+          // const boundingBoxFundingText = resultFundingTextBoundingBox[2].bounds;
+          // const finalCropValue = boundingBoxFundingText.bottom._value;
+
+          // const finalCrop = [
+          //   { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 200 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
+          //   { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
+          //   { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
+          //   { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
+          //   { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
+          //   { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 200 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
+          // ]
+          // await batchPlay(finalCrop, {});
+
+          // const selectAndCopy = [
+          //   { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+          //   { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+          //   { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+          //   { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+          // ]
+          // await batchPlay(selectAndCopy, {});
+
+          // const activeDocument = app.activeDocument;
+          // await activeDocument.paste();
+
+
+          // const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+          // const docWidth = activeDocument.width;
+          // const docHeight = activeDocument.height;
+          // const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 515);
+
+          // let offsetY;
+
+          // if ((selectedFunding === null || selectedFunding === 'no-vf')) {
+          //   offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight));
+          // } else {
+          //   offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
+          // }
+
+          // pastedGroup.translate(offsetX, offsetY);
+
+          console.log('Birdseed inserido com sucesso!');
+        } catch (error) {
+          console.error('Erro ao inserir o Birdseed:', error);
+        }
+      };
+
+      const options = {
+        commandName: 'Inserir Birdseed',
+        interactive: true,
+      };
+
+      await core.executeAsModal(targetFunction, options);
+    } catch (error) {
+      console.error('Erro ao encontrar o arquivo do Birdseed:', error);
+    }
+  };
 
   // Fim da Função de selecionar o Birdseed
 
@@ -1092,7 +1260,7 @@ function App() {
     if (selectedFooter === null) { footerHeight = 0 }
     else { }
 
-    const allModulesSizes = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight + footerHeight;
+    const allModulesSizes = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight + footerHeight + birdseedHeight;
 
     const targetFunction = async (executionContext) => {
       try {
@@ -1134,14 +1302,15 @@ function App() {
     try {
       await clearAllLayers();
       await fitToScreenPre();
-      var slHeight = await sslSelect();
-      await handleHeaderSelect(selectedHeader, slHeight);
-      var fundingHeight = await handleFundingSelect(selectedFunding, slHeight)
-      var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight);
-      var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, heroHeight);
-      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight);
-      var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
-      var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
+      // var slHeight = await sslSelect();
+      // await handleHeaderSelect(selectedHeader, slHeight);
+      // var fundingHeight = await handleFundingSelect(selectedFunding, slHeight)
+      // var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight);
+      // var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, heroHeight);
+      // var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight);
+      // var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
+      // var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
+      var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
       await fitToScreenPos(slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight);
 
       console.log('Todas as funções foram executadas com sucesso.');

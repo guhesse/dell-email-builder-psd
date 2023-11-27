@@ -5,30 +5,6 @@ import { Theme } from "@swc-react/theme";
 
 export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedCopy, onBirdseedCopyChange, onDateChange }) {
 
-    const [selectedDay, setSelectedDay] = useState(1);
-    const [selectedMonth, setSelectedMonth] = useState(1);
-    const [selectedYear, setSelectedYear] = useState(2023);
-
-    const handleDateChange = ({ selectedDay, selectedMonth, selectedYear }) => {
-        setSelectedDay(selectedDay);
-        setSelectedMonth(selectedMonth);
-        setSelectedYear(selectedYear);
-        
-        // Chamada para atualização externa, se necessário
-        onDateChange({ selectedDay, selectedMonth, selectedYear });
-    };
-
-
-    useEffect(() => {
-        // Aqui, pode-se executar alguma ação após a atualização dos estados de data, se necessário
-        console.log(`Data selecionada: Dia ${selectedDay}, Mês ${selectedMonth}, Ano ${selectedYear}`);
-        
-        // Chama a função externa para notificar sobre a mudança na data
-        onDateChange({ selectedDay, selectedMonth, selectedYear });
-    }, [selectedDay, selectedMonth, selectedYear, onDateChange]);
-
-
-
     const [selectedBirdseed, setSelectedBirdseed] = useState(null);
 
     const handleBirdseedClick = (birdseed) => {
@@ -56,6 +32,31 @@ export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedC
             birdseedCopyValue: value
         });
     };
+
+
+    const [selectedDay, setSelectedDay] = useState(1);
+    const [selectedMonth, setSelectedMonth] = useState(1);
+    const [selectedYear, setSelectedYear] = useState(2023);
+
+    const handleDateChange = ({ selectedDay, selectedMonth, selectedYear }) => {
+        setSelectedDay(selectedDay);
+        setSelectedMonth(selectedMonth);
+        setSelectedYear(selectedYear);
+        
+        // Chamada para atualização externa, se necessário
+        onDateChange({ selectedDay, selectedMonth, selectedYear });
+    };
+
+
+    useEffect(() => {
+        // Aqui, pode-se executar alguma ação após a atualização dos estados de data, se necessário
+        console.log(`Data selecionada: Dia ${selectedDay}, Mês ${selectedMonth}, Ano ${selectedYear}`);
+        
+        // Chama a função externa para notificar sobre a mudança na data
+        onDateChange({ selectedDay, selectedMonth, selectedYear });
+    }, [selectedDay, selectedMonth, selectedYear, onDateChange]);
+
+
 
 
     return (
