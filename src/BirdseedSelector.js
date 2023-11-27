@@ -49,9 +49,7 @@ export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedC
 
 
     useEffect(() => {
-        // Aqui, pode-se executar alguma ação após a atualização dos estados de data, se necessário
-        console.log(`Data selecionada: Dia ${selectedDay}, Mês ${selectedMonth}, Ano ${selectedYear}`);
-        
+       
         // Chama a função externa para notificar sobre a mudança na data
         onDateChange({ selectedDay, selectedMonth, selectedYear });
     }, [selectedDay, selectedMonth, selectedYear, onDateChange]);

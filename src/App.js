@@ -73,6 +73,20 @@ function App() {
     }
   };
 
+  // Função para limpar todas as alturas antes de montar o layout novamente 
+
+  async function clearAllHeights() {
+    slHeight = "";
+    headerHeight = "";
+    fundingHeight = "";
+    heroHeight = "";
+    pluginHeight = "";
+    fpoHeight = "";
+    bannerHeight = "";
+    footerHeight = "";
+    birdseedHeight = "";
+  }
+
   // Função para deletar todas as camadas antes de colocar os módulos
 
   async function clearAllLayers() {
@@ -87,9 +101,9 @@ function App() {
 
         await batchPlay(deleteAllLayers, {});
 
-        console.log('Layer deletadas com sucesso!');
+        console.log('%cCamadas deletadas com sucesso!', 'color: #00EAADFF;');
       } catch (error) {
-        console.error('Não foi possível deletar os as layers', error);
+        console.error('Não foi possível deletar as Camadas', error);
       }
     }
 
@@ -102,6 +116,7 @@ function App() {
   };
 
   // Fim da função para deletar todas as camadas antes de colocar os módulos
+
 
   // Função para aumentar o tamanho do documento e ajustar o zoom para fit to screen
 
@@ -132,7 +147,7 @@ function App() {
 
         await batchPlay(batchZoomFit, {});
 
-        console.log('Zoom ajustado para "Fit on Screen" com sucesso!');
+        console.log('%cFit inicial executado com sucesso!', 'color: #00EAADFF;');
       } catch (error) {
         console.error('Não foi possível ajustar o zoom para "Fit on Screen":', error);
       }
@@ -207,7 +222,7 @@ function App() {
           const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (slHeight / 2));
           pastedGroup.translate(offsetX, offsetY);
 
-          console.log('SSL inserido com sucesso!');
+          console.log('%cSSL inserido com sucesso!', 'color: #00EAADFF;');
         } catch (error) {
           console.error('Erro ao inserir SSL:', error);
         }
@@ -230,6 +245,12 @@ function App() {
   const [selectedHeader, setSelectedHeader] = useState(null);
 
   const handleHeaderSelect = async (header) => {
+    if (!header) {
+      console.warn('Header não selecionado');
+      headerHeight = 0; // Define a altura como 0 se o "hero" não for selecionado
+      return; // Retorna imediatamente sem executar o restante do código
+    }
+
     const headerFilePath = `assets/headers/${header}.psd`;
     const fs = storage.localFileSystem;
     try {
@@ -264,7 +285,7 @@ function App() {
 
           pastedGroup.translate(offsetX, offsetY);
 
-          console.log('Header inserido com sucesso!');
+          console.log('%cHeader inserido com sucesso!', 'color: #00EAADFF;');
         } catch (error) {
           console.error('Erro ao inserir o Header:', error);
         }
@@ -286,7 +307,7 @@ function App() {
   // Função de selecionar o Funding
 
   const [fundingCopyValues, setFundingCopyValues] = useState(null);
-  const [selectedFunding, setSelectedFunding] = useState(null);
+  const [selectedFunding, setSelectedFunding] = useState('no-vf');
 
   const handleFundingCopyChange = (values) => {
     setFundingCopyValues(values);
@@ -358,15 +379,15 @@ function App() {
 
           let offsetY;
 
-          if ((selectedFunding === null || selectedFunding === 'no-vf')) {
-            offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight));
+          if ((selectedFunding === 'no-vf')) {
+            offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 26));
           } else {
             offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
           }
 
           pastedGroup.translate(offsetX, offsetY);
 
-          console.log('Funding inserido com sucesso!');
+          console.log('%cFunding inserido com sucesso!', 'color: #00EAADFF;');
         } catch (error) {
           console.error('Erro ao inserir o Funding:', error);
         }
@@ -404,6 +425,13 @@ function App() {
 
 
   const handleHeroSelect = async (hero) => {
+
+    if (!hero) {
+      console.warn('Hero não selecionado');
+      heroHeight = 0;
+      return;
+    }
+
     const heroFilePath = `assets/heros/${hero}.psd`;
     const fs = storage.localFileSystem;
     try {
@@ -523,21 +551,12 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
-            fundingHeight = 0;
-          } else if (selectedFunding === null || selectedFunding === 'no-vf') {
-            fundingHeight = headerHeight;
-          } else { }
-
-          if (selectedHeader === null) { headerHeight = 0; }
-          else { }
-
           const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
-          let offsetModules = ((slHeight + 30) + (fundingHeight)); //- (heroPaddingTop) / 2
+          let offsetModules = ((slHeight + 30) + (fundingHeight));
           const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
 
-          console.log('Hero inserido com sucesso!');
+          console.log('%cHero inserido com sucesso!', 'color: #00EAADFF;');
         } catch (error) {
           console.error('Erro ao inserir o Hero:', error);
         }
@@ -585,7 +604,9 @@ function App() {
     } else if (selectedPlugin === 'plugin') {
       pluginFilePath = 'assets/plugins/plugin.psd';
     } else {
-      pluginFilePath = null;
+      console.warn('Plugin não selecionado');
+      pluginHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
+      return; // Retorna imediatamente se o plugin não estiver selecionado
     }
 
     const fs = storage.localFileSystem;
@@ -625,8 +646,8 @@ function App() {
               { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedRightCopyValue } },
               { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [3402], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: true, _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3334, 3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _options: { dialogOptions: "dontDisplay" } },
               { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
               { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
@@ -637,12 +658,14 @@ function App() {
               { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedPluginCopyValue } },
               { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersH" }, alignToCanvas: true, _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: true, _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }, { _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3320, 3325], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersH" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" }, },
+              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
               { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
               { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+              { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } },
+
             ];
           } else {
             console.error('Plugin não selecionado')
@@ -657,24 +680,13 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
-            fundingHeight = 0;
-          } else if (selectedFunding === null || selectedFunding === 'no-vf') {
-            fundingHeight = headerHeight;
-          } else { }
-
-          if (selectedHeader === null) { headerHeight = 0; }
-          else { }
-
-          if (selectedHero === null) { heroHeight = 0; }
-          else { }
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
           let offsetModules = (slHeight + 30) + (fundingHeight) + (heroHeight);
           const offsetY = (0 - (docHeight / 2) + (pluginHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
 
-          console.log('Plugin inserido com sucesso!');
+          console.log('%cPlugin inserido com sucesso!', 'color: #00EAADFF;');
         } catch (error) {
           console.error('Erro ao inserir plugin:', error);
         }
@@ -699,6 +711,14 @@ function App() {
   const [selectedFpoSegment, setSelectedFpoSegment] = useState("sb");
 
   const handleFpoSelect = async () => {
+
+    if (selectedFpoValue === null) {
+      console.warn('Fpo não selecionado');
+      fpoHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
+      return; // Retorna imediatamente se o plugin não estiver selecionado
+    } else {
+    }
+
     try {
       const fs = storage.localFileSystem;
       const pluginDir = await fs.getPluginFolder();
@@ -721,7 +741,6 @@ function App() {
             { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
           ];
 
-
           await batchPlay(batchFPO, {});
 
           const activeDocument = app.activeDocument;
@@ -731,28 +750,13 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
-            fundingHeight = 0;
-          } else if (selectedFunding === null || selectedFunding === 'no-vf') {
-            fundingHeight = headerHeight;
-          } else { }
-
-          if (selectedHeader === null) { headerHeight = 0; }
-          else { }
-
-          if (selectedHero === null) { heroHeight = 0; }
-          else { }
-
-          if (selectedPlugin === null) { pluginHeight = 0; }
-          else { }
-
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fpoWidth / 2) + 25);
           let offsetModules = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight;
           const offsetY = (0 - (docHeight / 2) + (fpoHeight / 2) + (offsetModules));
 
           pastedGroup.translate(offsetX, offsetY);
 
-          console.log('FPO inserido com sucesso!');
+          console.log('%cFPO inserido com sucesso!', 'color: #00EAADFF;');
         } catch (error) {
           console.error('Erro ao inserir o FPO:', error);
         }
@@ -800,6 +804,13 @@ function App() {
 
   const handleBannerSelect = async () => {
     try {
+
+      if (selectedBannerPosition === null) {
+        console.warn('Banner não selecionado');
+        bannerHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
+        return; // Retorna imediatamente se o plugin não estiver selecionado
+      } else {
+      }
 
       const fs = storage.localFileSystem;
       const pluginDir = await fs.getPluginFolder();
@@ -881,12 +892,12 @@ function App() {
           await batchPlay(alignCopyVertical, {});
 
           const finalCrop = [
-            { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 230 }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 210 }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
             { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
             { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 230 }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
+            { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 210 }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
           ]
 
           await batchPlay(finalCrop, {});
@@ -908,23 +919,6 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
-            fundingHeight = 0;
-          } else if (selectedFunding === null || selectedFunding === 'no-vf') {
-            fundingHeight = headerHeight;
-          } else { }
-
-          if (selectedHeader === null) { headerHeight = 0; }
-          else { }
-
-          if (selectedHero === null) { heroHeight = 0; }
-          else { }
-
-          if (selectedPlugin === null) { pluginHeight = 0; }
-          else { }
-
-          if (selectedFpoValue === null) { fpoHeight = 0; }
-          else { }
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (bannerWidth / 2) + 25);
           let offsetModules = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight;
@@ -932,7 +926,7 @@ function App() {
 
           pastedGroup.translate(offsetX, offsetY);
 
-          console.log('Banner inserido com sucesso!');
+          console.log('%cBanner inserido com sucesso!', 'color: #00EAADFF;');
         } catch (error) {
           console.error('Erro ao inserir o Banner:', error);
         }
@@ -958,10 +952,18 @@ function App() {
     const footerFilePath = `assets/footers/${footer}.psd`;
     const fs = storage.localFileSystem;
     try {
+
+      if (!footer) {
+        console.warn('Footer não selecionado');
+        footerHeight = 0;
+        return;
+      }
+
       const pluginDir = await fs.getPluginFolder();
       const fileEntry = await pluginDir.getEntry(footerFilePath);
 
       const targetFunction = async (executionContext) => {
+
         try {
           await app.open(fileEntry);
           const secondDocument = app.documents[1];
@@ -984,35 +986,13 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-
-          if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
-            fundingHeight = 0;
-          } else if (selectedFunding === null || selectedFunding === 'no-vf') {
-            fundingHeight = headerHeight;
-          } else { }
-
-          if (selectedHeader === null) { headerHeight = 0; }
-          else { }
-
-          if (selectedHero === null) { heroHeight = 0; }
-          else { }
-
-          if (selectedPlugin === null) { pluginHeight = 0; }
-          else { }
-
-          if (selectedFpoValue === null) { fpoHeight = 0; }
-          else { }
-
-          if (selectedBannerPosition === null) { bannerHeight = 0 }
-          else { }
-
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (footerWidth / 2) + 45);
           let offsetModules = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight;
-          const offsetY = (docHeight - docHeight) - (docHeight / 2) + (footerHeight / 2) + offsetModules;
+          const offsetY = (docHeight - docHeight) - (docHeight / 2) + (footerHeight / 2) + 10 + offsetModules;
 
           pastedGroup.translate(offsetX, offsetY);
 
-          console.log('Footer inserido com sucesso!');
+          console.log('%cFooter inserido com sucesso!', 'color: #00EAADFF;');
         } catch (error) {
           console.error('Erro ao inserir o Footer:', error);
         }
@@ -1055,12 +1035,14 @@ function App() {
     setSelectedYear(selectedYear);
   };
 
-  console.log("Selected Birdseed", selectedBirdseed)
-  console.log("Birdseed Copy", selectedBirdseedCopy)
-  console.log("Birdseed Copy Value", birdseedCopyValue)
-  console.log(`Data selecionada: Dia ${selectedDay}, Mês ${selectedMonth}, Ano ${selectedYear}`)
-
   const handleBirdseedSelect = async (birdseed) => {
+
+    if (!birdseed) {
+      console.warn('Birdseed não selecionado');
+      birdseedHeight = 0;
+      return;
+    }
+
     const birdseedFilePath = `assets/birdseeds/${birdseed}.psd`;
     const fs = storage.localFileSystem;
     try {
@@ -1070,10 +1052,6 @@ function App() {
       const targetFunction = async (executionContext) => {
         try {
           await app.open(fileEntry);
-          const secondDocument = app.documents[1];
-          const birdseedWidth = secondDocument.width;
-          birdseedHeight = secondDocument.height;
-
 
           let batchBirdseedCopy = [];
 
@@ -1087,9 +1065,7 @@ function App() {
 
             const defaultTextURLTwo = ` www.dell.com.br/servicos.\r\r`
 
-            const defaultTextSliceThree = `Empresa beneficiada pela Lei da Informática. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport são marcas registradas da © 2023 Dell Inc. Todos os direitos reservados. Microsoft e Windows são marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro, Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane são marcas registradas da Intel Corporation e suas subsidiárias. © 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combinações resultantes são marcas registradas da Advanced Micro Devices, Inc. © 2023 NVIDIA, o logotipo NVIDIA, GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal e Turing são marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros países. \r\r
-
-            Dell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil. `;
+            const defaultTextSliceThree = `Empresa beneficiada pela Lei da Informática. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport são marcas registradas da © 2023 Dell Inc. Todos os direitos reservados. Microsoft e Windows são marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro, Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane são marcas registradas da Intel Corporation e suas subsidiárias. © 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combinações resultantes são marcas registradas da Advanced Micro Devices, Inc. © 2023 NVIDIA, o logotipo NVIDIA, GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal e Turing são marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros países. \r\rDell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil. `;
 
             // Concatena o birdseedCopyValue antes do texto padrão
             const BirdseedCopy = birdseedCopyValue + "\r\r" + defaultTextSliceOne + defaultTextURLOne + defaultTextSliceTwo + defaultTextURLTwo + defaultTextSliceThree;
@@ -1132,9 +1108,7 @@ function App() {
 
             const defaultTextURLTwo = ` www.dell.com.br/servicos.\r\r`
 
-            const defaultTextSliceThree = `Empresa beneficiada pela Lei da Informática. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport são marcas registradas da © 2023 Dell Inc. Todos os direitos reservados. Microsoft e Windows são marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro, Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane são marcas registradas da Intel Corporation e suas subsidiárias. © 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combinações resultantes são marcas registradas da Advanced Micro Devices, Inc. © 2023 NVIDIA, o logotipo NVIDIA, GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal e Turing são marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros países. \r\r
-
-            Dell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil. `;
+            const defaultTextSliceThree = `Empresa beneficiada pela Lei da Informática. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport são marcas registradas da © 2023 Dell Inc. Todos os direitos reservados. Microsoft e Windows são marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro, Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane são marcas registradas da Intel Corporation e suas subsidiárias. © 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combinações resultantes são marcas registradas da Advanced Micro Devices, Inc. © 2023 NVIDIA, o logotipo NVIDIA, GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal e Turing são marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros países.\r\rDell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil. `;
 
             // Concatena o birdseedCopyValue antes do texto padrão
             const BirdseedCopy = defaultTextSliceOne + defaultTextURLOne + defaultTextSliceTwo + defaultTextURLTwo + defaultTextSliceThree;
@@ -1168,50 +1142,49 @@ function App() {
             ];
 
           }
-          await batchPlay(batchBirdseedCopy, {});
 
-          // const resultFundingTextBoundingBox = await batchPlay(batchFundingCopy, {});
-          // const boundingBoxFundingText = resultFundingTextBoundingBox[2].bounds;
-          // const finalCropValue = boundingBoxFundingText.bottom._value;
+          const resultBirdseedBoundingBox = await batchPlay(batchBirdseedCopy, {});
+          const birdseedBoundingBox = resultBirdseedBoundingBox[2].bounds;
+          const finalCropValue = birdseedBoundingBox.bottom._value;
 
-          // const finalCrop = [
-          //   { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 200 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
-          //   { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
-          //   { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
-          //   { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
-          //   { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-          //   { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 200 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
-          // ]
-          // await batchPlay(finalCrop, {});
+          const finalCrop = [
+            { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 564 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 564 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
+          ]
+          await batchPlay(finalCrop, {});
 
-          // const selectAndCopy = [
-          //   { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-          //   { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-          //   { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-          //   { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-          // ]
-          // await batchPlay(selectAndCopy, {});
+          const secondDocument = app.documents[1];
+          const birdseedWidth = secondDocument.width;
+          birdseedHeight = secondDocument.height;
 
-          // const activeDocument = app.activeDocument;
-          // await activeDocument.paste();
+          const selectAndCopy = [
+            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+          ]
+          await batchPlay(selectAndCopy, {});
+
+          const activeDocument = app.activeDocument;
+          await activeDocument.paste();
 
 
-          // const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-          // const docWidth = activeDocument.width;
-          // const docHeight = activeDocument.height;
-          // const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 515);
+          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+          const docWidth = activeDocument.width;
+          const docHeight = activeDocument.height;
 
-          // let offsetY;
 
-          // if ((selectedFunding === null || selectedFunding === 'no-vf')) {
-          //   offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight));
-          // } else {
-          //   offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
-          // }
+          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (birdseedWidth / 2) + 43);
+          let offsetModules = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight;
+          const offsetY = (docHeight - docHeight) - (docHeight / 2) + (birdseedHeight / 2) + offsetModules + 20;
 
-          // pastedGroup.translate(offsetX, offsetY);
+          pastedGroup.translate(offsetX, offsetY);
 
-          console.log('Birdseed inserido com sucesso!');
+          console.log('%cBirdseed inserido com sucesso!', 'color: #00EAADFF;');
         } catch (error) {
           console.error('Erro ao inserir o Birdseed:', error);
         }
@@ -1234,33 +1207,7 @@ function App() {
 
   async function fitToScreenPos() {
 
-    if ((selectedFunding === null || selectedFunding === 'no-vf') && headerHeight === null) {
-      fundingHeight = 0;
-      headerHeight = 0;
-    } else if (selectedFunding === null || selectedFunding === 'no-vf') {
-      fundingHeight = headerHeight;
-    } else {
-    }
-
-    if (selectedHeader === null) { headerHeight = 0; }
-    else { }
-
-    if (selectedHero === null) { heroHeight = 0; }
-    else { }
-
-    if (selectedPlugin === null) { pluginHeight = 0; }
-    else { }
-
-    if (selectedFpoValue === null) { fpoHeight = 0; }
-    else { }
-
-    if (selectedBannerPosition === null) { bannerHeight = 0; }
-    else { }
-
-    if (selectedFooter === null) { footerHeight = 0 }
-    else { }
-
-    const allModulesSizes = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight + footerHeight + birdseedHeight;
+    const allModulesSizes = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight + (birdseedHeight + 20) + 40;
 
     const targetFunction = async (executionContext) => {
       try {
@@ -1279,7 +1226,7 @@ function App() {
         // Ajuste para "wait" para aguardar a conclusão do comando
         await batchPlay(batchZoomFit, {});
 
-        console.log('Zoom ajustado para "Fit on Screen" Pos com sucesso!');
+        console.log('%cFit final executado com sucesso!', 'color: #00EAADFF;');
       } catch (error) {
         console.error('Não foi possível ajustar o zoom para "Fit on Screen Pos":', error);
       }
@@ -1301,19 +1248,20 @@ function App() {
 
     try {
       await clearAllLayers();
+      await clearAllHeights();
       await fitToScreenPre();
-      // var slHeight = await sslSelect();
-      // await handleHeaderSelect(selectedHeader, slHeight);
-      // var fundingHeight = await handleFundingSelect(selectedFunding, slHeight)
-      // var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight);
-      // var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, heroHeight);
-      // var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight);
-      // var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
-      // var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
+      var slHeight = await sslSelect();
+      var headerHeight = await handleHeaderSelect(selectedHeader, slHeight);
+      var fundingHeight = await handleFundingSelect(selectedFunding, headerHeight, slHeight);
+      var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight);
+      var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, heroHeight);
+      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight);
+      var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
+      var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
       var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
-      await fitToScreenPos(slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight);
+      await fitToScreenPos(slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
 
-      console.log('Todas as funções foram executadas com sucesso.');
+      console.log('%cTodas as funções foram executadas com sucesso.', 'color: #00EAADFF;');
     } catch (error) {
       console.error('Erro ao montar o layout:', error);
     }

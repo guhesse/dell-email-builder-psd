@@ -51,7 +51,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
             <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
                 <sp-picker placeholder="Selecione o hero" style={{ width: "45vw", padding: "0" }} id="picker-m" size="m" label="Selection type">
                     <sp-menu>
-                        <sp-menu-item onClick={() => handleHeroClick('null')}>None</sp-menu-item>
+                        <sp-menu-item onClick={() => handleHeroClick(null)}>None</sp-menu-item>
                         <sp-menu-item disabled onClick={() => handleHeroClick('hero1-promotion')}>Hero Layout 1 - Promotion 1</sp-menu-item>
                         <sp-menu-item disabled onClick={() => handleHeroClick('hero1-promotion2')}>Hero Layout 1 - Promotion 2</sp-menu-item>
                         <sp-menu-item disabled onClick={() => handleHeroClick('hero1-business')}>Hero Layout 1 - Business</sp-menu-item>
@@ -86,7 +86,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                         <sp-field-label for="headline-field">Headline</sp-field-label>
                         <sp-textfield
                             style={{ width: "90vw" }}
-                            id="haedline-field"
+                            id="headline-field"
                             placeholder="Insira o Headline"
                             value={headlineValue}
                             onInput={handleHeadlineChange}
@@ -117,7 +117,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                         <sp-field-label for="headline-field">Headline</sp-field-label>
                         <sp-textfield
                             style={{ width: "90vw" }}
-                            id="haedline-field"
+                            id="headline-field"
                             placeholder="Insira o Headline"
                             value={headlineValue}
                             onInput={handleHeadlineChange}
