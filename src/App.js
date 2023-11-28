@@ -326,7 +326,6 @@ function App() {
         try {
           await app.open(fileEntry);
           const secondDocument = app.documents[1];
-          fundingHeight = secondDocument.height;
 
           const formattedfundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 25);
 
@@ -360,6 +359,8 @@ function App() {
           ]
           await batchPlay(finalCrop, {});
 
+          fundingHeight = secondDocument.height;
+
           const selectAndCopy = [
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
@@ -377,6 +378,7 @@ function App() {
           const docHeight = activeDocument.height;
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 515);
 
+
           let offsetY;
 
           if ((selectedFunding === 'no-vf')) {
@@ -386,6 +388,15 @@ function App() {
           }
 
           pastedGroup.translate(offsetX, offsetY);
+
+          const alignToHeader = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Header" }, { _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [448, 449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSTops" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } }
+          ]
+
+          await batchPlay(alignToHeader, {});
+
 
           console.log('%cFunding inserido com sucesso!', 'color: #00EAADFF;');
         } catch (error) {
@@ -800,7 +811,7 @@ function App() {
   const bannerCtaValue = bannerCtaValues?.bannerCtaValue || '';
 
   const formattedBannerHeadlineValue = limitCharsPerLine(bannerHeadlineValue || '', 27);
-  const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 60);
+  const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 55);
 
   const handleBannerSelect = async () => {
     try {
@@ -885,8 +896,9 @@ function App() {
           await batchPlay(offsetCta, {});
 
           const alignCopyVertical = [
-            { _obj: "select", _target: [{ _ref: "layer", _name: "Copy" }], makeVisible: false, layerID: [7788], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: true, _options: { dialogOptions: "dontDisplay" } }
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Copy" }], makeVisible: false, layerID: [7739], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Image" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelection" }, makeVisible: false, layerID: [7739, 7743], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _options: { dialogOptions: "dontDisplay" } }
           ]
 
           await batchPlay(alignCopyVertical, {});
@@ -1282,9 +1294,25 @@ function App() {
         <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerHeadlineChange={handleBannerHeadlineChange} onBannerCopyChange={handleBannerCopyChange} onBannerCtaChange={handleBannerCtaChange} />
         <FooterSelector handleFooterSelect={setSelectedFooter} />
         <BirdseedSelector handleBirdseedSelect={setSelectedBirdseed} handleBirdseedCopy={setSelectedBirdseedCopy} onDateChange={handleDateChange} onBirdseedCopyChange={handleBirdseedCopyChange} />
-        <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
-          Montar layout
-        </sp-button>
+
+
+        <sp-overlay>
+          <sp-button slot="trigger" style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
+            Montar layout
+          </sp-button>
+          <sp-popover
+            offset="5"
+            placement="top"
+            alignment="center"
+            appearance="none"
+            slot="hover"
+            style={{ borderRadius: "5px" }}
+          >
+            <sp-body style={{ padding: "5px 8px", width: "150px", fontSize: "12px", margin: 0 }}>
+
+            </sp-body>
+          </sp-popover>
+        </sp-overlay>
       </Theme>
     </div>
   );
