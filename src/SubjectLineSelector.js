@@ -24,23 +24,27 @@ export default function SubjectLineSelector(props) {
 
 
     return (
-        <div>
-            <sp-field-label for="sl-field">SL</sp-field-label>
-            <sp-textfield
-                style={{ width: "100%" }}
-                id="sl-field"
-                placeholder="Insira o SL"
-                value={slValue}
-                onInput={handleSlChange}
-            ></sp-textfield>
-            <sp-field-label for="ssl-field">SSL</sp-field-label>
-            <sp-textfield
-                style={{ width: "100%" }}
-                id="ssl-field"
-                placeholder="Insira o SSL"
-                value={sslValue}
-                onInput={handleSslChange}
-            ></sp-textfield>
-        </div>
+        <>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} class="group"><sp-label>SL & SSL</sp-label>
+                <div style={{ margin:"-2px 0"}}>
+                    <sp-detail for="sl-field" >SL</sp-detail>
+                    <sp-textfield
+                        id="sl-field"
+                        placeholder="Insira o SL"
+                        value={slValue}
+                        onInput={handleSlChange}
+                    ></sp-textfield>
+                </div>
+                <div style={{ margin:"-2px 0"}}>
+                    <sp-detail for="ssl-field">SSL</sp-detail>
+                    <sp-textfield
+                        id="ssl-field"
+                        placeholder="Insira o SSL"
+                        value={sslValue}
+                        onInput={handleSslChange}
+                    ></sp-textfield>
+                </div>
+            </div>
+        </>
     );
 }

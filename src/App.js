@@ -90,22 +90,27 @@ function App() {
   // Fun\u00e7\u00e3o para deletar todas as camadas antes de colocar os m\u00f3dulos
 
   async function clearAllLayers() {
-    const targetFunction = async (executionContext) => {
+    const targetFunction = async () => {
       try {
-
         // Deleta todas as camadas
         const deleteAllLayers = [
           { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
           { _obj: "delete", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], layerID: [3155, 3156, 3157], _options: { dialogOptions: "dontDisplay" } }
-        ]
+        ];
 
         await batchPlay(deleteAllLayers, {});
 
         console.log('%cCamadas deletadas com sucesso!', 'color: #00EAADFF;');
       } catch (error) {
-        console.error('N\u00e3o foi poss\u00edvel deletar as Camadas', error);
+        // Ignora o erro relacionado à seleção de camadas
+        if (error.message.includes('select')) {
+          // Não faz nada ou lida com o erro silenciosamente se preferir
+          // Por exemplo, console.log('Não foi possível selecionar as camadas para deletar.');
+        } else {
+          console.error('Não foi possível deletar as Camadas', error);
+        }
       }
-    }
+    };
 
     const options = {
       commandName: 'Deletar todas as camadas',
@@ -113,7 +118,9 @@ function App() {
     };
 
     await core.executeAsModal(targetFunction, options);
-  };
+  }
+
+
 
   // Fim da fun\u00e7\u00e3o para deletar todas as camadas antes de colocar os m\u00f3dulos
 
@@ -389,13 +396,16 @@ function App() {
 
           pastedGroup.translate(offsetX, offsetY);
 
-          const alignToHeader = [
-            { _obj: "select", _target: [{ _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "select", _target: [{ _ref: "layer", _name: "Header" }, { _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [448, 449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSTops" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } }
-          ]
+          if (selectedHeader !== null) {
 
-          await batchPlay(alignToHeader, {});
+            const alignToHeader = [
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Header" }, { _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [448, 449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSTops" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } }
+            ]
+
+            await batchPlay(alignToHeader, {});
+          }
 
 
           console.log('%cFunding inserido com sucesso!', 'color: #00EAADFF;');
@@ -1341,12 +1351,14 @@ function App() {
   // UI do Plugin
 
   return (
-    <div width="100%" style={{ padding: "0px 15px", paddingTop: "10px", width: "100%" }}>
+    <div className="wrapper">
       <Theme theme="spectrum" scale="medium" color="light">
         <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
         <AccentColorSelector onAccentColorChange={handleAccentColorChange} />
-        <HeaderSelector handleHeaderSelect={setSelectedHeader} />
-        <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
+        <div style={{ display: "flex", flexWrap: "wrap" }} class="group"><sp-label>Header & Funding</sp-label>
+          <HeaderSelector handleHeaderSelect={setSelectedHeader} />
+          <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
+        </div>
         <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
         <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} onSuperChargerCopyChange={handleSuperChargerCopyChange} />
         <FpoSelector handleFpoValueSelect={setSelectedFpoValue} handleFpoSegmentSelect={setSelectedFpoSegment} />

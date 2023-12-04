@@ -76,12 +76,12 @@ export default function AccentColorSelector({ onAccentColorChange }) {
 
     return (
         <>
-            <Theme theme="dark" scale="medium" color="dark">
-                <div style={{ display: "flex", gap: "0", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", width: "90vw" }}>
-                    <span style={{ backgroundColor: coresRGB[selectedColor], width: "40px", height: "40px", borderRadius: "5px", border: "white 1px solid" }}></span>
-                    <sp-field-group style={{ width: "80vw", display: "flex", flexDirection: "column", padding: "10", gap: "5px" }}>
-                        <sp-field-label for="accent-color">Accent Color</sp-field-label>
-                        <sp-picker placeholder="Selecione o Accent Color" style={{ display: "flex", flexDirection: "row", width: "100%" }} id="picker-m" size="m" label="Selection type">
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} class="group"><sp-label>Accent Color</sp-label>
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin:"-1em 0"}}>
+                    <span style={{ backgroundColor: coresRGB[selectedColor], width: "55px", height: "55px", borderRadius: "30px", border: "white 1px solid" }}></span>
+                    <sp-field-group style={{ padding: "10" }}>
+                        <sp-detail for="accent-color">ACCENT COLOR</sp-detail>
+                        <sp-picker placeholder="Selecione o Accent Color" id="picker-m" size="m" label="Selection type">
                             <sp-menu>
                                 {Object.keys(cores).map((cor) => (
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleColorClick(cor)}>
@@ -96,7 +96,7 @@ export default function AccentColorSelector({ onAccentColorChange }) {
                         </sp-picker>
                     </sp-field-group>
                 </div>
-            </Theme>
+            </div>
         </>
     );
 }

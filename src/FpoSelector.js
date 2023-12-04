@@ -18,35 +18,40 @@ export default function FpoSelector({ handleFpoValueSelect, handleFpoSegmentSele
 
     return (
         <>
-            <sp-field-label for="fpo-value-field">FPO's:</sp-field-label>
-            <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
-                <sp-picker placeholder="Selecione quantos FPO's" style={{ width: "45vw", padding: "0" }} id="picker-m" size="m" label="Selection type">
-                    <sp-menu>
-                        <sp-menu-item onClick={() => handleFpoValueClick(null)}>None</sp-menu-item>
-                        <sp-menu-item onClick={() => handleFpoValueClick('1')}>1</sp-menu-item>
-                        <sp-menu-item onClick={() => handleFpoValueClick('2')}>2</sp-menu-item>
-                        <sp-menu-item onClick={() => handleFpoValueClick('3')}>3</sp-menu-item>
-                        <sp-menu-item onClick={() => handleFpoValueClick('4')}>4</sp-menu-item>
-                        <sp-menu-item onClick={() => handleFpoValueClick('5')}>5</sp-menu-item>
-                    </sp-menu>
-                </sp-picker>
-            </sp-field-group>
 
-            {selectedFpoValue !== null && (
-                <>
-                    <sp-field-label for="fpo-segment-field">Seguimento de FPO:</sp-field-label>
-                    <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
-                        <sp-picker placeholder="Seguimento do FPO" style={{ width: "45vw", padding: "0" }} id="picker-m" size="m" label="Selection type">
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} class="group"><sp-label>Accent Color</sp-label>
+                <div style={{ display: "flex", flexDirection: "column", flexWrap: "wrap", alignItems: "flex-start" }}>
+                    <sp-detail for="fpo-value-field">FPO'S</sp-detail>
+                    <sp-field-group style={{ display: "flex", flexDirection: "row" }}>
+                        <sp-picker placeholder="Selecione quantos FPO's" style={{ padding: "0" }} id="picker-m" size="m" label="Selection type">
                             <sp-menu>
-                                <sp-menu-item onClick={() => handleFpoSegmentClick('sb')}>SB</sp-menu-item>
-                                <sp-menu-item disabled onClick={() => handleFpoSegmentClick('isg')}>ISG</sp-menu-item>
-                                <sp-menu-item disabled onClick={() => handleFpoSegmentClick('gaming')}>Gaming</sp-menu-item>
-                                <sp-menu-item disabled onClick={() => handleFpoSegmentClick('alienware')}>Alienware</sp-menu-item>
+                                <sp-menu-item onClick={() => handleFpoValueClick(null)}>None</sp-menu-item>
+                                <sp-menu-item onClick={() => handleFpoValueClick('1')}>1</sp-menu-item>
+                                <sp-menu-item onClick={() => handleFpoValueClick('2')}>2</sp-menu-item>
+                                <sp-menu-item onClick={() => handleFpoValueClick('3')}>3</sp-menu-item>
+                                <sp-menu-item onClick={() => handleFpoValueClick('4')}>4</sp-menu-item>
+                                <sp-menu-item onClick={() => handleFpoValueClick('5')}>5</sp-menu-item>
                             </sp-menu>
                         </sp-picker>
                     </sp-field-group>
-                </>
-            )}
+                </div>
+
+                {selectedFpoValue !== null && (
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                        <sp-detail for="fpo-segment-field">SEGUIMENTO DO FPO</sp-detail>
+                        <sp-field-group>
+                            <sp-picker placeholder="Seguimento do FPO" style={{ padding: "0" }} id="picker-m" size="m" label="Selection type">
+                                <sp-menu>
+                                    <sp-menu-item onClick={() => handleFpoSegmentClick('sb')}>SB</sp-menu-item>
+                                    <sp-menu-item disabled onClick={() => handleFpoSegmentClick('isg')}>ISG</sp-menu-item>
+                                    <sp-menu-item disabled onClick={() => handleFpoSegmentClick('gaming')}>Gaming</sp-menu-item>
+                                    <sp-menu-item disabled onClick={() => handleFpoSegmentClick('alienware')}>Alienware</sp-menu-item>
+                                </sp-menu>
+                            </sp-picker>
+                        </sp-field-group>
+                    </div>
+                )}
+            </div>
         </>
     );
 }

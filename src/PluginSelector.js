@@ -18,7 +18,7 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
         const value = event.target.value;
         setPluginCopyValue(value);
         onPluginCopyChange({
-            pluginCopyValue : value
+            pluginCopyValue: value
         });
     };
 
@@ -26,7 +26,7 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
         const value = event.target.value;
         setLeftCopyValue(value);
         onSuperChargerCopyChange({
-            leftCopyValue : value,
+            leftCopyValue: value,
             middleCopyValue,
             rightCopyValue
         });
@@ -37,7 +37,7 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
         setMiddleCopyValue(value);
         onSuperChargerCopyChange({
             leftCopyValue,
-            middleCopyValue : value,
+            middleCopyValue: value,
             rightCopyValue
         });
     };
@@ -48,58 +48,63 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
         onSuperChargerCopyChange({
             leftCopyValue,
             middleCopyValue,
-            rightCopyValue : value
+            rightCopyValue: value
         });
     };
 
 
     return (
-        <div>
+        <>
+            <div>
+                <div class="group"><sp-label>Plugin & Supercharger</sp-label>
 
-            <sp-radio-group label="Medium" name="example">
-                <sp-radio onClick={() => handlePluginClick('plugin')}>Plugin</sp-radio>
-                <sp-radio onClick={() => handlePluginClick('supercharger')}>Supercharger</sp-radio>
-                <sp-radio checked={true} onClick={() => handlePluginClick('null')}>Nenhum</sp-radio>
-            </sp-radio-group>
+                    <sp-radio-group style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} label="Medium" name="example">
+                        <sp-radio onClick={() => handlePluginClick('plugin')}>Plugin</sp-radio>
+                        <sp-radio onClick={() => handlePluginClick('supercharger')}>Supercharger</sp-radio>
+                        <sp-radio checked={true} onClick={() => handlePluginClick('null')}>Nenhum</sp-radio>
+                    </sp-radio-group>
 
-            {selectedPlugin === 'plugin' && (
-                <>
-                    <sp-textfield
-                        style={{ width: "90vw", paddingTop: "5px" }}
-                        id="plugin-copy"
-                        placeholder="Plugin Copy"
-                        value={pluginCopyValue}
-                        onInput={handlePluginCopyChange}
-                    ></sp-textfield>
-                </>
-            )}
+                    {selectedPlugin === 'plugin' && (
+                        <>
+                            <sp-textfield
+                                style={{ paddingTop: "5px" }}
+                                id="plugin-copy"
+                                placeholder="Plugin Copy"
+                                value={pluginCopyValue}
+                                onInput={handlePluginCopyChange}
+                            ></sp-textfield>
+                        </>
+                    )}
 
-            {selectedPlugin === 'supercharger' && (
-                <>
-                    <sp-textfield
-                        style={{ width: "90vw", paddingTop: "5px" }}
-                        id="left-copy"
-                        placeholder="Left Copy"
-                        value={leftCopyValue}
-                        onInput={handleLeftCopyChange}
-                    ></sp-textfield>
-                    <sp-textfield
-                        style={{ width: "90vw", paddingTop: "5px" }}
-                        id="center-copy"
-                        placeholder="Middle Copy"
-                        value={middleCopyValue}
-                        onInput={handleMiddleCopyChange}
-                    ></sp-textfield>
-                    <sp-textfield
-                        style={{ width: "90vw", paddingTop: "5px" }}
-                        id="right-copy"
-                        placeholder="Right Copy"
-                        value={rightCopyValue}
-                        onInput={handleRightCopyChange}
-                    ></sp-textfield>
-                </>
-            )}
-        </div>
+                    {selectedPlugin === 'supercharger' && (
+                        <>
+                            <sp-textfield
+                                style={{ paddingTop: "5px" }}
+                                id="left-copy"
+                                placeholder="Left Copy"
+                                value={leftCopyValue}
+                                onInput={handleLeftCopyChange}
+                            ></sp-textfield>
+                            <sp-textfield
+                                style={{ paddingTop: "5px" }}
+                                id="center-copy"
+                                placeholder="Middle Copy"
+                                value={middleCopyValue}
+                                onInput={handleMiddleCopyChange}
+                            ></sp-textfield>
+                            <sp-textfield
+                                style={{ paddingTop: "5px" }}
+                                id="right-copy"
+                                placeholder="Right Copy"
+                                value={rightCopyValue}
+                                onInput={handleRightCopyChange}
+                            ></sp-textfield>
+                        </>
+                    )}
+
+                </div>
+            </div>
+        </>
     );
 };
 
