@@ -1,4 +1,4 @@
-// Import de todas as funções 
+// Import de todas as fun\u00e7\u00f5es 
 
 import React, { useState, useEffect } from 'react';
 import HeaderSelector from "./HeaderSelector.js";
@@ -18,7 +18,7 @@ const { storage } = require('uxp');
 const { batchPlay } = require('photoshop').action;
 
 
-// Variáveis das alturas dos módulos
+// Vari\u00e1veis das alturas dos m\u00f3dulos
 
 var slHeight = "";
 var headerHeight = "";
@@ -31,7 +31,7 @@ var footerHeight = "";
 var birdseedHeight = "";
 
 
-// Função para definir limite de caracter por linha
+// Fun\u00e7\u00e3o para definir limite de caracter por linha
 
 function limitCharsPerLine(text, limit) {
   const words = text.split(' ');
@@ -73,7 +73,7 @@ function App() {
     }
   };
 
-  // Função para limpar todas as alturas antes de montar o layout novamente 
+  // Fun\u00e7\u00e3o para limpar todas as alturas antes de montar o layout novamente 
 
   async function clearAllHeights() {
     slHeight = "";
@@ -87,7 +87,7 @@ function App() {
     birdseedHeight = "";
   }
 
-  // Função para deletar todas as camadas antes de colocar os módulos
+  // Fun\u00e7\u00e3o para deletar todas as camadas antes de colocar os m\u00f3dulos
 
   async function clearAllLayers() {
     const targetFunction = async (executionContext) => {
@@ -103,7 +103,7 @@ function App() {
 
         console.log('%cCamadas deletadas com sucesso!', 'color: #00EAADFF;');
       } catch (error) {
-        console.error('Não foi possível deletar as Camadas', error);
+        console.error('N\u00e3o foi poss\u00edvel deletar as Camadas', error);
       }
     }
 
@@ -115,16 +115,16 @@ function App() {
     await core.executeAsModal(targetFunction, options);
   };
 
-  // Fim da função para deletar todas as camadas antes de colocar os módulos
+  // Fim da fun\u00e7\u00e3o para deletar todas as camadas antes de colocar os m\u00f3dulos
 
 
-  // Função para aumentar o tamanho do documento e ajustar o zoom para fit to screen
+  // Fun\u00e7\u00e3o para aumentar o tamanho do documento e ajustar o zoom para fit to screen
 
   async function fitToScreenPre() {
     const targetFunction = async (executionContext) => {
       try {
 
-        // Define a cor do Background Padrão
+        // Define a cor do Background Padr\u00e3o
         const batchDefineBaseBackground = [
           { _obj: "set", _target: [{ _ref: "color", _property: "backgroundColor" }], to: { _obj: "HSBColorClass", hue: { _unit: "angleUnit", _value: 0 }, saturation: 0, brightness: 100 }, source: "photoshopPicker", _options: { dialogOptions: "dontDisplay" } }
         ]
@@ -149,7 +149,7 @@ function App() {
 
         console.log('%cFit inicial executado com sucesso!', 'color: #00EAADFF;');
       } catch (error) {
-        console.error('Não foi possível ajustar o zoom para "Fit on Screen":', error);
+        console.error('N\u00e3o foi poss\u00edvel ajustar o zoom para "Fit on Screen":', error);
       }
     }
 
@@ -161,10 +161,10 @@ function App() {
     await core.executeAsModal(targetFunction, options);
   };
 
-  // Fim da função para aumentar o tamanho do documento e ajustar o zoom para fit to screen
+  // Fim da fun\u00e7\u00e3o para aumentar o tamanho do documento e ajustar o zoom para fit to screen
 
 
-  // Função de moficar e importar o SSL
+  // Fun\u00e7\u00e3o de moficar e importar o SSL
 
   const [subjectLineValues, setSubjectLineValues] = useState(null);
 
@@ -192,7 +192,7 @@ function App() {
           const slWidth = secondDocument.width;
           slHeight = secondDocument.height;
 
-          // Função que troca o texto do SL e SSL
+          // Fun\u00e7\u00e3o que troca o texto do SL e SSL
           const changeSLCopy = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "SL" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `SL PT :  ${slValue}`, } },
@@ -202,7 +202,7 @@ function App() {
 
           await batchPlay(changeSLCopy, {});
 
-          // Função que copia e cola o módulo
+          // Fun\u00e7\u00e3o que copia e cola o m\u00f3dulo
           const selectAndCopy = [
             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
@@ -239,16 +239,16 @@ function App() {
     }
   };
 
-  // Fim de função de modificar e importar o SSL
+  // Fim de fun\u00e7\u00e3o de modificar e importar o SSL
 
-  // Função de selecionar o Header
+  // Fun\u00e7\u00e3o de selecionar o Header
   const [selectedHeader, setSelectedHeader] = useState(null);
 
   const handleHeaderSelect = async (header) => {
     if (!header) {
-      console.warn('Header não selecionado');
-      headerHeight = 0; // Define a altura como 0 se o "hero" não for selecionado
-      return; // Retorna imediatamente sem executar o restante do código
+      console.warn('Header n\u00e3o selecionado');
+      headerHeight = 0; // Define a altura como 0 se o "hero" n\u00e3o for selecionado
+      return; // Retorna imediatamente sem executar o restante do c\u00f3digo
     }
 
     const headerFilePath = `assets/headers/${header}.psd`;
@@ -292,7 +292,7 @@ function App() {
       };
 
       const options = {
-        commandName: 'Inserir Cabeçalho',
+        commandName: 'Inserir Cabe\u00e7alho',
         interactive: true,
       };
 
@@ -302,9 +302,9 @@ function App() {
     }
   };
 
-  // Fim de função de selecionar o Header
+  // Fim de fun\u00e7\u00e3o de selecionar o Header
 
-  // Função de selecionar o Funding
+  // Fun\u00e7\u00e3o de selecionar o Funding
 
   const [fundingCopyValues, setFundingCopyValues] = useState(null);
   const [selectedFunding, setSelectedFunding] = useState('no-vf');
@@ -405,7 +405,7 @@ function App() {
       };
 
       const options = {
-        commandName: 'Inserir Cabeçalho',
+        commandName: 'Inserir Cabe\u00e7alho',
         interactive: true,
       };
 
@@ -414,10 +414,10 @@ function App() {
       console.error('Erro ao encontrar o arquivo do Funding:', error);
     }
   };
-  // Fim de função de selecionar o Funding
+  // Fim de fun\u00e7\u00e3o de selecionar o Funding
 
 
-  // Função de selecionar o Hero
+  // Fun\u00e7\u00e3o de selecionar o Hero
   const [selectedHero, setSelectedHero] = useState(null);
 
   const [heroCopyValues, setHeroCopyValues] = useState(null);
@@ -429,6 +429,13 @@ function App() {
   const badgeValue = heroCopyValues?.badgeValue || '';
   const headlineValue = heroCopyValues?.headlineValue || '';
   const subHeadlineValue = heroCopyValues?.subHeadlineValue || '';
+  const inlinePromoValue = heroCopyValues?.inlinePromoValue || '';
+  const productNameValue = heroCopyValues?.productNameValue || '';
+  const priceValue = heroCopyValues?.priceValue || '';
+  const specsValue = heroCopyValues?.specsValue || '';
+  const heroCtaValue = heroCopyValues?.heroCtaValue || '';
+
+
 
   function formatHeadlineCopy(text) {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
@@ -438,7 +445,7 @@ function App() {
   const handleHeroSelect = async (hero) => {
 
     if (!hero) {
-      console.warn('Hero não selecionado');
+      console.warn('Hero n\u00e3o selecionado');
       heroHeight = 0;
       return;
     }
@@ -505,9 +512,39 @@ function App() {
           const productPadding = subheadlinePadding + 40;
           const newProductPosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + boundingBoxSubheadline.height._value + productPadding;
 
+          // Concatena o birdseedCopyValue antes do texto padr\u00e3o
+          const specsCopy = inlinePromoValue + "\r" + productNameValue + "\r" + "R$" + priceValue + "00" + "\r" + specsValue;
+
+
+          const specsCopyChange = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Specs" }], makeVisible: false, layerID: [9906], _options: { dialogOptions: "dontDisplay" } },
+
+            {
+              _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: {
+                _obj: "textLayer", textKey: specsCopy, textStyleRange: [
+
+                  { _obj: "textStyleRange", from: 0, to: inlinePromoValue.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Arial-BoldMT", fontName: "Arial", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 14 }, tracking: 30, fontCaps: { _enum: "fontCaps", _value: "allCaps" }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+
+                  { _obj: "textStyleRange", from: inlinePromoValue.length + 1, to: inlinePromoValue.length + productNameValue.length + 2, textStyle: { _obj: "textStyle", fontPostScriptName: "Arial-BoldMT", fontName: "Arial", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 16 }, tracking: 30, baselineShift: { _unit: "pointsUnit", _value: -3.3285999298095703 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -4.000004329476243 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+
+                  { _obj: "textStyleRange", from: inlinePromoValue.length + productNameValue.length + 2, to: inlinePromoValue.length + productNameValue.length + 4, textStyle: { _obj: "textStyle", fontPostScriptName: "Arial-BoldMT", fontName: "Arial", fontStyleName: "Bold", baseline: { _enum: "baseline", _value: "superScript" }, baselineShift: { _unit: "pointsUnit", _value: 2.4964499473571777 }, impliedBaselineShift: { _unit: "pointsUnit", _value: 3.0000032471071827 }, size: { _unit: "pointsUnit", _value: 25 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+
+                  { _obj: "textStyleRange", from: inlinePromoValue.length + productNameValue.length + 4, to: inlinePromoValue.length + productNameValue.length + 4 + priceValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "Arial-BoldMT", fontName: "Arial", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 25 }, baselineShift: { _unit: "pointsUnit", _value: 2.4964499473571777 }, impliedBaselineShift: { _unit: "pointsUnit", _value: 3.0000032471071827 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+
+                  { _obj: "textStyleRange", from: inlinePromoValue.length + productNameValue.length + 4 + priceValue.length, to: inlinePromoValue.length + productNameValue.length + 4 + priceValue.length + 2, textStyle: { _obj: "textStyle", fontPostScriptName: "Arial-BoldMT", fontName: "Arial", fontStyleName: "Bold", baseline: { _enum: "baseline", _value: "superScript" }, baselineShift: { _unit: "pointsUnit", _value: 2.4964499473571777 }, impliedBaselineShift: { _unit: "pointsUnit", _value: 3.0000032471071827 }, size: { _unit: "pointsUnit", _value: 25 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+
+                  { _obj: "textStyleRange", from: inlinePromoValue.length + productNameValue.length + 4 + priceValue.length + 3, to: inlinePromoValue.length + productNameValue.length + 4 + priceValue.length + 3 + specsValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 11 }, leading: { _unit: "pointsUnit", _value: 10.817939758300781 }, impliedLeading: { _unit: "pointsUnit", _value: 13.000002037400721 }, tracking: 30, baselineShift: { _unit: "pointsUnit", _value: -4.992889881134033 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -5.9999944608172955 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+                ]
+              },
+
+              _isCommand: true
+            },
+          ];
+          await batchPlay(specsCopyChange, {});
+
           const offsetProduct = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Product" }], makeVisible: false, layerID: [9790], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "select", _target: [{ _ref: "layer", _name: "Specs / Text / Carbon" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [9780, 9781, 9782, 9783, 9784, 9787, 9788, 9789, 9785, 9790], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Specs" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [9780, 9781, 9782, 9783, 9784, 9787, 9788, 9789, 9785, 9790], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "select", _target: [{ _ref: "layer", _name: "Product" }], makeVisible: false, layerID: [9834], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "move", _target: [{ _ref: "layer", _name: "Product", }], makeVisible: false, layerID: [9834], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newProductPosition, } }, _options: { dialogOptions: "dontDisplay" }, },
@@ -516,20 +553,42 @@ function App() {
 
           const resultProductBoundingBox = await batchPlay(offsetProduct, {});
           const boundingBoxProduct = resultProductBoundingBox[5].bounds;
+
+          const changeCtaCopy = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Copy" }], makeVisible: false, layerID: [9628], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: heroCtaValue } },
+            { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "CTA Copy" },], },
+          ]
+
+          const resultCtaCopyBoundingBox = await batchPlay(changeCtaCopy, {});
+          const boundingBoxCtaCopy = resultCtaCopyBoundingBox[2].boundingBox;
+          const newBorderCta = boundingBoxCtaCopy.width._value;
+
+          const resizeCtaBorder = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], makeVisible: false, layerID: [9923], _options: { dialogOptions: "dontDisplay" } },
+
+            { _obj: "transform", _target: [{ _ref: "path", _enum: "ordinal", _value: "targetEnum" }], freeTransformCenterState: { _enum: "quadCenterState", _value: "QCSAverage" }, offset: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0 }, vertical: { _unit: "pixelsUnit", _value: 0 } }, width: { _unit: "pixelsUnit", _value: newBorderCta }, },
+
+            { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [9630], _options: { dialogOptions: "dontDisplay" } },
+
+            { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [9923, 9628, 9630], _options: { dialogOptions: "dontDisplay" } },
+
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+          ]
+          await batchPlay(resizeCtaBorder, {});
+
+
           const ctaPadding = productPadding + 30;
           const newCtaPosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + boundingBoxSubheadline.height._value + boundingBoxProduct.height._value + ctaPadding;
 
           const offsetCta = [
-            { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [9833], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "select", _target: [{ _ref: "layer", _name: "Button / Outline / Carbon" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [9821, 9822, 9823, 9825, 9826, 9827, 9828, 9830, 9831, 9832, 9833], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
             { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [9845], _options: { dialogOptions: "dontDisplay" } },
             { _obj: "move", _target: [{ _ref: "layer", _name: "CTA", }], makeVisible: false, layerID: [9845], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newCtaPosition, } }, _options: { dialogOptions: "dontDisplay" }, },
             { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "CTA" },], },
           ];
 
           const resultCtaBoundingBox = await batchPlay(offsetCta, {});
-          const boundingBoxCta = resultCtaBoundingBox[5].bounds;
+          const boundingBoxCta = resultCtaBoundingBox[2].bounds;
           const finalCropValue = boundingBoxCta.bottom._value + 30;
 
           const finalCrop = [
@@ -583,9 +642,9 @@ function App() {
       console.error('Erro ao encontrar o arquivo do Hero:', error);
     }
   };
-  // Fim de função de selecionar o Hero
+  // Fim de fun\u00e7\u00e3o de selecionar o Hero
 
-  //Função de modificar e importar o Plugin
+  //Fun\u00e7\u00e3o de modificar e importar o Plugin
 
   const [selectedPlugin, setSelectedPlugin] = useState(null);
 
@@ -615,9 +674,9 @@ function App() {
     } else if (selectedPlugin === 'plugin') {
       pluginFilePath = 'assets/plugins/plugin.psd';
     } else {
-      console.warn('Plugin não selecionado');
+      console.warn('Plugin n\u00e3o selecionado');
       pluginHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
-      return; // Retorna imediatamente se o plugin não estiver selecionado
+      return; // Retorna imediatamente se o plugin n\u00e3o estiver selecionado
     }
 
     const fs = storage.localFileSystem;
@@ -679,7 +738,7 @@ function App() {
 
             ];
           } else {
-            console.error('Plugin não selecionado')
+            console.error('Plugin n\u00e3o selecionado')
             return;
           }
 
@@ -714,9 +773,9 @@ function App() {
     }
   };
 
-  // Fim de função de modificar e importar o Plugin
+  // Fim de fun\u00e7\u00e3o de modificar e importar o Plugin
 
-  // Função de importar o FPO
+  // Fun\u00e7\u00e3o de importar o FPO
 
   const [selectedFpoValue, setSelectedFpoValue] = useState(null);
   const [selectedFpoSegment, setSelectedFpoSegment] = useState("sb");
@@ -724,9 +783,9 @@ function App() {
   const handleFpoSelect = async () => {
 
     if (selectedFpoValue === null) {
-      console.warn('Fpo não selecionado');
+      console.warn('Fpo n\u00e3o selecionado');
       fpoHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
-      return; // Retorna imediatamente se o plugin não estiver selecionado
+      return; // Retorna imediatamente se o plugin n\u00e3o estiver selecionado
     } else {
     }
 
@@ -784,10 +843,10 @@ function App() {
     }
   };
 
-  // Fim de função de importar o FPO
+  // Fim de fun\u00e7\u00e3o de importar o FPO
 
 
-  // Início da função de importar o Banner
+  // In\u00edcio da fun\u00e7\u00e3o de importar o Banner
 
   const [selectedBannerPosition, setSelectedBannerPosition] = useState(null);
   const [bannerHeadlineValues, setBannerHeadlineValues] = useState('');
@@ -817,9 +876,9 @@ function App() {
     try {
 
       if (selectedBannerPosition === null) {
-        console.warn('Banner não selecionado');
+        console.warn('Banner n\u00e3o selecionado');
         bannerHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
-        return; // Retorna imediatamente se o plugin não estiver selecionado
+        return; // Retorna imediatamente se o plugin n\u00e3o estiver selecionado
       } else {
       }
 
@@ -955,9 +1014,9 @@ function App() {
     }
   };
 
-  // Fim da função de importar o Banner
+  // Fim da fun\u00e7\u00e3o de importar o Banner
 
-  // Função de selecionar o Footer
+  // Fun\u00e7\u00e3o de selecionar o Footer
   const [selectedFooter, setSelectedFooter] = useState(null);
 
   const handleFooterSelect = async (footer) => {
@@ -966,7 +1025,7 @@ function App() {
     try {
 
       if (!footer) {
-        console.warn('Footer não selecionado');
+        console.warn('Footer n\u00e3o selecionado');
         footerHeight = 0;
         return;
       }
@@ -1011,7 +1070,7 @@ function App() {
       };
 
       const options = {
-        commandName: 'Inserir Cabeçalho',
+        commandName: 'Inserir Cabe\u00e7alho',
         interactive: true,
       };
 
@@ -1021,9 +1080,9 @@ function App() {
     }
   };
 
-  // Fim de função de selecionar o Footer
+  // Fim de fun\u00e7\u00e3o de selecionar o Footer
 
-  // Função de selecionar o Birdseed
+  // Fun\u00e7\u00e3o de selecionar o Birdseed
 
   const [selectedBirdseed, setSelectedBirdseed] = useState(null);
   const [selectedBirdseedCopy, setSelectedBirdseedCopy] = useState(null);
@@ -1050,7 +1109,7 @@ function App() {
   const handleBirdseedSelect = async (birdseed) => {
 
     if (!birdseed) {
-      console.warn('Birdseed não selecionado');
+      console.warn('Birdseed n\u00e3o selecionado');
       birdseedHeight = 0;
       return;
     }
@@ -1069,17 +1128,17 @@ function App() {
 
           if (selectedBirdseedCopy === "birdseedcopy") {
 
-            const defaultTextSliceOne = `Ofertas válidas até ${selectedDay}/${selectedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa física, seja por aquisição direta e/ou entrega a ordem, que não tenha adquirido equipamentos Dell nos últimos 4 meses, e a 5 unidades para pessoa jurídica ou grupo de empresas com até 500 funcionários registrados. Frete grátis para todo o Brasil. Cálculo do valor do produto sem frete. Nossos notebooks e desktops são construídos especialmente para você. Nada de máquinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPreços referenciados com impostos para consumidores pessoas físicas, comprando com CPF. O preço final aplicável nas vendas para pessoas jurídicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em razão dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas através de cartão de crédito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, através de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
+            const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${selectedDay}/${selectedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
 
             const defaultTextURLOne = ` www.dell.com.br.\r\r`
 
-            const defaultTextSliceTwo = `Garantia total mínima (legal + contratual) de 1 ano, inclui peças e mão de obra, restrita aos produtos Dell. Na garantia no centro de reparos, o cliente, após contato telefônico com o Suporte Técnico da Dell com diagnóstico remoto, deverá levar o seu equipamento ao centro de reparos localizado em SP ou encaminhar pelos Correios. Na garantia a domicílio/assistência técnica no local, técnicos serão deslocados, se necessário, após consulta telefônica com diagnóstico remoto. Garantia a domícilio não disponível para acessórios. Produtos e softwares de outras marcas estão sujeitos aos termos de garantia dos respectivos fabricantes. Para mais informações sobre Serviços, acesse`
+            const defaultTextSliceTwo = `Garantia total m\u00ednima (legal + contratual) de 1 ano, inclui pe\u00e7as e m\u00e3o de obra, restrita aos produtos Dell. Na garantia no centro de reparos, o cliente, ap\u00f3s contato telef\u00f4nico com o Suporte T\u00e9cnico da Dell com diagn\u00f3stico remoto, dever\u00e1 levar o seu equipamento ao centro de reparos localizado em SP ou encaminhar pelos Correios. Na garantia a domic\u00edlio/assist\u00eancia t\u00e9cnica no local, t\u00e9cnicos ser\u00e3o deslocados, se necess\u00e1rio, ap\u00f3s consulta telef\u00f4nica com diagn\u00f3stico remoto. Garantia a dom\u00edcilio n\u00e3o dispon\u00edvel para acess\u00f3rios. Produtos e softwares de outras marcas est\u00e3o sujeitos aos termos de garantia dos respectivos fabricantes. Para mais informa\u00e7\u00f5es sobre Servi\u00e7os, acesse`
 
             const defaultTextURLTwo = ` www.dell.com.br/servicos.\r\r`
 
-            const defaultTextSliceThree = `Empresa beneficiada pela Lei da Informática. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport são marcas registradas da © 2023 Dell Inc. Todos os direitos reservados. Microsoft e Windows são marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro, Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane são marcas registradas da Intel Corporation e suas subsidiárias. © 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combinações resultantes são marcas registradas da Advanced Micro Devices, Inc. © 2023 NVIDIA, o logotipo NVIDIA, GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal e Turing são marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros países. \r\rDell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil. `;
+            const defaultTextSliceThree = `Empresa beneficiada pela Lei da Inform\u00e1tica. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport s\u00e3o marcas registradas da \u00a9 2023 Dell Inc. Todos os direitos reservados. Microsoft e Windows s\u00e3o marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro, Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane s\u00e3o marcas registradas da Intel Corporation e suas subsidi\u00e1rias. \u00a9 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combina\u00e7\u00f5es resultantes s\u00e3o marcas registradas da Advanced Micro Devices, Inc. \u00a9 2023 NVIDIA, o logotipo NVIDIA, GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal e Turing s\u00e3o marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros pa\u00edses. \r\rDell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil. `;
 
-            // Concatena o birdseedCopyValue antes do texto padrão
+            // Concatena o birdseedCopyValue antes do texto padr\u00e3o
             const BirdseedCopy = birdseedCopyValue + "\r\r" + defaultTextSliceOne + defaultTextURLOne + defaultTextSliceTwo + defaultTextURLTwo + defaultTextSliceThree;
 
 
@@ -1112,17 +1171,17 @@ function App() {
 
           } else if (selectedBirdseedCopy === null) {
 
-            const defaultTextSliceOne = `Ofertas válidas até ${selectedDay}/${selectedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa física, seja por aquisição direta e/ou entrega a ordem, que não tenha adquirido equipamentos Dell nos últimos 4 meses, e a 5 unidades para pessoa jurídica ou grupo de empresas com até 500 funcionários registrados. Frete grátis para todo o Brasil. Cálculo do valor do produto sem frete. Nossos notebooks e desktops são construídos especialmente para você. Nada de máquinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPreços referenciados com impostos para consumidores pessoas físicas, comprando com CPF. O preço final aplicável nas vendas para pessoas jurídicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em razão dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas através de cartão de crédito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, através de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
+            const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${selectedDay}/${selectedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
 
             const defaultTextURLOne = ` www.dell.com.br.\r\r`
 
-            const defaultTextSliceTwo = `Garantia total mínima (legal + contratual) de 1 ano, inclui peças e mão de obra, restrita aos produtos Dell. Na garantia no centro de reparos, o cliente, após contato telefônico com o Suporte Técnico da Dell com diagnóstico remoto, deverá levar o seu equipamento ao centro de reparos localizado em SP ou encaminhar pelos Correios. Na garantia a domicílio/assistência técnica no local, técnicos serão deslocados, se necessário, após consulta telefônica com diagnóstico remoto. Garantia a domícilio não disponível para acessórios. Produtos e softwares de outras marcas estão sujeitos aos termos de garantia dos respectivos fabricantes. Para mais informações sobre Serviços, acesse`
+            const defaultTextSliceTwo = `Garantia total m\u00ednima (legal + contratual) de 1 ano, inclui pe\u00e7as e m\u00e3o de obra, restrita aos produtos Dell. Na garantia no centro de reparos, o cliente, ap\u00f3s contato telef\u00f4nico com o Suporte T\u00e9cnico da Dell com diagn\u00f3stico remoto, dever\u00e1 levar o seu equipamento ao centro de reparos localizado em SP ou encaminhar pelos Correios. Na garantia a domic\u00edlio/assist\u00eancia t\u00e9cnica no local, t\u00e9cnicos ser\u00e3o deslocados, se necess\u00e1rio, ap\u00f3s consulta telef\u00f4nica com diagn\u00f3stico remoto. Garantia a dom\u00edcilio n\u00e3o dispon\u00edvel para acess\u00f3rios. Produtos e softwares de outras marcas est\u00e3o sujeitos aos termos de garantia dos respectivos fabricantes. Para mais informa\u00e7\u00f5es sobre Servi\u00e7os, acesse`
 
             const defaultTextURLTwo = ` www.dell.com.br/servicos.\r\r`
 
-            const defaultTextSliceThree = `Empresa beneficiada pela Lei da Informática. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport são marcas registradas da © 2023 Dell Inc. Todos os direitos reservados. Microsoft e Windows são marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro, Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane são marcas registradas da Intel Corporation e suas subsidiárias. © 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combinações resultantes são marcas registradas da Advanced Micro Devices, Inc. © 2023 NVIDIA, o logotipo NVIDIA, GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal e Turing são marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros países.\r\rDell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil. `;
+            const defaultTextSliceThree = `Empresa beneficiada pela Lei da Inform\u00e1tica. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport s\u00e3o marcas registradas da \u00a9 2023 Dell Inc. Todos os direitos reservados. Microsoft e Windows s\u00e3o marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro, Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane s\u00e3o marcas registradas da Intel Corporation e suas subsidi\u00e1rias. \u00a9 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combina\u00e7\u00f5es resultantes s\u00e3o marcas registradas da Advanced Micro Devices, Inc. \u00a9 2023 NVIDIA, o logotipo NVIDIA, GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal e Turing s\u00e3o marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros pa\u00edses.\r\rDell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil. `;
 
-            // Concatena o birdseedCopyValue antes do texto padrão
+            // Concatena o birdseedCopyValue antes do texto padr\u00e3o
             const BirdseedCopy = defaultTextSliceOne + defaultTextURLOne + defaultTextSliceTwo + defaultTextURLTwo + defaultTextSliceThree;
 
 
@@ -1213,9 +1272,9 @@ function App() {
     }
   };
 
-  // Fim da Função de selecionar o Birdseed
+  // Fim da Fun\u00e7\u00e3o de selecionar o Birdseed
 
-  // Função para ajustar o documento após a colocação dos módulos
+  // Fun\u00e7\u00e3o para ajustar o documento ap\u00f3s a coloca\u00e7\u00e3o dos m\u00f3dulos
 
   async function fitToScreenPos() {
 
@@ -1235,12 +1294,12 @@ function App() {
 
           { _obj: "select", _target: [{ _ref: "menuItemClass", _enum: "menuItemType", _value: "fitOnScreen", },], _options: { ialogOptions: "dontDisplay", }, },];
 
-        // Ajuste para "wait" para aguardar a conclusão do comando
+        // Ajuste para "wait" para aguardar a conclus\u00e3o do comando
         await batchPlay(batchZoomFit, {});
 
         console.log('%cFit final executado com sucesso!', 'color: #00EAADFF;');
       } catch (error) {
-        console.error('Não foi possível ajustar o zoom para "Fit on Screen Pos":', error);
+        console.error('N\u00e3o foi poss\u00edvel ajustar o zoom para "Fit on Screen Pos":', error);
       }
     }
 
@@ -1252,9 +1311,9 @@ function App() {
     await core.executeAsModal(targetFunction, options);
   };
 
-  // Fim da função para ajustar o documento após a colocação dos módulos
+  // Fim da fun\u00e7\u00e3o para ajustar o documento ap\u00f3s a coloca\u00e7\u00e3o dos m\u00f3dulos
 
-  // Execução de todas as funções por botão
+  // Execu\u00e7\u00e3o de todas as fun\u00e7\u00f5es por bot\u00e3o
 
   const handleMontarLayoutClick = async () => {
 
@@ -1273,7 +1332,7 @@ function App() {
       var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
       await fitToScreenPos(slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
 
-      console.log('%cTodas as funções foram executadas com sucesso.', 'color: #00EAADFF;');
+      console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
     } catch (error) {
       console.error('Erro ao montar o layout:', error);
     }
@@ -1295,24 +1354,9 @@ function App() {
         <FooterSelector handleFooterSelect={setSelectedFooter} />
         <BirdseedSelector handleBirdseedSelect={setSelectedBirdseed} handleBirdseedCopy={setSelectedBirdseedCopy} onDateChange={handleDateChange} onBirdseedCopyChange={handleBirdseedCopyChange} />
 
-
-        <sp-overlay>
-          <sp-button slot="trigger" style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
-            Montar layout
-          </sp-button>
-          <sp-popover
-            offset="5"
-            placement="top"
-            alignment="center"
-            appearance="none"
-            slot="hover"
-            style={{ borderRadius: "5px" }}
-          >
-            <sp-body style={{ padding: "5px 8px", width: "150px", fontSize: "12px", margin: 0 }}>
-
-            </sp-body>
-          </sp-popover>
-        </sp-overlay>
+        <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
+          Montar layout
+        </sp-button>
       </Theme>
     </div>
   );
