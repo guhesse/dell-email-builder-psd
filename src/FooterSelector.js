@@ -13,9 +13,10 @@ export default function FooterSelector({ handleFooterSelect }) {
 
     return (
         <>
-                <sp-field-group width={{base: 'size-3000', L: "single-line-width"}}>
+            <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "column", alignItems: "flex-start" }} className="group">
+                <sp-label>Footer</sp-label>
+                <sp-field-group width={{ base: 'size-3000', L: "single-line-width" }}>
                     <div>
-                        <sp-field-label for="picker-m" size="m">Footer:</sp-field-label>
                         <sp-picker id="picker-m" size="m" label="Selection type" placeholder="Selecione o footer">
                             <sp-menu >
                                 <sp-menu-item onClick={() => handleFooterClick('sb-four-btn')}>SB 4 Button</sp-menu-item>
@@ -32,6 +33,8 @@ export default function FooterSelector({ handleFooterSelect }) {
                         </sp-picker>
                     </div>
                 </sp-field-group>
+            </div>
+
         </>
     );
 }

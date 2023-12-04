@@ -25,23 +25,25 @@ export default function SubjectLineSelector(props) {
 
     return (
         <>
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} class="group"><sp-label>SL & SSL</sp-label>
-                <div style={{ margin:"-2px 0"}}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group"><sp-label>SL & SSL</sp-label>
+                <div style={{ margin: "0 4px" }}>
                     <sp-detail for="sl-field" >SL</sp-detail>
                     <sp-textfield
                         id="sl-field"
                         placeholder="Insira o SL"
                         value={slValue}
                         onInput={handleSlChange}
+                        {...(slValue !== "" && { valid: true })}
                     ></sp-textfield>
                 </div>
-                <div style={{ margin:"-2px 0"}}>
+                <div style={{ margin: "0 4px" }}>
                     <sp-detail for="ssl-field">SSL</sp-detail>
                     <sp-textfield
                         id="ssl-field"
                         placeholder="Insira o SSL"
                         value={sslValue}
                         onInput={handleSslChange}
+                        {...(sslValue !== "" && { valid: true })}
                     ></sp-textfield>
                 </div>
             </div>

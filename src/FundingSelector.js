@@ -56,12 +56,13 @@ export default function FundingSelector({ handleFundingSelect, onFundingCopyChan
             {selectedFunding !== 'no-vf' && (
 
                 <div>
-                    <sp-detail for="funding-copy-field">Funding Copy</sp-detail>
+                    <sp-detail for="funding-copy-field">FUNDING COPY</sp-detail>
                     <sp-textfield
                         id="funding-copy-field"
                         placeholder="Insira o Funding Copy"
                         value={fundingCopyValue}
                         onInput={handleFundingCopyChange}
+                        {...(fundingCopyValue !== "" && { valid: true })}
                     ></sp-textfield>
                 </div>
 

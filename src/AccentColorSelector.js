@@ -76,7 +76,7 @@ export default function AccentColorSelector({ onAccentColorChange }) {
 
     return (
         <>
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} class="group"><sp-label>Accent Color</sp-label>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group"><sp-label>Accent Color</sp-label>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin:"-1em 0"}}>
                     <span style={{ backgroundColor: coresRGB[selectedColor], width: "55px", height: "55px", borderRadius: "30px", border: "white 1px solid" }}></span>
                     <sp-field-group style={{ padding: "10" }}>
@@ -85,7 +85,6 @@ export default function AccentColorSelector({ onAccentColorChange }) {
                             <sp-menu>
                                 {Object.keys(cores).map((cor) => (
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleColorClick(cor)}>
-
                                         <sp-menu-item style={{ width: "100%", alignItems: "center" }}>
                                             <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", padding: "0px 10px 0px 0px", }}></span>
                                             {cor.charAt(0).toUpperCase() + cor.slice(1)}

@@ -56,7 +56,7 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
     return (
         <>
             <div>
-                <div class="group"><sp-label>Plugin & Supercharger</sp-label>
+                <div className="group"><sp-label>Plugin & Supercharger</sp-label>
 
                     <sp-radio-group style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} label="Medium" name="example">
                         <sp-radio onClick={() => handlePluginClick('plugin')}>Plugin</sp-radio>
@@ -72,6 +72,7 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
                                 placeholder="Plugin Copy"
                                 value={pluginCopyValue}
                                 onInput={handlePluginCopyChange}
+                                {...(pluginCopyValue !== "" && { valid: true })}
                             ></sp-textfield>
                         </>
                     )}
@@ -84,6 +85,7 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
                                 placeholder="Left Copy"
                                 value={leftCopyValue}
                                 onInput={handleLeftCopyChange}
+                                {...(leftCopyValue !== "" && { valid: true })}
                             ></sp-textfield>
                             <sp-textfield
                                 style={{ paddingTop: "5px" }}
@@ -91,6 +93,7 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
                                 placeholder="Middle Copy"
                                 value={middleCopyValue}
                                 onInput={handleMiddleCopyChange}
+                                {...(middleCopyValue !== "" && { valid: true })}
                             ></sp-textfield>
                             <sp-textfield
                                 style={{ paddingTop: "5px" }}
@@ -98,6 +101,7 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
                                 placeholder="Right Copy"
                                 value={rightCopyValue}
                                 onInput={handleRightCopyChange}
+                                {...(rightCopyValue !== "" && { valid: true })}
                             ></sp-textfield>
                         </>
                     )}

@@ -42,14 +42,14 @@ export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedC
         setSelectedDay(selectedDay);
         setSelectedMonth(selectedMonth);
         setSelectedYear(selectedYear);
-        
+
         // Chamada para atualização externa, se necessário
         onDateChange({ selectedDay, selectedMonth, selectedYear });
     };
 
 
     useEffect(() => {
-       
+
         // Chama a função externa para notificar sobre a mudança na data
         onDateChange({ selectedDay, selectedMonth, selectedYear });
     }, [selectedDay, selectedMonth, selectedYear, onDateChange]);
@@ -59,118 +59,119 @@ export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedC
 
     return (
         <>
-            <sp-field-group width={{ base: 'size-3000', L: "single-line-width" }}>
-                <div>
-                    <sp-field-label for="picker-m" size="m">Birdseed:</sp-field-label>
-                    <sp-picker id="picker-m" size="m" label="Selection type" placeholder="Selecione o birdseed">
-                        <sp-menu>
-                            <sp-menu-group>
-                                <sp-menu-item onClick={() => handleBirdseedClick('standard')}>Standard</sp-menu-item>
-                                <sp-menu-item onClick={() => handleBirdseedClick('outlet')}>Outlet</sp-menu-item>
-                            </sp-menu-group>
-                        </sp-menu>
-                    </sp-picker>
 
-                </div>
-            </sp-field-group>
-
-
-            {selectedBirdseed === 'standard' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <sp-field-label>Data Birdseed:</sp-field-label>
-                    <div style={{ display: 'flex', gap: '10px' }}>
-
-                        <sp-picker
-                            size="m"
-                            label="Dia"
-                            placeholder="Selecione o dia"
-                            id="day-picker"
-                        >
-                            <sp-menu>
-                                <sp-menu-group>
-                                    {[...Array(31)].map((_, index) => (
-                                        <sp-menu-item key={index + 1} onClick={() => {
-                                            setSelectedDay(index + 1);
-                                            handleDateChange({ selectedDay: index + 1, selectedMonth, selectedYear });
-                                        }}>
-                                            {index + 1}
-                                        </sp-menu-item>
-                                    ))}
-                                </sp-menu-group>
-                            </sp-menu>
-                        </sp-picker>
-
-                        <sp-picker
-                            size="m"
-                            label="Mês"
-                            placeholder="Selecione o mês"
-                            id="month-picker"
-                        >
-                            <sp-menu>
-                                <sp-menu-group>
-                                    {[...Array(12)].map((_, index) => (
-                                        <sp-menu-item key={index + 1} onClick={() => {
-                                            setSelectedMonth(index + 1);
-                                            handleDateChange({ selectedDay, selectedMonth: index + 1, selectedYear });
-                                        }}>
-                                            {index + 1}
-                                        </sp-menu-item>
-                                    ))}
-                                </sp-menu-group>
-                            </sp-menu>
-                        </sp-picker>
-
-                        <sp-picker
-                            size="m"
-                            label="Ano"
-                            placeholder="Selecione o ano"
-                            id="year-picker"
-                        >
-                            <sp-menu>
-                                <sp-menu-group>
-                                    {[...Array(2)].map((_, index) => (
-                                        <sp-menu-item key={2023 + index} onClick={() => {
-                                            setSelectedYear(2023 + index);
-                                            handleDateChange({ selectedDay, selectedMonth, selectedYear: 2023 + index });
-                                        }}>
-                                            {2023 + index}
-                                        </sp-menu-item>
-                                    ))}
-                                </sp-menu-group>
-                            </sp-menu>
-                        </sp-picker>
-                    </div>
-                </div>
-            )}
-
-
-            {selectedBirdseed !== null && (
-                <>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group"><sp-label>Birdseed</sp-label>
+                <sp-field-group width={{ base: 'size-3000', L: "single-line-width" }}>
                     <div>
-                        <sp-field-group>
-                            <sp-checkbox size="m" onClick={() => handleBirdseedCopyClick('birdseedcopy')} >Extra Birdseed</sp-checkbox>
-                        </sp-field-group>
+                        <sp-picker id="picker-m" size="m" label="Selection type" placeholder="Selecione o birdseed">
+                            <sp-menu>
+                                <sp-menu-group>
+                                    <sp-menu-item onClick={() => handleBirdseedClick('standard')}>Standard</sp-menu-item>
+                                    <sp-menu-item onClick={() => handleBirdseedClick('outlet')}>Outlet</sp-menu-item>
+                                </sp-menu-group>
+                            </sp-menu>
+                        </sp-picker>
                     </div>
-                </>
-            )
-            }
+                </sp-field-group>
 
-            {
-                selectedBirdseedCopy === "birdseedcopy" && (
-                    <>
-                        <div>
-                            <sp-field-label for="funding-copy-field">Texto extra Birdseed</sp-field-label>
-                            <sp-textfield
-                                style={{ width: "90vw" }}
-                                id="birdseed-copy-field"
-                                placeholder="Texto extra para o Birdseed"
-                                value={birdseedCopyValue}
-                                onInput={handleBirdseedCopyChange}
-                            ></sp-textfield>
+
+                {selectedBirdseed === 'standard' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <sp-detail>DATA DE DISPARO</sp-detail>
+                        <div style={{ display: 'flex', flexWrap: "wrap" }}>
+
+                            <sp-picker
+                                size="m"
+                                label="Dia"
+                                placeholder="Dia"
+                                id="day-picker"
+                            >
+                                <sp-menu>
+                                    <sp-menu-group>
+                                        {[...Array(31)].map((_, index) => (
+                                            <sp-menu-item key={index + 1} onClick={() => {
+                                                setSelectedDay(index + 1);
+                                                handleDateChange({ selectedDay: index + 1, selectedMonth, selectedYear });
+                                            }}>
+                                                {index + 1}
+                                            </sp-menu-item>
+                                        ))}
+                                    </sp-menu-group>
+                                </sp-menu>
+                            </sp-picker>
+
+                            <sp-picker
+                                size="m"
+                                label="Mês"
+                                placeholder="Mês"
+                                id="month-picker"
+                            >
+                                <sp-menu>
+                                    <sp-menu-group>
+                                        {[...Array(12)].map((_, index) => (
+                                            <sp-menu-item key={index + 1} onClick={() => {
+                                                setSelectedMonth(index + 1);
+                                                handleDateChange({ selectedDay, selectedMonth: index + 1, selectedYear });
+                                            }}>
+                                                {index + 1}
+                                            </sp-menu-item>
+                                        ))}
+                                    </sp-menu-group>
+                                </sp-menu>
+                            </sp-picker>
+
+                            <sp-picker
+                                size="m"
+                                label="Ano"
+                                placeholder="Ano"
+                                id="year-picker"
+                            >
+                                <sp-menu>
+                                    <sp-menu-group>
+                                        {[...Array(2)].map((_, index) => (
+                                            <sp-menu-item key={2023 + index} onClick={() => {
+                                                setSelectedYear(2023 + index);
+                                                handleDateChange({ selectedDay, selectedMonth, selectedYear: 2023 + index });
+                                            }}>
+                                                {2023 + index}
+                                            </sp-menu-item>
+                                        ))}
+                                    </sp-menu-group>
+                                </sp-menu>
+                            </sp-picker>
                         </div>
-                    </>
-                )
-            }
+                    </div>
+                )}
+
+                <div style={{margin:"-5px 0 0 10px",}}>
+                    {selectedBirdseed !== null && (
+                        <>
+                            <div>
+                                <sp-field-group>
+                                    <sp-checkbox size="m" onClick={() => handleBirdseedCopyClick('birdseedcopy')} >Copy extra</sp-checkbox>
+                                </sp-field-group>
+                            </div>
+                        </>
+                    )
+                    }
+
+                    {
+                        selectedBirdseedCopy === "birdseedcopy" && (
+                            <>
+                                <div style={{marginTop:"10px"}}>
+                                    <sp-textfield
+                                        id="birdseed-copy-field"
+                                        placeholder="Texto extra para o Birdseed"
+                                        value={birdseedCopyValue}
+                                        onInput={handleBirdseedCopyChange}
+                                        {...(birdseedCopyValue !== "" && { valid: true })}
+                                    ></sp-textfield>
+                                </div>
+                            </>
+                        )
+                    }
+                </div>
+            </div>
 
         </>
     );

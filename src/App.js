@@ -1355,7 +1355,7 @@ function App() {
       <Theme theme="spectrum" scale="medium" color="light">
         <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
         <AccentColorSelector onAccentColorChange={handleAccentColorChange} />
-        <div style={{ display: "flex", flexWrap: "wrap" }} class="group"><sp-label>Header & Funding</sp-label>
+        <div style={{ display: "flex", flexWrap: "wrap" }} className="group"><sp-label>Header & Funding</sp-label>
           <HeaderSelector handleHeaderSelect={setSelectedHeader} />
           <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
         </div>
