@@ -334,7 +334,7 @@ function App() {
           await app.open(fileEntry);
           const secondDocument = app.documents[1];
 
-          const formattedfundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 25);
+          const formattedfundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 20);
 
           let batchFundingCopy;
 
@@ -480,7 +480,7 @@ function App() {
 
 
           const formattedHeadlineValue = limitCharsPerLine(headlineValue ? formatHeadlineCopy(headlineValue) : '', 20);
-          const formattedSubHeadlineValue = limitCharsPerLine(subHeadlineValue || '', 40);
+          const formattedSubHeadlineValue = limitCharsPerLine(subHeadlineValue || '', 55);
 
           await batchPlay(batchChangeColor, {});
 
@@ -695,7 +695,7 @@ function App() {
       const pluginDir = await fs.getPluginFolder();
       const fileEntry = await pluginDir.getEntry(pluginFilePath);
 
-      const formattedPluginCopyValue = limitCharsPerLine(pluginCopyValue || '', 50);
+      const formattedPluginCopyValue = limitCharsPerLine(pluginCopyValue || '', 60);
       const formattedleftCopyValue = limitCharsPerLine(leftCopyValue || '', 13);
       const formattedMiddleCopyValue = limitCharsPerLine(middleCopyValue || '', 13);
       const formattedRightCopyValue = limitCharsPerLine(rightCopyValue || '', 13);
@@ -880,7 +880,7 @@ function App() {
   const bannerCtaValue = bannerCtaValues?.bannerCtaValue || '';
 
   const formattedBannerHeadlineValue = limitCharsPerLine(bannerHeadlineValue || '', 27);
-  const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 55);
+  const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 60);
 
   const handleBannerSelect = async () => {
     try {
