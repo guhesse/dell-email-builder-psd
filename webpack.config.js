@@ -62,6 +62,7 @@ const shared = {
       },
     ],
   },
+  
   resolve: {
     extensions: [".js", ".json"],
     // This is required for the spectrum web component to properly work in UXP
