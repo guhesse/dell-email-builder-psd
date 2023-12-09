@@ -25,7 +25,8 @@
       "extensions": [
         ".pdf",
         ".xd",
-        ".psd"
+        ".psd",
+        ".csv"
       ]
     }
   },
