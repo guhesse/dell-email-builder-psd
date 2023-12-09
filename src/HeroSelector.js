@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Theme } from "@swc-react/theme";
 
 export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
 
@@ -177,8 +176,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                         </sp-action-button>
                     </div>
                 </sp-field-group>
-
-
 
 
                 {selectedHero === 'hero2-promotion' && (

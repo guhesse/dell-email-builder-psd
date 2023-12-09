@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { Theme } from "@swc-react/theme";
+import React, { useState } from "react";
 
 export default function AccentColorSelector({ onAccentColorChange }) {
     const cores = {
@@ -60,7 +59,7 @@ export default function AccentColorSelector({ onAccentColorChange }) {
         burgundy: "rgb(105, 29, 63)",
     };
 
-    let [selectedColor, setSelectedColor] = useState("dellBlue");
+    const [selectedColor, setSelectedColor] = useState("dellBlue");
 
     const handleColorClick = (color) => {
         setSelectedColor(color);
@@ -68,7 +67,6 @@ export default function AccentColorSelector({ onAccentColorChange }) {
             colorName: color,
             rgbValues: cores[color],
         };
-        // Certifique-se de que `onAccentColorChange` está definido antes de chamá-lo
         if (onAccentColorChange) {
             onAccentColorChange(selectedColorInfo);
         }
@@ -77,7 +75,7 @@ export default function AccentColorSelector({ onAccentColorChange }) {
     return (
         <>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group"><sp-label>Accent Color</sp-label>
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin:"-1em 0"}}>
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin: "-1em 0" }}>
                     <span style={{ backgroundColor: coresRGB[selectedColor], width: "55px", height: "55px", borderRadius: "30px", border: "white 1px solid" }}></span>
                     <sp-field-group style={{ padding: "10" }}>
                         <sp-detail for="accent-color">ACCENT COLOR</sp-detail>
@@ -98,4 +96,8 @@ export default function AccentColorSelector({ onAccentColorChange }) {
             </div>
         </>
     );
+    
 }
+
+
+
