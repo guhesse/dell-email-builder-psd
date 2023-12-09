@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { limitCharsPerLine } from "../App.js";
 import { batchPlay } from "../App.js";
-import { useAccentColor } from '../App.js';
 
 
-export default async function Hero2Promotion(heroCopyValues) {
-    const redValue = 55;
-    const greenValue = 25;
-    const blueValue = 80;
+
+export default async function Hero2Promotion(heroCopyValues, colorValues) {
+
+    const { red, green, blue } = colorValues;
 
     const { badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, specsValue, priceValue, heroCtaValue } = heroCopyValues;
 
@@ -24,7 +23,7 @@ export default async function Hero2Promotion(heroCopyValues) {
 
     const batchChangeColor = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" }, },
-        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: redValue, grain: greenValue, blue: blueValue }, }, _options: { dialogOptions: "dontDisplay" }, },
+        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: red, grain: green, blue: blue }, }, _options: { dialogOptions: "dontDisplay" }, },
     ];
 
     await batchPlay(batchChangeColor, {});

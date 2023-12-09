@@ -58,19 +58,27 @@ function App() {
 
   const [selectedColorValues, setSelectedColorValues] = useState(null);
 
-  const [redValue, setRedValue] = useState(6);
-  const [greenValue, setGreenValue] = useState(114);
-  const [blueValue, setBlueValue] = useState(203);
+  const initialColorValues = {
+    red: 6,
+    green: 114,
+    blue: 203
+  };
+
+  const [colorValues, setColorValues] = useState(initialColorValues);
 
   const handleAccentColorChange = (values) => {
     setSelectedColorValues(values);
 
     if (values) {
-      setRedValue(values.rgbValues.r);
-      setGreenValue(values.rgbValues.g);
-      setBlueValue(values.rgbValues.b);
+      setColorValues({
+        red: values.rgbValues.r,
+        green: values.rgbValues.g,
+        blue: values.rgbValues.b
+      });
     }
   };
+
+  const { red, green, blue } = colorValues;
 
   // Fun\u00e7\u00e3o para limpar todas as alturas antes de montar o layout novamente 
 
@@ -85,6 +93,8 @@ function App() {
     footerHeight = "";
     birdseedHeight = "";
   }
+
+  
 
   // Fun\u00e7\u00e3o para deletar todas as camadas antes de colocar os m\u00f3dulos
 
@@ -467,7 +477,7 @@ function App() {
 
           if (hero === 'hero2-promotion') {
             try {
-              await Hero2Promotion(heroCopyValues);
+              await Hero2Promotion(heroCopyValues, colorValues);
               // Se precisar de alguma lógica após a execução de Hero2Promotion
             } catch (error) {
               console.error('Erro ao executar Hero2Promotion:', error);
@@ -572,7 +582,7 @@ function App() {
 
           const batchChangeColor = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redValue, grain: greenValue, blue: blueValue } }, _options: { dialogOptions: "dontDisplay" } }
+            { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: red, grain: green, blue: blue } }, _options: { dialogOptions: "dontDisplay" } }
           ];
 
           await batchPlay(batchChangeColor, {});
