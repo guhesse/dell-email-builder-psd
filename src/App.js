@@ -11,6 +11,7 @@ import FpoSelector from './fpoSelector.js';
 import BannerSelector from './BannerSelector.js';
 import FooterSelector from './FooterSelector.js';
 import BirdseedSelector from './BirdseedSelector.js';
+import Hero1Lifestyle from './HeroLayout/hero1lifestyle.jsx';
 import Hero2Promotion from './HeroLayout/hero2promotion.jsx';
 
 
@@ -54,6 +55,82 @@ export function limitCharsPerLine(text, limit) {
   return result;
 }
 
+
+const csvValues = {
+  'Campaign Type': '',
+  'SL': '',
+  'SSL': '',
+  'Vendor Funding Name': '',
+};
+
+async function readCSVFile() {
+  const csvFilePath = 'assets/briefing.csv';
+  const fs = storage.localFileSystem;
+
+  try {
+    const pluginDir = await fs.getPluginFolder();
+    const csvFileEntry = await pluginDir.getEntry(csvFilePath);
+
+    const readFile = async (fileEntry) => {
+      try {
+        const contents = await fileEntry.read();
+        const rows = contents.split('\n');
+        const headerRow = rows[0].split(';');
+
+        // Encontrar índices das colunas Basic Info e Enter Content
+        const columnIndexBasicInfo = headerRow.indexOf('Basic Info');
+        const columnIndexEnterContent = headerRow.indexOf('Enter Content');
+
+        // Verificar se os índices foram encontrados corretamente
+        if (columnIndexBasicInfo !== -1 && columnIndexEnterContent !== -1) {
+          for (let i = 1; i < rows.length; i++) {
+            const columns = rows[i].split(';');
+
+            // Obter o valor da coluna Basic Info e Enter Content
+            const basicInfoValue = columns[columnIndexBasicInfo];
+            const enterContentValue = columns[columnIndexEnterContent];
+
+            // // Verificar se os valores não estão vazios e atribuir ao identificador correspondente
+            // if (basicInfoValue !== '' && enterContentValue !== '') {
+            //   // Armazenar o valor de Enter Content no identificador correspondente
+            //   if (csvValues.hasOwnProperty(basicInfoValue)) {
+            //     csvValues[basicInfoValue] = enterContentValue;
+            //     console.log(`Valor correspondente para '${basicInfoValue}': ${enterContentValue}`);
+            //   }
+            // }
+          }
+        } else {
+          console.log('Índices das colunas não encontrados.');
+        }
+      } catch (error) {
+        console.error('Erro ao ler o arquivo:', error);
+      }
+    };
+
+    const targetFunction = async (executionContext) => {
+      try {
+        await readFile(csvFileEntry);
+      } catch (error) {
+        console.error('Erro ao ler o CSV:', error);
+      }
+    };
+
+    const options = {
+      commandName: 'Ler CSV',
+      interactive: true,
+    };
+
+
+    await core.executeAsModal(targetFunction, options);
+  } catch (error) {
+    console.error('Erro ao acessar os arquivos:', error);
+  }
+}
+
+// Chamar a função para iniciar o processo de leitura do CSV
+readCSVFile();
+
+
 function App() {
 
   const [selectedColorValues, setSelectedColorValues] = useState(null);
@@ -94,7 +171,7 @@ function App() {
     birdseedHeight = "";
   }
 
-  
+
 
   // Fun\u00e7\u00e3o para deletar todas as camadas antes de colocar os m\u00f3dulos
 
@@ -188,10 +265,10 @@ function App() {
     setSubjectLineValues(values);
   };
 
-  const slValue = subjectLineValues?.slValue || '';
+  const slValue = subjectLineValues?.slValue || (csvValues.SL !== "" ? csvValues.SL : '');
   const sslValue = subjectLineValues?.sslValue || '';
 
-  const sslSelect = async () => {
+  const sslSelect = async (updatedSLValue) => {
     const sslFilePath = `assets/sl-ssl/SL & SSL.psd`;
     const fs = storage.localFileSystem;
 
@@ -331,7 +408,8 @@ function App() {
 
   const fundingCopyValue = fundingCopyValues?.fundingCopyValue || '';
 
-  const handleFundingSelect = async (funding) => {
+  const handleFundingSelect = async (funding) => {         
+
     const fundingFilePath = `assets/fundings/${funding}.psd`;
     const fs = storage.localFileSystem;
     try {
@@ -446,9 +524,14 @@ function App() {
     headlineValue: '', // Certifique-se de definir esse estado
     subHeadlineValue: '', // Certifique-se de definir esse estado
     inlinePromoValue: '',
+    inlinePromo2Value: '',
     productNameValue: '',
+    productName2Value: '',
+    productName3Value: '',
     specsValue: '',
+    specs2Value: '',
     priceValue: '',
+    price2Value: '',
     heroCtaValue: '',
   });
 
@@ -475,6 +558,15 @@ function App() {
           await app.open(fileEntry);
           const secondDocument = app.documents[1];
 
+          if (hero === 'hero1-lifestyle') {
+            try {
+              await Hero1Lifestyle(heroCopyValues, colorValues);
+              // Se precisar de alguma lógica após a execução de Hero1Promotion
+            } catch (error) {
+              console.error('Erro ao executar Hero1Lifestyle:', error);
+            }
+          } 
+
           if (hero === 'hero2-promotion') {
             try {
               await Hero2Promotion(heroCopyValues, colorValues);
@@ -482,7 +574,7 @@ function App() {
             } catch (error) {
               console.error('Erro ao executar Hero2Promotion:', error);
             }
-          }
+          } 
 
           const heroWidth = secondDocument.width;
           heroHeight = secondDocument.height;
@@ -502,6 +594,10 @@ function App() {
           const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
+
+          if (selectedFunding === "no-vf"){
+            fundingHeight = headerHeight
+          }
 
           const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
           let offsetModules = ((slHeight + 30) + (fundingHeight));
@@ -1201,17 +1297,17 @@ function App() {
 
     try {
       await clearAllLayers();
-      await clearAllHeights();
+      // await clearAllHeights();
       await fitToScreenPre();
       var slHeight = await sslSelect();
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight);
       var fundingHeight = await handleFundingSelect(selectedFunding, headerHeight, slHeight);
       var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight);
-      var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, heroHeight);
-      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight);
-      var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
-      var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
-      var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
+      // var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, heroHeight);
+      // var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight);
+      // var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
+      // var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
+      // var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
       await fitToScreenPos(slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
 
       console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
