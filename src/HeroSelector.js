@@ -320,6 +320,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                 </sp-field-group>
 
 
+
                 {/* Inputs for hero selection */}
 
                 {selectedHero === 'hero1-lifestyle' && (
@@ -332,7 +333,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Badge"
                                     value={badgeValue}
                                     onInput={handleBadgeChange}
-                                    {...(badgeValue !== "" && { valid: true })}
+                                    valid={badgeValue !== "" ? true : undefined}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -342,7 +343,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Headline"
                                     value={headlineValue}
                                     onInput={handleHeadlineChange}
-                                    {...(headlineValue !== "" && { valid: true })}
+                                    valid={headlineValue !== "" ? true : undefined}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -352,7 +353,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o SubHeadline"
                                     value={subHeadlineValue}
                                     onInput={handleSubHeadlineChange}
-                                    {...(subHeadlineValue !== "" && { valid: true })}
+                                    valid={subHeadlineValue !== "" ? true : undefined}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -362,7 +363,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleProductNameChange}
-                                    {...(productNameValue !== "" && { valid: true })}
+                                    valid={productNameValue !== "" ? true : undefined}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -372,7 +373,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira as Specs"
                                     value={heroCtaValue}
                                     onInput={handleHeroCtaChange}
-                                    {...(heroCtaValue !== "" && { valid: true })}
+                                    valid={heroCtaValue !== "" ? true : undefined}
                                 ></sp-textfield>
                             </div>
 

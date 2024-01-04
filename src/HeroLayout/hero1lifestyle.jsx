@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { limitCharsPerLine } from "../App.js";
 import { batchPlay } from "../App.js";
 
-export default async function Hero1Lifestyle(heroCopyValues, colorValues) {
+export default async function Hero1Lifestyle(heroCopyValues, accentColorValues, secondaryColorValues, tertiaryColorValues) {
 
-    const { red, green, blue } = colorValues;
+    const { redAccent, greenAccent, blueAccent } = accentColorValues;
+    const { redSecondary, greenSecondary, blueSecondary } = secondaryColorValues;
+    const { redTertiary, greenTertiary, blueTertiary } = tertiaryColorValues;
 
     const { badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, specsValue, priceValue, heroCtaValue } = heroCopyValues;
 
@@ -20,8 +22,25 @@ export default async function Hero1Lifestyle(heroCopyValues, colorValues) {
     const formattedSubHeadlineValue = limitCharsPerLine(subHeadlineValue || '', 55);
 
     const batchChangeColor = [
+        { _obj: "select", _target: [{ _ref: "layer", _name: "BG" }], makeVisible: false, layerID: [9027], _options: { dialogOptions: "dontDisplay" }, },
+        { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redAccent, grain: greenAccent, blue: blueAccent }, }, _options: { dialogOptions: "dontDisplay" }, },
+
         { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [9102], _options: { dialogOptions: "dontDisplay" }, },
-        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: red, grain: green, blue: blue }, }, _options: { dialogOptions: "dontDisplay" }, },
+        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: redSecondary, grain: greenSecondary, blue: blueSecondary }, }, _options: { dialogOptions: "dontDisplay" }, },
+
+        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], makeVisible: false, layerID: [9616], _options: { dialogOptions: "dontDisplay" }, },
+        { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redTertiary, grain: greenTertiary, blue: blueTertiary }, }, _options: { dialogOptions: "dontDisplay" }, },
+
+        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Copy" }], makeVisible: false, layerID: [9617], _options: { dialogOptions: "dontDisplay" }, },
+        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: redAccent, grain: greenAccent, blue: blueAccent }, }, _options: { dialogOptions: "dontDisplay" }, },
+
+        { _obj: "select", _target: [{ _ref: "layer", _name: "Pattern" }], makeVisible: false, layerID: [9653], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "set", _target: [{ _ref: "property", _property: "layerEffects" }, { _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layerEffects", scale: { _unit: "percentUnit", _value: 100 }, solidFill: { _obj: "solidFill", enabled: true, present: true, showInDialog: true, mode: { _enum: "blendMode", _value: "normal" }, color: { _obj: "RGBColor", red: redSecondary, grain: greenSecondary, blue: blueSecondary }, opacity: { _unit: "percentUnit", _value: 100 } } }, _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+
+        { _obj: "select", _target: [{ _ref: "layer", _name: "Super Charger" }], makeVisible: false, layerID: [9651], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textStyle", textOverrideFeatureName: 808466226, typeStyleOperationType: 3, color: { _obj: "RGBColor", red: redSecondary, grain: greenSecondary, blue: blueSecondary } }, _isCommand: false, _options: { dialogOptions: "dontDisplay" } }
+
+
     ];
 
     await batchPlay(batchChangeColor, {});
@@ -107,16 +126,16 @@ export default async function Hero1Lifestyle(heroCopyValues, colorValues) {
     // await batchPlay(specsCopyChange, {});
 
     const offsetProduct = [
-        // { _obj: "select", _target: [{ _ref: "layer", _name: "Product" }], makeVisible: false, layerID: [9790], _options: { dialogOptions: "dontDisplay" } },
-        // { _obj: "select", _target: [{ _ref: "layer", _name: "Specs" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [9780, 9781, 9782, 9783, 9784, 9787, 9788, 9789, 9785, 9790], _options: { dialogOptions: "dontDisplay" } },
-        // { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "select", _target: [{ _ref: "layer", _name: "Product" }], makeVisible: false, layerID: [9655], _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "select", _target: [{ _ref: "layer", _name: "Specs" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [9653, 9654, 9655], _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
         { _obj: "select", _target: [{ _ref: "layer", _name: "Product" }], makeVisible: false, layerID: [9627], _options: { dialogOptions: "dontDisplay" } },
         { _obj: "move", _target: [{ _ref: "layer", _name: "Product", }], makeVisible: false, layerID: [9627], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newProductPosition, } }, _options: { dialogOptions: "dontDisplay" }, },
         { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Product" },], },
     ];
 
     const resultProductBoundingBox = await batchPlay(offsetProduct, {});
-    const boundingBoxProduct = resultProductBoundingBox[2].bounds;
+    const boundingBoxProduct = resultProductBoundingBox[5].bounds;
 
     const changeCtaCopy = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Copy" }], makeVisible: false, layerID: [9617], _options: { dialogOptions: "dontDisplay" } },
@@ -126,7 +145,7 @@ export default async function Hero1Lifestyle(heroCopyValues, colorValues) {
 
     const resultCtaCopyBoundingBox = await batchPlay(changeCtaCopy, {});
     const boundingBoxCtaCopy = resultCtaCopyBoundingBox[2].boundingBox;
-    const newBorderCta = boundingBoxCtaCopy.width._value;
+    const newBorderCta = boundingBoxCtaCopy.width._value + 20;
 
     const resizeCtaBorder = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], makeVisible: false, layerID: [9616], _options: { dialogOptions: "dontDisplay" } },
@@ -143,7 +162,7 @@ export default async function Hero1Lifestyle(heroCopyValues, colorValues) {
 
 
     const ctaPadding = productPadding + 50;
-    const newCtaPosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + boundingBoxLifestyle.height._value +  boundingBoxSubheadline.height._value + boundingBoxProduct.height._value + ctaPadding;
+    const newCtaPosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + boundingBoxLifestyle.height._value + boundingBoxSubheadline.height._value + boundingBoxProduct.height._value + ctaPadding;
 
     const offsetCta = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [9845], _options: { dialogOptions: "dontDisplay" } },

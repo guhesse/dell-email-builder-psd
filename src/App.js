@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import HeaderSelector from "./HeaderSelector.js";
 import SubjectLineSelector from './SubjectLineSelector.js';
-import AccentColorSelector from './AccentColorSelector.js';
+import ColorSelector from './ColorSelector.js';
 import HeroSelector from './HeroSelector.js';
 import PluginSelector from './PluginSelector.js';
 import FundingSelector from './FundingSelector.js';
@@ -135,27 +135,70 @@ function App() {
 
   const [selectedColorValues, setSelectedColorValues] = useState(null);
 
-  const initialColorValues = {
-    red: 6,
-    green: 114,
-    blue: 203
+  const initialAccentColorValues = {
+    red: 36,
+    green: 71,
+    blue: 57
   };
 
-  const [colorValues, setColorValues] = useState(initialColorValues);
+  const initialSecondaryColorValues = {
+    red: 159,
+    green: 255,
+    blue: 153
+  };
+
+  const initialTertiaryColorValues = {
+    red: 191,
+    green: 255,
+    blue: 183
+  };
+
+  const [accentColorValues, setAccentColorValues] = useState(initialAccentColorValues);
+  const [secondaryColorValues, setSecondaryColorValues] = useState(initialSecondaryColorValues);
+  const [tertiaryColorValues, setTertiaryColorValues] = useState(initialTertiaryColorValues);
 
   const handleAccentColorChange = (values) => {
     setSelectedColorValues(values);
 
     if (values) {
-      setColorValues({
-        red: values.rgbValues.r,
-        green: values.rgbValues.g,
-        blue: values.rgbValues.b
+      setAccentColorValues({
+        redAccent: values.rgbValues.r,
+        greenAccent: values.rgbValues.g,
+        blueAccent: values.rgbValues.b
       });
     }
   };
 
-  const { red, green, blue } = colorValues;
+  const handleSecondaryColorChange = (values) => {
+    setSelectedColorValues(values);
+
+    if (values) {
+      setSecondaryColorValues({
+        redSecondary: values.rgbValues.r,
+        greenSecondary: values.rgbValues.g,
+        blueSecondary: values.rgbValues.b
+      });
+    }
+  }; 
+
+  const handleTertiaryColorChange = (values) => {
+    setSelectedColorValues(values);
+
+    if (values) {
+      setTertiaryColorValues({
+        redTertiary: values.rgbValues.r,
+        greenTertiary: values.rgbValues.g,
+        blueTertiary: values.rgbValues.b
+      });
+    }
+  }; 
+
+  const { redAccent, greenAccent, blueAccent } = accentColorValues;
+
+  const { redSecondary, greenSecondary, blueSecondary } = secondaryColorValues;
+
+  const { redTertiary, greenTertiary, blueTertiary } = tertiaryColorValues;
+  
 
   // Fun\u00e7\u00e3o para limpar todas as alturas antes de montar o layout novamente 
 
@@ -560,7 +603,7 @@ function App() {
 
           if (hero === 'hero1-lifestyle') {
             try {
-              await Hero1Lifestyle(heroCopyValues, colorValues);
+              await Hero1Lifestyle(heroCopyValues, accentColorValues, secondaryColorValues, tertiaryColorValues );
               // Se precisar de alguma lógica após a execução de Hero1Promotion
             } catch (error) {
               console.error('Erro ao executar Hero1Lifestyle:', error);
@@ -597,6 +640,8 @@ function App() {
 
           if (selectedFunding === "no-vf"){
             fundingHeight = headerHeight
+          } else {
+            
           }
 
           const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
@@ -678,7 +723,7 @@ function App() {
 
           const batchChangeColor = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: red, grain: green, blue: blue } }, _options: { dialogOptions: "dontDisplay" } }
+            { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redSecondary, grain: greenSecondary, blue: blueSecondary } }, _options: { dialogOptions: "dontDisplay" } }
           ];
 
           await batchPlay(batchChangeColor, {});
@@ -1297,17 +1342,17 @@ function App() {
 
     try {
       await clearAllLayers();
-      // await clearAllHeights();
+      await clearAllHeights();
       await fitToScreenPre();
       var slHeight = await sslSelect();
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight);
       var fundingHeight = await handleFundingSelect(selectedFunding, headerHeight, slHeight);
       var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight);
-      // var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, heroHeight);
-      // var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight);
-      // var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
-      // var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
-      // var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
+      var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, heroHeight);
+      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight);
+      var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
+      var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
+      var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
       await fitToScreenPos(slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
 
       console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
@@ -1322,7 +1367,7 @@ function App() {
     <div className="wrapper">
       <Theme theme="spectrum" scale="medium" color="light">
         <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
-        <AccentColorSelector onAccentColorChange={handleAccentColorChange} />
+        <ColorSelector onAccentColorChange={handleAccentColorChange} onSecondaryColorChange={handleSecondaryColorChange} onTertiaryColorChange={handleTertiaryColorChange} />
         <div style={{ display: "flex", flexWrap: "wrap" }} className="group"><sp-label>Header & Funding</sp-label>
           <HeaderSelector handleHeaderSelect={setSelectedHeader} />
           <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
