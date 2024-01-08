@@ -22,7 +22,6 @@ export default function SubjectLineSelector(props) {
         });
     };
 
-
     return (
         <>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group"><sp-label>SL & SSL</sp-label>

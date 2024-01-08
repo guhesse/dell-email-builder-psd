@@ -61,6 +61,36 @@ export default function colorSelector({ onAccentColorChange, onSecondaryColorCha
         burgundy: "rgb(105, 29, 63)",
     };
 
+    const coresHEX = {
+        white: '#FEFEFE',
+        quartz: '#EEEEEE',
+        granite: '#C8C9C7',
+        gray: '#808080',
+        carbon: '#444444',
+        black: '#000000',
+        sky: '#80C7FB',
+        dellBlue: '#0672CB',
+        royal: '#0C32A4',
+        glacier: '#E5F8FF',
+        midnight: '#0D2155',
+        teaGreen: '#E4FFD6',
+        honeydew: '#BFFFb7',
+        lime: '#9FFF99',
+        basil: '#37CC5C',
+        hunter: '#247554',
+        deepGreen: '#244739',
+        periwinkle: '#DEDDFF',
+        lavender: '#BEAFFf',
+        amethyst: '#8E5CEF',
+        plum: '#612CB0',
+        raisin: '#2A145A',
+        sand: '#FBEECE',
+        apricot: '#F4BB5E',
+        coral: '#E1633F',
+        scarlet: '#B30B37',
+        burgundy: '#691D3F',
+    };
+
     const [accentSelectedColor, setAccentSelectedColor] = useState("deepGreen");
 
     const handleAccentColorClick = (color) => {
@@ -87,7 +117,7 @@ export default function colorSelector({ onAccentColorChange, onSecondaryColorCha
         }
     };
 
-    const [tertiarySelectedColor, setTertiarySelectedColor] = useState("teaGreen");
+    const [tertiarySelectedColor, setTertiarySelectedColor] = useState("honeydew");
 
     const handleTertiaryColorClick = (color) => {
         setTertiarySelectedColor(color);
@@ -100,6 +130,8 @@ export default function colorSelector({ onAccentColorChange, onSecondaryColorCha
         }
     };
 
+    const [isPickerOpen, setIsPickerOpen] = useState(false);
+
     return (
         <>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group"><sp-label>Colors</sp-label>
@@ -111,9 +143,12 @@ export default function colorSelector({ onAccentColorChange, onSecondaryColorCha
                             <sp-menu>
                                 {Object.keys(cores).map((cor) => (
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleAccentColorClick(cor)}>
-                                        <sp-menu-item style={{ width: "100%", alignItems: "center" }}>
-                                            <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", padding: "0px 10px 0px 0px", }}></span>
-                                            {cor.charAt(0).toUpperCase() + cor.slice(1)}
+                                        <sp-menu-item style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                                            <div style={{ display: "flex", alignItems: "center" }}>
+                                                <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
+                                                {cor.charAt(0).toUpperCase() + cor.slice(1)}
+                                                <span style={{ color: "gray", marginLeft: "10px" }}>{coresHEX[cor]}</span>
+                                            </div>
                                         </sp-menu-item>
                                     </div>
                                 ))}
@@ -125,13 +160,16 @@ export default function colorSelector({ onAccentColorChange, onSecondaryColorCha
                     <span style={{ backgroundColor: coresRGB[secondarySelectedColor], width: "55px", height: "55px", borderRadius: "30px", border: "white 1px solid" }}></span>
                     <sp-field-group style={{ padding: "10" }}>
                         <sp-detail for="secondary-color">SECONDARY COLOR</sp-detail>
-                        <sp-picker placeholder="Selecione o Secondary Color" id="picker-m" size="m" label="Selection type">
+                        <sp-picker placeholder="Selecione o Accent Color" id="picker-m" size="m" label="Selection type">
                             <sp-menu>
                                 {Object.keys(cores).map((cor) => (
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleSecondaryColorClick(cor)}>
-                                        <sp-menu-item style={{ width: "100%", alignItems: "center" }}>
-                                            <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", padding: "0px 10px 0px 0px", }}></span>
-                                            {cor.charAt(0).toUpperCase() + cor.slice(1)}
+                                        <sp-menu-item style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                                            <div style={{ display: "flex", alignItems: "center" }}>
+                                                <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
+                                                {cor.charAt(0).toUpperCase() + cor.slice(1)}
+                                                <span style={{ color: "gray", marginLeft: "10px" }}>{coresHEX[cor]}</span>
+                                            </div>
                                         </sp-menu-item>
                                     </div>
                                 ))}
@@ -143,13 +181,16 @@ export default function colorSelector({ onAccentColorChange, onSecondaryColorCha
                     <span style={{ backgroundColor: coresRGB[tertiarySelectedColor], width: "55px", height: "55px", borderRadius: "30px", border: "white 1px solid" }}></span>
                     <sp-field-group style={{ padding: "10" }}>
                         <sp-detail for="tertiary-color">TERTIARY COLOR</sp-detail>
-                        <sp-picker placeholder="Selecione a Tertiary Color" id="picker-m" size="m" label="Selection type">
+                        <sp-picker placeholder="Selecione o Accent Color" id="picker-m" size="m" label="Selection type">
                             <sp-menu>
                                 {Object.keys(cores).map((cor) => (
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleTertiaryColorClick(cor)}>
-                                        <sp-menu-item style={{ width: "100%", alignItems: "center" }}>
-                                            <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", padding: "0px 10px 0px 0px", }}></span>
-                                            {cor.charAt(0).toUpperCase() + cor.slice(1)}
+                                        <sp-menu-item style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                                            <div style={{ display: "flex", alignItems: "center" }}>
+                                                <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
+                                                {cor.charAt(0).toUpperCase() + cor.slice(1)}
+                                                <span style={{ color: "gray", marginLeft: "10px" }}>{coresHEX[cor]}</span>
+                                            </div>
                                         </sp-menu-item>
                                     </div>
                                 ))}

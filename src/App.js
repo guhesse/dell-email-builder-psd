@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import HeaderSelector from "./HeaderSelector.js";
 import SubjectLineSelector from './SubjectLineSelector.js';
 import ColorSelector from './ColorSelector.js';
+import SkinnySelector from './SkinnySelector.js';
 import HeroSelector from './HeroSelector.js';
 import PluginSelector from './PluginSelector.js';
 import FundingSelector from './FundingSelector.js';
@@ -13,6 +14,7 @@ import FooterSelector from './FooterSelector.js';
 import BirdseedSelector from './BirdseedSelector.js';
 import Hero1Lifestyle from './HeroLayout/hero1lifestyle.jsx';
 import Hero2Promotion from './HeroLayout/hero2promotion.jsx';
+
 
 
 import { Theme } from "@swc-react/theme";
@@ -32,6 +34,7 @@ var fpoHeight = "";
 var bannerHeight = "";
 var footerHeight = "";
 var birdseedHeight = "";
+var skinnyBannerHeight = "";
 
 
 // Fun\u00e7\u00e3o para definir limite de caracter por linha
@@ -136,21 +139,21 @@ function App() {
   const [selectedColorValues, setSelectedColorValues] = useState(null);
 
   const initialAccentColorValues = {
-    red: 36,
-    green: 71,
-    blue: 57
+    redAccent: 36,
+    greenAccent: 71,
+    blueAccent: 57
   };
 
   const initialSecondaryColorValues = {
-    red: 159,
-    green: 255,
-    blue: 153
+    redSecondary: 159,
+    greenSecondary: 255,
+    blueSecondary: 153
   };
 
   const initialTertiaryColorValues = {
-    red: 191,
-    green: 255,
-    blue: 183
+    redTertiary: 191,
+    greenTertiary: 255,
+    blueTertiary: 183
   };
 
   const [accentColorValues, setAccentColorValues] = useState(initialAccentColorValues);
@@ -179,7 +182,8 @@ function App() {
         blueSecondary: values.rgbValues.b
       });
     }
-  }; 
+  };
+
 
   const handleTertiaryColorChange = (values) => {
     setSelectedColorValues(values);
@@ -191,14 +195,14 @@ function App() {
         blueTertiary: values.rgbValues.b
       });
     }
-  }; 
+  };
 
   const { redAccent, greenAccent, blueAccent } = accentColorValues;
 
   const { redSecondary, greenSecondary, blueSecondary } = secondaryColorValues;
 
   const { redTertiary, greenTertiary, blueTertiary } = tertiaryColorValues;
-  
+
 
   // Fun\u00e7\u00e3o para limpar todas as alturas antes de montar o layout novamente 
 
@@ -331,9 +335,9 @@ function App() {
           // Fun\u00e7\u00e3o que troca o texto do SL e SSL
           const changeSLCopy = [
             { _obj: "select", _target: [{ _ref: "layer", _name: "SL" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `SL PT :  ${slValue}`, } },
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `Subject Line:  ${slValue}`, } },
             { _obj: "select", _target: [{ _ref: "layer", _name: "SSL" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `SSL :  ${sslValue}`, } }
+            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `Super Subject Line :  ${sslValue}`, } }
           ];
 
           await batchPlay(changeSLCopy, {});
@@ -451,7 +455,7 @@ function App() {
 
   const fundingCopyValue = fundingCopyValues?.fundingCopyValue || '';
 
-  const handleFundingSelect = async (funding) => {         
+  const handleFundingSelect = async (funding) => {
 
     const fundingFilePath = `assets/fundings/${funding}.psd`;
     const fs = storage.localFileSystem;
@@ -556,7 +560,124 @@ function App() {
   };
   // Fim de fun\u00e7\u00e3o de selecionar o Funding
 
+  const [skinnyValues, setSkinnyValues] = useState(null);
 
+  const handleSkinnyChange = (values) => {
+    setSkinnyValues(values);
+  };
+
+  const skinnyHeadlineValue = skinnyValues?.skinnyHeadlineValue || (csvValues.SL !== "" ? csvValues.SL : '');
+  const skinnyCopyValue = skinnyValues?.skinnyCopyValue || '';
+
+  console.log("Skinny Headline", skinnyHeadlineValue)
+  console.log("Skinny Copy", skinnyCopyValue)
+
+  // Fun\u00e7\u00e3o de modificar e importar o Skinny Banner
+
+  const skinnySelect = async () => {
+    const skinnyFilePath = `assets/skinny-banner/skinny-banner.psd`;
+    const fs = storage.localFileSystem;
+
+    try {
+      const pluginDir = await fs.getPluginFolder();
+      const fileEntry = await pluginDir.getEntry(skinnyFilePath);
+
+
+      const targetFunction = async (executionContext) => {
+        try {
+          await app.open(fileEntry);
+
+          const secondDocument = app.documents[1];
+          const skinnyBannerWidth = secondDocument.width;
+
+          const formattedHeadlineCopyValue = limitCharsPerLine(skinnyHeadlineValue || '', 60);
+          const formattedSkinnyCopyValue = limitCharsPerLine(skinnyCopyValue || '', 60);
+
+          const skinnyBannerCopy = formattedHeadlineCopyValue + "\r" + formattedSkinnyCopyValue
+
+          const changeSkinnyBannerCopy = [
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Copy" }], makeVisible: false, layerID: [4], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+            {
+              _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+
+              to: {
+                _obj: "textLayer", textKey: skinnyBannerCopy, textStyleRange: [
+
+                  { _obj: "textStyleRange", from: 0, to: skinnyHeadlineValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Bold", fontName: "Roboto", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 20.75 }, color: { _obj: "RGBColor", red: redAccent, green: greenAccent, blue: blueAccent } } },
+
+                  { _obj: "textStyleRange", from: skinnyHeadlineValue.length + 1, to: skinnyHeadlineValue.length + skinnyCopyValue.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Regular", fontName: "Roboto", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 20.75 }, color: { _obj: "RGBColor", red: redAccent, green: greenAccent, blue: blueAccent } } },
+                ]
+              }, _isCommand: true
+            },
+            { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Banner Copy" }], }
+          ]
+            ;
+
+          await batchPlay(changeSkinnyBannerCopy, {});
+
+          const resultSkinnyBoundingBox = await batchPlay(changeSkinnyBannerCopy, {});
+          const boundingBoxSkinnyBanner = resultSkinnyBoundingBox[2].bounds;
+          const finalCropValue = boundingBoxSkinnyBanner.bottom._value + 20;
+
+          const finalCrop = [
+            { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redSecondary, grain: greenSecondary, blue: blueSecondary } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
+
+            { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
+
+            { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
+          ]
+
+          await batchPlay(finalCrop, {});
+
+          skinnyBannerHeight = secondDocument.height;
+
+          const selectAndCopy = [
+            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+          ];
+
+          await batchPlay(selectAndCopy, {});
+
+          const activeDocument = app.activeDocument;
+          await activeDocument.paste();
+
+          if (selectedFunding === "no-vf") {
+            fundingHeight = headerHeight
+          } else {
+          }
+
+          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+          const docWidth = activeDocument.width;
+          const docHeight = activeDocument.height;
+          const offsetX = (0 - (docWidth / 2) + (skinnyBannerWidth / 2) + 25);
+          let offsetModules = ((slHeight + 30) + (fundingHeight + 20));
+          const offsetY = (0 - (docHeight / 2) + (skinnyBannerHeight / 2) + (offsetModules));
+          pastedGroup.translate(offsetX, offsetY);
+
+          console.log('%cSkinny Banner inserido com sucesso!', 'color: #00EAADFF;');
+        } catch (error) {
+          console.error('Erro ao inserir Skinny Banner:', error);
+        }
+      };
+
+      const options = {
+        commandName: 'Inserir Skinny Banner',
+        interactive: true,
+      };
+
+      await core.executeAsModal(targetFunction, options);
+    } catch (error) {
+      console.error('Erro ao encontrar o arquivo de Skinny Banner:', error);
+    }
+  };
+
+  // Fim de fun\u00e7\u00e3o de modificar e importar o Skinny Banner
 
 
   // Fun\u00e7\u00e3o de selecionar o Hero
@@ -603,12 +724,12 @@ function App() {
 
           if (hero === 'hero1-lifestyle') {
             try {
-              await Hero1Lifestyle(heroCopyValues, accentColorValues, secondaryColorValues, tertiaryColorValues );
+              await Hero1Lifestyle(heroCopyValues, accentColorValues, secondaryColorValues, tertiaryColorValues);
               // Se precisar de alguma lógica após a execução de Hero1Promotion
             } catch (error) {
               console.error('Erro ao executar Hero1Lifestyle:', error);
             }
-          } 
+          }
 
           if (hero === 'hero2-promotion') {
             try {
@@ -617,7 +738,7 @@ function App() {
             } catch (error) {
               console.error('Erro ao executar Hero2Promotion:', error);
             }
-          } 
+          }
 
           const heroWidth = secondDocument.width;
           heroHeight = secondDocument.height;
@@ -638,14 +759,13 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if (selectedFunding === "no-vf"){
+          if (selectedFunding === "no-vf") {
             fundingHeight = headerHeight
           } else {
-            
           }
 
           const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
-          let offsetModules = ((slHeight + 30) + (fundingHeight));
+          let offsetModules = ((slHeight + 30) + (fundingHeight + 20) + (skinnyBannerHeight));
           const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
 
@@ -775,7 +895,7 @@ function App() {
 
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
-          let offsetModules = (slHeight + 30) + (fundingHeight) + (heroHeight);
+          let offsetModules = (slHeight + 30) + (fundingHeight + 20) + heroHeight + skinnyBannerHeight;
           const offsetY = (0 - (docHeight / 2) + (pluginHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
 
@@ -844,7 +964,7 @@ function App() {
           const docHeight = activeDocument.height;
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fpoWidth / 2) + 25);
-          let offsetModules = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight;
+          let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight;
           const offsetY = (0 - (docHeight / 2) + (fpoHeight / 2) + (offsetModules));
 
           pastedGroup.translate(offsetX, offsetY);
@@ -1015,7 +1135,7 @@ function App() {
 
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (bannerWidth / 2) + 25);
-          let offsetModules = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight;
+          let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight;
           const offsetY = (0 - (docHeight / 2) + (bannerHeight / 2) + offsetModules);
 
           pastedGroup.translate(offsetX, offsetY);
@@ -1081,7 +1201,7 @@ function App() {
           const docHeight = activeDocument.height;
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (footerWidth / 2) + 45);
-          let offsetModules = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight;
+          let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight;
           const offsetY = (docHeight - docHeight) - (docHeight / 2) + (footerHeight / 2) + 10 + offsetModules;
 
           pastedGroup.translate(offsetX, offsetY);
@@ -1273,7 +1393,7 @@ function App() {
 
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (birdseedWidth / 2) + 43);
-          let offsetModules = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight;
+          let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight;
           const offsetY = (docHeight - docHeight) - (docHeight / 2) + (birdseedHeight / 2) + offsetModules + 20;
 
           pastedGroup.translate(offsetX, offsetY);
@@ -1301,7 +1421,7 @@ function App() {
 
   async function fitToScreenPos() {
 
-    const allModulesSizes = (slHeight + 30) + fundingHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight + (birdseedHeight + 20) + 40;
+    const allModulesSizes = (slHeight + 30) + fundingHeight + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight + (birdseedHeight + 20) + 40;
 
     const targetFunction = async (executionContext) => {
       try {
@@ -1347,13 +1467,14 @@ function App() {
       var slHeight = await sslSelect();
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight);
       var fundingHeight = await handleFundingSelect(selectedFunding, headerHeight, slHeight);
-      var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight);
-      var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, heroHeight);
-      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight);
-      var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight);
-      var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
-      var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
-      await fitToScreenPos(slHeight, headerHeight, fundingHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
+      var skinnyBannerHeight = await skinnySelect(slHeight, headerHeight, fundingHeight);
+      var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight, skinnyBannerHeight);
+      var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, skinnyBannerHeight , heroHeight);
+      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, skinnyBannerHeight , heroHeight, pluginHeight);
+      var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight);
+      var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
+      var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
+      await fitToScreenPos(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
 
       console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
     } catch (error) {
@@ -1372,6 +1493,7 @@ function App() {
           <HeaderSelector handleHeaderSelect={setSelectedHeader} />
           <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
         </div>
+        <SkinnySelector onSkinnyChange={handleSkinnyChange}></SkinnySelector>
         <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
         <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} onSuperChargerCopyChange={handleSuperChargerCopyChange} />
         <FpoSelector handleFpoValueSelect={setSelectedFpoValue} handleFpoSegmentSelect={setSelectedFpoSegment} />
