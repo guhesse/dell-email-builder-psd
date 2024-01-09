@@ -26,23 +26,23 @@ export default function SkinnySelector(props) {
         <>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group"><sp-label>Skinny Banner</sp-label>
                 <div style={{ margin: "0 4px" }}>
-                    <sp-detail for="sl-field" >Headline</sp-detail>
+                    <sp-detail for="skinny-title" >TITLE</sp-detail>
                     <sp-textfield
                         id="skinny-headline-field"
-                        placeholder="Insira o Skinny Banner Headline"
+                        placeholder="Skinny banner title here"
                         value={skinnyHeadlineValue}
                         onInput={handleSkinnyHeadlineChange}
                         {...(skinnyHeadlineValue !== "" && { valid: true })}
                     ></sp-textfield>
                 </div>
                 <div style={{ margin: "0 4px" }}>
-                    <sp-detail for="ssl-field">Copy</sp-detail>
+                    <sp-detail for="skinny-copy">COPY</sp-detail>
                     <sp-textfield
                         id="skinny-copy-field"
-                        placeholder="Insira o Skinny Banner Copy"
+                        placeholder="Skinny banner copy here"
                         value={skinnyCopyValue}
                         onInput={handleSkinnyCopyChange}
-                        {...(skinnyCopyValue !== "" && { valid: true })}
+                        // {...(skinnyCopyValue !== "" && { valid: true })}
                     ></sp-textfield>
                 </div>
                 {/* <div>

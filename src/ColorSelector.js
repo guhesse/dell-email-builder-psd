@@ -135,11 +135,48 @@ export default function colorSelector({ onAccentColorChange, onSecondaryColorCha
     return (
         <>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group"><sp-label>Colors</sp-label>
+                <sp-overlay style={{ position: "absolute", top:"5%", right:"5%"}}>
+                    <div className="sp-tab-page" slot="trigger" id="sp-spectrum-widgets-tab-page">
+                        <sp-action-button quiet label="Edit">
+                            <div slot="icon" className="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 18 18" width="18">
+                                    <rect id="Canvas" fill="#ff13dc" opacity="0" width="18" height="18" /><path class="fill" d="M10.075,6A1.075,1.075,0,1,1,9,4.925H9A1.075,1.075,0,0,1,10.075,6Zm.09173,6H10V8.2A.20005.20005,0,0,0,9.8,8H7.83324S7.25,8.01612,7.25,8.5c0,.48365.58325.5.58325.5H8v3H7.83325s-.58325.01612-.58325.5c0,.48365.58325.5.58325.5h2.3335s.58325-.01635.58325-.5C10.75,12.01612,10.16673,12,10.16673,12ZM9,.5A8.5,8.5,0,1,0,17.5,9,8.5,8.5,0,0,0,9,.5ZM9,15.6748A6.67481,6.67481,0,1,1,15.67484,9,6.67481,6.67481,0,0,1,9,15.6748Z" />
+                                </svg>
+                            </div>
+                        </sp-action-button>
+                    </div>
+                    <sp-popover
+                        offset="5"
+                        placement="right"
+                        alignment="center"
+                        appearance="none"
+                        slot="hover"
+                        style={{ borderRadius: "5px" }}
+                    >
+                        <sp-body style={{ padding: "5px 8px", width: "150px", fontSize: "12px", margin: 0 }}>
+                            <h4>Accent Color</h4>
+                            <p style={{ fontSize: 11, lineHeight: 1, margin: 0, padding: 0 }}>
+                                They are used in: <br />
+                                <span style={{ fontStyle: "italic" }}> Background </span>
+                            </p>
+                            <h4 style={{ marginTop: 2 }}>Secondary Color</h4>
+                            <p style={{ fontSize: 11, lineHeight: 1, margin: 0, padding: 0 }}>
+                                They are used in: <br />
+                                <span style={{ fontStyle: "italic" }}>  Skinny Banner, Badge, Plugin, Product Pattern</span>
+                            </p>
+                            <h4 style={{ marginTop: 2 }}>Tertiary Color</h4>
+                            <p style={{ fontSize: 11, lineHeight: 1, margin: 0, padding: 0 }}>
+                                They are used in: <br />
+                                <span style={{ fontStyle: "italic" }}> Hero CTA </span>
+                            </p>
+                        </sp-body>
+                    </sp-popover>
+                </sp-overlay>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin: "0.025em 0" }}>
                     <span style={{ backgroundColor: coresRGB[accentSelectedColor], width: "55px", height: "55px", borderRadius: "30px", border: "white 1px solid" }}></span>
                     <sp-field-group style={{ padding: "10" }}>
                         <sp-detail for="accent-color">ACCENT COLOR</sp-detail>
-                        <sp-picker placeholder="Selecione o Accent Color" id="picker-m" size="m" label="Selection type">
+                        <sp-picker placeholder="Select accent color" id="picker-m" size="m" label="Selection type">
                             <sp-menu>
                                 {Object.keys(cores).map((cor) => (
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleAccentColorClick(cor)}>
@@ -160,7 +197,7 @@ export default function colorSelector({ onAccentColorChange, onSecondaryColorCha
                     <span style={{ backgroundColor: coresRGB[secondarySelectedColor], width: "55px", height: "55px", borderRadius: "30px", border: "white 1px solid" }}></span>
                     <sp-field-group style={{ padding: "10" }}>
                         <sp-detail for="secondary-color">SECONDARY COLOR</sp-detail>
-                        <sp-picker placeholder="Selecione o Accent Color" id="picker-m" size="m" label="Selection type">
+                        <sp-picker placeholder="Select secondary color" id="picker-m" size="m" label="Selection type">
                             <sp-menu>
                                 {Object.keys(cores).map((cor) => (
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleSecondaryColorClick(cor)}>
@@ -181,7 +218,7 @@ export default function colorSelector({ onAccentColorChange, onSecondaryColorCha
                     <span style={{ backgroundColor: coresRGB[tertiarySelectedColor], width: "55px", height: "55px", borderRadius: "30px", border: "white 1px solid" }}></span>
                     <sp-field-group style={{ padding: "10" }}>
                         <sp-detail for="tertiary-color">TERTIARY COLOR</sp-detail>
-                        <sp-picker placeholder="Selecione o Accent Color" id="picker-m" size="m" label="Selection type">
+                        <sp-picker placeholder="Select tertiary color" id="picker-m" size="m" label="Selection type">
                             <sp-menu>
                                 {Object.keys(cores).map((cor) => (
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleTertiaryColorClick(cor)}>
@@ -198,7 +235,7 @@ export default function colorSelector({ onAccentColorChange, onSecondaryColorCha
                         </sp-picker>
                     </sp-field-group>
                 </div>
-            </div>
+            </div >
         </>
     );
 
