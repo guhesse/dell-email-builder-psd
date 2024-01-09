@@ -9,184 +9,23 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
         handleHeroSelect(hero); // Executa a função passada pelo pai (handleHeroSelect) com o hero selecionado
     };
 
-    const [badgeValue, setBadgeValue] = useState(""); // Armazena o Valor do Badge
-    const [headlineValue, setHeadlineValue] = useState(""); // Armazena o Valor do Headline
-    const [subHeadlineValue, setSubHeadlineValue] = useState(""); // Armazena o Valor do SubHeadline
-    const [inlinePromoValue, setInlinePromoValue] = useState(""); // Armazena o Valor do Inline Promo
-    const [inlinePromo2Value, setInlinePromo2Value] = useState(""); // Armazena o Valor do Inline Promo 2
-    const [productNameValue, setProductNameValue] = useState(""); // Armazena o Valor do Product Name
-    const [productName2Value, setProductName2Value] = useState(""); // Armazena o Valor do Product Name 2
-    const [productName3Value, setProductName3Value] = useState(""); // Armazena o Valor do Product Name 3
-    const [specsValue, setSpecsValue] = useState("");  // Armazena o Valor do Specs
-    const [specs2Value, setSpecs2Value] = useState("");  // Armazena o Valor do Specs 2
-    const [priceValue, setPriceValue] = useState("");  // Armazena o Valor do Price
-    const [price2Value, setPrice2Value] = useState("");  // Armazena o Valor do Price 2
-    const [heroCtaValue, setHeroCtaValue] = useState("") // Estado que Arma
+    const useFormState = (initialState) => {
+        const [formState, setFormState] = useState(initialState);
 
-    const handleBadgeChange = (event) => {
-        const value = event.target.value;
-        setBadgeValue(value);
-        onHeroCopyChange({
-            badgeValue: value,
-            headlineValue,
-            subHeadlineValue,
-            inlinePromoValue,
-            inlinePromo2Value,
-            productNameValue,
-            productName2Value,
-            productName3Value,
-            priceValue,
-            price2Value,
-            specsValue,
-            specs2Value,
-            heroCtaValue,
-        });
+        const handleInputChange = (key, value) => {
+            setFormState({
+                ...formState,
+                [key]: value,
+            });
+
+            onHeroCopyChange({ ...formState, [key]: value });
+        };
+
+        return [formState, handleInputChange];
     };
 
-    const handleHeadlineChange = (event) => {
-        const value = event.target.value;
-        setHeadlineValue(value);
-        onHeroCopyChange({
-            badgeValue,
-            headlineValue: value,
-            subHeadlineValue,
-            inlinePromoValue,
-            inlinePromo2Value,
-            productNameValue,
-            productName2Value,
-            productName3Value,
-            priceValue,
-            price2Value,
-            specsValue,
-            specs2Value,
-            heroCtaValue,
-        });
-    };
-
-    const handleSubHeadlineChange = (event) => {
-        const value = event.target.value;
-        setSubHeadlineValue(value);
-        onHeroCopyChange({
-            badgeValue,
-            headlineValue,
-            subHeadlineValue: value,
-            inlinePromoValue,
-            inlinePromo2Value,
-            productNameValue,
-            productName2Value,
-            productName3Value,
-            priceValue,
-            price2Value,
-            specsValue,
-            specs2Value,
-            heroCtaValue,
-        });
-    };
-
-    const handleInlinePromoChange = (event) => {
-        const value = event.target.value;
-        setInlinePromoValue(value);
-        onHeroCopyChange({
-            badgeValue,
-            headlineValue,
-            subHeadlineValue,
-            inlinePromoValue: value,
-            inlinePromo2Value,
-            productNameValue,
-            productName2Value,
-            productName3Value,
-            priceValue,
-            price2Value,
-            specsValue,
-            specs2Value,
-            heroCtaValue,
-        });
-    };
-
-    const handleInlinePromo2Change = (event) => {
-        const value = event.target.value;
-        setInlinePromo2Value(value);
-        onHeroCopyChange({
-            badgeValue,
-            headlineValue,
-            subHeadlineValue,
-            inlinePromoValue,
-            inlinePromo2Value: value,
-            productNameValue,
-            productName2Value,
-            productName3Value,
-            priceValue,
-            price2Value,
-            specsValue,
-            specs2Value,
-            heroCtaValue,
-        });
-    };
-
-    const handleProductNameChange = (event) => {
-        const value = event.target.value;
-        setProductNameValue(value);
-        onHeroCopyChange({
-            badgeValue,
-            headlineValue,
-            subHeadlineValue,
-            inlinePromoValue,
-            inlinePromo2Value,
-            productNameValue: value,
-            productName2Value,
-            productName3Value,
-            priceValue,
-            price2Value,
-            specsValue,
-            specs2Value,
-            heroCtaValue,
-        });
-    };
-
-    const handleProductName2Change = (event) => {
-        const value = event.target.value;
-        setProductName2Value(value);
-        onHeroCopyChange({
-            badgeValue,
-            headlineValue,
-            subHeadlineValue,
-            inlinePromoValue,
-            inlinePromo2Value,
-            productNameValue,
-            productName2Value: value,
-            productName3Value,
-            priceValue,
-            price2Value,
-            specsValue,
-            specs2Value,
-            heroCtaValue,
-        });
-    };
-
-    const handleProductName3Change = (event) => {
-        const value = event.target.value;
-        setProductName3Value(value);
-        onHeroCopyChange({
-            badgeValue,
-            headlineValue,
-            subHeadlineValue,
-            inlinePromoValue,
-            inlinePromo2Value,
-            productNameValue,
-            productName2Value,
-            productName3Value: value,
-            priceValue,
-            price2Value,
-            specsValue,
-            specs2Value,
-            heroCtaValue,
-        });
-    };
-
-    const handlePriceChange = (event) => {
-        const value = event.target.value;
-        setPriceValue(value);
-        onHeroCopyChange({
+    const [
+        {
             badgeValue,
             headlineValue,
             subHeadlineValue,
@@ -195,92 +34,41 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
             productNameValue,
             productName2Value,
             productName3Value,
-            priceValue: value,
-            price2Value,
             specsValue,
             specs2Value,
-            heroCtaValue,
-        });
-    };
-
-    const handlePrice2Change = (event) => {
-        const value = event.target.value;
-        setPrice2Value(value);
-        onHeroCopyChange({
-            badgeValue,
-            headlineValue,
-            subHeadlineValue,
-            inlinePromoValue,
-            inlinePromo2Value,
-            productNameValue,
-            productName2Value,
-            productName3Value,
-            priceValue,
-            price2Value: value,
-            specsValue,
-            specs2Value,
-            heroCtaValue,
-        });
-    };
-
-    const handleSpecsChange = (event) => {
-        const value = event.target.value;
-        setSpecsValue(value);
-        onHeroCopyChange({
-            badgeValue,
-            headlineValue,
-            subHeadlineValue,
-            inlinePromoValue,
-            inlinePromo2Value,
-            productNameValue,
-            productName2Value,
-            productName3Value,
             priceValue,
             price2Value,
-            specsValue: value,
-            specs2Value,
             heroCtaValue,
-        });
+        },
+        setFormValue,
+    ] = useFormState({
+        badgeValue: "",
+        headlineValue: "",
+        subHeadlineValue: "",
+        inlinePromoValue: "",
+        inlinePromo2Value: "",
+        productNameValue: "",
+        productName2Value: "",
+        productName3Value: "",
+        specsValue: "",
+        specs2Value: "",
+        priceValue: "",
+        price2Value: "",
+        heroCtaValue: "",
+    });
+
+    console.log("Badge Value:", badgeValue)
+
+    const handleInputChange = (key) => (event) => {
+        const value = event.target.value;
+        setFormValue(key, value);
     };
 
-    const handleSpecs2Change = (event) => {
-        const value = event.target.value;
-        setSpecs2Value(value);
-        onHeroCopyChange({
-            badgeValue,
-            headlineValue,
-            subHeadlineValue,
-            inlinePromoValue,
-            inlinePromo2Value,
-            productNameValue,
-            productName2Value,
-            productName3Value,
-            priceValue,
-            price2Value,
-            specsValue,
-            specs2Value: value,
-            heroCtaValue,
-        });
-    };
+    const [valid, setValid] = useState(undefined);
 
-    const handleHeroCtaChange = (event) => {
-        const value = event.target.value;
-        setHeroCtaValue(value);
-        onHeroCopyChange({
-            badgeValue,
-            headlineValue,
-            subHeadlineValue,
-            inlinePromoValue,
-            inlinePromo2Value,
-            productNameValue,
-            productName2Value,
-            productName3Value,
-            priceValue,
-            price2Value,
-            specsValue,
-            specs2Value,
-            heroCtaValue: value,
-        });
+    const handleBlur = () => {
+        const inputValue = badgeValue !== "" ? true : undefined;
+        setValid(inputValue);
     };
 
     return (
@@ -332,8 +120,9 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     id="badge-field"
                                     placeholder="Insira o Badge"
                                     value={badgeValue}
-                                    onInput={handleBadgeChange}
-                                    valid={badgeValue !== "" ? true : undefined}
+                                    onInput={handleInputChange('badgeValue')}
+                                    onBlur={handleBlur}
+                                    valid={valid}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -342,8 +131,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     id="headline-field"
                                     placeholder="Insira o Headline"
                                     value={headlineValue}
-                                    onInput={handleHeadlineChange}
-                                    valid={headlineValue !== "" ? true : undefined}
+                                    onInput={handleInputChange('headlineValue')}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -352,8 +140,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     id="subheadline-field"
                                     placeholder="Insira o SubHeadline"
                                     value={subHeadlineValue}
-                                    onInput={handleSubHeadlineChange}
-                                    valid={subHeadlineValue !== "" ? true : undefined}
+                                    onInput={handleInputChange('subHeadlineValue')}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -362,8 +149,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     id="pname-field"
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
-                                    onInput={handleProductNameChange}
-                                    valid={productNameValue !== "" ? true : undefined}
+                                    onInput={handleInputChange('productNameValue')}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -372,11 +158,9 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     id="hero-cta-field"
                                     placeholder="Insira as Specs"
                                     value={heroCtaValue}
-                                    onInput={handleHeroCtaChange}
-                                    valid={heroCtaValue !== "" ? true : undefined}
+                                    onInput={handleInputChange('heroCtaValue')}
                                 ></sp-textfield>
                             </div>
-
                         </div>
                     </>
                 )}
@@ -391,7 +175,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Badge"
                                     value={badgeValue}
                                     onInput={handleBadgeChange}
-                                    {...(badgeValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -401,7 +184,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Headline"
                                     value={headlineValue}
                                     onInput={handleHeadlineChange}
-                                    {...(headlineValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -411,7 +193,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o SubHeadline"
                                     value={subHeadlineValue}
                                     onInput={handleSubHeadlineChange}
-                                    {...(subHeadlineValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -421,7 +202,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleProductNameChange}
-                                    {...(productNameValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -431,7 +211,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleProductNameChange}
-                                    {...(productNameValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -441,7 +220,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleProductNameChange}
-                                    {...(productNameValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -451,7 +229,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira as Specs"
                                     value={heroCtaValue}
                                     onInput={handleHeroCtaChange}
-                                    {...(heroCtaValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
 
@@ -469,7 +246,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Badge"
                                     value={badgeValue}
                                     onInput={handleBadgeChange}
-                                    {...(badgeValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -479,7 +255,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Headline"
                                     value={headlineValue}
                                     onInput={handleHeadlineChange}
-                                    {...(headlineValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -489,7 +264,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o SubHeadline"
                                     value={subHeadlineValue}
                                     onInput={handleSubHeadlineChange}
-                                    {...(subHeadlineValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -499,7 +273,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleProductNameChange}
-                                    {...(productNameValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -509,7 +282,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleProductNameChange}
-                                    {...(productNameValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -519,7 +291,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira as Specs"
                                     value={heroCtaValue}
                                     onInput={handleHeroCtaChange}
-                                    {...(heroCtaValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
 
@@ -537,7 +308,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Badge"
                                     value={badgeValue}
                                     onInput={handleBadgeChange}
-                                    {...(badgeValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -547,7 +317,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Headline"
                                     value={headlineValue}
                                     onInput={handleHeadlineChange}
-                                    {...(headlineValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -557,7 +326,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o SubHeadline"
                                     value={subHeadlineValue}
                                     onInput={handleSubHeadlineChange}
-                                    {...(subHeadlineValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -567,7 +335,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleProductNameChange}
-                                    {...(productNameValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -577,7 +344,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleProductNameChange}
-                                    {...(productNameValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -587,7 +353,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleProductNameChange}
-                                    {...(productNameValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -597,7 +362,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira as Specs"
                                     value={heroCtaValue}
                                     onInput={handleHeroCtaChange}
-                                    {...(heroCtaValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
 
@@ -615,7 +379,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Badge"
                                     value={badgeValue}
                                     onInput={handleBadgeChange}
-                                    {...(badgeValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -625,7 +388,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Headline"
                                     value={headlineValue}
                                     onInput={handleHeadlineChange}
-                                    {...(headlineValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -635,7 +397,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o SubHeadline"
                                     value={subHeadlineValue}
                                     onInput={handleSubHeadlineChange}
-                                    {...(subHeadlineValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -645,7 +406,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Inline Promo"
                                     value={inlinePromoValue}
                                     onInput={handleInlinePromoChange}
-                                    {...(inlinePromoValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -655,7 +415,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleProductNameChange}
-                                    {...(productNameValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -665,7 +424,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira as Specs"
                                     value={specsValue}
                                     onInput={handleSpecsChange}
-                                    {...(specsValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -675,7 +433,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Valor"
                                     value={priceValue}
                                     onInput={handlePriceChange}
-                                    {...(priceValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -685,7 +442,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira as Specs"
                                     value={heroCtaValue}
                                     onInput={handleHeroCtaChange}
-                                    {...(heroCtaValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
 
@@ -703,7 +459,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Badge"
                                     value={badgeValue}
                                     onInput={handleBadgeChange}
-                                    {...(badgeValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -713,7 +468,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Headline"
                                     value={headlineValue}
                                     onInput={handleHeadlineChange}
-                                    {...(headlineValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -723,7 +477,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o SubHeadline"
                                     value={subHeadlineValue}
                                     onInput={handleSubHeadlineChange}
-                                    {...(subHeadlineValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -733,7 +486,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Inline Promo"
                                     value={inlinePromoValue}
                                     onInput={handleInlinePromoChange}
-                                    {...(inlinePromoValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -743,7 +495,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleProductNameChange}
-                                    {...(productNameValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -753,7 +504,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira as Specs"
                                     value={specsValue}
                                     onInput={handleSpecsChange}
-                                    {...(specsValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -763,7 +513,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Valor"
                                     value={priceValue}
                                     onInput={handlePriceChange}
-                                    {...(priceValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -773,7 +522,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira as Specs"
                                     value={heroCtaValue}
                                     onInput={handleHeroCtaChange}
-                                    {...(heroCtaValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
 
@@ -791,7 +539,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Badge"
                                     value={badgeValue}
                                     onInput={handleBadgeChange}
-                                    {...(badgeValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -801,7 +548,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Headline"
                                     value={headlineValue}
                                     onInput={handleHeadlineChange}
-                                    {...(headlineValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -811,7 +557,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o SubHeadline"
                                     value={subHeadlineValue}
                                     onInput={handleSubHeadlineChange}
-                                    {...(subHeadlineValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -821,7 +566,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Inline Promo"
                                     value={inlinePromoValue}
                                     onInput={handleInlinePromoChange}
-                                    {...(inlinePromoValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -831,7 +575,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleProductNameChange}
-                                    {...(productNameValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -841,7 +584,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira as Specs"
                                     value={specsValue}
                                     onInput={handleSpecsChange}
-                                    {...(specsValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -851,7 +593,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Valor"
                                     value={priceValue}
                                     onInput={handlePriceChange}
-                                    {...(priceValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -861,7 +602,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Inline Promo2"
                                     value={inlinePromo2Value}
                                     onInput={handleInlinePromo2Change}
-                                    {...(inlinePromo2Value !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -871,7 +611,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productName2Value}
                                     onInput={handleProductName2Change}
-                                    {...(productName2Value !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -881,7 +620,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira as Specs"
                                     value={specs2Value}
                                     onInput={handleSpecs2Change}
-                                    {...(specsValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -891,7 +629,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Valor"
                                     value={price2Value}
                                     onInput={handlePrice2Change}
-                                    {...(priceValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -901,7 +638,6 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira as Specs"
                                     value={heroCtaValue}
                                     onInput={handleHeroCtaChange}
-                                    {...(heroCtaValue !== "" && { valid: true })}
                                 ></sp-textfield>
                             </div>
 

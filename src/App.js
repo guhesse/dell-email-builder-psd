@@ -560,6 +560,8 @@ function App() {
   };
   // Fim de fun\u00e7\u00e3o de selecionar o Funding
 
+  // Fun\u00e7\u00e3o de modificar e importar o Skinny Banner
+
   const [skinnyValues, setSkinnyValues] = useState(null);
 
   const handleSkinnyChange = (values) => {
@@ -568,11 +570,6 @@ function App() {
 
   const skinnyHeadlineValue = skinnyValues?.skinnyHeadlineValue || (csvValues.SL !== "" ? csvValues.SL : '');
   const skinnyCopyValue = skinnyValues?.skinnyCopyValue || '';
-
-  console.log("Skinny Headline", skinnyHeadlineValue)
-  console.log("Skinny Copy", skinnyCopyValue)
-
-  // Fun\u00e7\u00e3o de modificar e importar o Skinny Banner
 
   const skinnySelect = async () => {
     const skinnyFilePath = `assets/skinny-banner/skinny-banner.psd`;
