@@ -57,19 +57,28 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
         heroCtaValue: "",
     });
 
-    console.log("Badge Value:", badgeValue)
+    const [valid, setValid] = useState({});
 
+    // Função para validar um campo específico
+    const validateField = (value) => {
+        return value !== "";
+    };
+
+    // Função para manipular a mudança no valor do campo
     const handleInputChange = (key) => (event) => {
         const value = event.target.value;
         setFormValue(key, value);
     };
 
-    const [valid, setValid] = useState(undefined);
-
-    const handleBlur = () => {
-        const inputValue = badgeValue !== "" ? true : undefined;
-        setValid(inputValue);
+    // Função para manipular o blur do campo e atualizar a validação
+    const handleBlur = (key, value) => {
+        const isValid = validateField(value);
+        setValid((prevValid) => ({
+            ...prevValid,
+            [key]: isValid,
+        }));
     };
+
 
     return (
         <>
@@ -121,8 +130,8 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Badge"
                                     value={badgeValue}
                                     onInput={handleInputChange('badgeValue')}
-                                    onBlur={handleBlur}
-                                    valid={valid}
+                                    onBlur={() => handleBlur('badgeValue')}
+                                    valid={valid['badgeValue']}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -132,6 +141,8 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Headline"
                                     value={headlineValue}
                                     onInput={handleInputChange('headlineValue')}
+                                    onBlur={() => handleBlur('headlineValue')}
+                                    valid={valid['headlineValue']}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -141,6 +152,8 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o SubHeadline"
                                     value={subHeadlineValue}
                                     onInput={handleInputChange('subHeadlineValue')}
+                                    onBlur={() => handleBlur('subHeadlineValue')}
+                                    valid={valid['subHeadlineValue']}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -150,20 +163,25 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                     placeholder="Insira o Product Name"
                                     value={productNameValue}
                                     onInput={handleInputChange('productNameValue')}
+                                    onBlur={() => handleBlur('productNameValue')}
+                                    valid={valid['productNameValue']}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
                                 <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
                                 <sp-textfield
                                     id="hero-cta-field"
-                                    placeholder="Insira as Specs"
+                                    placeholder="Insira o CTA"
                                     value={heroCtaValue}
                                     onInput={handleInputChange('heroCtaValue')}
+                                    onBlur={() => handleBlur('heroCtaValue')}
+                                    valid={valid['heroCtaValue']}
                                 ></sp-textfield>
                             </div>
                         </div>
                     </>
                 )}
+
 
                 {selectedHero === 'hero1-standard' && (
                     <>
