@@ -24,14 +24,53 @@ export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedC
         }
     }
 
-    const [birdseedCopyValue, setBirdseedCopyValue] = useState("");
-    const handleBirdseedCopyChange = (event) => {
-        const value = event.target.value;
-        setBirdseedCopyValue(value);
-        onBirdseedCopyChange({
-            birdseedCopyValue: value
-        });
+    const useFormState = (initialState) => {
+        const [formState, setFormState] = useState(initialState);
+
+        const handleInputChange = (key, value) => {
+            setFormState({
+                ...formState,
+                [key]: value,
+            });
+
+            // Assuming onFundingCopyChange is a prop or a function you have access to
+            onBirdseedCopyChange({ ...formState, [key]: value });
+        };
+
+        return [formState, handleInputChange];
     };
+
+        const [
+            {
+                birdseedCopyValue,
+            },
+            setFormValue,
+        ] = useFormState({
+            birdseedCopyValue: "",
+        });
+
+        const [valid, setValid] = useState({});
+
+        // Função para validar um campo específico
+        const validateField = (value) => {
+            return value !== "";
+        };
+
+        // Função para manipular a mudança no valor do campo
+        const handleInputChange = (key) => (event) => {
+            const value = event.target.value;
+            setFormValue(key, value);
+        };
+
+        // Função para manipular o blur do campo e atualizar a validação
+        const handleBlur = (key, value) => {
+            const isValid = validateField(value);
+            setValid((prevValid) => ({
+                ...prevValid,
+                [key]: isValid,
+            }));
+        };
+
 
 
     const [selectedDay, setSelectedDay] = useState(1);
@@ -163,8 +202,9 @@ export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedC
                                         id="birdseed-copy-field"
                                         placeholder="Texto extra para o Birdseed"
                                         value={birdseedCopyValue}
-                                        onInput={handleBirdseedCopyChange}
-                                        {...(birdseedCopyValue !== "" && { valid: true })}
+                                        onInput={handleInputChange('birdseedCopyValue')}
+                                        onBlur={() => handleBlur('birdseedCopyValue')}
+                                        valid={valid['birdseedCopyValue']}
                                     ></sp-textfield>
                                 </div>
                             </>

@@ -563,15 +563,25 @@ function App() {
   // Fun\u00e7\u00e3o de modificar e importar o Skinny Banner
 
   const [skinnyValues, setSkinnyValues] = useState(null);
+  const [selectedSkinny, setSelectedSkinny] = useState(null);
 
-  const handleSkinnyChange = (values) => {
-    setSkinnyValues(values);
+  const handleSkinnyChange = (skinny) => {
+    setSkinnyValues(skinny);
   };
 
   const skinnyHeadlineValue = skinnyValues?.skinnyHeadlineValue || (csvValues.SL !== "" ? csvValues.SL : '');
   const skinnyCopyValue = skinnyValues?.skinnyCopyValue || '';
 
-  const skinnySelect = async () => {
+  const handleSkinnySelect = async (skinny) => {
+
+    console.log('Valor de skinny:', skinny);
+
+    if (!skinny) {
+      console.warn('Skinny não selecionado');
+      skinnyBannerHeight = 0;
+      return;
+    }
+
     const skinnyFilePath = `assets/skinny-banner/skinny-banner.psd`;
     const fs = storage.localFileSystem;
 
@@ -682,8 +692,8 @@ function App() {
 
   const [heroCopyValues, setHeroCopyValues] = useState({
     badgeValue: '',
-    headlineValue: '', // Certifique-se de definir esse estado
-    subHeadlineValue: '', // Certifique-se de definir esse estado
+    headlineValue: '',
+    subHeadlineValue: '',
     inlinePromoValue: '',
     inlinePromo2Value: '',
     productNameValue: '',
@@ -708,6 +718,7 @@ function App() {
       return;
     }
 
+
     const heroFilePath = `assets/heros/${hero}.psd`;
     const fs = storage.localFileSystem;
     try {
@@ -722,7 +733,6 @@ function App() {
           if (hero === 'hero1-lifestyle') {
             try {
               await Hero1Lifestyle(heroCopyValues, accentColorValues, secondaryColorValues, tertiaryColorValues);
-              // Se precisar de alguma lógica após a execução de Hero1Promotion
             } catch (error) {
               console.error('Erro ao executar Hero1Lifestyle:', error);
             }
@@ -731,7 +741,6 @@ function App() {
           if (hero === 'hero2-promotion') {
             try {
               await Hero2Promotion(heroCopyValues, colorValues);
-              // Se precisar de alguma lógica após a execução de Hero2Promotion
             } catch (error) {
               console.error('Erro ao executar Hero2Promotion:', error);
             }
@@ -801,9 +810,9 @@ function App() {
   };
 
   const pluginCopyValue = pluginCopyValues?.pluginCopyValue || '';
-  const leftCopyValue = superChargerCopyValues?.leftCopyValue || '';
-  const middleCopyValue = superChargerCopyValues?.middleCopyValue || '';
-  const rightCopyValue = superChargerCopyValues?.rightCopyValue || '';
+  const leftCopyValue = pluginCopyValues?.leftCopyValue || '';
+  const middleCopyValue = pluginCopyValues?.middleCopyValue || '';
+  const rightCopyValue = pluginCopyValues?.rightCopyValue || '';
 
   const pluginSelect = async () => {
 
@@ -838,17 +847,22 @@ function App() {
           const pluginWidth = secondDocument.width;
           pluginHeight = secondDocument.height;
 
-          const batchChangeColor = [
-            { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redSecondary, grain: greenSecondary, blue: blueSecondary } }, _options: { dialogOptions: "dontDisplay" } }
-          ];
-
-          await batchPlay(batchChangeColor, {});
-
           let batchPluginChange = []
 
           if (selectedPlugin === 'supercharger') {
-            batchPluginChange = [
+
+            const batchChangeColor = [
+              { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [3402], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textStyle", textOverrideFeatureName: 808466226, typeStyleOperationType: 3, color: { _obj: "RGBColor", red: redAccent, grain: greenAccent, blue: blueAccent } }, _options: { dialogOptions: "dontDisplay" } },
+
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redSecondary, grain: greenSecondary, blue: blueSecondary } }, _options: { dialogOptions: "dontDisplay" } },
+            ];
+
+            await batchPlay(batchChangeColor, {});
+
+            const batchPluginChange = [
               { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedleftCopyValue } },
               { _obj: "select", _target: [{ _ref: "layer", _name: "2" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
@@ -863,8 +877,22 @@ function App() {
               { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
               { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
             ];
+
+            await batchPlay(batchPluginChange, {});
+
           } else if (selectedPlugin === 'plugin') {
-            batchPluginChange = [
+
+            const batchChangeColor = [
+              { _obj: "select", _target: [{ _ref: "textLayer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3335], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: redAccent, grain: greenAccent, blue: blueAccent }, }, _options: { dialogOptions: "dontDisplay" }, },
+
+              { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
+              { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redSecondary, grain: greenSecondary, blue: blueSecondary } }, _options: { dialogOptions: "dontDisplay" } },
+            ];
+
+            await batchPlay(batchChangeColor, {});
+
+            const batchPluginChange = [
               { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
               { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedPluginCopyValue } },
               { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
@@ -875,8 +903,10 @@ function App() {
               { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
               { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
               { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } },
-
             ];
+
+            await batchPlay(batchPluginChange, {});
+
           } else {
             console.error('Plugin n\u00e3o selecionado')
             return;
@@ -914,6 +944,8 @@ function App() {
   };
 
   // Fim de fun\u00e7\u00e3o de modificar e importar o Plugin
+
+
 
   // Fun\u00e7\u00e3o de importar o FPO
 
@@ -989,25 +1021,17 @@ function App() {
   // In\u00edcio da fun\u00e7\u00e3o de importar o Banner
 
   const [selectedBannerPosition, setSelectedBannerPosition] = useState(null);
-  const [bannerHeadlineValues, setBannerHeadlineValues] = useState('');
   const [bannerCopyValues, setBannerCopyValues] = useState('');
-  const [bannerCtaValues, setBannerCtaValues] = useState('');
 
-  const handleBannerHeadlineChange = (values) => {
-    setBannerHeadlineValues(values);
-  };
 
   const handleBannerCopyChange = (values) => {
     setBannerCopyValues(values);
   };
 
-  const handleBannerCtaChange = (values) => {
-    setBannerCtaValues(values);
-  };
 
-  const bannerHeadlineValue = bannerHeadlineValues?.bannerHeadlineValue || '';
+  const bannerHeadlineValue = bannerCopyValues?.bannerHeadlineValue || '';
   const bannerCopyValue = bannerCopyValues?.bannerCopyValue || '';
-  const bannerCtaValue = bannerCtaValues?.bannerCtaValue || '';
+  const bannerCtaValue = bannerCopyValues?.bannerCtaValue || '';
 
   const formattedBannerHeadlineValue = limitCharsPerLine(bannerHeadlineValue || '', 27);
   const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 60);
@@ -1155,6 +1179,7 @@ function App() {
   };
 
   // Fim da fun\u00e7\u00e3o de importar o Banner
+
 
   // Fun\u00e7\u00e3o de selecionar o Footer
   const [selectedFooter, setSelectedFooter] = useState(null);
@@ -1464,10 +1489,10 @@ function App() {
       var slHeight = await sslSelect();
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight);
       var fundingHeight = await handleFundingSelect(selectedFunding, headerHeight, slHeight);
-      var skinnyBannerHeight = await skinnySelect(slHeight, headerHeight, fundingHeight);
+      var skinnyBannerHeight = await handleSkinnySelect(selectedSkinny, slHeight, headerHeight, fundingHeight);
       var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight, skinnyBannerHeight);
-      var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, skinnyBannerHeight , heroHeight);
-      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, skinnyBannerHeight , heroHeight, pluginHeight);
+      var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight);
+      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight);
       var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight);
       var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
       var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
@@ -1490,11 +1515,11 @@ function App() {
           <HeaderSelector handleHeaderSelect={setSelectedHeader} />
           <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
         </div>
-        <SkinnySelector onSkinnyChange={handleSkinnyChange}></SkinnySelector>
+        <SkinnySelector handleSkinnySelect={setSelectedSkinny} onSkinnyChange={handleSkinnyChange}></SkinnySelector>
         <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
-        <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} onSuperChargerCopyChange={handleSuperChargerCopyChange} />
+        <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} />
         <FpoSelector handleFpoValueSelect={setSelectedFpoValue} handleFpoSegmentSelect={setSelectedFpoSegment} />
-        <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerHeadlineChange={handleBannerHeadlineChange} onBannerCopyChange={handleBannerCopyChange} onBannerCtaChange={handleBannerCtaChange} />
+        <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerCopyChange={handleBannerCopyChange} />
         <FooterSelector handleFooterSelect={setSelectedFooter} />
         <BirdseedSelector handleBirdseedSelect={setSelectedBirdseed} handleBirdseedCopy={setSelectedBirdseedCopy} onDateChange={handleDateChange} onBirdseedCopyChange={handleBirdseedCopyChange} />
 

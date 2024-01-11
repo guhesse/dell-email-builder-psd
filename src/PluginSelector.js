@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function PluginSelector({ handlePluginSelect, onPluginCopyChange, onSuperChargerCopyChange }) {
+export default function PluginSelector({ handlePluginSelect, onPluginCopyChange }) {
 
     const [selectedPlugin, setSelectedPlugin] = useState('null');
 
@@ -9,47 +9,57 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
         handlePluginSelect(plugin);
     };
 
-    const [pluginCopyValue, setPluginCopyValue] = useState("");
-    const [leftCopyValue, setLeftCopyValue] = useState("");
-    const [middleCopyValue, setMiddleCopyValue] = useState("");
-    const [rightCopyValue, setRightCopyValue] = useState("");
+    const useFormState = (initialState) => {
+        const [formState, setFormState] = useState(initialState);
 
-    const handlePluginCopyChange = (event) => {
-        const value = event.target.value;
-        setPluginCopyValue(value);
-        onPluginCopyChange({
-            pluginCopyValue: value
-        });
+        const handleInputChange = (key, value) => {
+            setFormState({
+                ...formState,
+                [key]: value,
+            });
+
+            onPluginCopyChange({ ...formState, [key]: value });
+        };
+
+        return [formState, handleInputChange];
     };
 
-    const handleLeftCopyChange = (event) => {
-        const value = event.target.value;
-        setLeftCopyValue(value);
-        onSuperChargerCopyChange({
-            leftCopyValue: value,
-            middleCopyValue,
-            rightCopyValue
-        });
-    };
-
-    const handleMiddleCopyChange = (event) => {
-        const value = event.target.value;
-        setMiddleCopyValue(value);
-        onSuperChargerCopyChange({
-            leftCopyValue,
-            middleCopyValue: value,
-            rightCopyValue
-        });
-    };
-
-    const handleRightCopyChange = (event) => {
-        const value = event.target.value;
-        setRightCopyValue(value);
-        onSuperChargerCopyChange({
+    const [
+        {
+            pluginCopyValue,
             leftCopyValue,
             middleCopyValue,
-            rightCopyValue: value
-        });
+            rightCopyValue,
+        },
+        setFormValue,
+    ] = useFormState({
+        pluginCopyValue: "",
+        leftCopyValue: "",
+        middleCopyValue: "",
+        rightCopyValue: "",
+    });
+
+
+    const [valid, setValid] = useState({});
+
+    // Função para validar um campo específico
+    const validateField = (value) => {
+        return value !== "";
+    };
+
+    // Função para manipular a mudança no valor do campo
+    const handleInputChange = (key) => (event) => {
+        const value = event.target.value;
+        setFormValue(key, value);
+    };
+
+    // Função para manipular o blur do campo e atualizar a validação
+    const handleBlur = (key, value) => {
+        const isValid = validateField(value);
+        setValid((prevValid) => ({
+            ...prevValid,
+            [key]: isValid,
+        }));
     };
 
 
@@ -71,8 +81,9 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
                                 id="plugin-copy"
                                 placeholder="Plugin Copy"
                                 value={pluginCopyValue}
-                                onInput={handlePluginCopyChange}
-                                {...(pluginCopyValue !== "" && { valid: true })}
+                                onInput={handleInputChange('pluginCopyValue')}
+                                onBlur={() => handleBlur('pluginCopyValue')}
+                                valid={valid['pluginCopyValue']}
                             ></sp-textfield>
                         </>
                     )}
@@ -84,24 +95,27 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange,
                                 id="left-copy"
                                 placeholder="Left Copy"
                                 value={leftCopyValue}
-                                onInput={handleLeftCopyChange}
-                                {...(leftCopyValue !== "" && { valid: true })}
+                                onInput={handleInputChange('leftCopyValue')}
+                                onBlur={() => handleBlur('leftCopyValue')}
+                                valid={valid['leftCopyValue']}
                             ></sp-textfield>
                             <sp-textfield
                                 style={{ paddingTop: "5px" }}
                                 id="center-copy"
                                 placeholder="Middle Copy"
                                 value={middleCopyValue}
-                                onInput={handleMiddleCopyChange}
-                                {...(middleCopyValue !== "" && { valid: true })}
+                                onInput={handleInputChange('middleCopyValue')}
+                                onBlur={() => handleBlur('middleCopyValue')}
+                                valid={valid['middleCopyValue']}
                             ></sp-textfield>
                             <sp-textfield
                                 style={{ paddingTop: "5px" }}
                                 id="right-copy"
                                 placeholder="Right Copy"
                                 value={rightCopyValue}
-                                onInput={handleRightCopyChange}
-                                {...(rightCopyValue !== "" && { valid: true })}
+                                onInput={handleInputChange('rightCopyValue')}
+                                onBlur={() => handleBlur('rightCopyValue')}
+                                valid={valid['rightCopyValue']}
                             ></sp-textfield>
                         </>
                     )}

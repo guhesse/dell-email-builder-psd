@@ -1,31 +1,60 @@
 import React, { useState } from "react";
 
-export default function SkinnySelector({onSkinnyChange, handleSkinnySelect}) {
-    const [skinnyHeadlineValue, setSkinnyHeadlineValue] = useState(""); // State to store SL value
-    const [skinnyCopyValue, setSkinnyCopyValue] = useState(""); // State to store SSL value
+export default function SkinnySelector({ handleSkinnySelect, onSkinnyChange }) {
+
     const [selectedSkinny, setSelectedSkinny] = useState(null);
 
     const handleSkinnyClick = (skinny) => {
         setSelectedSkinny(skinny);
-        handleSkinnySelect(skinny); // Executa a função passada pelo pai (handleHeaderSelect) com o header selecionado
+        handleSkinnySelect(skinny); 
     };
 
-    const handleSkinnyHeadlineChange = (event) => {
-        const value = event.target.value;
-        setSkinnyHeadlineValue(value);
-        onSkinnyChange({
-            skinnyHeadlineValue: value,
-            skinnyCopyValue
-        });
+    const useFormState = (initialState) => {
+        const [formState, setFormState] = useState(initialState);
+
+        const handleInputChange = (key, value) => {
+            setFormState({
+                ...formState,
+                [key]: value,
+            });
+
+            onSkinnyChange({ ...formState, [key]: value });
+        };
+
+        return [formState, handleInputChange];
     };
-    
-    const handleSkinnyCopyChange = (event) => {
-        const value = event.target.value;
-        setSkinnyCopyValue(value);
-        onSkinnyChange({
+
+    const [
+        {
             skinnyHeadlineValue,
-            skinnyCopyValue: value,
-        });
+            skinnyCopyValue
+        },
+        setFormValue,
+    ] = useFormState({
+        skinnyHeadlineValue: "",
+        skinnyCopyValue: "",
+    });
+
+    const [valid, setValid] = useState({});
+
+    // Função para validar um campo específico
+    const validateField = (value) => {
+        return value !== "";
+    };
+
+    // Função para manipular a mudança no valor do campo
+    const handleInputChange = (key) => (event) => {
+        const value = event.target.value;
+        setFormValue(key, value);
+    };
+
+    // Função para manipular o blur do campo e atualizar a validação
+    const handleBlur = (key, value) => {
+        const isValid = validateField(value);
+        setValid((prevValid) => ({
+            ...prevValid,
+            [key]: isValid,
+        }));
     };
 
     return (
@@ -51,8 +80,9 @@ export default function SkinnySelector({onSkinnyChange, handleSkinnySelect}) {
                                 id="skinny-headline-field"
                                 placeholder="Skinny banner title here"
                                 value={skinnyHeadlineValue}
-                                onChange={handleSkinnyHeadlineChange}
-                                // valid={skinnyHeadlineValue !== "" ? true : undefined}
+                                onInput={handleInputChange('skinnyHeadlineValue')}
+                                onBlur={() => handleBlur('skinnyHeadlineValue')}
+                                valid={valid['skinnyHeadlineValue']}
                             ></sp-textfield>
                         </div>
                         <div style={{ margin: "0 4px" }}>
@@ -61,8 +91,9 @@ export default function SkinnySelector({onSkinnyChange, handleSkinnySelect}) {
                                 id="skinny-copy-field"
                                 placeholder="Skinny banner copy here"
                                 value={skinnyCopyValue}
-                                onChange={handleSkinnyCopyChange}
-                                // valid={skinnyCopyValue !== "" ? true : undefined}
+                                onInput={handleInputChange('skinnyCopyValue')}
+                                onBlur={() => handleBlur('skinnyCopyValue')}
+                                valid={valid['skinnyCopyValue']}
                             ></sp-textfield>
                         </div>
                     </>

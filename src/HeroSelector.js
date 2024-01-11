@@ -6,7 +6,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
 
     const handleHeroClick = (hero) => {
         setSelectedHero(hero);
-        handleHeroSelect(hero); // Executa a função passada pelo pai (handleHeroSelect) com o hero selecionado
+        handleHeroSelect(hero);
     };
 
     const useFormState = (initialState) => {

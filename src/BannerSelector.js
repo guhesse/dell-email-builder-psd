@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function BannerSelector({ handleBannerPositionSelected, onBannerHeadlineChange, onBannerCopyChange, onBannerCtaChange }) {
+export default function BannerSelector({ handleBannerPositionSelected, onBannerCopyChange }) {
 
     const [selectedBannerPosition, setSelectedBannerPosition] = useState(null);
 
@@ -9,37 +9,60 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerH
         handleBannerPositionSelected(banner);
     };
 
-    const [bannerHeadlineValue, setBannerHeadlineValue] = useState(""); // Estado que armazena o Valor do Headline do Banner
-    const [bannerCopyValue, setBannerCopyValue] = useState(""); // Estado que armazena o Valor do Copy do Banner
-    const [bannerCtaValue, setBannerCtaValue] = useState(""); // Estado que armazena o Valor do CTA do Banner
+    const useFormState = (initialState) => {
+        const [formState, setFormState] = useState(initialState);
 
-    const handleBannerHeadlineChange = (event) => {
-        const value = event.target.value;
-        setBannerHeadlineValue(value);
-        onBannerHeadlineChange({
-            bannerHeadlineValue: value
-        });
+        const handleInputChange = (key, value) => {
+            setFormState({
+                ...formState,
+                [key]: value,
+            });
+
+            onBannerCopyChange({ ...formState, [key]: value });
+        };
+
+        return [formState, handleInputChange];
     };
 
-    const handleBannerCopyChange = (event) => {
-        const value = event.target.value;
-        setBannerCopyValue(value);
-        onBannerCopyChange({
-            bannerCopyValue: value
-        });
+    const [
+        {
+            bannerHeadlineValue,
+            bannerCopyValue,
+            bannerCtaValue
+        },
+        setFormValue,
+    ] = useFormState({
+        bannerHeadlineValue: "",
+        bannerCopyValue: "",
+        bannerCtaValue: ""
+    });
+
+    const [valid, setValid] = useState({});
+
+    // Função para validar um campo específico
+    const validateField = (value) => {
+        return value !== "";
     };
 
-    const handleBannerCtaChange = (event) => {
+    // Função para manipular a mudança no valor do campo
+    const handleInputChange = (key) => (event) => {
         const value = event.target.value;
-        setBannerCtaValue(value);
-        onBannerCtaChange({
-            bannerCtaValue: value
-        });
+        setFormValue(key, value);
     };
+
+    // Função para manipular o blur do campo e atualizar a validação
+    const handleBlur = (key, value) => {
+        const isValid = validateField(value);
+        setValid((prevValid) => ({
+            ...prevValid,
+            [key]: isValid,
+        }));
+    };
+
 
     return (
         <>
-            <div style={{ display: "flex", flexWrap: "wrap", flexDirection:"column", alignItems: "flex-start" }} className="group">
+            <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "column", alignItems: "flex-start" }} className="group">
                 <sp-label>Banner</sp-label>
                 <sp-field-group style={{ display: "flex", flexDirection: "column", margin: "0 4px" }}>
                     <sp-picker style={{ margin: "0 4px" }} placeholder="Lado da imagem do Banner" id="picker-m" size="m" label="Selection type">
@@ -62,8 +85,9 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerH
                                     id="banner-hl-field"
                                     placeholder="Insira o Banner Headline"
                                     value={bannerHeadlineValue}
-                                    onInput={handleBannerHeadlineChange}
-                                    {...(bannerHeadlineValue !== "" && { valid: true })} multiline></sp-textarea>
+                                    onInput={handleInputChange('bannerHeadlineValue')}
+                                    onBlur={() => handleBlur('bannerHeadlineValue')}
+                                    valid={valid['bannerHeadlineValue']} multiline></sp-textarea>
                             </div>
                             <div style={{ display: "flex", flexDirection: "column", margin: "0 4px" }}>
                                 <sp-detail>COPY</sp-detail>
@@ -71,8 +95,9 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerH
                                     id="banner-copy-field"
                                     placeholder="Insira o Banner Copy"
                                     value={bannerCopyValue}
-                                    onInput={handleBannerCopyChange}
-                                    {...(bannerCopyValue !== "" && { valid: true })} multiline></sp-textarea>
+                                    onInput={handleInputChange('bannerCopyValue')}
+                                    onBlur={() => handleBlur('bannerCopyValue')}
+                                    valid={valid['bannerCopyValue']} multiline></sp-textarea>
                             </div>
                             <div style={{ display: "flex", flexDirection: "column", margin: "0 4px" }}>
                                 <sp-detail>CTA</sp-detail>
@@ -80,8 +105,9 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerH
                                     id="banner-cta-field"
                                     placeholder="Insira o CTA"
                                     value={bannerCtaValue}
-                                    onInput={handleBannerCtaChange}
-                                    {...(bannerCtaValue !== "" && { valid: true })} multiline></sp-textarea>
+                                    onInput={handleInputChange('bannerCtaValue')}
+                                    onBlur={() => handleBlur('bannerCtaValue')}
+                                    valid={valid['bannerCtaValue']} multiline></sp-textarea>
                             </div>
                         </div>
                     </>
