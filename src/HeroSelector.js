@@ -1,12 +1,40 @@
 import React, { useState } from 'react';
+export const { storage } = require('uxp');
+
 
 export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
 
+    const heroPaths = {
+        'hero1-lifestyle': {
+            path: 'assets/heros/images/hero1-lifestyle.png',
+            name: 'Hero Layout 1 - Lifestyle',
+        },
+        'hero1-standard': {
+            path: 'assets/heros/images/hero1-standard.png',
+            name: 'Hero Layout 1 - Standard',
+        },
+        'hero2-promotion': {
+            path: 'assets/heros/images/hero2-promotion.png',
+            name: 'Hero Layout 2 - Promotion',
+        },
+        // ... Adicione os outros heróis aqui ...
+    };
+
     const [selectedHero, setSelectedHero] = useState("");
 
-    const handleHeroClick = (hero) => {
+    const handleHeroClick = async (hero) => {
         setSelectedHero(hero);
         handleHeroSelect(hero);
+
+        if (hero) {
+            const heroFilePath = `assets/heros/images/${hero}.png`;
+            const fs = storage.localFileSystem;
+            const pluginDir = await fs.getPluginFolder();
+            const heroFileEntry = await pluginDir.getEntry(heroFilePath);
+            const imageUrl = heroFileEntry.url.href;
+            const heroName = heroPaths[hero].name;
+        }
+        // ... Outras lógicas relacionadas à seleção do herói ...
     };
 
     const useFormState = (initialState) => {
@@ -84,25 +112,20 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
         <>
 
             <div className="group"><sp-label>Hero</sp-label>
+
                 <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
-                    <sp-picker placeholder="Selecione o hero" style={{ width: "45vw", padding: "0" }} id="picker-m" size="m" label="Selection type">
+                    <sp-picker placeholder="Selecione o hero" style={{ width: '45vw', padding: '0' }} id="picker-m" size="m" label="Selection type">
                         <sp-menu>
-                            <sp-menu-item onClick={() => handleHeroClick(null)}>None</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero1-lifestyle')}>Hero Layout 1 - Lifestyle</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero1-standard')}>Hero Layout 1 - Standard</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero2-promotion')}>Hero Layout 2 - Promotion</sp-menu-item>
-                            <sp-menu-item disabled onClick={() => handleHeroClick('hero2-showcase')}>Hero Layout 2 - Showcase</sp-menu-item>
-                            <sp-menu-item disabled onClick={() => handleHeroClick('hero3-promotion')}>Hero Layout 3 - Promotion</sp-menu-item>
-                            <sp-menu-item disabled onClick={() => handleHeroClick('hero4-promotion')}>Hero Layout 4 - Promotion</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero5-promotion')}>Hero Layout 5 - Promotion</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero6-promotion')}>Hero Layout 6 - Showcase</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero7-promotion')}>Hero Layout 7 - Business</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero8-showcase')}>Hero Layout 8 - Showcase</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero9-promotion')}>Hero Layout 9 - Promotion</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero10-showcase')}>Hero Layout 10 - Showcase</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero11-showcase')}>Hero Layout 11 - Showcase 1</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero11-showcase2')}>Hero Layout 11 - Showcase 2</sp-menu-item>
-                            <sp-menu-item onClick={() => handleHeroClick('hero12-showcase')}>Hero Layout 12 - Promotion</sp-menu-item>
+                            {Object.entries(heroPaths).map(([hero, { path, name }]) => (
+                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={hero} onClick={() => handleHeroClick(hero)}>
+                                    <sp-menu-item style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                                        <div style={{ display: "flex", alignItems: "center" }}>
+                                            <img style={{ width: '30px', height: 'auto', marginRight: '10px' }} src={path} alt={`Hero Layout - ${hero}`} />
+                                            {name}
+                                        </div>
+                                    </sp-menu-item>
+                                </div>
+                            ))}
                         </sp-menu>
                     </sp-picker>
                     <div className="sp-tab-page" id="sp-spectrum-widgets-tab-page">

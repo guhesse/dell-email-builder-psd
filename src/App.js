@@ -574,8 +574,6 @@ function App() {
 
   const handleSkinnySelect = async (skinny) => {
 
-    console.log('Valor de skinny:', skinny);
-
     if (!skinny) {
       console.warn('Skinny não selecionado');
       skinnyBannerHeight = 0;
