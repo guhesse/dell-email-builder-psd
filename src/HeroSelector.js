@@ -111,8 +111,8 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
     return (
         <>
 
-            <div className="group"><sp-label>Hero</sp-label>
-
+            <div className="group">
+                <sp-label>Hero</sp-label>
                 <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
                     <sp-picker placeholder="Selecione o hero" style={{ width: '45vw', padding: '0' }} id="picker-m" size="m" label="Selection type">
                         <sp-menu>

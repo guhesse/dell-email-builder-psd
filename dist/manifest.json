@@ -6,7 +6,7 @@
   "manifestVersion": 5,
   "requiredPermissions": {
     "allowCodeGenerationFromStrings": true,
-    "localFileSystem": "plugin"
+    "localFileSystem": "fullAccess"
   },
   "featureFlags": {
     "enableSWCSupport": true
