@@ -1,0 +1,116 @@
+body {
+    background-color: var(--uxp-host-background-color);
+    color: var(--uxp-host-text-color-secondary);
+    border-color: var(--uxp-host-border-color);
+    font-size: var(--uxp-host-font-size-smaller);
+}
+
+.modal-border {
+    background-color: rgb(50, 50, 50);
+    border-radius: 10px;
+    width: 100%;
+}
+
+.modal-container{
+    width: 90%;
+    margin: 10px 40px 30px 40px;
+}
+
+.modal {
+    position: relative;
+    height: 500px;
+    overflow-y: scroll;
+}
+
+.dialog-inner-container {
+    margin: 3% 10%;
+}
+
+.modal-buttons {
+    margin: 0 0 20px 10px;
+    padding-top: 20px;
+}
+
+.csv-input{
+    padding-left: 15px;
+}
+
+
+sp-field-label {
+    font-size: 0.8em;
+    padding: 4px 0px;
+}
+
+sp-detail {
+    font-size: 0.85em;
+    padding: 8px 0px;
+    margin: 0;
+}
+
+ul div sp-detail {
+    font-size: 1em;
+    padding: 10px 0 0 0;
+    margin: 0 0 0 0;
+}
+
+sp-menu-group span {
+    font-size: 0.8em;
+    padding: 4px 0px;
+}
+
+/* icons */
+.icon {
+    fill: currentColor;
+    height: 18px;
+    width: 18px;
+}
+
+.icon svg {
+    height: 18px;
+    width: 18px;
+}
+
+.wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+    display: flex;
+    padding: 12px;
+    overflow-y: scroll;
+}
+
+
+/* groups */
+.group {
+    flex: 0 0 auto;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 24px 12px 12px 12px;
+    position: relative;
+    margin-top: 1.5em;
+    margin-bottom: 12px;
+}
+
+#sp-native-tab-page .group {
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.group>sp-label:not(.safe) {
+    position: absolute;
+    top: -1em;
+    left: -0.1em;
+    background-color: rgb(45, 45, 45);
+    display: block;
+    padding: 4px 12px;
+    border-radius: 4px;
+}
+
+.group> :not(sp-label) {
+    margin: 6px;
+}

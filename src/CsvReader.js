@@ -1,29 +1,9 @@
+// CsvReader.js
 import React, { useState, useEffect } from 'react';
 const { storage } = require('uxp');
+import CsvBriefingForm from './CsvBriefingForm.js';
 
-// Componente de formulário para a dialog
-function Form({ csvValues, closeModal }) {
-    return (
-        <form className="modal">
-            <h1 style={{ position: "relative", left: "-10px" }}>Briefing Info</h1>
-            <hr style={{ position: "relative", left: "-10px" }} />
-            <ul>
-                {Object.entries(csvValues).map(([key, value]) => (
-                    value && (
-                        <li key={key}>
-                            <strong style={{ fontWeight: "bold" }}>{key}:</strong> {value}
-                        </li>
-                    )
-                ))}
-            </ul>
-            <footer>
-            </footer>
-        </form>
-    );
-}
-
-
-export default function CsvReader() {
+export default function CsvReader({ onAppValuesChange }) {
     const [csvValues, setCSVValues] = useState({
         'Source File': '',
         'URN': '',
@@ -187,7 +167,7 @@ export default function CsvReader() {
                                 ...prevValues,
                                 [basicInfoValue]: enterContentValue,
                             }));
-                            console.log(`Valor correspondente para '${basicInfoValue}': ${enterContentValue}`);
+                            // console.log(`Valor correspondente para '${basicInfoValue}': ${enterContentValue}`);
                         }
                     }
                 }
@@ -197,6 +177,7 @@ export default function CsvReader() {
         }
     }
 
+    // Função para lidar com a mudança no input do arquivo
     async function handleFileInputChange() {
         const fs = storage.localFileSystem;
         const file = await fs.getFileForOpening({ types: ['csv'] });
@@ -211,24 +192,31 @@ export default function CsvReader() {
         }
     }
 
+    // Função para fechar o modal
     const closeModal = () => {
         setIsModalOpen(false);
     };
 
+
+    // Função para confirmar a edição e receber os valores do formulário
+    const handleConfirmEdit = (editedValues) => {
+        // Encaminhe os valores para o componente App
+        onAppValuesChange(editedValues);
+        // Feche o modal
+        closeModal();
+    };
+
     useEffect(() => {
         if (isModalOpen) {
-            // Adicione uma classe ao body para impedir o rolar do conteúdo subjacente
             document.body.classList.add('modal-open');
-
             return () => {
-                // Remova a classe ao fechar o modal
                 document.body.classList.remove('modal-open');
             };
         }
     }, [isModalOpen]);
 
     return (
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", }} className="group">
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", flexDirection: "column" }} className="group">
             <sp-label>CSV Reader</sp-label>
             <div>
                 <sp-button type="submit" onClick={handleFileInputChange}>Select a File</sp-button>
@@ -236,13 +224,7 @@ export default function CsvReader() {
 
             {isModalOpen && (
                 <div className="modal-border">
-                    <div className="modal-container">
-                        <Form csvValues={csvValues} closeModal={closeModal} />
-                        <div className="modal-buttons">
-                            <sp-button style={{ margin: "0px 5px" }} variant="warning" type="submit" onClick={closeModal}>Cancel</sp-button>
-                            <sp-button style={{ margin: "0px 5px" }} variant="primary"  type="submit" onClick={closeModal}>Confirm & Edit</sp-button>
-                        </div>
-                    </div>
+                    <CsvBriefingForm csvValues={csvValues} closeModal={closeModal} onConfirmEdit={handleConfirmEdit} />
                 </div>
             )}
         </div>

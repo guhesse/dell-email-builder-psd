@@ -16,40 +16,11 @@ import BirdseedSelector from './BirdseedSelector.js';
 import Hero1Lifestyle from './HeroLayout/hero1lifestyle.jsx';
 import Hero2Promotion from './HeroLayout/hero2promotion.jsx';
 
-
-// async function readCSVFile(file) {
-//   const contents = await file.read();
-//   const rows = contents.split('\n');
-//   const headerRow = rows[0].split(';');
-
-//   const columnIndexBasicInfo = headerRow.indexOf('Basic Info');
-//   const columnIndexEnterContent = headerRow.indexOf('Enter Content');
-
-//   if (columnIndexBasicInfo !== -1 && columnIndexEnterContent !== -1) {
-//       for (let i = 1; i < rows.length; i++) {
-//           const columns = rows[i].split(';');
-//           const basicInfoValue = columns[columnIndexBasicInfo];
-//           const enterContentValue = columns[columnIndexEnterContent];
-
-//           if (basicInfoValue !== '' && enterContentValue !== '') {
-//               if (csvValues.hasOwnProperty(basicInfoValue)) {
-//                   setCSVValues((prevValues) => ({
-//                       ...prevValues,
-//                       [basicInfoValue]: enterContentValue,
-//                   }));
-//                   console.log(`Valor correspondente para '${basicInfoValue}': ${enterContentValue}`);
-//               }
-//           }
-//       }
-//   } else {
-//       console.log('Índices das colunas não encontrados.');
-//   }
-// }
-
 import { Theme } from "@swc-react/theme";
 export const { core, app } = require('photoshop');
 export const { storage } = require('uxp');
 export const { batchPlay } = require('photoshop').action;
+
 
 
 // Vari\u00e1veis das alturas dos m\u00f3dulos
@@ -88,84 +59,30 @@ export function limitCharsPerLine(text, limit) {
 }
 
 
-// const csvValues = {
-//   'Campaign Type': '',
-//   'SL': '',
-//   'SSL': '',
-//   'Vendor Funding Name': '',
-// };
-
-// async function readCSVFile() {
-//   const csvFilePath = 'assets/briefing.csv';
-//   const fs = storage.localFileSystem;
-
-//   try {
-//     const pluginDir = await fs.getPluginFolder();
-//     const csvFileEntry = await pluginDir.getEntry(csvFilePath);
-
-//     const readFile = async (fileEntry) => {
-//       try {
-//         const contents = await fileEntry.read();
-//         const rows = contents.split('\n');
-//         const headerRow = rows[0].split(';');
-
-//         // Encontrar índices das colunas Basic Info e Enter Content
-//         const columnIndexBasicInfo = headerRow.indexOf('Basic Info');
-//         const columnIndexEnterContent = headerRow.indexOf('Enter Content');
-
-//         // Verificar se os índices foram encontrados corretamente
-//         if (columnIndexBasicInfo !== -1 && columnIndexEnterContent !== -1) {
-//           for (let i = 1; i < rows.length; i++) {
-//             const columns = rows[i].split(';');
-
-//             // Obter o valor da coluna Basic Info e Enter Content
-//             const basicInfoValue = columns[columnIndexBasicInfo];
-//             const enterContentValue = columns[columnIndexEnterContent];
-
-//             // // Verificar se os valores não estão vazios e atribuir ao identificador correspondente
-//             // if (basicInfoValue !== '' && enterContentValue !== '') {
-//             //   // Armazenar o valor de Enter Content no identificador correspondente
-//             //   if (csvValues.hasOwnProperty(basicInfoValue)) {
-//             //     csvValues[basicInfoValue] = enterContentValue;
-//             //     console.log(`Valor correspondente para '${basicInfoValue}': ${enterContentValue}`);
-//             //   }
-//             // }
-//           }
-//         } else {
-//           console.log('Índices das colunas não encontrados.');
-//         }
-//       } catch (error) {
-//         console.error('Erro ao ler o arquivo:', error);
-//       }
-//     };
-
-//     const targetFunction = async (executionContext) => {
-//       try {
-//         await readFile(csvFileEntry);
-//       } catch (error) {
-//         console.error('Erro ao ler o CSV:', error);
-//       }
-//     };
-
-//     const options = {
-//       commandName: 'Ler CSV',
-//       interactive: true,
-//     };
-
-
-//     await core.executeAsModal(targetFunction, options);
-//   } catch (error) {
-//     console.error('Erro ao acessar os arquivos:', error);
-//   }
-// }
-
-// // Chamar a função para iniciar o processo de leitura do CSV
-// readCSVFile();
-
-
-
-
 function App() {
+
+  const [appValues, setAppValues] = useState({
+    slValue: '',
+    sslValue: '',
+    fundingCopyValue: '',
+  });
+
+  // Função para lidar com os valores editados vindos do CsvReader
+  const handleAppValues = (editedValues) => {
+    // console.log('Valores editados no App:', editedValues);
+
+    // Atualize apenas os valores específicos no estado do App
+    setAppValues({
+      slValue: editedValues.SL || '',
+      sslValue: editedValues.SSL || '',
+      fundingCopyValue:
+        editedValues['Funding/WEP Content'] !== undefined &&
+          editedValues['Funding/WEP Content'] !== ''
+          ? editedValues['Funding/WEP Content']
+          : '',
+    });
+  };
+
 
   const [selectedColorValues, setSelectedColorValues] = useState(null);
 
@@ -343,9 +260,8 @@ function App() {
     setSubjectLineValues(values);
   };
 
-  // const slValue = subjectLineValues?.slValue || (csvValues.SL !== "" ? csvValues.SL : '');
-  const slValue = subjectLineValues?.slValue ;
-  const sslValue = subjectLineValues?.sslValue || '';
+  const slValue = subjectLineValues?.slValue || (appValues.slValue.SL !== "" ? appValues.sslValue : '');
+  const sslValue = subjectLineValues?.sslValue || (appValues.sslValue.SSL !== "" ? appValues.sslValue : '');
 
   const sslSelect = async (updatedSLValue) => {
     const sslFilePath = `assets/sl-ssl/SL & SSL.psd`;
@@ -485,8 +401,8 @@ function App() {
     setFundingCopyValues(values);
   };
 
-  const fundingCopyValue = fundingCopyValues?.fundingCopyValue || '';
-
+  const fundingCopyValue = appValues?.fundingCopyValue || (appValues.fundingCopyValue !== "" ? appValues.fundingCopyValue : '')
+  
   const handleFundingSelect = async (funding) => {
 
     const fundingFilePath = `assets/fundings/${funding}.psd`;
@@ -1509,7 +1425,9 @@ function App() {
 
   // Fim da fun\u00e7\u00e3o para ajustar o documento ap\u00f3s a coloca\u00e7\u00e3o dos m\u00f3dulos
 
+
   // Execu\u00e7\u00e3o de todas as fun\u00e7\u00f5es por bot\u00e3o
+
 
   const handleMontarLayoutClick = async () => {
 
@@ -1536,10 +1454,9 @@ function App() {
   };
 
   // UI do Plugin
-
   return (
     <div className="wrapper">
-      <CsvReader></CsvReader>
+      <CsvReader onAppValuesChange={handleAppValues} />
       <Theme theme="spectrum" scale="medium" color="light">
         <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
         <ColorSelector onAccentColorChange={handleAccentColorChange} onSecondaryColorChange={handleSecondaryColorChange} onTertiaryColorChange={handleTertiaryColorChange} />
