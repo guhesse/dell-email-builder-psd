@@ -1,6 +1,6 @@
 // Import de todas as fun\u00e7\u00f5es 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import CsvReader from './CsvReader.js';
 import HeaderSelector from "./HeaderSelector.js";
 import SubjectLineSelector from './SubjectLineSelector.js';
@@ -21,6 +21,11 @@ export const { core, app } = require('photoshop');
 export const { storage } = require('uxp');
 export const { batchPlay } = require('photoshop').action;
 
+import AppProvider from './context/AppProvider.js';
+import CsvProvider from './context/CsvProvider.js';
+import { useCsvContext } from './context/CsvProvider.js';
+
+// Aqui ele deve pegar os valores do CSV
 
 
 // Vari\u00e1veis das alturas dos m\u00f3dulos
@@ -61,6 +66,7 @@ export function limitCharsPerLine(text, limit) {
 
 function App() {
 
+
   // Tratar os valores
 
   const [appValues, setAppValues] = useState({
@@ -99,6 +105,8 @@ function App() {
       subHeadlineValue: editedValues['SHL'] || '',
       heroCtaValue: editedValues['HERO CTA1 Text'] || '',
     }));
+
+
 
     updateHeroCopyValues({
       ...appValues,
@@ -282,14 +290,17 @@ function App() {
     setSubjectLineValues(values);
   };
 
+
+
   const slValue = subjectLineValues?.slValue || (appValues.slValue.SL !== "" ? appValues.sslValue : '');
   const sslValue = subjectLineValues?.sslValue || (appValues.sslValue.SSL !== "" ? appValues.sslValue : '');
 
   const sslSelect = async (updatedSLValue) => {
+
     const sslFilePath = `assets/sl-ssl/SL & SSL.psd`;
-    const fs = storage.localFileSystem;
 
     try {
+      const fs = storage.localFileSystem;
       const pluginDir = await fs.getPluginFolder();
       const fileEntry = await pluginDir.getEntry(sslFilePath);
 
@@ -660,7 +671,7 @@ function App() {
   const [selectedHero, setSelectedHero] = useState(null);
 
   const [heroCopyValues, setHeroCopyValues] = useState({
-    badgeValue : '',
+    badgeValue: '',
     headlineValue: '',
     subHeadlineValue: '',
     inlinePromoValue: '',
@@ -675,8 +686,6 @@ function App() {
     heroCtaValue: '',
   });
 
-  console.log("CTA Value do Hero", heroCopyValues.heroCtaValue);
-
   const handleHeroCopyChange = (newValues) => {
     setHeroCopyValues({ ...heroCopyValues, ...newValues });
   };
@@ -688,7 +697,6 @@ function App() {
       heroHeight = 0;
       return;
     }
-
 
     const heroFilePath = `assets/heros/${hero}.psd`;
     const fs = storage.localFileSystem;
@@ -1477,30 +1485,32 @@ function App() {
     }
   };
 
+
   // UI do Plugin
   return (
-    <div className="wrapper">
-      <CsvReader onAppValuesChange={handleAppValues} />
-      <Theme theme="spectrum" scale="medium" color="light">
-        <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
-        <ColorSelector onAccentColorChange={handleAccentColorChange} onSecondaryColorChange={handleSecondaryColorChange} onTertiaryColorChange={handleTertiaryColorChange} />
-        <div style={{ display: "flex", flexWrap: "wrap" }} className="group"><sp-label>Header & Funding</sp-label>
-          <HeaderSelector handleHeaderSelect={setSelectedHeader} />
-          <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
-        </div>
-        <SkinnySelector handleSkinnySelect={setSelectedSkinny} onSkinnyChange={handleSkinnyChange}></SkinnySelector>
-        <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
-        <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} />
-        <FpoSelector handleFpoValueSelect={setSelectedFpoValue} handleFpoSegmentSelect={setSelectedFpoSegment} />
-        <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerCopyChange={handleBannerCopyChange} />
-        <FooterSelector handleFooterSelect={setSelectedFooter} />
-        <BirdseedSelector handleBirdseedSelect={setSelectedBirdseed} handleBirdseedCopy={setSelectedBirdseedCopy} onDateChange={handleDateChange} onBirdseedCopyChange={handleBirdseedCopyChange} />
-
+    <Theme theme="spectrum" scale="medium" color="light">
+      <AppProvider className="wrapper">
+        <CsvProvider>
+          <CsvReader onAppValuesChange={handleAppValues} />
+          <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
+          <ColorSelector onAccentColorChange={handleAccentColorChange} onSecondaryColorChange={handleSecondaryColorChange} onTertiaryColorChange={handleTertiaryColorChange} />
+          <div style={{ display: "flex", flexWrap: "wrap" }} className="group"><sp-label>Header & Funding</sp-label>
+            <HeaderSelector handleHeaderSelect={setSelectedHeader} />
+            <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
+          </div>
+          <SkinnySelector handleSkinnySelect={setSelectedSkinny} onSkinnyChange={handleSkinnyChange}></SkinnySelector>
+          <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
+          <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} />
+          <FpoSelector handleFpoValueSelect={setSelectedFpoValue} handleFpoSegmentSelect={setSelectedFpoSegment} />
+          <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerCopyChange={handleBannerCopyChange} />
+          <FooterSelector handleFooterSelect={setSelectedFooter} />
+          <BirdseedSelector handleBirdseedSelect={setSelectedBirdseed} handleBirdseedCopy={setSelectedBirdseedCopy} onDateChange={handleDateChange} onBirdseedCopyChange={handleBirdseedCopyChange} />
+        </CsvProvider>
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
         </sp-button>
-      </Theme>
-    </div>
+      </AppProvider>
+    </Theme>
   );
 }
 

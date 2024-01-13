@@ -1,148 +1,11 @@
 // CsvReader.js
 import React, { useState, useEffect } from 'react';
-const { storage } = require('uxp');
+import { storage } from './App.js';
 import CsvBriefingForm from './CsvBriefingForm.js';
+import useCsvContext from './hook/useCsvContext.jsx';
 
-export default function CsvReader({ onAppValuesChange }) {
-    const [csvValues, setCSVValues] = useState({
-        'Source File': '',
-        'URN': '',
-        'Campaign Name': '',
-        'Delivery Label': '',
-        'Deployment Date': '',
-        'Country': '',
-        'Segment': '',
-        'SL': '',
-        'SSL': '',
-        'From Name': '',
-        'TFCID': '',
-        'Campaign Type': '',
-        'Inline Promo': '',
-        'Basic Info': '',
-        'Vendor Funding Name': '',
-        'Funding/WEP Content': '',
-        'Basic Info': '',
-        'Banner Text': '',
-        'Expiry Date/Time in BRT': '',
-        'Skinny Banner Headline': '',
-        'Skinny Banner Text': '',
-        'Skinny Banner Background Color': '',
-        'Skinny Banner Text Color': '',
-        'Skinny CTA Text': '',
-        'Header Plugin Text': '',
-        'Header Plugin Text Color': '',
-        'Header Plugin Background Color': '',
-        'Basic Info': '',
-        'HERO Template': '',
-        'Badge Text': '',
-        'Headline Text': '',
-        'HERO1 Image': '',
-        'HERO1 Product Name': '',
-        'HERO1 Product Inline Promo': '',
-        'HERO1 Product Description': '',
-        'HERO2 Image': '',
-        'HERO2 Product Name': '',
-        'HERO2 Product Inline Promo': '',
-        'HERO2 Product Description': '',
-        'HERO3 Image': '',
-        'HERO3 Product Name': '',
-        'HERO3 Product Inline Promo': '',
-        'HERO3 Product Description': '',
-        'HERO4 Image': '',
-        'HERO4 Product Name': '',
-        'HERO4 Product Inline Promo': '',
-        'HERO4 Product Description': '',
-        'HERO5 Image': '',
-        'HERO5 Product Name': '',
-        'HERO5 Product Inline Promo': '',
-        'HERO5 Product Description': '',
-        'SHL': '',
-        'HERO CTA1 Text': '',
-        'HERO CTA2 Text': '',
-        'Plugin1 Image': '',
-        'Plugin1 Text': '',
-        'Plugin1 Text Color': '',
-        'Plugin1 Background Color': '',
-        'Plugin2 Text': '',
-        'Plugin2 Text Color': '',
-        'Plugin2 Background Color': '',
-        'Order_Code 1(Hero Product)': '',
-        'Order_Code 2(Hero Product)': '',
-        'Order_Code 3(Hero Product)': '',
-        'Order_Code 4(Hero Product)': '',
-        'Order_Code 5(Hero Product)': '',
-        'Order_Code 6(Bundle 1)': '',
-        'Order_Code 7(Bundle 2)': '',
-        'Order_Code 8(Bundle 3)': '',
-        'Order_Code 9(Bundle 4)': '',
-        'Order_Code 10(Bundle 5)': '',
-        'Bundle1_ProductName': '',
-        'Bundle1_Inline_Promo': '',
-        'Bundle1_Description': '',
-        'Bundle1_Image': '',
-        'Bundle2_ProductName': '',
-        'Bundle2_Inline_Promo': '',
-        'Bundle2_Description': '',
-        'Bundle2_Image': '',
-        'Bundle3_ProductName': '',
-        'Bundle3_Inline_Promo': '',
-        'Bundle3_Description': '',
-        'Bundle3_Image': '',
-        'Bundle4_ProductName': '',
-        'Bundle4_Inline_Promo': '',
-        'Bundle4_Description': '',
-        'Bundle4_Image': '',
-        'Bundle5_ProductName': '',
-        'Bundle5_Inline_Promo': '',
-        'Bundle5_Description': '',
-        'Bundle5_Image': '',
-        'Banner1 Layout': '',
-        'Banner1 Image': '',
-        'Banner1 Headline': '',
-        'Banner1 Headline Image': '',
-        'Banner1 Text': '',
-        'Banner1 Text Align': '',
-        'Banner1 Background Color': '',
-        'Banner1 Text Color': '',
-        'Banner1 CTA Text': '',
-        'Banner1 Border': '',
-        'Banner2 Layout': '',
-        'Banner2 Image': '',
-        'Banner2 Headline': '',
-        'Banner2 Headline Image': '',
-        'Banner2 Text': '',
-        'Banner2 Text Align': '',
-        'Banner2 Background Color': '',
-        'Banner2 Text Color': '',
-        'Banner2 CTA Text': '',
-        'Banner2 Border': '',
-        'Birdseed 1A': '',
-        'Birdseed 1 Link Text': '',
-        'Birdseed 1B': '',
-        'Birdseed 2': '',
-        'Header Plugin Link': '',
-        'CDT Link': '',
-        'Skinny Banner Link': '',
-        'Headline Link': '',
-        'HERO1 Link': '',
-        'HERO2 Link': '',
-        'HERO3 Link': '',
-        'HERO4 Link': '',
-        'HERO5 Link': '',
-        'SHL Link': '',
-        'HERO CTA1 Link': '',
-        'HERO CTA2 Link': '',
-        'Plugin1 Link': '',
-        'Plugin2 Link': '',
-        'Bundle1_Link': '',
-        'Bundle2_Link': '',
-        'Bundle3_Link': '',
-        'Bundle4_Link': '',
-        'Bundle5_Link': '',
-        'Banner1 Link': '',
-        'Banner2 Link': '',
-        'Birdseed 1 Link': '',
-    });
+export default function CsvReader() {
+    const { csvValues, setCsvValues } = useCsvContext();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     async function readCSVFile(file) {
@@ -154,56 +17,41 @@ export default function CsvReader({ onAppValuesChange }) {
         const columnIndexEnterContent = headerRow.indexOf('Enter Content');
 
         if (columnIndexBasicInfo !== -1 && columnIndexEnterContent !== -1) {
+            const loadedValues = {};
             for (let i = 1; i < rows.length; i++) {
                 const columns = rows[i].split(';');
                 const basicInfoValue = columns[columnIndexBasicInfo];
                 const enterContentValue = columns[columnIndexEnterContent];
 
                 if (basicInfoValue !== '' && enterContentValue !== '') {
-                    if (csvValues.hasOwnProperty(basicInfoValue)) {
-                        // Verifica se o valor não é vazio antes de adicioná-lo ao estado
-                        if (enterContentValue !== '') {
-                            setCSVValues((prevValues) => ({
-                                ...prevValues,
-                                [basicInfoValue]: enterContentValue,
-                            }));
-                            // console.log(`Valor correspondente para '${basicInfoValue}': ${enterContentValue}`);
-                        }
-                    }
+                    loadedValues[basicInfoValue] = enterContentValue;
                 }
             }
+            return loadedValues;
         } else {
             console.log('Índices das colunas não encontrados.');
+            return {};
         }
     }
 
     // Função para lidar com a mudança no input do arquivo
     async function handleFileInputChange() {
-        const fs = storage.localFileSystem;
-        const file = await fs.getFileForOpening({ types: ['csv'] });
+        try {
+            const fs = storage.localFileSystem;
+            const file = await fs.getFileForOpening({ types: ['csv'] });
 
-        if (file) {
-            try {
-                await readCSVFile(file);
+            if (file) {
+                const loadedValues = await readCSVFile(file);
+                setCsvValues(loadedValues);
                 setIsModalOpen(true);
-            } catch (error) {
-                console.error('Erro ao ler o arquivo:', error);
             }
+        } catch (error) {
+            console.error('Erro ao ler o arquivo CSV:', error);
         }
     }
 
-    // Função para fechar o modal
     const closeModal = () => {
         setIsModalOpen(false);
-    };
-
-
-    // Função para confirmar a edição e receber os valores do formulário
-    const handleConfirmEdit = (editedValues) => {
-        // Encaminhe os valores para o componente App
-        onAppValuesChange(editedValues);
-        // Feche o modal
-        closeModal();
     };
 
     useEffect(() => {
@@ -224,7 +72,7 @@ export default function CsvReader({ onAppValuesChange }) {
 
             {isModalOpen && (
                 <div className="modal-border">
-                    <CsvBriefingForm csvValues={csvValues} closeModal={closeModal} onConfirmEdit={handleConfirmEdit} />
+                    <CsvBriefingForm closeModal={closeModal} />
                 </div>
             )}
         </div>

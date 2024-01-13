@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import useCsvContext from './hook/useCsvContext.jsx';
 
-export default function CsvBriefingForm({ csvValues, closeModal, onConfirmEdit }) {
+export default function CsvBriefingForm({ closeModal }) {
+    const { csvValues, setCsvValues } = useCsvContext();
     const [editedValues, setEditedValues] = useState({});
 
     useEffect(() => {
-        setEditedValues({ ...csvValues }); // Sincroniza editadoValues com csvValues
-    }, [csvValues]); // Adiciona editedValues na lista de dependências
+        setEditedValues({ ...csvValues });
+    }, [csvValues]);
 
     const handleInputChange = (key, value) => {
         setEditedValues((prevValues) => ({
             ...prevValues,
             [key]: value,
-        })); // Atualiza o estado sem mutação
+        }));
     };
 
     const handleConfirmEdit = () => {
-        console.log('Valores Editados Confirmados:', editedValues);
-        onConfirmEdit(editedValues);
+        // console.log('Valores Editados Confirmados:', editedValues);
+        setCsvValues(editedValues);
         closeModal();
     };
 
@@ -33,11 +35,10 @@ export default function CsvBriefingForm({ csvValues, closeModal, onConfirmEdit }
                             .map(([key, value]) => (
                                 <div key={key} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", margin: "4px" }}>
                                     <sp-detail className="sp-detail-dialog">
-                                        <strong style={{ fontWeight: "bold" }}>{key}: <span style={{ fontWeight: "light" }}>{value}</span> </strong>
+                                        <strong style={{ fontWeight: "bold" }}>{key}: <span style={{ fontWeight: "light" }}>{value}</span></strong>
                                     </sp-detail>
                                 </div>
                             ))}
-
                     </ul>
                     <footer>
                         {/* ... (outros elementos do formulário, se necessário) */}

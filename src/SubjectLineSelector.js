@@ -1,78 +1,78 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import useCsvContext from "./hook/useCsvContext.jsx";
 
 export default function SubjectLineSelector(props) {
+    const { csvValues } = useCsvContext();
 
-    const useFormState = (initialState) => {
-        const [formState, setFormState] = useState(initialState);
-
-        const handleInputChange = (key, value) => {
-            setFormState({
-                ...formState,
-                [key]: value,
-            });
-
-            props.onSubjectLineChange({ ...formState, [key]: value });
-        };
-
-        return [formState, handleInputChange];
-    };
-
-    const [
-        {
-            slValue,
-            sslValue,
-        },
-        setFormValue,
-    ] = useFormState({
-        slValue: "",
-        sslValue: "",
+    const [formState, setFormState] = useState({
+        slValue: csvValues.SL || "",
+        sslValue: csvValues.SSL || "",
     });
 
-    const [valid, setValid] = useState({});
+    const [valid, setValid] = useState({
+        slValue: false,
+        sslValue: false,
+    });
 
-    // Função para validar um campo específico
-    const validateField = (value) => {
-        return value !== "";
-    };
+    useEffect(() => {
+        setFormState({
+            slValue: csvValues.SL || "",
+            sslValue: csvValues.SSL || "",
+        });
 
-    // Função para manipular a mudança no valor do campo
-    const handleInputChange = (key) => (event) => {
-        const value = event.target.value;
-        setFormValue(key, value);
-    };
+        props.onSubjectLineChange({
+            slValue: csvValues.SL || "",
+            sslValue: csvValues.SSL || "",
+        });
+    }, [csvValues.SL, csvValues.SSL]);
 
-    // Função para manipular o blur do campo e atualizar a validação
-    const handleBlur = (key, value) => {
-        const isValid = validateField(value);
+    const handleInputChange = (key, value) => {
+        setFormState((prevFormState) => ({
+            ...prevFormState,
+            [key]: value,
+        }));
+
+        props.onSubjectLineChange({
+            ...formState,
+            [key]: value,
+        });
+
         setValid((prevValid) => ({
             ...prevValid,
-            [key]: isValid,
+            [key]: value !== "" ? true : false,
         }));
     };
 
     return (
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", }} className="group">
+        <div
+            style={{
+                display: "flex",
+                flexWrap: "wrap",
+                alignItems: "flex-start",
+            }}
+            className="group"
+        >
             <sp-label>SL & SSL</sp-label>
             <div style={{ margin: "0 4px" }}>
                 <sp-detail for="sl-field">SL</sp-detail>
                 <sp-textfield
                     id="sl-field"
                     placeholder="Insira o SL"
-                    value={slValue}
-                    onInput={handleInputChange('slValue')}
-                    onBlur={() => handleBlur('slValue')}
-                    valid={valid['slValue']}
+                    value={formState.slValue}
+                    onInput={(event) => handleInputChange("slValue", event.target.value)}
+                    onBlur={() => handleInputChange("slValue", formState.slValue)}
+                    valid={formState.slValue !== "" ? valid.slValue : undefined}
                 ></sp-textfield>
             </div>
             <div style={{ margin: "0 4px" }}>
                 <sp-detail for="ssl-field">SSL</sp-detail>
                 <sp-textfield
-                    id="ssl-fie ld"
+                    id="ssl-field"
                     placeholder="Insira o SSL"
-                    value={sslValue}
-                    onInput={handleInputChange('sslValue')}
-                    onBlur={() => handleBlur('sslValue')}
-                    valid={valid['sslValue']}
+                    value={formState.sslValue}
+                    onInput={(event) => handleInputChange("sslValue", event.target.value)}
+                    onBlur={() => handleInputChange("sslValue", formState.sslValue)}
+                    valid={formState.sslValue !== "" ? valid.sslValue : undefined}
                 ></sp-textfield>
             </div>
         </div>
