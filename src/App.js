@@ -61,28 +61,50 @@ export function limitCharsPerLine(text, limit) {
 
 function App() {
 
+  // Tratar os valores
+
   const [appValues, setAppValues] = useState({
     slValue: '',
     sslValue: '',
     fundingCopyValue: '',
+    badgeValue: '',
+    headlineValue: '',
+    subHeadlineValue: '',
+    heroCtaValue: '',
   });
 
-  // Função para lidar com os valores editados vindos do CsvReader
-  const handleAppValues = (editedValues) => {
-    // console.log('Valores editados no App:', editedValues);
+  useEffect(() => {
+    updateHeroCopyValues(appValues);
+  }, [appValues]);
 
-    // Atualize apenas os valores específicos no estado do App
-    setAppValues({
-      slValue: editedValues.SL || '',
-      sslValue: editedValues.SSL || '',
-      fundingCopyValue:
-        editedValues['Funding/WEP Content'] !== undefined &&
-          editedValues['Funding/WEP Content'] !== ''
-          ? editedValues['Funding/WEP Content']
-          : '',
-    });
+  const updateHeroCopyValues = (values) => {
+    setHeroCopyValues((prevHeroCopyValues) => ({
+      ...prevHeroCopyValues,
+      badgeValue: values.badgeValue || '',
+      headlineValue: values.headlineValue || '',
+      subHeadlineValue: values.subHeadlineValue || '',
+      heroCtaValue: values.heroCtaValue || '',
+      // Adicione outras propriedades conforme necessário
+    }));
   };
 
+  const handleAppValues = (editedValues) => {
+    setAppValues((prevAppValues) => ({
+      ...prevAppValues,
+      slValue: editedValues.SL || '',
+      sslValue: editedValues.SSL || '',
+      fundingCopyValue: editedValues['Funding/WEP Content'] || '',
+      badgeValue: editedValues['Badge Text'] || '',
+      headlineValue: editedValues['Headline Text'] || '',
+      subHeadlineValue: editedValues['SHL'] || '',
+      heroCtaValue: editedValues['HERO CTA1 Text'] || '',
+    }));
+
+    updateHeroCopyValues({
+      ...appValues,
+      ...editedValues,
+    });
+  };
 
   const [selectedColorValues, setSelectedColorValues] = useState(null);
 
@@ -402,7 +424,7 @@ function App() {
   };
 
   const fundingCopyValue = appValues?.fundingCopyValue || (appValues.fundingCopyValue !== "" ? appValues.fundingCopyValue : '')
-  
+
   const handleFundingSelect = async (funding) => {
 
     const fundingFilePath = `assets/fundings/${funding}.psd`;
@@ -518,7 +540,7 @@ function App() {
   };
 
   // const skinnyHeadlineValue = skinnyValues?.skinnyHeadlineValue || (csvValues.SL !== "" ? csvValues.SL : '');
-  const skinnyHeadlineValue = skinnyValues?.skinnyHeadlineValue;
+  const skinnyHeadlineValue = skinnyValues?.skinnyHeadlineValue || '';
   const skinnyCopyValue = skinnyValues?.skinnyCopyValue || '';
 
   const handleSkinnySelect = async (skinny) => {
@@ -638,7 +660,7 @@ function App() {
   const [selectedHero, setSelectedHero] = useState(null);
 
   const [heroCopyValues, setHeroCopyValues] = useState({
-    badgeValue: '',
+    badgeValue : '',
     headlineValue: '',
     subHeadlineValue: '',
     inlinePromoValue: '',
@@ -652,6 +674,8 @@ function App() {
     price2Value: '',
     heroCtaValue: '',
   });
+
+  console.log("CTA Value do Hero", heroCopyValues.heroCtaValue);
 
   const handleHeroCopyChange = (newValues) => {
     setHeroCopyValues({ ...heroCopyValues, ...newValues });
