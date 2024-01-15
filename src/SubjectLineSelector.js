@@ -2,9 +2,14 @@ import React, { useState, useEffect } from "react";
 import useCsvContext from "./hook/useCsvContext.jsx";
 
 export default function SubjectLineSelector(props) {
-    const { csvValues } = useCsvContext();
+    const { csvValues, setCsvValues, setSlValue, setSslValue } = useCsvContext();
 
     const [formState, setFormState] = useState({
+        slValue: csvValues.SL || "",
+        sslValue: csvValues.SSL || "",
+    });
+
+    const [tempFormState, setTempFormState] = useState({
         slValue: csvValues.SL || "",
         sslValue: csvValues.SSL || "",
     });
@@ -15,32 +20,56 @@ export default function SubjectLineSelector(props) {
     });
 
     useEffect(() => {
-        setFormState({
-            slValue: csvValues.SL || "",
-            sslValue: csvValues.SSL || "",
+        // Limpe o estado temporário ao montar o componente
+        setTempFormState({
+            slValue: "",
+            sslValue: "",
         });
 
-        props.onSubjectLineChange({
+        // Atualize o estado final com os valores do contexto
+        setFormState({
             slValue: csvValues.SL || "",
             sslValue: csvValues.SSL || "",
         });
     }, [csvValues.SL, csvValues.SSL]);
 
     const handleInputChange = (key, value) => {
-        setFormState((prevFormState) => ({
-            ...prevFormState,
+        // Atualize o estado temporário imediatamente
+        setTempFormState((prevTempFormState) => ({
+            ...prevTempFormState,
             [key]: value,
         }));
-
-        props.onSubjectLineChange({
-            ...formState,
-            [key]: value,
-        });
 
         setValid((prevValid) => ({
             ...prevValid,
-            [key]: value !== "" ? true : false,
+            [key]: value !== "",
         }));
+    };
+
+    const handleBlur = (key) => {
+        // Atualize o CsvContext com os valores editados
+        setCsvValues({
+            ...csvValues,
+            [key]: tempFormState[key],
+        });
+
+        // Atualize diretamente os valores no contexto
+        if (key === "slValue") {
+            setSlValue(tempFormState.slValue);
+        } else if (key === "sslValue") {
+            setSslValue(tempFormState.sslValue);
+        }
+
+        // Atualize o estado final com os valores do estado temporário
+        setFormState({
+            ...formState,
+            [key]: tempFormState[key],
+        });
+
+        props.onSubjectLineChange({
+            slValue: key === "slValue" ? tempFormState.slValue : csvValues.SL,
+            sslValue: key === "sslValue" ? tempFormState.sslValue : csvValues.SSL,
+        });
     };
 
     return (
@@ -60,7 +89,7 @@ export default function SubjectLineSelector(props) {
                     placeholder="Insira o SL"
                     value={formState.slValue}
                     onInput={(event) => handleInputChange("slValue", event.target.value)}
-                    onBlur={() => handleInputChange("slValue", formState.slValue)}
+                    onBlur={() => handleBlur("slValue")}
                     valid={formState.slValue !== "" ? valid.slValue : undefined}
                 ></sp-textfield>
             </div>
@@ -71,7 +100,7 @@ export default function SubjectLineSelector(props) {
                     placeholder="Insira o SSL"
                     value={formState.sslValue}
                     onInput={(event) => handleInputChange("sslValue", event.target.value)}
-                    onBlur={() => handleInputChange("sslValue", formState.sslValue)}
+                    onBlur={() => handleBlur("sslValue")}
                     valid={formState.sslValue !== "" ? valid.sslValue : undefined}
                 ></sp-textfield>
             </div>

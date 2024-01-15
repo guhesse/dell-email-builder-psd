@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import useCsvContext from './hook/useCsvContext.jsx';
 export const { storage } = require('uxp');
+
 
 
 export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {

@@ -23,7 +23,9 @@ export const { batchPlay } = require('photoshop').action;
 
 import AppProvider from './context/AppProvider.js';
 import CsvProvider from './context/CsvProvider.js';
-import { useCsvContext } from './context/CsvProvider.js';
+
+
+import useCsvContext from './hook/useCsvContext.jsx';
 
 // Aqui ele deve pegar os valores do CSV
 
@@ -69,10 +71,20 @@ function App() {
 
   // Tratar os valores
 
+  const slValue = "aaaaaaa"
+  const sslValue = "AOBBBBBA"
+  const fundingCopyValue = '11111'
+
+  const handleSubjectLineChange = (editedValues) => {
+    // Atualize o estado da aplicação com os valores editados
+    setCsvValues({
+      ...csvValues,
+      ...editedValues,
+    });
+  };
+
+
   const [appValues, setAppValues] = useState({
-    slValue: '',
-    sslValue: '',
-    fundingCopyValue: '',
     badgeValue: '',
     headlineValue: '',
     subHeadlineValue: '',
@@ -97,9 +109,6 @@ function App() {
   const handleAppValues = (editedValues) => {
     setAppValues((prevAppValues) => ({
       ...prevAppValues,
-      slValue: editedValues.SL || '',
-      sslValue: editedValues.SSL || '',
-      fundingCopyValue: editedValues['Funding/WEP Content'] || '',
       badgeValue: editedValues['Badge Text'] || '',
       headlineValue: editedValues['Headline Text'] || '',
       subHeadlineValue: editedValues['SHL'] || '',
@@ -286,14 +295,6 @@ function App() {
 
   const [subjectLineValues, setSubjectLineValues] = useState(null);
 
-  const handleSubjectLineChange = (values) => {
-    setSubjectLineValues(values);
-  };
-
-
-
-  const slValue = subjectLineValues?.slValue || (appValues.slValue.SL !== "" ? appValues.sslValue : '');
-  const sslValue = subjectLineValues?.sslValue || (appValues.sslValue.SSL !== "" ? appValues.sslValue : '');
 
   const sslSelect = async (updatedSLValue) => {
 
@@ -433,8 +434,6 @@ function App() {
   const handleFundingCopyChange = (values) => {
     setFundingCopyValues(values);
   };
-
-  const fundingCopyValue = appValues?.fundingCopyValue || (appValues.fundingCopyValue !== "" ? appValues.fundingCopyValue : '')
 
   const handleFundingSelect = async (funding) => {
 

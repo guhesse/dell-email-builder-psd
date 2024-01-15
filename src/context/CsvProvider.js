@@ -1,6 +1,6 @@
 
 // CsvContext.js
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { CsvContext } from './CsvContext.js';
 import { storage } from '../App.js';
 
@@ -160,8 +160,29 @@ export default function CsvProvider({ children }) {
         }
     };
 
+    // Função genérica para atualizar valores com base em um objeto de mapeamento
+    const updateValues = (valueMapping) => {
+        const updatedValues = {};
+        Object.keys(valueMapping).forEach((key) => {
+            updatedValues[key] = csvValues[valueMapping[key]];
+        });
+        return updatedValues;
+    };
+    const [slValue, setSlValue] = useState("");
+    const [sslValue, setSslValue] = useState("");
+
+    useEffect(() => {
+        setSlValue(csvValues.SL || "");
+        setSslValue(csvValues.SSL || "");
+    }, [csvValues.SL, csvValues.SSL]);
+
+    console.log("Sl Value:", slValue)
+    console.log("Ssl Value:", sslValue)
+
+
+
     return (
-        <CsvContext.Provider value={{ csvValues, setCsvValues, loadDefaultValuesFromCsv }}>
+        <CsvContext.Provider value={{ csvValues, setCsvValues, loadDefaultValuesFromCsv, setSlValue, setSslValue, slValue, sslValue}}>
             {children}
         </CsvContext.Provider>
     );
