@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { storage } from './App.js';
 import CsvBriefingForm from './CsvBriefingForm.js';
-import useCsvContext from './hook/useCsvContext.jsx';
+import useAppContext from './hook/useAppContext.jsx';
 
 export default function CsvReader() {
-    const { csvValues, setCsvValues } = useCsvContext();
+    const { csvValues, setCsvValues } = useAppContext();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     async function readCSVFile(file) {

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import useCsvContext from "./hook/useCsvContext.jsx";
+import useAppContext from "./hook/useAppContext.jsx";
 
 export default function SubjectLineSelector(props) {
-    const { csvValues, setCsvValues, setSlValue, setSslValue } = useCsvContext();
+    const { csvValues, setCsvValues, setSlValue, setSslValue } = useAppContext();
 
     const [formState, setFormState] = useState({
         slValue: csvValues.SL || "",

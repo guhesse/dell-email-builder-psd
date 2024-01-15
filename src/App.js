@@ -15,6 +15,7 @@ import FooterSelector from './FooterSelector.js';
 import BirdseedSelector from './BirdseedSelector.js';
 import Hero1Lifestyle from './HeroLayout/hero1lifestyle.jsx';
 import Hero2Promotion from './HeroLayout/hero2promotion.jsx';
+import EmailBuilder from './components/EmailBuilder.jsx';
 
 import { Theme } from "@swc-react/theme";
 export const { core, app } = require('photoshop');
@@ -22,10 +23,7 @@ export const { storage } = require('uxp');
 export const { batchPlay } = require('photoshop').action;
 
 import AppProvider from './context/AppProvider.js';
-import CsvProvider from './context/CsvProvider.js';
 
-
-import useCsvContext from './hook/useCsvContext.jsx';
 
 // Aqui ele deve pegar os valores do CSV
 
@@ -291,77 +289,7 @@ function App() {
   // Fim da fun\u00e7\u00e3o para aumentar o tamanho do documento e ajustar o zoom para fit to screen
 
 
-  // Fun\u00e7\u00e3o de moficar e importar o SSL
 
-  const [subjectLineValues, setSubjectLineValues] = useState(null);
-
-
-  const sslSelect = async (updatedSLValue) => {
-
-    const sslFilePath = `assets/sl-ssl/SL & SSL.psd`;
-
-    try {
-      const fs = storage.localFileSystem;
-      const pluginDir = await fs.getPluginFolder();
-      const fileEntry = await pluginDir.getEntry(sslFilePath);
-
-
-      const targetFunction = async (executionContext) => {
-        try {
-          await app.open(fileEntry);
-
-          const secondDocument = app.documents[1];
-          const slWidth = secondDocument.width;
-          slHeight = secondDocument.height;
-
-          // Fun\u00e7\u00e3o que troca o texto do SL e SSL
-          const changeSLCopy = [
-            { _obj: "select", _target: [{ _ref: "layer", _name: "SL" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `Subject Line:  ${slValue}`, } },
-            { _obj: "select", _target: [{ _ref: "layer", _name: "SSL" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `Super Subject Line :  ${sslValue}`, } }
-          ];
-
-          await batchPlay(changeSLCopy, {});
-
-          // Fun\u00e7\u00e3o que copia e cola o m\u00f3dulo
-          const selectAndCopy = [
-            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-          ];
-
-          await batchPlay(selectAndCopy, {});
-
-          const activeDocument = app.activeDocument;
-          await activeDocument.paste();
-
-          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-          const docWidth = activeDocument.width;
-          const docHeight = activeDocument.height;
-          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (slWidth / 2));
-          const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (slHeight / 2));
-          pastedGroup.translate(offsetX, offsetY);
-
-          console.log('%cSSL inserido com sucesso!', 'color: #00EAADFF;');
-        } catch (error) {
-          console.error('Erro ao inserir SSL:', error);
-        }
-      };
-
-      const options = {
-        commandName: 'Inserir SSL',
-        interactive: true,
-      };
-
-      await core.executeAsModal(targetFunction, options);
-    } catch (error) {
-      console.error('Erro ao encontrar o arquivo de SSL:', error);
-    }
-  };
-
-  // Fim de fun\u00e7\u00e3o de modificar e importar o SSL
 
   // Fun\u00e7\u00e3o de selecionar o Header
   const [selectedHeader, setSelectedHeader] = useState(null);
@@ -1466,7 +1394,7 @@ function App() {
       await clearAllLayers();
       await clearAllHeights();
       await fitToScreenPre();
-      var slHeight = await sslSelect();
+      slHeight = 60;
       var headerHeight = await handleHeaderSelect(selectedHeader, slHeight);
       var fundingHeight = await handleFundingSelect(selectedFunding, headerHeight, slHeight);
       var skinnyBannerHeight = await handleSkinnySelect(selectedSkinny, slHeight, headerHeight, fundingHeight);
@@ -1489,22 +1417,21 @@ function App() {
   return (
     <Theme theme="spectrum" scale="medium" color="light">
       <AppProvider className="wrapper">
-        <CsvProvider>
-          <CsvReader onAppValuesChange={handleAppValues} />
-          <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
-          <ColorSelector onAccentColorChange={handleAccentColorChange} onSecondaryColorChange={handleSecondaryColorChange} onTertiaryColorChange={handleTertiaryColorChange} />
-          <div style={{ display: "flex", flexWrap: "wrap" }} className="group"><sp-label>Header & Funding</sp-label>
-            <HeaderSelector handleHeaderSelect={setSelectedHeader} />
-            <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
-          </div>
-          <SkinnySelector handleSkinnySelect={setSelectedSkinny} onSkinnyChange={handleSkinnyChange}></SkinnySelector>
-          <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
-          <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} />
-          <FpoSelector handleFpoValueSelect={setSelectedFpoValue} handleFpoSegmentSelect={setSelectedFpoSegment} />
-          <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerCopyChange={handleBannerCopyChange} />
-          <FooterSelector handleFooterSelect={setSelectedFooter} />
-          <BirdseedSelector handleBirdseedSelect={setSelectedBirdseed} handleBirdseedCopy={setSelectedBirdseedCopy} onDateChange={handleDateChange} onBirdseedCopyChange={handleBirdseedCopyChange} />
-        </CsvProvider>
+        <CsvReader onAppValuesChange={handleAppValues} />
+        <EmailBuilder></EmailBuilder>
+        <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
+        <ColorSelector onAccentColorChange={handleAccentColorChange} onSecondaryColorChange={handleSecondaryColorChange} onTertiaryColorChange={handleTertiaryColorChange} />
+        <div style={{ display: "flex", flexWrap: "wrap" }} className="group"><sp-label>Header & Funding</sp-label>
+          <HeaderSelector handleHeaderSelect={setSelectedHeader} />
+          <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
+        </div>
+        <SkinnySelector handleSkinnySelect={setSelectedSkinny} onSkinnyChange={handleSkinnyChange}></SkinnySelector>
+        <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
+        <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} />
+        <FpoSelector handleFpoValueSelect={setSelectedFpoValue} handleFpoSegmentSelect={setSelectedFpoSegment} />
+        <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerCopyChange={handleBannerCopyChange} />
+        <FooterSelector handleFooterSelect={setSelectedFooter} />
+        <BirdseedSelector handleBirdseedSelect={setSelectedBirdseed} handleBirdseedCopy={setSelectedBirdseedCopy} onDateChange={handleDateChange} onBirdseedCopyChange={handleBirdseedCopyChange} />
         <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
         </sp-button>

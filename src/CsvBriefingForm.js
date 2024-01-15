@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import useCsvContext from './hook/useCsvContext.jsx';
+import useAppContext from './hook/useAppContext.jsx';
 
 export default function CsvBriefingForm({ closeModal }) {
-    const { csvValues, setCsvValues } = useCsvContext();
+    const { csvValues, setCsvValues } = useAppContext();
     const [editedValues, setEditedValues] = useState({});
 
     useEffect(() => {
