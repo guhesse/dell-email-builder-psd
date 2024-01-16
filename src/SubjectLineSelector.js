@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import useAppContext from "./hook/useAppContext.jsx";
 
-export default function SubjectLineSelector(props) {
-    const { csvValues, setCsvValues, setSlValue, setSslValue } = useAppContext();
+export default function SubjectLineSelector() {
+    const { csvValues, setCsvValues, sslValue, slValue, setSlValue, setSslValue } = useAppContext();
 
     const [formState, setFormState] = useState({
         slValue: csvValues.SL || "",
@@ -64,11 +64,6 @@ export default function SubjectLineSelector(props) {
         setFormState({
             ...formState,
             [key]: tempFormState[key],
-        });
-
-        props.onSubjectLineChange({
-            slValue: key === "slValue" ? tempFormState.slValue : csvValues.SL,
-            sslValue: key === "sslValue" ? tempFormState.sslValue : csvValues.SSL,
         });
     };
 

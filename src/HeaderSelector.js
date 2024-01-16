@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Theme } from "@swc-react/theme";
+import useAppContext from './hook/useAppContext.jsx';
 
 
-export default function HeaderSelector({ handleHeaderSelect }) {
-    const [selectedHeader, setSelectedHeader] = useState(null);
+export default function HeaderSelector() {
 
-    const handleHeaderClick = (header) => {
-        setSelectedHeader(header);
-        handleHeaderSelect(header); // Executa a função passada pelo pai (handleHeaderSelect) com o header selecionado
-    };
+    const { csvValues, selectedHeader, setSelectedHeader } = useAppContext();
+
+    useEffect(() => {
+        const handleHeaderClick = (header) => {
+            setSelectedHeader(header);
+        };
+        handleHeaderClick(csvValues['Campaign Type']);
+    }, [csvValues['Campaign Type']]);
 
 
     return (
@@ -17,13 +21,13 @@ export default function HeaderSelector({ handleHeaderSelect }) {
             <sp-overlay>
                 <sp-picker slot="trigger" id="picker-m" size="m" label="Selection type" placeholder="Selecione o header">
                     <sp-menu>
-                        <sp-menu-item onClick={() => handleHeaderClick('csb')}>CSB & SB</sp-menu-item>
-                        <sp-menu-item onClick={() => handleHeaderClick('outlet')}>CSB Outlet</sp-menu-item>
+                        <sp-menu-item selected={selectedHeader === 'csb'}  onClick={() => handleHeaderClick('csb')}>CSB & SB</sp-menu-item>
+                        <sp-menu-item selected={selectedHeader === 'outlet'}  onClick={() => handleHeaderClick('outlet')}>CSB Outlet</sp-menu-item>
                         <sp-menu-divider></sp-menu-divider>
-                        <sp-menu-item onClick={() => handleHeaderClick('sb-rd')}>SB RD</sp-menu-item>
-                        <sp-menu-item onClick={() => handleHeaderClick('sb-gdo')}>SB GDO</sp-menu-item>
+                        <sp-menu-item selected={selectedHeader === 'sb-rd'}  onClick={() => handleHeaderClick('sb-rd')}>SB RD</sp-menu-item>
+                        <sp-menu-item selected={selectedHeader === 'sb-gdo'}  onClick={() => handleHeaderClick('sb-gdo')}>SB GDO</sp-menu-item>
                         <sp-menu-divider></sp-menu-divider>
-                        <sp-menu-item onClick={() => handleHeaderClick('alienware')}>Alienware</sp-menu-item>
+                        <sp-menu-item selected={selectedHeader === 'alienware'}  onClick={() => handleHeaderClick('alienware')}>Alienware</sp-menu-item>
                     </sp-menu>
                 </sp-picker>
                 <sp-popover

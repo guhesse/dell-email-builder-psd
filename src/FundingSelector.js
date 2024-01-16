@@ -1,109 +1,99 @@
-import React, { useState } from 'react';
-import { Theme } from "@swc-react/theme";
+import React, { useState, useEffect } from 'react';
+import useAppContext from './hook/useAppContext.jsx';
 
+export default function FundingSelector() {
+    const { csvValues, setCsvValues, setFundingCopyValue, selectedFunding, setSelectedFunding } = useAppContext();
 
-export default function FundingSelector({ handleFundingSelect, onFundingCopyChange }) {
-    const [selectedFunding, setSelectedFunding] = useState('no-vf');
-
+    // Declare a função handleFundingClick fora do useEffect
     const handleFundingClick = (funding) => {
         setSelectedFunding(funding);
-        handleFundingSelect(funding); // Executa a função passada pelo pai (handleHeaderSelect) com o header selecionado
     };
 
-    const useFormState = (initialState) => {
-        const [formState, setFormState] = useState(initialState);
+    useEffect(() => {
+        // Executa a função handleFundingClick quando houver uma mudança em csvValues['Vendor Funding Name']
+        handleFundingClick(csvValues['Vendor Funding Name']);
+    }, [csvValues['Vendor Funding Name']]);
 
-        const handleInputChange = (key, value) => {
-            setFormState({
-                ...formState,
-                [key]: value,
-            });
+    console.log("selected funding", selectedFunding);
 
-            // Assuming onFundingCopyChange is a prop or a function you have access to
-            onFundingCopyChange({ ...formState, [key]: value });
-        };
+    const [formState, setFormState] = useState({
+        fundingCopyValue: csvValues['Funding/WEP Content'] || "",
+    });
 
-        return [formState, handleInputChange];
+    useEffect(() => {
+        setFormState({
+            fundingCopyValue: csvValues['Funding/WEP Content'] || "",
+        });
+    }, [csvValues['Funding/WEP Content']]);
+
+    const handleInputChange = (key, value) => {
+        setFormState((prevFormState) => ({
+            ...prevFormState,
+            [key]: value,
+        }));
     };
 
-        const [
-            {
-                fundingCopyValue,
-            },
-            setFormValue,
-        ] = useFormState({
-            fundingCopyValue: "",
+    const handleBlur = (key) => {
+        setCsvValues({
+            ...csvValues,
+            [key]: formState[key],
         });
 
-        const [valid, setValid] = useState({});
+        if (key === "fundingCopyValue") {
+            setFundingCopyValue(formState.fundingCopyValue);
+        }
 
-        // Função para validar um campo específico
-        const validateField = (value) => {
-            return value !== "";
-        };
+        props.onSubjectLineChange({
+            fundingCopyValue: key === "fundingCopyValue" ? formState.fundingCopyValue : csvValues['Funding/WEP Content'],
+        });
+    };
 
-        // Função para manipular a mudança no valor do campo
-        const handleInputChange = (key) => (event) => {
-            const value = event.target.value;
-            setFormValue(key, value);
-        };
+    return (
+        <>
+            <div>
+                <sp-detail for="funding-field">FUNDING</sp-detail>
+                <sp-picker id="picker-m" size="m" label="Selection type" placeholder="Selecione o funding">
+                    <sp-menu>
+                        <sp-menu-item selected={selectedFunding === 'no-vf'} onClick={() => handleFundingClick('no-vf')}>No VF</sp-menu-item>
+                        <sp-menu-divider></sp-menu-divider>
+                        <sp-menu-group>
+                            <sp-menu-item selected={selectedFunding === 'win11'} onClick={() => handleFundingClick('win11')}>Windows 11</sp-menu-item>
+                            <sp-menu-item disabled selected={selectedFunding === 'ms365'} onClick={() => handleFundingClick('ms365')}>Microsoft 365</sp-menu-item>
+                            <sp-menu-item disabled selected={selectedFunding === 'msserver'} onClick={() => handleFundingClick('msserver')}>Microsoft Server</sp-menu-item>
+                        </sp-menu-group>
+                        <sp-menu-divider></sp-menu-divider>
+                        <sp-menu-group>
+                            <sp-menu-item disabled selected={selectedFunding === 'intelcorp'} onClick={() => handleFundingClick('intelcorp')}>Intel Corporate</sp-menu-item>
+                            <sp-menu-item disabled selected={selectedFunding === 'xeon'} onClick={() => handleFundingClick('xeon')}>Xeon</sp-menu-item>
+                            <sp-menu-item disabled selected={selectedFunding === 'i5'} onClick={() => handleFundingClick('i5')}>i5</sp-menu-item>
+                            <sp-menu-item disabled selected={selectedFunding === 'i7'} onClick={() => handleFundingClick('i7')}>i7</sp-menu-item>
+                            <sp-menu-item disabled selected={selectedFunding === 'i9'} onClick={() => handleFundingClick('i9')}>i9</sp-menu-item>
+                            <sp-menu-item disabled selected={selectedFunding === 'evo'} onClick={() => handleFundingClick('evo')}>Evo</sp-menu-item>
+                            <sp-menu-item disabled selected={selectedFunding === 'vpro'} onClick={() => handleFundingClick('vpro')}>V Pro</sp-menu-item>
+                        </sp-menu-group>
+                        <sp-menu-divider></sp-menu-divider>
+                        <sp-menu-group>
+                            <sp-menu-item disabled selected={selectedFunding === 'mcaffee'} onClick={() => handleFundingClick('mcaffee')}>McAffee</sp-menu-item>
+                        </sp-menu-group>
+                    </sp-menu>
 
-        // Função para manipular o blur do campo e atualizar a validação
-        const handleBlur = (key, value) => {
-            const isValid = validateField(value);
-            setValid((prevValid) => ({
-                ...prevValid,
-                [key]: isValid,
-            }));
-        };
+                </sp-picker>
+            </div>
 
 
-        return (
-            <>
+            {selectedFunding !== 'no-vf' && (
                 <div>
-                    <sp-detail for="funding-field">FUNDING</sp-detail>
-                    <sp-picker id="picker-m" size="m" label="Selection type" placeholder="Selecione o funding">
-                        <sp-menu>
-                            <sp-menu-item onClick={() => handleFundingClick('no-vf')}>No VF</sp-menu-item>
-                            <sp-menu-divider></sp-menu-divider>
-                            <sp-menu-group>
-                                <sp-menu-item onClick={() => handleFundingClick('win11')}>Windows 11</sp-menu-item>
-                                <sp-menu-item disabled onClick={() => handleFundingClick('ms365')}>Microsoft 365</sp-menu-item>
-                                <sp-menu-item disabled onClick={() => handleFundingClick('msserver')}>Microsoft Server</sp-menu-item>
-                            </sp-menu-group>
-                            <sp-menu-divider></sp-menu-divider>
-                            <sp-menu-group>
-                                <sp-menu-item disabled onClick={() => handleFundingClick('intelcorp')}>Intel Corporate</sp-menu-item>
-                                <sp-menu-item disabled onClick={() => handleFundingClick('xeon')}>Xeon</sp-menu-item>
-                                <sp-menu-item disabled onClick={() => handleFundingClick('i5')}>i5</sp-menu-item>
-                                <sp-menu-item disabled onClick={() => handleFundingClick('i7')}>i7</sp-menu-item>
-                                <sp-menu-item disabled onClick={() => handleFundingClick('i9')}>i9</sp-menu-item>
-                                <sp-menu-item disabled onClick={() => handleFundingClick('evo')}>Evo</sp-menu-item>
-                                <sp-menu-item disabled onClick={() => handleFundingClick('vpro')}>V Pro</sp-menu-item>
-                            </sp-menu-group>
-                            <sp-menu-divider></sp-menu-divider>
-                            <sp-menu-group>
-                                <sp-menu-item disabled onClick={() => handleFundingClick('mcaffee')}>McAffee</sp-menu-item>
-                            </sp-menu-group>
-                        </sp-menu>
-                    </sp-picker>
+                    <sp-detail for="funding-copy-field">FUNDING COPY</sp-detail>
+                    <sp-textfield
+                        id="funding-copy-field"
+                        placeholder="Insira o Funding Copy"
+                        value={formState.fundingCopyValue}
+                        onInput={(event) => handleInputChange("fundingCopyValue", event.target.value)}
+                        onBlur={() => handleBlur("fundingCopyValue")}
+                        valid={formState.fundingCopyValue !== "" ? true : undefined} // Ajuste para sempre ser válido enquanto você não implementa a validação específica
+                    ></sp-textfield>
                 </div>
-
-
-                {selectedFunding !== 'no-vf' && (
-                    <div>
-                        <sp-detail for="funding-copy-field">FUNDING COPY</sp-detail>
-                        <sp-textfield
-                            id="funding-copy-field"
-                            placeholder="Insira o Funding Copy"
-                            value={fundingCopyValue}
-                            onInput={handleInputChange('fundingCopyValue')}
-                            onBlur={() => handleBlur('fundingCopyValue', fundingCopyValue)}
-                            valid={valid['fundingCopyValue']}
-                        ></sp-textfield>
-                    </div>
-                )}
-
-            </>
-        );
-    }
+            )}
+        </>
+    );
+}

@@ -30,9 +30,6 @@ import AppProvider from './context/AppProvider.js';
 
 // Vari\u00e1veis das alturas dos m\u00f3dulos
 
-var slHeight = "";
-var headerHeight = "";
-var fundingHeight = "";
 var heroHeight = "";
 var pluginHeight = "";
 var fpoHeight = "";
@@ -69,19 +66,6 @@ function App() {
 
   // Tratar os valores
 
-  const slValue = "aaaaaaa"
-  const sslValue = "AOBBBBBA"
-  const fundingCopyValue = '11111'
-
-  const handleSubjectLineChange = (editedValues) => {
-    // Atualize o estado da aplicação com os valores editados
-    setCsvValues({
-      ...csvValues,
-      ...editedValues,
-    });
-  };
-
-
   const [appValues, setAppValues] = useState({
     badgeValue: '',
     headlineValue: '',
@@ -112,7 +96,6 @@ function App() {
       subHeadlineValue: editedValues['SHL'] || '',
       heroCtaValue: editedValues['HERO CTA1 Text'] || '',
     }));
-
 
 
     updateHeroCopyValues({
@@ -192,7 +175,6 @@ function App() {
   // Fun\u00e7\u00e3o para limpar todas as alturas antes de montar o layout novamente 
 
   async function clearAllHeights() {
-    slHeight = "";
     headerHeight = "";
     fundingHeight = "";
     heroHeight = "";
@@ -202,396 +184,6 @@ function App() {
     footerHeight = "";
     birdseedHeight = "";
   }
-
-
-
-  // Fun\u00e7\u00e3o para deletar todas as camadas antes de colocar os m\u00f3dulos
-
-  async function clearAllLayers() {
-    const targetFunction = async () => {
-      try {
-        // Deleta todas as camadas
-        const deleteAllLayers = [
-          { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-          { _obj: "delete", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], layerID: [3155, 3156, 3157], _options: { dialogOptions: "dontDisplay" } }
-        ];
-
-        await batchPlay(deleteAllLayers, {});
-
-        console.log('%cCamadas deletadas com sucesso!', 'color: #00EAADFF;');
-      } catch (error) {
-        // Ignora o erro relacionado à seleção de camadas
-        if (error.message.includes('select')) {
-          // Não faz nada ou lida com o erro silenciosamente se preferir
-          // Por exemplo, console.log('Não foi possível selecionar as camadas para deletar.');
-        } else {
-          console.error('Não foi possível deletar as Camadas', error);
-        }
-      }
-    };
-
-    const options = {
-      commandName: 'Deletar todas as camadas',
-      interactive: true,
-    };
-
-    await core.executeAsModal(targetFunction, options);
-  }
-
-
-
-  // Fim da fun\u00e7\u00e3o para deletar todas as camadas antes de colocar os m\u00f3dulos
-
-
-  // Fun\u00e7\u00e3o para aumentar o tamanho do documento e ajustar o zoom para fit to screen
-
-  async function fitToScreenPre() {
-    const targetFunction = async (executionContext) => {
-      try {
-
-        // Define a cor do Background Padr\u00e3o
-        const batchDefineBaseBackground = [
-          { _obj: "set", _target: [{ _ref: "color", _property: "backgroundColor" }], to: { _obj: "HSBColorClass", hue: { _unit: "angleUnit", _value: 0 }, saturation: 0, brightness: 100 }, source: "photoshopPicker", _options: { dialogOptions: "dontDisplay" } }
-        ]
-
-        await batchPlay(batchDefineBaseBackground, {});
-
-        // Aumenta o tamanho do documento
-        const batchCropDocument = [
-          { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
-          { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-          { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 5000.223315669948 }, right: { _unit: "pixelsUnit", _value: 650 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
-        ]
-
-        await batchPlay(batchCropDocument, {});
-
-        // Ajusta o zoom para Fit to Screen
-        const batchZoomFit = [
-          { _obj: "select", _target: [{ _ref: "menuItemClass", _enum: "menuItemType", _value: "fitOnScreen", },], _options: { dialogOptions: "dontDisplay", }, },
-        ];
-
-        await batchPlay(batchZoomFit, {});
-
-        console.log('%cFit inicial executado com sucesso!', 'color: #00EAADFF;');
-      } catch (error) {
-        console.error('N\u00e3o foi poss\u00edvel ajustar o zoom para "Fit on Screen":', error);
-      }
-    }
-
-    const options = {
-      commandName: 'Ajuste de documento pre montagem',
-      interactive: true,
-    };
-
-    await core.executeAsModal(targetFunction, options);
-  };
-
-  // Fim da fun\u00e7\u00e3o para aumentar o tamanho do documento e ajustar o zoom para fit to screen
-
-
-
-
-  // Fun\u00e7\u00e3o de selecionar o Header
-  const [selectedHeader, setSelectedHeader] = useState(null);
-
-  const handleHeaderSelect = async (header) => {
-    if (!header) {
-      console.warn('Header n\u00e3o selecionado');
-      headerHeight = 0; // Define a altura como 0 se o "hero" n\u00e3o for selecionado
-      return; // Retorna imediatamente sem executar o restante do c\u00f3digo
-    }
-
-    const headerFilePath = `assets/headers/${header}.psd`;
-    const fs = storage.localFileSystem;
-    try {
-      const pluginDir = await fs.getPluginFolder();
-      const fileEntry = await pluginDir.getEntry(headerFilePath);
-
-      const targetFunction = async (executionContext) => {
-        try {
-          await app.open(fileEntry);
-          const secondDocument = app.documents[1];
-          const headerWidth = secondDocument.width;
-          headerHeight = secondDocument.height;
-
-          // Seleciona o Header, copia e cola
-          const headerSelect = [
-            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-          ];
-
-          await batchPlay(headerSelect, {});
-
-          const activeDocument = app.activeDocument;
-          await activeDocument.paste();
-
-          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-          const docWidth = activeDocument.width;
-          const docHeight = activeDocument.height;
-          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (headerWidth / 2) + 40);
-          const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (headerHeight / 2) + (slHeight + 30));
-
-          pastedGroup.translate(offsetX, offsetY);
-
-          console.log('%cHeader inserido com sucesso!', 'color: #00EAADFF;');
-        } catch (error) {
-          console.error('Erro ao inserir o Header:', error);
-        }
-      };
-
-      const options = {
-        commandName: 'Inserir Cabe\u00e7alho',
-        interactive: true,
-      };
-
-      await core.executeAsModal(targetFunction, options);
-    } catch (error) {
-      console.error('Erro ao encontrar o arquivo do Header:', error);
-    }
-  };
-
-  // Fim de fun\u00e7\u00e3o de selecionar o Header
-
-  // Fun\u00e7\u00e3o de selecionar o Funding
-
-  const [fundingCopyValues, setFundingCopyValues] = useState(null);
-  const [selectedFunding, setSelectedFunding] = useState('no-vf');
-
-  const handleFundingCopyChange = (values) => {
-    setFundingCopyValues(values);
-  };
-
-  const handleFundingSelect = async (funding) => {
-
-    const fundingFilePath = `assets/fundings/${funding}.psd`;
-    const fs = storage.localFileSystem;
-    try {
-      const pluginDir = await fs.getPluginFolder();
-      const fileEntry = await pluginDir.getEntry(fundingFilePath);
-
-      const targetFunction = async (executionContext) => {
-        try {
-          await app.open(fileEntry);
-          const secondDocument = app.documents[1];
-
-          const formattedfundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 20);
-
-          let batchFundingCopy;
-
-          if (fundingCopyValue === '') {
-            batchFundingCopy = [
-              { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: formattedfundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
-              { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Funding Copy" },], },
-            ]
-          } else {
-            batchFundingCopy = [
-              { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedfundingCopyValue + "\r" + "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: formattedfundingCopyValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } }, { _obj: "textStyleRange", from: formattedfundingCopyValue.length + 1, to: fundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
-              { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Funding Copy" },], },
-            ]
-          };
-
-          const resultFundingTextBoundingBox = await batchPlay(batchFundingCopy, {});
-          const boundingBoxFundingText = resultFundingTextBoundingBox[2].bounds;
-          const finalCropValue = boundingBoxFundingText.bottom._value;
-
-          const finalCrop = [
-            { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 200 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 200 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
-          ]
-          await batchPlay(finalCrop, {});
-
-          fundingHeight = secondDocument.height;
-
-          const selectAndCopy = [
-            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-          ]
-          await batchPlay(selectAndCopy, {});
-
-          const activeDocument = app.activeDocument;
-          await activeDocument.paste();
-
-
-          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-          const docWidth = activeDocument.width;
-          const docHeight = activeDocument.height;
-          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 515);
-
-
-          let offsetY;
-
-          if ((selectedFunding === 'no-vf')) {
-            offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 26));
-          } else {
-            offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
-          }
-
-          pastedGroup.translate(offsetX, offsetY);
-
-          if (selectedHeader !== null) {
-
-            const alignToHeader = [
-              { _obj: "select", _target: [{ _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "select", _target: [{ _ref: "layer", _name: "Header" }, { _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [448, 449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSTops" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } }
-            ]
-
-            await batchPlay(alignToHeader, {});
-          }
-
-
-          console.log('%cFunding inserido com sucesso!', 'color: #00EAADFF;');
-        } catch (error) {
-          console.error('Erro ao inserir o Funding:', error);
-        }
-      };
-
-      const options = {
-        commandName: 'Inserir Cabe\u00e7alho',
-        interactive: true,
-      };
-
-      await core.executeAsModal(targetFunction, options);
-    } catch (error) {
-      console.error('Erro ao encontrar o arquivo do Funding:', error);
-    }
-  };
-  // Fim de fun\u00e7\u00e3o de selecionar o Funding
-
-  // Fun\u00e7\u00e3o de modificar e importar o Skinny Banner
-
-  const [skinnyValues, setSkinnyValues] = useState(null);
-  const [selectedSkinny, setSelectedSkinny] = useState(null);
-
-  const handleSkinnyChange = (skinny) => {
-    setSkinnyValues(skinny);
-  };
-
-  // const skinnyHeadlineValue = skinnyValues?.skinnyHeadlineValue || (csvValues.SL !== "" ? csvValues.SL : '');
-  const skinnyHeadlineValue = skinnyValues?.skinnyHeadlineValue || '';
-  const skinnyCopyValue = skinnyValues?.skinnyCopyValue || '';
-
-  const handleSkinnySelect = async (skinny) => {
-
-    if (!skinny) {
-      console.warn('Skinny não selecionado');
-      skinnyBannerHeight = 0;
-      return;
-    }
-
-    const skinnyFilePath = `assets/skinny-banner/skinny-banner.psd`;
-    const fs = storage.localFileSystem;
-
-    try {
-      const pluginDir = await fs.getPluginFolder();
-      const fileEntry = await pluginDir.getEntry(skinnyFilePath);
-
-
-      const targetFunction = async (executionContext) => {
-        try {
-          await app.open(fileEntry);
-
-          const secondDocument = app.documents[1];
-          const skinnyBannerWidth = secondDocument.width;
-
-          const formattedHeadlineCopyValue = limitCharsPerLine(skinnyHeadlineValue || '', 60);
-          const formattedSkinnyCopyValue = limitCharsPerLine(skinnyCopyValue || '', 60);
-
-          const skinnyBannerCopy = formattedHeadlineCopyValue + "\r" + formattedSkinnyCopyValue
-
-          const changeSkinnyBannerCopy = [
-            { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Copy" }], makeVisible: false, layerID: [4], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-            {
-              _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
-
-              to: {
-                _obj: "textLayer", textKey: skinnyBannerCopy, textStyleRange: [
-
-                  { _obj: "textStyleRange", from: 0, to: skinnyHeadlineValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Bold", fontName: "Roboto", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 20.75 }, color: { _obj: "RGBColor", red: redAccent, green: greenAccent, blue: blueAccent } } },
-
-                  { _obj: "textStyleRange", from: skinnyHeadlineValue.length + 1, to: skinnyHeadlineValue.length + skinnyCopyValue.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Regular", fontName: "Roboto", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 20.75 }, color: { _obj: "RGBColor", red: redAccent, green: greenAccent, blue: blueAccent } } },
-                ]
-              }, _isCommand: true
-            },
-            { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Banner Copy" }], }
-          ]
-            ;
-
-          await batchPlay(changeSkinnyBannerCopy, {});
-
-          const resultSkinnyBoundingBox = await batchPlay(changeSkinnyBannerCopy, {});
-          const boundingBoxSkinnyBanner = resultSkinnyBoundingBox[2].bounds;
-          const finalCropValue = boundingBoxSkinnyBanner.bottom._value + 20;
-
-          const finalCrop = [
-            { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redSecondary, grain: greenSecondary, blue: blueSecondary } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
-
-            { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
-
-            { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
-          ]
-
-          await batchPlay(finalCrop, {});
-
-          skinnyBannerHeight = secondDocument.height;
-
-          const selectAndCopy = [
-            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-          ];
-
-          await batchPlay(selectAndCopy, {});
-
-          const activeDocument = app.activeDocument;
-          await activeDocument.paste();
-
-          if (selectedFunding === "no-vf") {
-            fundingHeight = headerHeight
-          } else {
-          }
-
-          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-          const docWidth = activeDocument.width;
-          const docHeight = activeDocument.height;
-          const offsetX = (0 - (docWidth / 2) + (skinnyBannerWidth / 2) + 25);
-          let offsetModules = ((slHeight + 30) + (fundingHeight + 20));
-          const offsetY = (0 - (docHeight / 2) + (skinnyBannerHeight / 2) + (offsetModules));
-          pastedGroup.translate(offsetX, offsetY);
-
-          console.log('%cSkinny Banner inserido com sucesso!', 'color: #00EAADFF;');
-        } catch (error) {
-          console.error('Erro ao inserir Skinny Banner:', error);
-        }
-      };
-
-      const options = {
-        commandName: 'Inserir Skinny Banner',
-        interactive: true,
-      };
-
-      await core.executeAsModal(targetFunction, options);
-    } catch (error) {
-      console.error('Erro ao encontrar o arquivo de Skinny Banner:', error);
-    }
-  };
-
-  // Fim de fun\u00e7\u00e3o de modificar e importar o Skinny Banner
 
 
   // Fun\u00e7\u00e3o de selecionar o Hero
@@ -671,13 +263,13 @@ function App() {
           const docWidth = activeDocument.width;
           const docHeight = activeDocument.height;
 
-          if (selectedFunding === "no-vf") {
-            fundingHeight = headerHeight
-          } else {
-          }
+          // if (selectedFunding === "no-vf") {
+          //   fundingHeight = headerHeight
+          // } else {
+          // }
 
           const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
-          let offsetModules = ((slHeight + 30) + (fundingHeight + 20) + (skinnyBannerHeight));
+          // let offsetModules = ((slHeight + 30) + (fundingHeight + 20) + (skinnyBannerHeight));
           const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
 
@@ -828,7 +420,7 @@ function App() {
 
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
-          let offsetModules = (slHeight + 30) + (fundingHeight + 20) + heroHeight + skinnyBannerHeight;
+          // let offsetModules = (slHeight + 30) + (fundingHeight + 20) + heroHeight + skinnyBannerHeight;
           const offsetY = (0 - (docHeight / 2) + (pluginHeight / 2) + (offsetModules));
           pastedGroup.translate(offsetX, offsetY);
 
@@ -899,7 +491,7 @@ function App() {
           const docHeight = activeDocument.height;
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fpoWidth / 2) + 25);
-          let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight;
+          // let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight;
           const offsetY = (0 - (docHeight / 2) + (fpoHeight / 2) + (offsetModules));
 
           pastedGroup.translate(offsetX, offsetY);
@@ -1062,7 +654,7 @@ function App() {
 
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (bannerWidth / 2) + 25);
-          let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight;
+          // let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight;
           const offsetY = (0 - (docHeight / 2) + (bannerHeight / 2) + offsetModules);
 
           pastedGroup.translate(offsetX, offsetY);
@@ -1129,7 +721,7 @@ function App() {
           const docHeight = activeDocument.height;
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (footerWidth / 2) + 45);
-          let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight;
+          // let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight;
           const offsetY = (docHeight - docHeight) - (docHeight / 2) + (footerHeight / 2) + 10 + offsetModules;
 
           pastedGroup.translate(offsetX, offsetY);
@@ -1321,7 +913,7 @@ function App() {
 
 
           const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (birdseedWidth / 2) + 43);
-          let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight;
+          // let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight;
           const offsetY = (docHeight - docHeight) - (docHeight / 2) + (birdseedHeight / 2) + offsetModules + 20;
 
           pastedGroup.translate(offsetX, offsetY);
@@ -1349,7 +941,7 @@ function App() {
 
   async function fitToScreenPos() {
 
-    const allModulesSizes = (slHeight + 30) + fundingHeight + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight + (birdseedHeight + 20) + 40;
+    // const allModulesSizes = (slHeight + 30) + fundingHeight + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight + (birdseedHeight + 20) + 40;
 
     const targetFunction = async (executionContext) => {
       try {
@@ -1391,16 +983,11 @@ function App() {
   const handleMontarLayoutClick = async () => {
 
     try {
-      await clearAllLayers();
+      // await clearAllLayers();
       await clearAllHeights();
-      await fitToScreenPre();
-      slHeight = 60;
-      var headerHeight = await handleHeaderSelect(selectedHeader, slHeight);
-      var fundingHeight = await handleFundingSelect(selectedFunding, headerHeight, slHeight);
-      var skinnyBannerHeight = await handleSkinnySelect(selectedSkinny, slHeight, headerHeight, fundingHeight);
-      var heroHeight = await handleHeroSelect(selectedHero, slHeight, headerHeight, fundingHeight, skinnyBannerHeight);
-      var pluginHeight = await pluginSelect(selectedPlugin, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight);
-      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight);
+      var heroHeight = await handleHeroSelect(selectedHero, headerHeight, fundingHeight, skinnyBannerHeight);
+      var pluginHeight = await pluginSelect(selectedPlugin, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight);
+      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight);
       var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight);
       var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
       var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
@@ -1418,23 +1005,23 @@ function App() {
     <Theme theme="spectrum" scale="medium" color="light">
       <AppProvider className="wrapper">
         <CsvReader onAppValuesChange={handleAppValues} />
-        <EmailBuilder></EmailBuilder>
-        <SubjectLineSelector onSubjectLineChange={handleSubjectLineChange} />
+        <EmailBuilder/>
+        <SubjectLineSelector/>
         <ColorSelector onAccentColorChange={handleAccentColorChange} onSecondaryColorChange={handleSecondaryColorChange} onTertiaryColorChange={handleTertiaryColorChange} />
         <div style={{ display: "flex", flexWrap: "wrap" }} className="group"><sp-label>Header & Funding</sp-label>
-          <HeaderSelector handleHeaderSelect={setSelectedHeader} />
-          <FundingSelector handleFundingSelect={setSelectedFunding} onFundingCopyChange={handleFundingCopyChange} />
+          <HeaderSelector/>
+          <FundingSelector/>
         </div>
-        <SkinnySelector handleSkinnySelect={setSelectedSkinny} onSkinnyChange={handleSkinnyChange}></SkinnySelector>
+        <SkinnySelector></SkinnySelector>
         <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
         <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} />
         <FpoSelector handleFpoValueSelect={setSelectedFpoValue} handleFpoSegmentSelect={setSelectedFpoSegment} />
         <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerCopyChange={handleBannerCopyChange} />
         <FooterSelector handleFooterSelect={setSelectedFooter} />
         <BirdseedSelector handleBirdseedSelect={setSelectedBirdseed} handleBirdseedCopy={setSelectedBirdseedCopy} onDateChange={handleDateChange} onBirdseedCopyChange={handleBirdseedCopyChange} />
-        <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
+        {/* <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout
-        </sp-button>
+        </sp-button> */}
       </AppProvider>
     </Theme>
   );

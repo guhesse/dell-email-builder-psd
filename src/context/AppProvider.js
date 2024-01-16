@@ -22,7 +22,6 @@ export default function AppProvider({ children }) {
         'Basic Info': '',
         'Vendor Funding Name': '',
         'Funding/WEP Content': '',
-        'Basic Info': '',
         'Banner Text': '',
         'Expiry Date/Time in BRT': '',
         'Skinny Banner Headline': '',
@@ -33,7 +32,6 @@ export default function AppProvider({ children }) {
         'Header Plugin Text': '',
         'Header Plugin Text Color': '',
         'Header Plugin Background Color': '',
-        'Basic Info': '',
         'HERO Template': '',
         'Badge Text': '',
         'Headline Text': '',
@@ -168,31 +166,82 @@ export default function AppProvider({ children }) {
         return updatedValues;
     };
 
-    // Values dos inputs
-
-    const [slValue, setSlValue] = useState("");
-    const [sslValue, setSslValue] = useState("");
-
-    useEffect(() => {
-        setSlValue(csvValues.SL || "");
-        setSslValue(csvValues.SSL || "");
-    }, [csvValues.SL, csvValues.SSL]);
-
-
     // Alturas dos módulos
 
     const [slHeight, setSlHeight] = useState("");
+    const [headerHeight, setHeaderHeight] = useState("");
+    const [fundingHeight, setFundingHeight] = useState("");
+    const [skinnyHeight, setSkinnyHeight] = useState("");
 
     useEffect(() => {
-        setSlHeight();
-    });
+        setSlHeight(slHeight);
+        setHeaderHeight(headerHeight);
+        setFundingHeight(fundingHeight);
+        setSkinnyHeight(skinnyHeight); 
+    }, [slHeight, headerHeight, fundingHeight, skinnyHeight]);
+
+    // Values e estados dos inputs
+    const [selectedHeader, setSelectedHeader] = useState("");
+    const [selectedFunding, setSelectedFunding] = useState("");
+    const [selectedSkinny, setSelectedSkinny] = useState(null);
+
+    const [slValue, setSlValue] = useState("");
+    const [sslValue, setSslValue] = useState("");
+    const [fundingCopyValue, setFundingCopyValue] = useState("");
+    const [skinnyTitleValue, setSkinnyTitleValue] = useState("");
+    const [skinnyCopyValue, setSkinnyCopyValue] = useState("");
+
+
+    useEffect(() => {
+        setSlHeight(slHeight);
+        setHeaderHeight(headerHeight);
+        setFundingHeight(fundingHeight);
+
+        setSlValue(csvValues.SL || "");
+        setSslValue(csvValues.SSL || "");
+
+        setSelectedHeader(csvValues['Campaign Type'] || "csb");
+        if (csvValues['Campaign Type'] === "CSB") {
+            setCsvValues({
+                ...csvValues,
+                'Campaign Type': "csb"
+            });
+        }
+
+        setSelectedFunding(csvValues['Vendor Funding Name'] || "no-vf");
+        if (csvValues['Vendor Funding Name'] === "Jumpstart Home") {
+            setCsvValues({
+                ...csvValues,
+                'Vendor Funding Name': "win11"
+            });
+        }
+        setFundingCopyValue(csvValues['Funding/WEP Content'] || "");
+
+        setSelectedSkinny(selectedSkinny);
+
+    }, [csvValues.SL, csvValues.SSL, csvValues['Funding/WEP Content'], csvValues['Campaign Type']]);
+
+
+
 
 
     return (
         <AppContext.Provider value={{
             csvValues, setCsvValues, loadDefaultValuesFromCsv,
+
             setSlValue, setSslValue, slValue, sslValue,
             slHeight, setSlHeight,
+
+            selectedHeader, setSelectedHeader,
+            headerHeight, setHeaderHeight,
+
+            selectedFunding, setSelectedFunding,
+            fundingCopyValue, setFundingCopyValue,
+            fundingHeight, setFundingHeight,
+
+            selectedSkinny, setSelectedSkinny,
+            skinnyTitleValue, setSkinnyTitleValue, skinnyCopyValue, setSkinnyCopyValue
+
         }}>
             {children}
         </AppContext.Provider>

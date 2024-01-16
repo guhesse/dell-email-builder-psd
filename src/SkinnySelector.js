@@ -1,59 +1,88 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import useAppContext from "./hook/useAppContext.jsx";
 
-export default function SkinnySelector({ handleSkinnySelect, onSkinnyChange }) {
-
-    const [selectedSkinny, setSelectedSkinny] = useState(null);
+export default function SkinnySelector() {
+    const {
+        csvValues,
+        setCsvValues,
+        selectedSkinny,
+        setSelectedSkinny,
+        skinnyTitleValue,
+        setSkinnyTitleValue,
+        skinnyCopyValue,
+        setSkinnyCopyValue,
+    } = useAppContext();
 
     const handleSkinnyClick = (skinny) => {
         setSelectedSkinny(skinny);
-        handleSkinnySelect(skinny); 
     };
 
-    const useFormState = (initialState) => {
-        const [formState, setFormState] = useState(initialState);
-
-        const handleInputChange = (key, value) => {
-            setFormState({
-                ...formState,
-                [key]: value,
-            });
-
-            onSkinnyChange({ ...formState, [key]: value });
-        };
-
-        return [formState, handleInputChange];
-    };
-
-    const [
-        {
-            skinnyHeadlineValue,
-            skinnyCopyValue
-        },
-        setFormValue,
-    ] = useFormState({
-        skinnyHeadlineValue: "",
+    const [formState, setFormState] = useState({
+        skinnyTitleValue: "",
         skinnyCopyValue: "",
     });
 
-    const [valid, setValid] = useState({});
+    const [tempFormState, setTempFormState] = useState({
+        skinnyTitleValue: "",
+        skinnyCopyValue: "",
+    });
 
-    // Função para validar um campo específico
-    const validateField = (value) => {
-        return value !== "";
-    };
+    const [valid, setValid] = useState({
+        skinnyTitleValue: false,
+        skinnyCopyValue: false,
+    });
 
-    // Função para manipular a mudança no valor do campo
-    const handleInputChange = (key) => (event) => {
-        const value = event.target.value;
-        setFormValue(key, value);
-    };
+    useEffect(() => {
+        // Limpe o estado temporário ao montar o componente
+        setTempFormState({
+            skinnyTitleValue: "",
+            skinnyCopyValue: "",
+        });
 
-    // Função para manipular o blur do campo e atualizar a validação
-    const handleBlur = (key, value) => {
-        const isValid = validateField(value);
+        // Atualize o estado final com os valores do contexto
+        setFormState({
+            skinnyTitleValue: skinnyTitleValue || "",
+            skinnyCopyValue: skinnyCopyValue || "",
+        });
+    }, [selectedSkinny]);
+
+    const handleInputChange = (key, value) => {
+        // Atualize o estado temporário imediatamente
+        setTempFormState((prevTempFormState) => ({
+            ...prevTempFormState,
+            [key]: value,
+        }));
+
         setValid((prevValid) => ({
             ...prevValid,
-            [key]: isValid,
+            [key]: value !== "",
+        }));
+    };
+
+    const handleBlur = (key) => {
+        // Atualize o CsvContext com os valores editados
+        setCsvValues({
+            ...csvValues,
+            [key]: tempFormState[key],
+        });
+
+        // Atualize diretamente os valores no contexto
+        if (key === "skinnyTitleValue") {
+            setSkinnyTitleValue(tempFormState.skinnyTitleValue);
+        } else if (key === "skinnyCopyValue") {
+            setSkinnyCopyValue(tempFormState.skinnyCopyValue);
+        }
+
+        // Atualize o estado final com os valores do estado temporário
+        setFormState({
+            ...formState,
+            [key]: tempFormState[key],
+        });
+
+        // Atualize a validação usando formState em vez de tempFormState
+        setValid((prevValid) => ({
+            ...prevValid,
+            [key]: formState[key] !== "",
         }));
     };
 
@@ -62,7 +91,7 @@ export default function SkinnySelector({ handleSkinnySelect, onSkinnyChange }) {
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group">
                 <sp-label>Skinny Banner</sp-label>
                 <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
-                    <sp-picker id="picker-m" size="m" label="Selection type" placeholder="Selecione o header">
+                    <sp-picker id="picker-m" size="m" label="Selection type" placeholder="Selecione o skinny banner">
                         <sp-menu>
                             <sp-menu-item onClick={() => handleSkinnyClick(null)}>None</sp-menu-item>
                             <sp-menu-item onClick={() => handleSkinnyClick('left')}>Left</sp-menu-item>
@@ -75,14 +104,14 @@ export default function SkinnySelector({ handleSkinnySelect, onSkinnyChange }) {
                 {selectedSkinny !== null && (
                     <>
                         <div style={{ margin: "0 4px" }}>
-                            <sp-detail for="skinny-title" >TITLE</sp-detail>
+                            <sp-detail for="skinny-title">TITLE</sp-detail>
                             <sp-textfield
                                 id="skinny-headline-field"
                                 placeholder="Skinny banner title here"
-                                value={skinnyHeadlineValue}
-                                onInput={handleInputChange('skinnyHeadlineValue')}
-                                onBlur={() => handleBlur('skinnyHeadlineValue')}
-                                valid={valid['skinnyHeadlineValue']}
+                                value={tempFormState.skinnyTitleValue}
+                                onInput={(e) => handleInputChange('skinnyTitleValue', e.target.value)}
+                                onBlur={() => handleBlur('skinnyTitleValue')}
+                                valid={skinnyTitleValue !== "" ? valid.skinnyTitleValue : undefined}
                             ></sp-textfield>
                         </div>
                         <div style={{ margin: "0 4px" }}>
@@ -90,48 +119,14 @@ export default function SkinnySelector({ handleSkinnySelect, onSkinnyChange }) {
                             <sp-textfield
                                 id="skinny-copy-field"
                                 placeholder="Skinny banner copy here"
-                                value={skinnyCopyValue}
-                                onInput={handleInputChange('skinnyCopyValue')}
+                                value={tempFormState.skinnyCopyValue}
+                                onInput={(e) => handleInputChange('skinnyCopyValue', e.target.value)}
                                 onBlur={() => handleBlur('skinnyCopyValue')}
-                                valid={valid['skinnyCopyValue']}
+                                valid={skinnyCopyValue !== "" ? valid.skinnyCopyValue : undefined}
                             ></sp-textfield>
                         </div>
                     </>
                 )}
-
-
-                {/* <div>
-                    <sp-action-button label="left" style={{ margin: "0 1px"}}>
-                        <div slot="icon" className="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 18 18" width="18">
-                                <rect id="Canvas" fill="#ff13dc" opacity="0" width="18" height="18" />
-                                <rect className="fill" height="2" rx="0.5" width="12" x="2" y="14" />
-                                <rect className="fill" height="2" rx="0.5" width="15" x="2" y="2" />
-                                <rect className="fill" height="2" rx="0.5" width="12" x="2" y="6" />
-                                <rect className="fill" height="2" rx="0.5" width="15" x="2" y="10" />
-                            </svg></div>
-                    </sp-action-button>
-                    <sp-action-button label="center" style={{ margin: "0 1px" }}>
-                        <div slot="icon" className="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 18 18" width="18">
-                                <rect id="Canvas" fill="#ff13dc" opacity="0" width="18" height="18" />
-                                <rect className="fill" height="2" rx="0.5" width="10" x="4" y="14" />
-                                <rect className="fill" height="2" rx="0.5" width="16" x="1" y="10" />
-                                <rect className="fill" height="2" rx="0.5" width="16" x="1" y="2" />
-                                <rect className="fill" height="2" rx="0.5" width="10" x="4" y="6" />
-                            </svg></div>
-                    </sp-action-button>
-                    <sp-action-button label="right" style={{ margin: "0 1px" }}>
-                        <div slot="icon" className="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 18 18" width="18">
-                                <rect id="Canvas" fill="#ff13dc" opacity="0" width="18" height="18" />
-                                <rect className="fill" height="2" rx="0.5" width="12" x="4" y="14" />
-                                <rect className="fill" height="2" rx="0.5" width="15" x="1" y="2" />
-                                <rect className="fill" height="2" rx="0.5" width="12" x="4" y="6" />
-                                <rect className="fill" height="2" rx="0.5" width="15" x="1" y="10" />
-                            </svg></div>
-                    </sp-action-button>
-                </div> */}
             </div>
         </>
     );
