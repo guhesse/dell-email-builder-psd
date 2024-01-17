@@ -4,6 +4,33 @@ import { core, app, batchPlay, storage } from '../App.js';
 
 export default function EmailBuilder() {
 
+    var slHeight = "";
+    var headerHeight = "";
+    var fundingHeight = "";
+    var skinnyHeight = ""
+    var heroHeight = "";
+    var pluginHeight = "";
+    var fpoHeight = "";
+    var bannerHeight = "";
+    var footerHeight = "";
+    var birdseedHeight = "";
+    var skinnyBannerHeight = "";
+
+    const { accentColor, secondaryColor, tertiaryColor, cores } = useAppContext();
+
+    const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
+    const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
+    const { r: tertiaryRed, g: tertiaryGreen, b: tertiaryBlue } = cores[tertiaryColor] || {};
+
+    const { slValue, sslValue } = useAppContext();
+
+    const { selectedHeader } = useAppContext();
+
+    const { selectedFunding, fundingCopyValue } = useAppContext();
+
+    const { selectedSkinny, skinnyTitleValue, skinnyCopyValue } = useAppContext();
+
+
     function limitCharsPerLine(text, limit) {
         const words = text.split(' ');
         let currentLine = '';
@@ -22,15 +49,6 @@ export default function EmailBuilder() {
 
         return result;
     }
-
-    const { slValue, sslValue, slHeight, setSlHeight } = useAppContext();
-
-    const { selectedHeader, headerHeight, setHeaderHeight } = useAppContext();
-
-    const { selectedFunding, fundingCopyValue, fundingHeight, setFundingHeight } = useAppContext();
-
-    const { selectedSkinny, skinnyTitleValue, skinnyCopyValue, skinnyHeight } = useAppContext();
-
 
     // Limpar as camadas do documento
     async function clearAllLayers() {
@@ -123,8 +141,7 @@ export default function EmailBuilder() {
 
                     const secondDocument = app.documents[1];
                     const slWidth = secondDocument.width;
-                    const slHeight = secondDocument.height;
-                    setSlHeight(slHeight);
+                    slHeight = secondDocument.height;
 
                     // Fun\u00e7\u00e3o que troca o texto do SL e SSL
                     const changeSLCopy = [
@@ -136,6 +153,7 @@ export default function EmailBuilder() {
 
                     await batchPlay(changeSLCopy, {});
 
+
                     // Fun\u00e7\u00e3o que copia e cola o m\u00f3dulo
                     const selectAndCopy = [
                         { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
@@ -145,6 +163,7 @@ export default function EmailBuilder() {
                     ];
 
                     await batchPlay(selectAndCopy, {});
+
 
                     const activeDocument = app.activeDocument;
                     await activeDocument.paste();
@@ -167,15 +186,10 @@ export default function EmailBuilder() {
                 interactive: true,
             };
 
-
-
             await core.executeAsModal(targetFunction, options);
         } catch (error) {
             console.error('Erro ao encontrar o arquivo de SSL:', error);
         }
-
-        return slHeight
-
     };
 
     // Importa o header
@@ -183,7 +197,7 @@ export default function EmailBuilder() {
 
         if (selectedHeader === "") {
             console.warn('Header n&#xe3;o selecionado');
-            const headerHeight = 0;
+            headerHeight = 0;
             return;
         }
         const headerFilePath = `assets/headers/${selectedHeader}.psd`;
@@ -198,8 +212,7 @@ export default function EmailBuilder() {
                     await app.open(fileEntry);
                     const secondDocument = app.documents[1];
                     const headerWidth = secondDocument.width;
-                    const headerHeight = secondDocument.height;
-                    setHeaderHeight(headerHeight);
+                    headerHeight = secondDocument.height;
 
                     // Seleciona o Header, copia e cola
                     const headerSelect = [
@@ -218,8 +231,6 @@ export default function EmailBuilder() {
                     const docWidth = activeDocument.width;
                     const docHeight = activeDocument.height;
                     const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (headerWidth / 2) + 40);
-
-
                     const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (headerHeight / 2) + (slHeight + 30));
 
                     pastedGroup.translate(offsetX, offsetY);
@@ -240,7 +251,6 @@ export default function EmailBuilder() {
             console.error('Erro ao encontrar o arquivo do Header:', error);
         }
 
-        return headerHeight
     };
 
     // Importa o funding
@@ -289,8 +299,7 @@ export default function EmailBuilder() {
                     ]
                     await batchPlay(finalCrop, {});
 
-                    const fundingHeight = secondDocument.height;
-                    setFundingHeight(fundingHeight);
+                    fundingHeight = secondDocument.height;
 
                     const selectAndCopy = [
                         { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
@@ -347,15 +356,14 @@ export default function EmailBuilder() {
             console.error('Erro ao encontrar o arquivo do Funding:', error);
         }
 
-        return fundingHeight
     };
 
     // Importa o skinny banner
     async function skinnyBuild() {
 
-        if ( selectedSkinny !== null) {
+        if (selectedSkinny === "") {
             console.warn('Skinny não selecionado');
-            skinnyBannerHeight = 0;
+            skinnyHeight = 0;
             return;
         }
 
@@ -372,7 +380,7 @@ export default function EmailBuilder() {
                     await app.open(fileEntry);
 
                     const secondDocument = app.documents[1];
-                    const skinnyBannerWidth = secondDocument.width;
+                    const skinnyWidth = secondDocument.width;
 
                     const formattedTitleCopyValue = limitCharsPerLine(skinnyTitleValue || '', 60);
                     const formattedSkinnyCopyValue = limitCharsPerLine(skinnyCopyValue || '', 60);
@@ -387,9 +395,9 @@ export default function EmailBuilder() {
                             to: {
                                 _obj: "textLayer", textKey: skinnyBannerCopy, textStyleRange: [
 
-                                    { _obj: "textStyleRange", from: 0, to: skinnyTitleValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Bold", fontName: "Roboto", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 20.75 }, color: { _obj: "RGBColor", red: redAccent, green: greenAccent, blue: blueAccent } } },
+                                    { _obj: "textStyleRange", from: 0, to: skinnyTitleValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Bold", fontName: "Roboto", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 20.75 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
 
-                                    { _obj: "textStyleRange", from: skinnyTitleValue.length + 1, to: skinnyTitleValue.length + skinnyCopyValue.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Regular", fontName: "Roboto", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 20.75 }, color: { _obj: "RGBColor", red: redAccent, green: greenAccent, blue: blueAccent } } },
+                                    { _obj: "textStyleRange", from: skinnyTitleValue.length + 1, to: skinnyTitleValue.length + skinnyCopyValue.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Regular", fontName: "Roboto", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 20.75 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
                                 ]
                             }, _isCommand: true
                         },
@@ -404,7 +412,7 @@ export default function EmailBuilder() {
                     const finalCropValue = boundingBoxSkinnyBanner.bottom._value + 20;
 
                     const finalCrop = [
-                        { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redSecondary, grain: greenSecondary, blue: blueSecondary } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
 
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
                         { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
@@ -417,8 +425,7 @@ export default function EmailBuilder() {
 
                     await batchPlay(finalCrop, {});
 
-                    const skinnyHeight = secondDocument.height;
-                    setSkinnyHeight(skinnyHeight);
+                    skinnyHeight = secondDocument.height;
 
                     const selectAndCopy = [
                         { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
@@ -434,15 +441,14 @@ export default function EmailBuilder() {
 
                     if (selectedFunding === "no-vf") {
                         fundingHeight = headerHeight
-                    } else {
-                    }
+                    } else { }
 
                     const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
                     const docWidth = activeDocument.width;
                     const docHeight = activeDocument.height;
-                    const offsetX = (0 - (docWidth / 2) + (skinnyBannerWidth / 2) + 25);
+                    const offsetX = (0 - (docWidth / 2) + (skinnyWidth / 2) + 25);
                     let offsetModules = ((slHeight + 30) + (fundingHeight + 20));
-                    const offsetY = (0 - (docHeight / 2) + (skinnyBannerHeight / 2) + (offsetModules));
+                    const offsetY = (0 - (docHeight / 2) + (skinnyHeight / 2) + (offsetModules));
                     pastedGroup.translate(offsetX, offsetY);
 
                     console.log('%cSkinny Banner inserido com sucesso!', 'color: #00EAADFF;');
@@ -485,8 +491,6 @@ export default function EmailBuilder() {
             <sp-button variant="warning" onClick={handleBuild} >Aqui é o novo</sp-button>
         </>
     )
-
-
 }
 
 

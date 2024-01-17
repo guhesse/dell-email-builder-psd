@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import useAppContext from "./hook/useAppContext.jsx";
 
-export default function colorSelector({ onAccentColorChange, onSecondaryColorChange, onTertiaryColorChange }) {
+export default function colorSelector() {
+
+    const { accentColor, secondaryColor, tertiaryColor, handleAccentColorChange, handleSecondaryColorChange, handleTertiaryColorChange } = useAppContext();
+
     const cores = {
         white: { r: 254, g: 254, b: 254 },
         quartz: { r: 238, g: 238, b: 238 },
@@ -91,51 +95,30 @@ export default function colorSelector({ onAccentColorChange, onSecondaryColorCha
         burgundy: '#691D3F',
     };
 
-    const [accentSelectedColor, setAccentSelectedColor] = useState("deepGreen");
+    const [accentSelectedColor, setAccentSelectedColor] = useState(accentColor);
+    const [secondarySelectedColor, setSecondarySelectedColor] = useState(secondaryColor);
+    const [tertiarySelectedColor, setTertiarySelectedColor] = useState(tertiaryColor);
 
     const handleAccentColorClick = (color) => {
         setAccentSelectedColor(color);
-        const selectedColorInfo = {
-            colorName: color,
-            rgbValues: cores[color],
-        };
-        if (onAccentColorChange) {
-            onAccentColorChange(selectedColorInfo);
-        }
+        handleAccentColorChange(color);
     };
-
-    const [secondarySelectedColor, setSecondarySelectedColor] = useState("lime");
 
     const handleSecondaryColorClick = (color) => {
         setSecondarySelectedColor(color);
-        const selectedColorInfo = {
-            colorName: color,
-            rgbValues: cores[color],
-        };
-        if (onSecondaryColorChange) {
-            onSecondaryColorChange(selectedColorInfo);
-        }
+        handleSecondaryColorChange(color);
     };
-
-    const [tertiarySelectedColor, setTertiarySelectedColor] = useState("honeydew");
 
     const handleTertiaryColorClick = (color) => {
         setTertiarySelectedColor(color);
-        const selectedColorInfo = {
-            colorName: color,
-            rgbValues: cores[color],
-        };
-        if (onTertiaryColorChange) {
-            onTertiaryColorChange(selectedColorInfo);
-        }
+        handleTertiaryColorChange(color);
     };
 
-    const [isPickerOpen, setIsPickerOpen] = useState(false);
 
     return (
         <>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group"><sp-label>Colors</sp-label>
-                <sp-overlay style={{ position: "absolute", top:"5%", right:"5%"}}>
+                <sp-overlay style={{ position: "absolute", top: "5%", right: "5%" }}>
                     <div className="sp-tab-page" slot="trigger" id="sp-spectrum-widgets-tab-page">
                         <sp-action-button quiet label="Edit">
                             <div slot="icon" className="icon">

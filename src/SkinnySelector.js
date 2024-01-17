@@ -13,9 +13,12 @@ export default function SkinnySelector() {
         setSkinnyCopyValue,
     } = useAppContext();
 
-    const handleSkinnyClick = (skinny) => {
-        setSelectedSkinny(skinny);
+    const handleSkinnyClick = (selectedSkinny) => {
+        console.log("Clicked on:", selectedSkinny);
+        setSelectedSkinny(selectedSkinny);
     };
+    
+    // console.log("seleceted skinny", selectedSkinny)
 
     const [formState, setFormState] = useState({
         skinnyTitleValue: "",
@@ -93,15 +96,16 @@ export default function SkinnySelector() {
                 <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
                     <sp-picker id="picker-m" size="m" label="Selection type" placeholder="Selecione o skinny banner">
                         <sp-menu>
-                            <sp-menu-item onClick={() => handleSkinnyClick(null)}>None</sp-menu-item>
+                            <sp-menu-item onClick={() => handleSkinnyClick("")}>None</sp-menu-item>
                             <sp-menu-item onClick={() => handleSkinnyClick('left')}>Left</sp-menu-item>
                             <sp-menu-item disabled onClick={() => handleSkinnyClick('center')}>Center</sp-menu-item>
-                            <sp-menu-item disabled onClick={() => handleSkinnyClick('right')}>Right</sp-menu-item>
+                            <sp-menu-item disabled  onClick={() => handleSkinnyClick('right')}>Right</sp-menu-item>
                         </sp-menu>
                     </sp-picker>
                 </sp-field-group>
+                
 
-                {selectedSkinny !== null && (
+                {selectedSkinny !== "" && (
                     <>
                         <div style={{ margin: "0 4px" }}>
                             <sp-detail for="skinny-title">TITLE</sp-detail>

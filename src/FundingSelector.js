@@ -14,7 +14,6 @@ export default function FundingSelector() {
         handleFundingClick(csvValues['Vendor Funding Name']);
     }, [csvValues['Vendor Funding Name']]);
 
-    console.log("selected funding", selectedFunding);
 
     const [formState, setFormState] = useState({
         fundingCopyValue: csvValues['Funding/WEP Content'] || "",
