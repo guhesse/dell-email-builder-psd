@@ -230,12 +230,31 @@ export default function AppProvider({ children }) {
     const [fundingCopyValue, setFundingCopyValue] = useState("");
     const [skinnyTitleValue, setSkinnyTitleValue] = useState("");
     const [skinnyCopyValue, setSkinnyCopyValue] = useState("");
-
+    const [selectedHero, setSelectedHero] = useState("");
+    const [heroCopyValues, setHeroCopyValues] = useState({
+        badgeValue: "",
+        headlineValue: "",
+        subHeadlineValue: "",
+        inlinePromoValue: "",
+        inlinePromo2Value: "",
+        productNameValue: "",
+        heroCtaValue: "",
+    });
 
     useEffect(() => {
 
         setSlValue(csvValues.SL || "");
         setSslValue(csvValues.SSL || "");
+
+        setHeroCopyValues({
+            badgeValue: csvValues['Badge Text'] || "",
+            headlineValue: csvValues['Headline Text'] || "",
+            subHeadlineValue: csvValues['SHL'] || "",
+            inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || "",
+            inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || "",
+            productNameValue: csvValues['HERO1 Product Name'] || "",
+            heroCtaValue: csvValues['HERO CTA1 Text'] || "",
+        });
 
         setSelectedHeader(csvValues['Campaign Type'] || "csb");
         if (csvValues['Campaign Type'] === "CSB") {
@@ -252,9 +271,33 @@ export default function AppProvider({ children }) {
                 'Vendor Funding Name': "win11"
             });
         }
+
         setFundingCopyValue(csvValues['Funding/WEP Content'] || "");
 
-    }, [csvValues.SL, csvValues.SSL, csvValues['Funding/WEP Content'], csvValues['Campaign Type']]);
+        setSelectedHero(csvValues['HERO Template'] || "");
+        if (csvValues['HERO Template'] === "HERO LAYOUT 2") {
+            setCsvValues({
+                ...csvValues,
+                'HERO Template': "hero1-lifestyle"
+            });
+        }
+
+    }, [
+        csvValues.SL,
+        csvValues.SSL,
+        csvValues['Funding/WEP Content'],
+        csvValues['Campaign Type'],
+        csvValues['Badge Text'],
+        csvValues['Headline Text'],
+        csvValues['SHL'],
+        csvValues['HERO1 Product Inline Promo'],
+        csvValues['HERO2 Product Inline Promo'],
+        csvValues['HERO1 Product Name'],
+        csvValues['HERO CTA1 Text'],
+        csvValues['HERO Template'],
+    ]);
+
+
 
 
     return (
@@ -290,6 +333,11 @@ export default function AppProvider({ children }) {
             setSkinnyTitleValue,
             skinnyCopyValue,
             setSkinnyCopyValue,
+
+            selectedHero,
+            setSelectedHero,
+            heroCopyValues,
+            setHeroCopyValues,
 
         }}>
             {children}

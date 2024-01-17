@@ -1,114 +1,125 @@
-import React, { useState } from 'react';
-import useAppContext from './hook/useAppContext.jsx';
-export const { storage } = require('uxp');
+import React, { useState, useEffect } from "react";
+import useAppContext from "./hook/useAppContext.jsx";
 
+const heroPaths = {
+    'hero1-lifestyle': {
+        path: 'assets/heros/images/hero1-lifestyle.png',
+        name: 'Hero Layout 1 - Lifestyle',
+    },
+    'hero1-standard': {
+        path: 'assets/heros/images/hero1-standard.png',
+        name: 'Hero Layout 1 - Standard',
+    },
+    'hero2-promotion': {
+        path: 'assets/heros/images/hero2-promotion.png',
+        name: 'Hero Layout 2 - Promotion',
+    },
+};
 
+export default function HeroSelector() {
+    const { csvValues, setCsvValues, selectedHero, setSelectedHero, heroCopyValues, setHeroCopyValues } = useAppContext();
 
-export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
+    const {
+        badgeValue,
+        headlineValue,
+        subHeadlineValue,
+        inlinePromoValue,
+        inlinePromo2Value,
+        productNameValue,
+        heroCtaValue,
+    } = heroCopyValues || {};
 
-    const heroPaths = {
-        'hero1-lifestyle': {
-            path: 'assets/heros/images/hero1-lifestyle.png',
-            name: 'Hero Layout 1 - Lifestyle',
-        },
-        'hero1-standard': {
-            path: 'assets/heros/images/hero1-standard.png',
-            name: 'Hero Layout 1 - Standard',
-        },
-        'hero2-promotion': {
-            path: 'assets/heros/images/hero2-promotion.png',
-            name: 'Hero Layout 2 - Promotion',
-        },
-        // ... Adicione os outros heróis aqui ...
+    const handleHeroClick = (selectedHero) => {
+        setSelectedHero(selectedHero);
     };
+    
+    const [formState, setFormState] = useState({
+        badgeValue: csvValues['Badge Text'] || "",
+        headlineValue: csvValues['Headline Text'] || "",
+        subHeadlineValue: csvValues['SHL'] || "",
+        inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || "",
+        inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || "",
+        productNameValue: csvValues['HERO1 Product Name'] || "",
+        heroCtaValue: csvValues['HERO CTA1 Text'] || "",
+    });
 
-    const [selectedHero, setSelectedHero] = useState("");
-
-    const handleHeroClick = async (hero) => {
-        setSelectedHero(hero);
-        handleHeroSelect(hero);
-
-        if (hero) {
-            const heroFilePath = `assets/heros/images/${hero}.png`;
-            const fs = storage.localFileSystem;
-            const pluginDir = await fs.getPluginFolder();
-            const heroFileEntry = await pluginDir.getEntry(heroFilePath);
-            const imageUrl = heroFileEntry.url.href;
-            const heroName = heroPaths[hero].name;
-        }
-        // ... Outras lógicas relacionadas à seleção do herói ...
-    };
-
-    const useFormState = (initialState) => {
-        const [formState, setFormState] = useState(initialState);
-
-        const handleInputChange = (key, value) => {
-            setFormState({
-                ...formState,
-                [key]: value,
-            });
-
-            onHeroCopyChange({ ...formState, [key]: value });
-        };
-
-        return [formState, handleInputChange];
-    };
-
-    const [
-        {
-            badgeValue,
-            headlineValue,
-            subHeadlineValue,
-            inlinePromoValue,
-            inlinePromo2Value,
-            productNameValue,
-            productName2Value,
-            productName3Value,
-            specsValue,
-            specs2Value,
-            priceValue,
-            price2Value,
-            heroCtaValue,
-        },
-        setFormValue,
-    ] = useFormState({
+    const [tempFormState, setTempFormState] = useState({
         badgeValue: "",
         headlineValue: "",
         subHeadlineValue: "",
         inlinePromoValue: "",
         inlinePromo2Value: "",
         productNameValue: "",
-        productName2Value: "",
-        productName3Value: "",
-        specsValue: "",
-        specs2Value: "",
-        priceValue: "",
-        price2Value: "",
         heroCtaValue: "",
     });
 
-    const [valid, setValid] = useState({});
+    const [valid, setValid] = useState({
+        badgeValue: false,
+        headlineValue: false,
+        subHeadlineValue: false,
+        inlinePromoValue: false,
+        inlinePromo2Value: false,
+        productNameValue: false,
+        heroCtaValue: false,
+    });
 
-    // Função para validar um campo específico
-    const validateField = (value) => {
-        return value !== "";
-    };
+    useEffect(() => {
 
-    // Função para manipular a mudança no valor do campo
-    const handleInputChange = (key) => (event) => {
-        const value = event.target.value;
-        setFormValue(key, value);
-    };
+        // Limpe o estado temporário ao montar o componente
+        setTempFormState({
+            badgeValue: badgeValue || "",
+            headlineValue: headlineValue || "",
+            subHeadlineValue: subHeadlineValue || "",
+            inlinePromoValue: inlinePromoValue || "",
+            inlinePromo2Value: inlinePromo2Value || "",
+            productNameValue: productNameValue || "",
+            heroCtaValue: heroCtaValue || "",
+        });
 
-    // Função para manipular o blur do campo e atualizar a validação
-    const handleBlur = (key, value) => {
-        const isValid = validateField(value);
+        // Limpe o estado ao montar o componente
+        setFormState({
+            badgeValue: badgeValue || "",
+            headlineValue: headlineValue || "",
+            subHeadlineValue: subHeadlineValue || "",
+            inlinePromoValue: inlinePromoValue || "",
+            inlinePromo2Value: inlinePromo2Value || "",
+            productNameValue: productNameValue || "",
+            heroCtaValue: heroCtaValue || "",
+        });
+
+    }, [selectedHero]);
+
+    const handleInputChange = (key, value) => {
+        setTempFormState((prevTempFormState) => ({
+            ...prevTempFormState,
+            [key]: value,
+        }));
+
         setValid((prevValid) => ({
             ...prevValid,
-            [key]: isValid,
+            [key]: value !== "",
         }));
     };
 
+    const handleBlur = (key) => {
+        // Atualize o CsvContext com os valores editados
+        setCsvValues({
+            ...csvValues,
+            [key]: tempFormState[key],
+        });
+
+        // Atualize diretamente os valores no contexto
+        setHeroCopyValues((prevHeroCopyValues) => ({
+            ...prevHeroCopyValues,
+            [key]: tempFormState[key],
+        }));
+
+        // Atualize o estado final com os valores do estado temporário
+        setFormState({
+            ...formState,
+            [key]: tempFormState[key],
+        });
+    };
 
     return (
         <>
@@ -120,7 +131,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                         <sp-menu>
                             {Object.entries(heroPaths).map(([hero, { path, name }]) => (
                                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={hero} onClick={() => handleHeroClick(hero)}>
-                                    <sp-menu-item style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                                    <sp-menu-item selected={selectedHero === `${hero}`}style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                                         <div style={{ display: "flex", alignItems: "center" }}>
                                             <img style={{ width: '30px', height: 'auto', marginRight: '10px' }} src={path} alt={`Hero Layout - ${hero}`} />
                                             {name}
@@ -153,10 +164,10 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                 <sp-textfield
                                     id="badge-field"
                                     placeholder="Insira o Badge"
-                                    value={badgeValue}
-                                    onInput={handleInputChange('badgeValue')}
+                                    value={tempFormState.badgeValue}
+                                    onInput={(e) => handleInputChange('badgeValue', e.target.value)}
                                     onBlur={() => handleBlur('badgeValue')}
-                                    valid={valid['badgeValue']}
+                                    valid={valid.badgeValue}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -164,10 +175,10 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                 <sp-textfield
                                     id="headline-field"
                                     placeholder="Insira o Headline"
-                                    value={headlineValue}
-                                    onInput={handleInputChange('headlineValue')}
+                                    value={tempFormState.headlineValue}
+                                    onInput={(e) => handleInputChange('headlineValue', e.target.value)}
                                     onBlur={() => handleBlur('headlineValue')}
-                                    valid={valid['headlineValue']}
+                                    valid={valid.headlineValue}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -175,10 +186,10 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                 <sp-textfield
                                     id="subheadline-field"
                                     placeholder="Insira o SubHeadline"
-                                    value={subHeadlineValue}
-                                    onInput={handleInputChange('subHeadlineValue')}
+                                    value={tempFormState.subHeadlineValue}
+                                    onInput={(e) => handleInputChange('subHeadlineValue', e.target.value)}
                                     onBlur={() => handleBlur('subHeadlineValue')}
-                                    valid={valid['subHeadlineValue']}
+                                    valid={valid.subHeadlineValue}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -186,10 +197,10 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                 <sp-textfield
                                     id="pname-field"
                                     placeholder="Insira o Product Name"
-                                    value={productNameValue}
-                                    onInput={handleInputChange('productNameValue')}
+                                    value={tempFormState.productNameValue}
+                                    onInput={(e) => handleInputChange('productNameValue', e.target.value)}
                                     onBlur={() => handleBlur('productNameValue')}
-                                    valid={valid['productNameValue']}
+                                    valid={valid.productNameValue}
                                 ></sp-textfield>
                             </div>
                             <div style={{ margin: "4px" }}>
@@ -197,10 +208,9 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                                 <sp-textfield
                                     id="hero-cta-field"
                                     placeholder="Insira o CTA"
-                                    value={heroCtaValue}
-                                    onInput={handleInputChange('heroCtaValue')}
-                                    onBlur={() => handleBlur('heroCtaValue')}
-                                    valid={valid['heroCtaValue']}
+                                    value={tempFormState.heroCtaValue}
+                                    onInput={(e) => handleInputChange('heroCtaValue', e.target.value)}
+                                    valid={valid.heroCtaValue}
                                 ></sp-textfield>
                             </div>
                         </div>
@@ -208,7 +218,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                 )}
 
 
-                {selectedHero === 'hero1-standard' && (
+                {/* {selectedHero === 'hero1-standard' && (
                     <>
                         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
                             <div style={{ margin: "4px" }}>
@@ -277,9 +287,9 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
 
                         </div>
                     </>
-                )}
+                )} */}
 
-                {selectedHero === 'hero1-business' && (
+                {/* {selectedHero === 'hero1-business' && (
                     <>
                         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
                             <div style={{ margin: "4px" }}>
@@ -720,7 +730,7 @@ export default function HeroSelector({ handleHeroSelect, onHeroCopyChange }) {
                             </div>
                         </div>
                     </>
-                )}
+                )} */}
             </div >
 
         </>

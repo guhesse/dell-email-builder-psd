@@ -1,6 +1,8 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import useAppContext from '../hook/useAppContext.jsx';
 import { core, app, batchPlay, storage } from '../App.js';
+import Hero1Lifestyle from '../HeroLayout/hero1lifestyle.jsx';
+import Hero2Promotion from '../HeroLayout/hero2promotion.jsx';
 
 export default function EmailBuilder() {
 
@@ -29,6 +31,11 @@ export default function EmailBuilder() {
     const { selectedFunding, fundingCopyValue } = useAppContext();
 
     const { selectedSkinny, skinnyTitleValue, skinnyCopyValue } = useAppContext();
+
+    const { selectedHero, heroCopyValues} = useAppContext();
+
+    const { badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, inlinePromo2Value, productNameValue, heroCtaValue, } = heroCopyValues || {};
+
 
 
     function limitCharsPerLine(text, limit) {
@@ -468,6 +475,87 @@ export default function EmailBuilder() {
         }
     };
 
+    // Importa o Hero
+    async function heroBuild() {
+        if (selectedHero === "") {
+            console.warn('Hero não selecionado');
+            heroHeight = 0;
+            return;
+        }
+
+        const heroFilePath = `assets/heros/${selectedHero}.psd`;
+        const fs = storage.localFileSystem;
+        try {
+            const pluginDir = await fs.getPluginFolder();
+            const fileEntry = await pluginDir.getEntry(heroFilePath);
+
+            const targetFunction = async (executionContext) => {
+                try {
+                    await app.open(fileEntry);
+                    const secondDocument = app.documents[1];
+
+                    if (selectedHero === 'hero1-lifestyle') {
+                        try {
+                            await Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, heroCtaValue);
+                        } catch (error) {
+                            console.error('Erro ao executar Hero1Lifestyle:', error);
+                        }
+                    }
+
+                    if (selectedHero === 'hero2-promotion') {
+                        try {
+                            await Hero2Promotion(heroCopyValues, colorValues);
+                        } catch (error) {
+                            console.error('Erro ao executar Hero2Promotion:', error);
+                        }
+                    }
+
+                    const heroWidth = secondDocument.width;
+                    heroHeight = secondDocument.height;
+
+                    const copyAllHero = [
+                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+                    ]
+
+                    await batchPlay(copyAllHero, {});
+
+                    const activeDocument = app.activeDocument;
+                    await activeDocument.paste();
+
+                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+                    const docWidth = activeDocument.width;
+                    const docHeight = activeDocument.height;
+
+                    if (selectedFunding === "no-vf") {
+                        fundingHeight = headerHeight
+                    } else {
+                    }
+
+                    const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
+                    let offsetModules = ((slHeight + 30) + (fundingHeight + 20) + (skinnyHeight));
+                    const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
+                    pastedGroup.translate(offsetX, offsetY);
+
+                    console.log('%cHero inserido com sucesso!', 'color: #00EAADFF;');
+                } catch (error) {
+                    console.error('Erro ao inserir o Hero:', error);
+                }
+            };
+
+            const options = {
+                commandName: 'Inserir Hero',
+                interactive: true,
+            };
+
+            await core.executeAsModal(targetFunction, options);
+        } catch (error) {
+            console.error('Erro ao encontrar o arquivo do Hero:', error);
+        }
+    };
+
 
     const handleBuild = async () => {
 
@@ -478,7 +566,7 @@ export default function EmailBuilder() {
             var headerHeight = await headerBuild(slHeight);
             var fundingHeight = await fundingBuild(slHeight, headerHeight);
             var skinnyHeight = await skinnyBuild(slHeight, headerHeight, fundingHeight)
-
+            var heroHeight = await heroBuild(slHeight, headerHeight, fundingHeight, skinnyHeight)
 
             console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
         } catch (error) {

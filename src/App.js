@@ -230,7 +230,7 @@ function App() {
 
           if (hero === 'hero1-lifestyle') {
             try {
-              await Hero1Lifestyle(heroCopyValues, accentColorValues, secondaryColorValues, tertiaryColorValues);
+              await Hero1Lifestyle();
             } catch (error) {
               console.error('Erro ao executar Hero1Lifestyle:', error);
             }
@@ -984,7 +984,7 @@ function App() {
 
     try {
       // await clearAllLayers();
-      await clearAllHeights();
+      // await clearAllHeights();
       var heroHeight = await handleHeroSelect(selectedHero, headerHeight, fundingHeight, skinnyBannerHeight);
       var pluginHeight = await pluginSelect(selectedPlugin, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight);
       var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight);

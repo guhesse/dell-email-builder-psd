@@ -10,7 +10,6 @@ export default function FundingSelector() {
     };
 
     useEffect(() => {
-        // Executa a função handleFundingClick quando houver uma mudança em csvValues['Vendor Funding Name']
         handleFundingClick(csvValues['Vendor Funding Name']);
     }, [csvValues['Vendor Funding Name']]);
 

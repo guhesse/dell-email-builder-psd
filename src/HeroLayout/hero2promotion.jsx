@@ -3,7 +3,6 @@ import { limitCharsPerLine } from "../App.js";
 import { batchPlay } from "../App.js";
 
 
-
 export default async function Hero2Promotion(heroCopyValues, colorValues) {
 
     const { red, green, blue } = colorValues;
