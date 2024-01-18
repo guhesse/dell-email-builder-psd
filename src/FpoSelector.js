@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
+import useAppContext from './hook/useAppContext.jsx';
 
-export default function FpoSelector({ handleFpoValueSelect, handleFpoSegmentSelect }) {
 
-    const [selectedFpoValue, setSelectedFpoValue] = useState(null);
-    const [selectedFpoSegment, setSelectedFpoSegment] = useState('sb');
+export default function FpoSelector() {
 
-    const handleFpoValueClick = (value) => {
-        setSelectedFpoValue(value);
-        handleFpoValueSelect(value);
+    const { csvValues, setCsvValues, selectedFpoSegment, setSelectedFpoSegment, selectedFpoValue, setSelectedFpoValue } = useAppContext();
+
+
+    const handleFpoSegmentClick = (selectedFpoSegment) => {
+        setSelectedFpoSegment(selectedFpoSegment);
     };
 
-    const handleFpoSegmentClick = (segment) => {
-        setSelectedFpoSegment(segment);
-        handleFpoSegmentSelect(segment);
+    const handleFpoValueClick = (selectedFpoValue) => {
+        setSelectedFpoValue(selectedFpoValue);
     };
 
 

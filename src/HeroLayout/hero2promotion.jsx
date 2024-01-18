@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { limitCharsPerLine } from "../App.js";
 import { batchPlay } from "../App.js";
+import limitCharsPerLine from '../hook/charLimiter.jsx';
 
 
 export default async function Hero2Promotion(heroCopyValues, colorValues) {

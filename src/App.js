@@ -13,8 +13,8 @@ import FpoSelector from './fpoSelector.js';
 import BannerSelector from './BannerSelector.js';
 import FooterSelector from './FooterSelector.js';
 import BirdseedSelector from './BirdseedSelector.js';
-import Hero2Promotion from './HeroLayout/hero2promotion.jsx';
 import EmailBuilder from './components/EmailBuilder.jsx';
+import limitCharsPerLine from './hook/charLimiter.jsx';
 
 import { Theme } from "@swc-react/theme";
 export const { core, app } = require('photoshop');
@@ -30,32 +30,10 @@ import AppProvider from './context/AppProvider.js';
 // Vari\u00e1veis das alturas dos m\u00f3dulos
 
 var pluginHeight = "";
-var fpoHeight = "";
 var bannerHeight = "";
 var footerHeight = "";
 var birdseedHeight = "";
 var skinnyBannerHeight = "";
-
-
-// Fun\u00e7\u00e3o para definir limite de caracter por linha
-export function limitCharsPerLine(text, limit) {
-  const words = text.split(' ');
-  let currentLine = '';
-  let result = '';
-
-  for (const word of words) {
-      if ((currentLine + word).length <= limit) {
-          currentLine += (currentLine === '' ? '' : ' ') + word;
-      } else {
-          result += (result === '' ? '' : '\r') + currentLine;
-          currentLine = word;
-      }
-  }
-
-  result += (result === '' ? '' : '\r') + currentLine;
-
-  return result;
-}
 
 
 function App() {
@@ -91,77 +69,6 @@ function App() {
   //   price2Value: '',
   //   heroCtaValue: '',
   // });
-
-
-  // Fun\u00e7\u00e3o de importar o FPO
-
-  const [selectedFpoValue, setSelectedFpoValue] = useState(null);
-  const [selectedFpoSegment, setSelectedFpoSegment] = useState("sb");
-
-  const handleFpoSelect = async () => {
-
-    if (selectedFpoValue === null) {
-      console.warn('Fpo n\u00e3o selecionado');
-      fpoHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
-      return; // Retorna imediatamente se o plugin n\u00e3o estiver selecionado
-    } else {
-    }
-
-    try {
-      const fs = storage.localFileSystem;
-      const pluginDir = await fs.getPluginFolder();
-      let fpoFilePath;
-      for (let i = 1; i <= selectedFpoValue; i++) {
-        fpoFilePath = `assets/fpo/${selectedFpoSegment}/${i}.psd`;
-      }
-      const fileEntry = await pluginDir.getEntry(fpoFilePath)
-      const targetFunction = async (executionContext) => {
-        try {
-          await app.open(fileEntry);
-          const secondDocument = app.documents[1];
-          const fpoWidth = secondDocument.width;
-          fpoHeight = secondDocument.height;
-
-          const batchFPO = [
-            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-          ];
-
-          await batchPlay(batchFPO, {});
-
-          const activeDocument = app.activeDocument;
-          await activeDocument.paste();
-
-          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-          const docWidth = activeDocument.width;
-          const docHeight = activeDocument.height;
-
-          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fpoWidth / 2) + 25);
-          // let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight;
-          const offsetY = (0 - (docHeight / 2) + (fpoHeight / 2) + (offsetModules));
-
-          pastedGroup.translate(offsetX, offsetY);
-
-          console.log('%cFPO inserido com sucesso!', 'color: #00EAADFF;');
-        } catch (error) {
-          console.error('Erro ao inserir o FPO:', error);
-        }
-      };
-
-      const options = {
-        commandName: 'Inserir FPO',
-        interactive: true,
-      };
-
-      await core.executeAsModal(targetFunction, options);
-    } catch (error) {
-      console.error('Erro ao encontrar o arquivo do FPO:', error);
-    }
-  };
-
-  // Fim de fun\u00e7\u00e3o de importar o FPO
 
 
   // In\u00edcio da fun\u00e7\u00e3o de importar o Banner
@@ -631,12 +538,12 @@ function App() {
   const handleMontarLayoutClick = async () => {
 
     try {
-      // await clearAllLayers();
-      // await clearAllHeights();
-      var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight);
       var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight);
-      var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
+
+      var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight);
+
       var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
+
       await fitToScreenPos(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
 
       console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
@@ -661,7 +568,7 @@ function App() {
         <SkinnySelector/>
         <HeroSelector/>
         <PluginSelector/>
-        <FpoSelector handleFpoValueSelect={setSelectedFpoValue} handleFpoSegmentSelect={setSelectedFpoSegment} />
+        <FpoSelector/>
         <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerCopyChange={handleBannerCopyChange} />
         <FooterSelector handleFooterSelect={setSelectedFooter} />
         <BirdseedSelector handleBirdseedSelect={setSelectedBirdseed} handleBirdseedCopy={setSelectedBirdseedCopy} onDateChange={handleDateChange} onBirdseedCopyChange={handleBirdseedCopyChange} />

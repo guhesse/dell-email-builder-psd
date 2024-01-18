@@ -19,7 +19,7 @@ export default function EmailBuilder() {
     var birdseedHeight = "";
     var skinnyBannerHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores, slValue, sslValue, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues } = useAppContext();
+    const { accentColor, secondaryColor, tertiaryColor, cores, slValue, sslValue, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue } = useAppContext();
 
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
@@ -496,7 +496,7 @@ export default function EmailBuilder() {
 
                     if (selectedHero === 'hero2-promotion') {
                         try {
-                            await Hero2Promotion(heroCopyValues, colorValues);
+                            await Hero2Promotion();
                         } catch (error) {
                             console.error('Erro ao executar Hero2Promotion:', error);
                         }
@@ -676,8 +676,70 @@ export default function EmailBuilder() {
         }
     }
 
-    const handleBuild = async () => {
+    async function fpoBuild() {
 
+        if (selectedFpoValue === null) {
+            console.warn('Fpo n\u00e3o selecionado');
+            fpoHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
+            return; // Retorna imediatamente se o plugin n\u00e3o estiver selecionado
+        } else {
+        }
+
+        try {
+            const fs = storage.localFileSystem;
+            const pluginDir = await fs.getPluginFolder();
+            let fpoFilePath;
+            for (let i = 1; i <= selectedFpoValue; i++) {
+                fpoFilePath = `assets/fpo/${selectedFpoSegment}/${i}.psd`;
+            }
+            const fileEntry = await pluginDir.getEntry(fpoFilePath)
+            const targetFunction = async (executionContext) => {
+                try {
+                    await app.open(fileEntry);
+                    const secondDocument = app.documents[1];
+                    const fpoWidth = secondDocument.width;
+                    fpoHeight = secondDocument.height;
+
+                    const batchFPO = [
+                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+                    ];
+
+                    await batchPlay(batchFPO, {});
+
+                    const activeDocument = app.activeDocument;
+                    await activeDocument.paste();
+
+                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+                    const docWidth = activeDocument.width;
+                    const docHeight = activeDocument.height;
+
+                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fpoWidth / 2) + 25);
+                    let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyHeight + heroHeight + pluginHeight;
+                    const offsetY = (0 - (docHeight / 2) + (fpoHeight / 2) + (offsetModules));
+
+                    pastedGroup.translate(offsetX, offsetY);
+
+                    console.log('%cFPO inserido com sucesso!', 'color: #00EAADFF;');
+                } catch (error) {
+                    console.error('Erro ao inserir o FPO:', error);
+                }
+            };
+
+            const options = {
+                commandName: 'Inserir FPO',
+                interactive: true,
+            };
+
+            await core.executeAsModal(targetFunction, options);
+        } catch (error) {
+            console.error('Erro ao encontrar o arquivo do FPO:', error);
+        }
+    }
+
+    const handleBuild = async () => {
         try {
             await clearAllLayers();
             await fitToScreenPre();
@@ -687,6 +749,7 @@ export default function EmailBuilder() {
             var skinnyHeight = await skinnyBuild(slHeight, headerHeight, fundingHeight)
             var heroHeight = await heroBuild(slHeight, headerHeight, fundingHeight, skinnyHeight)
             var pluginHeight = await pluginBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight)
+            var fpoHeight = await fpoBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight)
 
             console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
         } catch (error) {

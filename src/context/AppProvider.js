@@ -223,6 +223,7 @@ export default function AppProvider({ children }) {
     const [selectedSkinny, setSelectedSkinny] = useState("");
     const [selectedHero, setSelectedHero] = useState("");
     const [selectedPlugin, setSelectedPlugin] = useState("");
+    const [selectedFpoSegment, setSelectedFpoSegment] = useState("sb");
 
     const [slValue, setSlValue] = useState("");
     const [sslValue, setSslValue] = useState("");
@@ -239,14 +240,14 @@ export default function AppProvider({ children }) {
         heroCtaValue: "",
     });
 
-    console.log(heroCopyValues)
-
     const [pluginCopyValues, setPluginCopyValues] = useState({
         pluginCopyValue: "",
         leftPluginCopyValue: "",
         centerPluginCopyValue: "",
         rightPluginCopyValue: "",
     });
+
+    const [selectedFpoValue, setSelectedFpoValue] = useState(null);
 
     useEffect(() => {
 
@@ -302,6 +303,10 @@ export default function AppProvider({ children }) {
         } else {
 
         }
+
+        // setSelectedFpoSegment(selectedFpoSegment)
+
+        // setSelectedFpoValue(selectedFpoValue)
 
     }, [
         csvValues.SL,
@@ -364,6 +369,12 @@ export default function AppProvider({ children }) {
             selectedPlugin,
             setSelectedPlugin,
             pluginCopyValues,
+
+            selectedFpoSegment,
+            setSelectedFpoSegment,
+            selectedFpoValue,
+            setSelectedFpoValue,
+            
 
         }}>
             {children}

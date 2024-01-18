@@ -4,7 +4,7 @@ import limitCharsPerLine from '../hook/charLimiter.jsx';
 
 export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, heroCtaValue) {
 
-    
+
     function formatHeadlineCopy(text) {
         return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
     }
