@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { limitCharsPerLine } from '../App.js';
 import { batchPlay } from "../App.js";
-import useAppContext from '../hook/useAppContext.jsx';
+import limitCharsPerLine from '../hook/charLimiter.jsx';
 
 export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, heroCtaValue) {
 
-
+    
     function formatHeadlineCopy(text) {
         return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
     }
 
     // Certifique-se de ter acesso a headlineValue e subHeadlineValue
-    const formattedHeadlineValue = limitCharsPerLine(
+    const formattedHeadlineValue = await limitCharsPerLine(
         headlineValue ? formatHeadlineCopy(headlineValue) : '',
         20
     );
-    const formattedSubHeadlineValue = limitCharsPerLine(subHeadlineValue || '', 55);
+    const formattedSubHeadlineValue = await limitCharsPerLine(subHeadlineValue || '', 55);
 
 
     const batchChangeColor = [

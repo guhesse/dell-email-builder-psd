@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import useAppContext from '../hook/useAppContext.jsx';
 import { core, app, batchPlay, storage } from '../App.js';
+import limitCharsPerLine from '../hook/charLimiter.jsx';
 import Hero1Lifestyle from '../HeroLayout/hero1lifestyle.jsx';
 import Hero2Promotion from '../HeroLayout/hero2promotion.jsx';
 
@@ -18,23 +19,14 @@ export default function EmailBuilder() {
     var birdseedHeight = "";
     var skinnyBannerHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores } = useAppContext();
+    const { accentColor, secondaryColor, tertiaryColor, cores, slValue, sslValue, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues } = useAppContext();
 
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
     const { r: tertiaryRed, g: tertiaryGreen, b: tertiaryBlue } = cores[tertiaryColor] || {};
-
-    const { slValue, sslValue } = useAppContext();
-
-    const { selectedHeader } = useAppContext();
-
-    const { selectedFunding, fundingCopyValue } = useAppContext();
-
-    const { selectedSkinny, skinnyTitleValue, skinnyCopyValue } = useAppContext();
-
-    const { selectedHero, heroCopyValues} = useAppContext();
-
     const { badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, inlinePromo2Value, productNameValue, heroCtaValue, } = heroCopyValues || {};
+    const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
+
 
 
 
@@ -556,6 +548,133 @@ export default function EmailBuilder() {
         }
     };
 
+    async function pluginBuild() {
+        let pluginFilePath = "";
+
+        if (selectedPlugin === 'supercharger') {
+            pluginFilePath = 'assets/plugins/supercharger.psd';
+        } else if (selectedPlugin === 'plugin') {
+            pluginFilePath = 'assets/plugins/plugin.psd';
+        } else {
+            console.warn('Plugin n\u00e3o selecionado');
+            pluginHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
+            return; // Retorna imediatamente se o plugin n\u00e3o estiver selecionado
+        }
+
+        const fs = storage.localFileSystem;
+
+        try {
+            const pluginDir = await fs.getPluginFolder();
+            const fileEntry = await pluginDir.getEntry(pluginFilePath);
+
+            const formattedPluginCopyValue = limitCharsPerLine(pluginCopyValue || '', 60);
+            const formattedleftCopyValue = limitCharsPerLine(leftPluginCopyValue || '', 13);
+            const formattedCenterCopyValue = limitCharsPerLine(centerPluginCopyValue || '', 13);
+            const formattedRightCopyValue = limitCharsPerLine(rightPluginCopyValue || '', 13);
+
+            const targetFunction = async (executionContext) => {
+                try {
+                    await app.open(fileEntry);
+
+                    const secondDocument = app.documents[1];
+                    const pluginWidth = secondDocument.width;
+                    pluginHeight = secondDocument.height;
+
+                    let batchPluginChange = []
+
+                    if (selectedPlugin === 'supercharger') {
+
+                        const batchChangeColor = [
+                            { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [3402], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textStyle", textOverrideFeatureName: 808466226, typeStyleOperationType: 3, color: { _obj: "RGBColor", red: accentRed, grain: accentGreen, blue: accentBlue } }, _options: { dialogOptions: "dontDisplay" } },
+
+                            { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue } }, _options: { dialogOptions: "dontDisplay" } },
+                        ];
+
+                        await batchPlay(batchChangeColor, {});
+
+                        const batchPluginChange = [
+                            { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedleftCopyValue } },
+                            { _obj: "select", _target: [{ _ref: "layer", _name: "2" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedCenterCopyValue } },
+                            { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedRightCopyValue } },
+                            { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [3402], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3334, 3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+                        ];
+
+                        await batchPlay(batchPluginChange, {});
+
+                    } else if (selectedPlugin === 'plugin') {
+
+                        const batchChangeColor = [
+                            { _obj: "select", _target: [{ _ref: "textLayer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3335], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: accentRed, grain: accentGreen, blue: accentBlue }, }, _options: { dialogOptions: "dontDisplay" }, },
+
+                            { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue } }, _options: { dialogOptions: "dontDisplay" } },
+                        ];
+
+                        await batchPlay(batchChangeColor, {});
+
+                        const batchPluginChange = [
+                            { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedPluginCopyValue } },
+                            { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }, { _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3320, 3325], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersH" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" }, },
+                            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+                            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } },
+                        ];
+
+                        await batchPlay(batchPluginChange, {});
+
+                    } else {
+                        console.error('Plugin n\u00e3o selecionado')
+                        return;
+                    }
+
+                    await batchPlay(batchPluginChange, {});
+
+                    const activeDocument = app.activeDocument;
+                    await activeDocument.paste();
+                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+                    const docWidth = activeDocument.width;
+                    const docHeight = activeDocument.height;
+
+
+                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
+                    let offsetModules = (slHeight + 30) + (fundingHeight + 20) + heroHeight + skinnyHeight;
+                    const offsetY = (0 - (docHeight / 2) + (pluginHeight / 2) + (offsetModules));
+                    pastedGroup.translate(offsetX, offsetY);
+
+                    console.log('%cPlugin inserido com sucesso!', 'color: #00EAADFF;');
+                } catch (error) {
+                    console.error('Erro ao inserir plugin:', error);
+                }
+            };
+
+            const options = {
+                commandName: 'Inserir Plugin',
+                interactive: true,
+            };
+
+            await core.executeAsModal(targetFunction, options);
+        } catch (error) {
+            console.error('Erro ao encontrar o arquivo de Plugin:', error);
+        }
+    }
 
     const handleBuild = async () => {
 
@@ -567,6 +686,7 @@ export default function EmailBuilder() {
             var fundingHeight = await fundingBuild(slHeight, headerHeight);
             var skinnyHeight = await skinnyBuild(slHeight, headerHeight, fundingHeight)
             var heroHeight = await heroBuild(slHeight, headerHeight, fundingHeight, skinnyHeight)
+            var pluginHeight = await pluginBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight)
 
             console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
         } catch (error) {

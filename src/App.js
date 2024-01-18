@@ -13,7 +13,6 @@ import FpoSelector from './fpoSelector.js';
 import BannerSelector from './BannerSelector.js';
 import FooterSelector from './FooterSelector.js';
 import BirdseedSelector from './BirdseedSelector.js';
-import Hero1Lifestyle from './HeroLayout/hero1lifestyle.jsx';
 import Hero2Promotion from './HeroLayout/hero2promotion.jsx';
 import EmailBuilder from './components/EmailBuilder.jsx';
 
@@ -30,7 +29,6 @@ import AppProvider from './context/AppProvider.js';
 
 // Vari\u00e1veis das alturas dos m\u00f3dulos
 
-var heroHeight = "";
 var pluginHeight = "";
 var fpoHeight = "";
 var bannerHeight = "";
@@ -40,19 +38,18 @@ var skinnyBannerHeight = "";
 
 
 // Fun\u00e7\u00e3o para definir limite de caracter por linha
-
 export function limitCharsPerLine(text, limit) {
   const words = text.split(' ');
   let currentLine = '';
   let result = '';
 
   for (const word of words) {
-    if ((currentLine + word).length <= limit) {
-      currentLine += (currentLine === '' ? '' : ' ') + word;
-    } else {
-      result += (result === '' ? '' : '\r') + currentLine;
-      currentLine = word;
-    }
+      if ((currentLine + word).length <= limit) {
+          currentLine += (currentLine === '' ? '' : ' ') + word;
+      } else {
+          result += (result === '' ? '' : '\r') + currentLine;
+          currentLine = word;
+      }
   }
 
   result += (result === '' ? '' : '\r') + currentLine;
@@ -64,115 +61,7 @@ export function limitCharsPerLine(text, limit) {
 function App() {
 
 
-  // Tratar os valores
-
-  const [appValues, setAppValues] = useState({
-    badgeValue: '',
-    headlineValue: '',
-    subHeadlineValue: '',
-    heroCtaValue: '',
-  });
-
-  useEffect(() => {
-    updateHeroCopyValues(appValues);
-  }, [appValues]);
-
-  const updateHeroCopyValues = (values) => {
-    setHeroCopyValues((prevHeroCopyValues) => ({
-      ...prevHeroCopyValues,
-      badgeValue: values.badgeValue || '',
-      headlineValue: values.headlineValue || '',
-      subHeadlineValue: values.subHeadlineValue || '',
-      heroCtaValue: values.heroCtaValue || '',
-      // Adicione outras propriedades conforme necessário
-    }));
-  };
-
-  const handleAppValues = (editedValues) => {
-    setAppValues((prevAppValues) => ({
-      ...prevAppValues,
-      badgeValue: editedValues['Badge Text'] || '',
-      headlineValue: editedValues['Headline Text'] || '',
-      subHeadlineValue: editedValues['SHL'] || '',
-      heroCtaValue: editedValues['HERO CTA1 Text'] || '',
-    }));
-
-
-    updateHeroCopyValues({
-      ...appValues,
-      ...editedValues,
-    });
-  };
-
-  const [selectedColorValues, setSelectedColorValues] = useState(null);
-
-  const initialAccentColorValues = {
-    redAccent: 36,
-    greenAccent: 71,
-    blueAccent: 57
-  };
-
-  const initialSecondaryColorValues = {
-    redSecondary: 159,
-    greenSecondary: 255,
-    blueSecondary: 153
-  };
-
-  const initialTertiaryColorValues = {
-    redTertiary: 191,
-    greenTertiary: 255,
-    blueTertiary: 183
-  };
-
-  const [accentColorValues, setAccentColorValues] = useState(initialAccentColorValues);
-  const [secondaryColorValues, setSecondaryColorValues] = useState(initialSecondaryColorValues);
-  const [tertiaryColorValues, setTertiaryColorValues] = useState(initialTertiaryColorValues);
-
-  const handleAccentColorChange = (values) => {
-    setSelectedColorValues(values);
-
-    if (values) {
-      setAccentColorValues({
-        redAccent: values.rgbValues.r,
-        greenAccent: values.rgbValues.g,
-        blueAccent: values.rgbValues.b
-      });
-    }
-  };
-
-  const handleSecondaryColorChange = (values) => {
-    setSelectedColorValues(values);
-
-    if (values) {
-      setSecondaryColorValues({
-        redSecondary: values.rgbValues.r,
-        greenSecondary: values.rgbValues.g,
-        blueSecondary: values.rgbValues.b
-      });
-    }
-  };
-
-
-  const handleTertiaryColorChange = (values) => {
-    setSelectedColorValues(values);
-
-    if (values) {
-      setTertiaryColorValues({
-        redTertiary: values.rgbValues.r,
-        greenTertiary: values.rgbValues.g,
-        blueTertiary: values.rgbValues.b
-      });
-    }
-  };
-
-  const { redAccent, greenAccent, blueAccent } = accentColorValues;
-
-  const { redSecondary, greenSecondary, blueSecondary } = secondaryColorValues;
-
-  const { redTertiary, greenTertiary, blueTertiary } = tertiaryColorValues;
-
-
-  // Fun\u00e7\u00e3o para limpar todas as alturas antes de montar o layout novamente 
+    // Fun\u00e7\u00e3o para limpar todas as alturas antes de montar o layout novamente 
 
   async function clearAllHeights() {
     headerHeight = "";
@@ -186,263 +75,22 @@ function App() {
   }
 
 
-  // Fun\u00e7\u00e3o de selecionar o Hero
-  const [selectedHero, setSelectedHero] = useState(null);
 
-  const [heroCopyValues, setHeroCopyValues] = useState({
-    badgeValue: '',
-    headlineValue: '',
-    subHeadlineValue: '',
-    inlinePromoValue: '',
-    inlinePromo2Value: '',
-    productNameValue: '',
-    productName2Value: '',
-    productName3Value: '',
-    specsValue: '',
-    specs2Value: '',
-    priceValue: '',
-    price2Value: '',
-    heroCtaValue: '',
-  });
-
-  const handleHeroCopyChange = (newValues) => {
-    setHeroCopyValues({ ...heroCopyValues, ...newValues });
-  };
-
-
-  const handleHeroSelect = async (hero) => {
-    if (!hero) {
-      console.warn('Hero não selecionado');
-      heroHeight = 0;
-      return;
-    }
-
-    const heroFilePath = `assets/heros/${hero}.psd`;
-    const fs = storage.localFileSystem;
-    try {
-      const pluginDir = await fs.getPluginFolder();
-      const fileEntry = await pluginDir.getEntry(heroFilePath);
-
-      const targetFunction = async (executionContext) => {
-        try {
-          await app.open(fileEntry);
-          const secondDocument = app.documents[1];
-
-          if (hero === 'hero1-lifestyle') {
-            try {
-              await Hero1Lifestyle();
-            } catch (error) {
-              console.error('Erro ao executar Hero1Lifestyle:', error);
-            }
-          }
-
-          if (hero === 'hero2-promotion') {
-            try {
-              await Hero2Promotion(heroCopyValues, colorValues);
-            } catch (error) {
-              console.error('Erro ao executar Hero2Promotion:', error);
-            }
-          }
-
-          const heroWidth = secondDocument.width;
-          heroHeight = secondDocument.height;
-
-          const copyAllHero = [
-            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-          ]
-
-          await batchPlay(copyAllHero, {});
-
-          const activeDocument = app.activeDocument;
-          await activeDocument.paste();
-
-          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-          const docWidth = activeDocument.width;
-          const docHeight = activeDocument.height;
-
-          // if (selectedFunding === "no-vf") {
-          //   fundingHeight = headerHeight
-          // } else {
-          // }
-
-          const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
-          // let offsetModules = ((slHeight + 30) + (fundingHeight + 20) + (skinnyBannerHeight));
-          const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
-          pastedGroup.translate(offsetX, offsetY);
-
-          console.log('%cHero inserido com sucesso!', 'color: #00EAADFF;');
-        } catch (error) {
-          console.error('Erro ao inserir o Hero:', error);
-        }
-      };
-
-      const options = {
-        commandName: 'Inserir Hero',
-        interactive: true,
-      };
-
-      await core.executeAsModal(targetFunction, options);
-    } catch (error) {
-      console.error('Erro ao encontrar o arquivo do Hero:', error);
-    }
-  };
-  // Fim de fun\u00e7\u00e3o de selecionar o Hero
-
-  //Fun\u00e7\u00e3o de modificar e importar o Plugin
-
-  const [selectedPlugin, setSelectedPlugin] = useState(null);
-
-  const [pluginCopyValues, setPluginCopyValues] = useState('');
-
-  const [superChargerCopyValues, setSuperChargerCopyValues] = useState('');
-
-  const handlePluginCopyChange = (values) => {
-    setPluginCopyValues(values);
-  };
-
-  const handleSuperChargerCopyChange = (values) => {
-    setSuperChargerCopyValues(values);
-  };
-
-  const pluginCopyValue = pluginCopyValues?.pluginCopyValue || '';
-  const leftCopyValue = pluginCopyValues?.leftCopyValue || '';
-  const middleCopyValue = pluginCopyValues?.middleCopyValue || '';
-  const rightCopyValue = pluginCopyValues?.rightCopyValue || '';
-
-  const pluginSelect = async () => {
-
-    let pluginFilePath = "";
-
-    if (selectedPlugin === 'supercharger') {
-      pluginFilePath = 'assets/plugins/supercharger.psd';
-    } else if (selectedPlugin === 'plugin') {
-      pluginFilePath = 'assets/plugins/plugin.psd';
-    } else {
-      console.warn('Plugin n\u00e3o selecionado');
-      pluginHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
-      return; // Retorna imediatamente se o plugin n\u00e3o estiver selecionado
-    }
-
-    const fs = storage.localFileSystem;
-
-    try {
-      const pluginDir = await fs.getPluginFolder();
-      const fileEntry = await pluginDir.getEntry(pluginFilePath);
-
-      const formattedPluginCopyValue = limitCharsPerLine(pluginCopyValue || '', 60);
-      const formattedleftCopyValue = limitCharsPerLine(leftCopyValue || '', 13);
-      const formattedMiddleCopyValue = limitCharsPerLine(middleCopyValue || '', 13);
-      const formattedRightCopyValue = limitCharsPerLine(rightCopyValue || '', 13);
-
-      const targetFunction = async (executionContext) => {
-        try {
-          await app.open(fileEntry);
-
-          const secondDocument = app.documents[1];
-          const pluginWidth = secondDocument.width;
-          pluginHeight = secondDocument.height;
-
-          let batchPluginChange = []
-
-          if (selectedPlugin === 'supercharger') {
-
-            const batchChangeColor = [
-              { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [3402], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textStyle", textOverrideFeatureName: 808466226, typeStyleOperationType: 3, color: { _obj: "RGBColor", red: redAccent, grain: greenAccent, blue: blueAccent } }, _options: { dialogOptions: "dontDisplay" } },
-
-              { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redSecondary, grain: greenSecondary, blue: blueSecondary } }, _options: { dialogOptions: "dontDisplay" } },
-            ];
-
-            await batchPlay(batchChangeColor, {});
-
-            const batchPluginChange = [
-              { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedleftCopyValue } },
-              { _obj: "select", _target: [{ _ref: "layer", _name: "2" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedMiddleCopyValue } },
-              { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedRightCopyValue } },
-              { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [3402], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3334, 3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-            ];
-
-            await batchPlay(batchPluginChange, {});
-
-          } else if (selectedPlugin === 'plugin') {
-
-            const batchChangeColor = [
-              { _obj: "select", _target: [{ _ref: "textLayer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3335], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: redAccent, grain: greenAccent, blue: blueAccent }, }, _options: { dialogOptions: "dontDisplay" }, },
-
-              { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: redSecondary, grain: greenSecondary, blue: blueSecondary } }, _options: { dialogOptions: "dontDisplay" } },
-            ];
-
-            await batchPlay(batchChangeColor, {});
-
-            const batchPluginChange = [
-              { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedPluginCopyValue } },
-              { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }, { _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3320, 3325], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersH" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" }, },
-              { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-              { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } },
-            ];
-
-            await batchPlay(batchPluginChange, {});
-
-          } else {
-            console.error('Plugin n\u00e3o selecionado')
-            return;
-          }
-
-          await batchPlay(batchPluginChange, {});
-
-          const activeDocument = app.activeDocument;
-          await activeDocument.paste();
-          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-          const docWidth = activeDocument.width;
-          const docHeight = activeDocument.height;
-
-
-          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
-          // let offsetModules = (slHeight + 30) + (fundingHeight + 20) + heroHeight + skinnyBannerHeight;
-          const offsetY = (0 - (docHeight / 2) + (pluginHeight / 2) + (offsetModules));
-          pastedGroup.translate(offsetX, offsetY);
-
-          console.log('%cPlugin inserido com sucesso!', 'color: #00EAADFF;');
-        } catch (error) {
-          console.error('Erro ao inserir plugin:', error);
-        }
-      };
-
-      const options = {
-        commandName: 'Inserir Plugin',
-        interactive: true,
-      };
-
-      await core.executeAsModal(targetFunction, options);
-    } catch (error) {
-      console.error('Erro ao encontrar o arquivo de Plugin:', error);
-    }
-  };
-
-  // Fim de fun\u00e7\u00e3o de modificar e importar o Plugin
-
+  // const [heroCopyValues, setHeroCopyValues] = useState({
+  //   badgeValue: '',
+  //   headlineValue: '',
+  //   subHeadlineValue: '',
+  //   inlinePromoValue: '',
+  //   inlinePromo2Value: '',
+  //   productNameValue: '',
+  //   productName2Value: '',
+  //   productName3Value: '',
+  //   specsValue: '',
+  //   specs2Value: '',
+  //   priceValue: '',
+  //   price2Value: '',
+  //   heroCtaValue: '',
+  // });
 
 
   // Fun\u00e7\u00e3o de importar o FPO
@@ -985,8 +633,6 @@ function App() {
     try {
       // await clearAllLayers();
       // await clearAllHeights();
-      var heroHeight = await handleHeroSelect(selectedHero, headerHeight, fundingHeight, skinnyBannerHeight);
-      var pluginHeight = await pluginSelect(selectedPlugin, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight);
       var fpoHeight = await handleFpoSelect(selectedFpoValue, selectedFpoSegment, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight);
       var bannerHeight = await handleBannerSelect(selectedBannerPosition, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight);
       var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight)
@@ -1004,17 +650,17 @@ function App() {
   return (
     <Theme theme="spectrum" scale="medium" color="light">
       <AppProvider className="wrapper">
-        <CsvReader onAppValuesChange={handleAppValues} />
-        <EmailBuilder/>
-        <SubjectLineSelector/>
-        <ColorSelector onAccentColorChange={handleAccentColorChange} onSecondaryColorChange={handleSecondaryColorChange} onTertiaryColorChange={handleTertiaryColorChange} />
+        <CsvReader />
+        <EmailBuilder />
+        <SubjectLineSelector />
+        <ColorSelector />
         <div style={{ display: "flex", flexWrap: "wrap" }} className="group"><sp-label>Header & Funding</sp-label>
-          <HeaderSelector/>
-          <FundingSelector/>
+          <HeaderSelector />
+          <FundingSelector />
         </div>
-        <SkinnySelector></SkinnySelector>
-        <HeroSelector handleHeroSelect={setSelectedHero} onHeroCopyChange={handleHeroCopyChange} />
-        <PluginSelector handlePluginSelect={setSelectedPlugin} onPluginCopyChange={handlePluginCopyChange} />
+        <SkinnySelector/>
+        <HeroSelector/>
+        <PluginSelector/>
         <FpoSelector handleFpoValueSelect={setSelectedFpoValue} handleFpoSegmentSelect={setSelectedFpoSegment} />
         <BannerSelector handleBannerPositionSelected={setSelectedBannerPosition} onBannerCopyChange={handleBannerCopyChange} />
         <FooterSelector handleFooterSelect={setSelectedFooter} />

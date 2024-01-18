@@ -1,65 +1,94 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import useAppContext from "./hook/useAppContext.jsx";
 
-export default function PluginSelector({ handlePluginSelect, onPluginCopyChange }) {
+export default function PluginSelector() {
 
-    const [selectedPlugin, setSelectedPlugin] = useState('null');
+    const { csvValues, setCsvValues, selectedPlugin, setSelectedPlugin, pluginCopyValues } = useAppContext();
 
-    const handlePluginClick = (plugin) => {
-        setSelectedPlugin(plugin); // Executa a função passada pelo pai
-        handlePluginSelect(plugin);
+    const {
+        pluginCopyValue,
+        leftPluginCopyValue,
+        centerPluginCopyValue,
+        rightPluginCopyValue,
+    } = pluginCopyValues || {};
+
+    const handlePluginClick = (selectedPlugin) => {
+        setSelectedPlugin(selectedPlugin); // Executa a função passada pelo pai
     };
 
-    const useFormState = (initialState) => {
-        const [formState, setFormState] = useState(initialState);
+    const [formState, setFormState] = useState({
+        pluginCopyValue: csvValues['Plugin1 Text'] || "",
+        leftPluginCopyValue: "",
+        centerPluginCopyValue: "",
+        rightPluginCopyValue: "",
+    });
 
-        const handleInputChange = (key, value) => {
-            setFormState({
-                ...formState,
-                [key]: value,
-            });
-
-            onPluginCopyChange({ ...formState, [key]: value });
-        };
-
-        return [formState, handleInputChange];
-    };
-
-    const [
-        {
-            pluginCopyValue,
-            leftCopyValue,
-            middleCopyValue,
-            rightCopyValue,
-        },
-        setFormValue,
-    ] = useFormState({
+    const [tempFormState, setTempFormState] = useState({
         pluginCopyValue: "",
-        leftCopyValue: "",
-        middleCopyValue: "",
-        rightCopyValue: "",
+        leftPluginCopyValue: "",
+        centerPluginCopyValue: "",
+        rightPluginCopyValue: "",
+    });
+
+    const [valid, setValid] = useState({
+        pluginCopyValue: false,
+        leftPluginCopyValue: false,
+        centerPluginCopyValue: false,
+        rightPluginCopyValue: false,
     });
 
 
-    const [valid, setValid] = useState({});
 
-    // Função para validar um campo específico
-    const validateField = (value) => {
-        return value !== "";
-    };
+    useEffect(() => {
 
-    // Função para manipular a mudança no valor do campo
-    const handleInputChange = (key) => (event) => {
-        const value = event.target.value;
-        setFormValue(key, value);
-    };
+        // Limpe o estado temporário ao montar o componente
+        setTempFormState({
+            pluginCopyValue: pluginCopyValue || "",
+            leftPluginCopyValue: leftPluginCopyValue || "",
+            centerPluginCopyValue: centerPluginCopyValue || "",
+            rightPluginCopyValue: rightPluginCopyValue || "",
+        });
 
-    // Função para manipular o blur do campo e atualizar a validação
-    const handleBlur = (key, value) => {
-        const isValid = validateField(value);
+        // Limpe o estado ao montar o componente
+        setFormState({
+            pluginCopyValue: pluginCopyValue || "",
+            leftPluginCopyValue: leftPluginCopyValue || "",
+            centerPluginCopyValue: centerPluginCopyValue || "",
+            rightPluginCopyValue: rightPluginCopyValue || "",
+        });
+
+    }, [selectedPlugin]);
+
+    const handleInputChange = (key, value) => {
+        setTempFormState((prevTempFormState) => ({
+            ...prevTempFormState,
+            [key]: value,
+        }));
+
         setValid((prevValid) => ({
             ...prevValid,
-            [key]: isValid,
+            [key]: value !== "",
         }));
+    };
+
+    const handleBlur = (key) => {
+        // Atualize o CsvContext com os valores editados
+        setCsvValues({
+            ...csvValues,
+            [key]: tempFormState[key],
+        });
+
+        // Atualize diretamente os valores no contexto
+        setPluginCopyValues((prevPluginCopyValues) => ({
+            ...prevPluginCopyValues,
+            [key]: tempFormState[key],
+        }));
+
+        // Atualize o estado final com os valores do estado temporário
+        setFormState({
+            ...formState,
+            [key]: tempFormState[key],
+        });
     };
 
 
@@ -69,9 +98,9 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange 
                 <div className="group"><sp-label>Plugin & Supercharger</sp-label>
 
                     <sp-radio-group style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} label="Medium" name="example">
-                        <sp-radio onClick={() => handlePluginClick('plugin')}>Plugin</sp-radio>
-                        <sp-radio onClick={() => handlePluginClick('supercharger')}>Supercharger</sp-radio>
-                        <sp-radio checked={true} onClick={() => handlePluginClick('null')}>Nenhum</sp-radio>
+                        <sp-radio checked={selectedPlugin === "plugin"} onClick={() => handlePluginClick('plugin')}>Plugin</sp-radio>
+                        <sp-radio checked={selectedPlugin === "supercharger"} onClick={() => handlePluginClick('supercharger')}>Supercharger</sp-radio>
+                        <sp-radio checked={selectedPlugin === ""} onClick={() => handlePluginClick(null)}>Nenhum</sp-radio>
                     </sp-radio-group>
 
                     {selectedPlugin === 'plugin' && (
@@ -80,10 +109,10 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange 
                                 style={{ paddingTop: "5px" }}
                                 id="plugin-copy"
                                 placeholder="Plugin Copy"
-                                value={pluginCopyValue}
-                                onInput={handleInputChange('pluginCopyValue')}
+                                value={tempFormState.pluginCopyValue}
+                                onInput={(e) => handleInputChange('pluginCopyValue', e.target.value)}
                                 onBlur={() => handleBlur('pluginCopyValue')}
-                                valid={valid['pluginCopyValue']}
+                                valid={valid.pluginCopyValue}
                             ></sp-textfield>
                         </>
                     )}
@@ -94,28 +123,28 @@ export default function PluginSelector({ handlePluginSelect, onPluginCopyChange 
                                 style={{ paddingTop: "5px" }}
                                 id="left-copy"
                                 placeholder="Left Copy"
-                                value={leftCopyValue}
-                                onInput={handleInputChange('leftCopyValue')}
-                                onBlur={() => handleBlur('leftCopyValue')}
-                                valid={valid['leftCopyValue']}
+                                value={tempFormState.leftPluginCopyValue}
+                                onInput={(e) => handleInputChange('leftPluginCopyValue', e.target.value)}
+                                onBlur={() => handleBlur('leftPluginCopyValue')}
+                                valid={valid.leftPluginCopyValue}
                             ></sp-textfield>
                             <sp-textfield
                                 style={{ paddingTop: "5px" }}
                                 id="center-copy"
                                 placeholder="Middle Copy"
-                                value={middleCopyValue}
-                                onInput={handleInputChange('middleCopyValue')}
-                                onBlur={() => handleBlur('middleCopyValue')}
-                                valid={valid['middleCopyValue']}
+                                value={tempFormState.centerPluginCopyValue}
+                                onInput={(e) => handleInputChange('centerPluginCopyValue', e.target.value)}
+                                onBlur={() => handleBlur('centerPluginCopyValue')}
+                                valid={valid.centerPluginCopyValue}
                             ></sp-textfield>
                             <sp-textfield
                                 style={{ paddingTop: "5px" }}
                                 id="right-copy"
                                 placeholder="Right Copy"
-                                value={rightCopyValue}
-                                onInput={handleInputChange('rightCopyValue')}
-                                onBlur={() => handleBlur('rightCopyValue')}
-                                valid={valid['rightCopyValue']}
+                                value={tempFormState.rightPluginCopyValue}
+                                onInput={(e) => handleInputChange('rightPluginCopyValue', e.target.value)}
+                                onBlur={() => handleBlur('rightPluginCopyValue')}
+                                valid={valid.rightPluginCopyValue}
                             ></sp-textfield>
                         </>
                     )}

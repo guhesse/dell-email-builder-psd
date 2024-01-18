@@ -166,6 +166,8 @@ export default function AppProvider({ children }) {
         return updatedValues;
     };
 
+    
+
     // Seletor de Cores
 
     const cores = {
@@ -214,23 +216,19 @@ export default function AppProvider({ children }) {
         setTertiaryColor(color);
     };
 
-    // console.log("Accent Color RGB", cores[accentColor]?.r, cores[accentColor]?.g, cores[accentColor]?.b);
-    // console.log("Secondary Color RGB", cores[secondaryColor]?.r, cores[secondaryColor]?.g, cores[secondaryColor]?.b);
-    // console.log("Tertiary Color RGB", cores[tertiaryColor]?.r, cores[tertiaryColor]?.g, cores[tertiaryColor]?.b);
-
-
     // Values e estados dos inputs
 
     const [selectedHeader, setSelectedHeader] = useState("");
     const [selectedFunding, setSelectedFunding] = useState("");
     const [selectedSkinny, setSelectedSkinny] = useState("");
+    const [selectedHero, setSelectedHero] = useState("");
+    const [selectedPlugin, setSelectedPlugin] = useState("");
 
     const [slValue, setSlValue] = useState("");
     const [sslValue, setSslValue] = useState("");
     const [fundingCopyValue, setFundingCopyValue] = useState("");
     const [skinnyTitleValue, setSkinnyTitleValue] = useState("");
     const [skinnyCopyValue, setSkinnyCopyValue] = useState("");
-    const [selectedHero, setSelectedHero] = useState("");
     const [heroCopyValues, setHeroCopyValues] = useState({
         badgeValue: "",
         headlineValue: "",
@@ -241,20 +239,19 @@ export default function AppProvider({ children }) {
         heroCtaValue: "",
     });
 
+    console.log(heroCopyValues)
+
+    const [pluginCopyValues, setPluginCopyValues] = useState({
+        pluginCopyValue: "",
+        leftPluginCopyValue: "",
+        centerPluginCopyValue: "",
+        rightPluginCopyValue: "",
+    });
+
     useEffect(() => {
 
         setSlValue(csvValues.SL || "");
         setSslValue(csvValues.SSL || "");
-
-        setHeroCopyValues({
-            badgeValue: csvValues['Badge Text'] || "",
-            headlineValue: csvValues['Headline Text'] || "",
-            subHeadlineValue: csvValues['SHL'] || "",
-            inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || "",
-            inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || "",
-            productNameValue: csvValues['HERO1 Product Name'] || "",
-            heroCtaValue: csvValues['HERO CTA1 Text'] || "",
-        });
 
         setSelectedHeader(csvValues['Campaign Type'] || "csb");
         if (csvValues['Campaign Type'] === "CSB") {
@@ -282,6 +279,30 @@ export default function AppProvider({ children }) {
             });
         }
 
+        setHeroCopyValues({
+            badgeValue: csvValues['Badge Text'] || "",
+            headlineValue: csvValues['Headline Text'] || "",
+            subHeadlineValue: csvValues['SHL'] || "",
+            inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || "",
+            inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || "",
+            productNameValue: csvValues['HERO1 Product Name'] || "",
+            heroCtaValue: csvValues['HERO CTA1 Text'] || "",
+        });
+
+        setPluginCopyValues({
+            pluginCopyValue: csvValues['Plugin1 Text'] || "",
+            leftPluginCopyValue: "",
+            centerPluginCopyValue: "",
+            rightPluginCopyValue: "",
+        });
+
+
+        if (csvValues['Plugin1 Text'] !== "") {
+            setSelectedPlugin("plugin");
+        } else {
+
+        }
+
     }, [
         csvValues.SL,
         csvValues.SSL,
@@ -295,6 +316,7 @@ export default function AppProvider({ children }) {
         csvValues['HERO1 Product Name'],
         csvValues['HERO CTA1 Text'],
         csvValues['HERO Template'],
+        csvValues['Plugin1 Text']
     ]);
 
 
@@ -338,6 +360,10 @@ export default function AppProvider({ children }) {
             setSelectedHero,
             heroCopyValues,
             setHeroCopyValues,
+
+            selectedPlugin,
+            setSelectedPlugin,
+            pluginCopyValues,
 
         }}>
             {children}
