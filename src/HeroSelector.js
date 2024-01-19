@@ -32,7 +32,7 @@ export default function HeroSelector() {
     const handleHeroClick = (selectedHero) => {
         setSelectedHero(selectedHero);
     };
-    
+
     const [formState, setFormState] = useState({
         badgeValue: csvValues['Badge Text'] || "",
         headlineValue: csvValues['Headline Text'] || "",
@@ -121,6 +121,13 @@ export default function HeroSelector() {
         });
     };
 
+    const [isEditClicked, setIsEditClicked] = useState(false);
+
+    const handleEditClick = () => {
+        setIsEditClicked((prevIsEditClicked) => !prevIsEditClicked);
+    };
+
+
     return (
         <>
 
@@ -131,7 +138,7 @@ export default function HeroSelector() {
                         <sp-menu>
                             {Object.entries(heroPaths).map(([hero, { path, name }]) => (
                                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={hero} onClick={() => handleHeroClick(hero)}>
-                                    <sp-menu-item selected={selectedHero === `${hero}`}style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                                    <sp-menu-item selected={selectedHero === `${hero}`} style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                                         <div style={{ display: "flex", alignItems: "center" }}>
                                             <img style={{ width: '30px', height: 'auto', marginRight: '10px' }} src={path} alt={`Hero Layout - ${hero}`} />
                                             {name}
@@ -142,7 +149,7 @@ export default function HeroSelector() {
                         </sp-menu>
                     </sp-picker>
                     <div className="sp-tab-page" id="sp-spectrum-widgets-tab-page">
-                        <sp-action-button label="Edit">
+                        <sp-action-button label="Edit" onClick={handleEditClick}>
                             <div slot="icon" className="icon">
                                 <svg id="spectrum-icon-18-Edit" viewBox="0 0 36 36">
                                     <path d="M33.567 8.2L27.8 2.432a1.215 1.215 0 0 0-.866-.353H26.9a1.371 1.371 0 0 0-.927.406L5.084 23.372a.99.99 0 0 0-.251.422L2.055 33.1c-.114.377.459.851.783.851a.251.251 0 0 0 .062-.007c.276-.063 7.866-2.344 9.311-2.778a.972.972 0 0 0 .414-.249l20.888-20.889a1.372 1.372 0 0 0 .4-.883 1.221 1.221 0 0 0-.346-.945zM11.4 29.316c-2.161.649-4.862 1.465-6.729 2.022l2.009-6.73z"></path>
@@ -158,62 +165,64 @@ export default function HeroSelector() {
 
                 {selectedHero === 'hero1-lifestyle' && (
                     <>
-                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="badge-field">BADGE</sp-detail>
-                                <sp-textfield
-                                    id="badge-field"
-                                    placeholder="Insira o Badge"
-                                    value={tempFormState.badgeValue}
-                                    onInput={(e) => handleInputChange('badgeValue', e.target.value)}
-                                    onBlur={() => handleBlur('badgeValue')}
-                                    valid={valid.badgeValue}
-                                ></sp-textfield>
+                        {isEditClicked && (
+                            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="badge-field">BADGE</sp-detail>
+                                    <sp-textfield
+                                        id="badge-field"
+                                        placeholder="Insira o Badge"
+                                        value={tempFormState.badgeValue}
+                                        onInput={(e) => handleInputChange('badgeValue', e.target.value)}
+                                        onBlur={() => handleBlur('badgeValue')}
+                                        valid={valid.badgeValue}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="headline-field">HEADLINE</sp-detail>
+                                    <sp-textfield
+                                        id="headline-field"
+                                        placeholder="Insira o Headline"
+                                        value={tempFormState.headlineValue}
+                                        onInput={(e) => handleInputChange('headlineValue', e.target.value)}
+                                        onBlur={() => handleBlur('headlineValue')}
+                                        valid={valid.headlineValue}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="subheadline-field">SUBHEADLINE</sp-detail>
+                                    <sp-textfield
+                                        id="subheadline-field"
+                                        placeholder="Insira o SubHeadline"
+                                        value={tempFormState.subHeadlineValue}
+                                        onInput={(e) => handleInputChange('subHeadlineValue', e.target.value)}
+                                        onBlur={() => handleBlur('subHeadlineValue')}
+                                        valid={valid.subHeadlineValue}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="pname-field">PRODUCT NAME</sp-detail>
+                                    <sp-textfield
+                                        id="pname-field"
+                                        placeholder="Insira o Product Name"
+                                        value={tempFormState.productNameValue}
+                                        onInput={(e) => handleInputChange('productNameValue', e.target.value)}
+                                        onBlur={() => handleBlur('productNameValue')}
+                                        valid={valid.productNameValue}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
+                                    <sp-textfield
+                                        id="hero-cta-field"
+                                        placeholder="Insira o CTA"
+                                        value={tempFormState.heroCtaValue}
+                                        onInput={(e) => handleInputChange('heroCtaValue', e.target.value)}
+                                        valid={valid.heroCtaValue}
+                                    ></sp-textfield>
+                                </div>
                             </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="headline-field">HEADLINE</sp-detail>
-                                <sp-textfield
-                                    id="headline-field"
-                                    placeholder="Insira o Headline"
-                                    value={tempFormState.headlineValue}
-                                    onInput={(e) => handleInputChange('headlineValue', e.target.value)}
-                                    onBlur={() => handleBlur('headlineValue')}
-                                    valid={valid.headlineValue}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="subheadline-field">SUBHEADLINE</sp-detail>
-                                <sp-textfield
-                                    id="subheadline-field"
-                                    placeholder="Insira o SubHeadline"
-                                    value={tempFormState.subHeadlineValue}
-                                    onInput={(e) => handleInputChange('subHeadlineValue', e.target.value)}
-                                    onBlur={() => handleBlur('subHeadlineValue')}
-                                    valid={valid.subHeadlineValue}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="pname-field">PRODUCT NAME</sp-detail>
-                                <sp-textfield
-                                    id="pname-field"
-                                    placeholder="Insira o Product Name"
-                                    value={tempFormState.productNameValue}
-                                    onInput={(e) => handleInputChange('productNameValue', e.target.value)}
-                                    onBlur={() => handleBlur('productNameValue')}
-                                    valid={valid.productNameValue}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
-                                <sp-textfield
-                                    id="hero-cta-field"
-                                    placeholder="Insira o CTA"
-                                    value={tempFormState.heroCtaValue}
-                                    onInput={(e) => handleInputChange('heroCtaValue', e.target.value)}
-                                    valid={valid.heroCtaValue}
-                                ></sp-textfield>
-                            </div>
-                        </div>
+                        )}
                     </>
                 )}
 

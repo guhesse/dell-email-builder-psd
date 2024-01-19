@@ -6,11 +6,13 @@ import useAppContext from './hook/useAppContext.jsx';
 export default function HeaderSelector() {
 
     const { csvValues, selectedHeader, setSelectedHeader } = useAppContext();
+    const handleHeaderClick = (selectedHeader) => {
+        setSelectedHeader(selectedHeader);
+    };
+
 
     useEffect(() => {
-        const handleHeaderClick = (header) => {
-            setSelectedHeader(header);
-        };
+
         handleHeaderClick(csvValues['Campaign Type']);
     }, [csvValues['Campaign Type']]);
 

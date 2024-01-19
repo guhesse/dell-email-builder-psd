@@ -166,8 +166,6 @@ export default function AppProvider({ children }) {
         return updatedValues;
     };
 
-    
-
     // Seletor de Cores
 
     const cores = {
@@ -224,6 +222,7 @@ export default function AppProvider({ children }) {
     const [selectedHero, setSelectedHero] = useState("");
     const [selectedPlugin, setSelectedPlugin] = useState("");
     const [selectedFpoSegment, setSelectedFpoSegment] = useState("sb");
+    const [selectedBanner, setSelectedBanner] = useState("");
 
     const [slValue, setSlValue] = useState("");
     const [sslValue, setSslValue] = useState("");
@@ -239,7 +238,6 @@ export default function AppProvider({ children }) {
         productNameValue: "",
         heroCtaValue: "",
     });
-
     const [pluginCopyValues, setPluginCopyValues] = useState({
         pluginCopyValue: "",
         leftPluginCopyValue: "",
@@ -248,6 +246,12 @@ export default function AppProvider({ children }) {
     });
 
     const [selectedFpoValue, setSelectedFpoValue] = useState(null);
+
+    const [bannerCopyValues, setBannerCopyValues] = useState({
+        bannerHeadlineValue: "",
+        bannerCopyValue: "",
+        bannerCtaValue: "",
+    })
 
     useEffect(() => {
 
@@ -260,6 +264,11 @@ export default function AppProvider({ children }) {
                 ...csvValues,
                 'Campaign Type': "csb"
             });
+        } else if (csvValues['Campaign Type'] === "outlet") {
+            setCsvValues({
+                ...csvValues,
+                'Campaign Type': "outlet"
+            })
         }
 
         setSelectedFunding(csvValues['Vendor Funding Name'] || "no-vf");
@@ -304,6 +313,25 @@ export default function AppProvider({ children }) {
 
         }
 
+        setSelectedBanner(csvValues['Banner1 Layout'] || "");
+        if (csvValues['Banner1 Layout'] === "IMG RIGHT") {
+            setCsvValues({
+                ...csvValues,
+                'Banner1 Layout': "right"
+            });
+        } else if (csvValues['Banner1 Layout'] === "IMG LEFT") {
+            setCsvValues({
+                ...csvValues,
+                'Banner1 Layout': "left"
+            });
+        }
+
+        setBannerCopyValues({
+            bannerHeadlineValue: csvValues['Banner1 Headline'] || "",
+            bannerCopyValue: csvValues['Banner1 Text'] || "",
+            bannerCtaValue: csvValues['Banner1 CTA Text'] || "",
+        })
+
         // setSelectedFpoSegment(selectedFpoSegment)
 
         // setSelectedFpoValue(selectedFpoValue)
@@ -321,11 +349,12 @@ export default function AppProvider({ children }) {
         csvValues['HERO1 Product Name'],
         csvValues['HERO CTA1 Text'],
         csvValues['HERO Template'],
-        csvValues['Plugin1 Text']
+        csvValues['Plugin1 Text'],
+        csvValues['Banner1 Layout'],
+        csvValues['Banner1 Headline'],
+        csvValues['Banner1 Text'],
+        csvValues['Banner1 CTA Text'],        
     ]);
-
-
-
 
     return (
         <AppContext.Provider value={{
@@ -374,7 +403,12 @@ export default function AppProvider({ children }) {
             setSelectedFpoSegment,
             selectedFpoValue,
             setSelectedFpoValue,
-            
+
+            selectedBanner,
+            setSelectedBanner,
+            bannerCopyValues,
+            setBannerCopyValues,
+
 
         }}>
             {children}

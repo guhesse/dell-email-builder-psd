@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import useAppContext from '../hook/useAppContext.jsx';
 import { core, app, batchPlay, storage } from '../App.js';
+import useAppContext from '../hook/useAppContext.jsx';
 import limitCharsPerLine from '../hook/charLimiter.jsx';
 import Hero1Lifestyle from '../HeroLayout/hero1lifestyle.jsx';
 import Hero2Promotion from '../HeroLayout/hero2promotion.jsx';
@@ -19,7 +19,7 @@ export default function EmailBuilder() {
     var birdseedHeight = "";
     var skinnyBannerHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores, slValue, sslValue, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue } = useAppContext();
+    const { accentColor, secondaryColor, tertiaryColor, cores, slValue, sslValue, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues } = useAppContext();
 
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
@@ -27,27 +27,27 @@ export default function EmailBuilder() {
     const { badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, inlinePromo2Value, productNameValue, heroCtaValue, } = heroCopyValues || {};
     const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
 
+    const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
 
 
+    // function limitCharsPerLine(text, limit) {
+    //     const words = text.split(' ');
+    //     let currentLine = '';
+    //     let result = '';
 
-    function limitCharsPerLine(text, limit) {
-        const words = text.split(' ');
-        let currentLine = '';
-        let result = '';
+    //     for (const word of words) {
+    //         if ((currentLine + word).length <= limit) {
+    //             currentLine += (currentLine === '' ? '' : ' ') + word;
+    //         } else {
+    //             result += (result === '' ? '' : '\r') + currentLine;
+    //             currentLine = word;
+    //         }
+    //     }
 
-        for (const word of words) {
-            if ((currentLine + word).length <= limit) {
-                currentLine += (currentLine === '' ? '' : ' ') + word;
-            } else {
-                result += (result === '' ? '' : '\r') + currentLine;
-                currentLine = word;
-            }
-        }
+    //     result += (result === '' ? '' : '\r') + currentLine;
 
-        result += (result === '' ? '' : '\r') + currentLine;
-
-        return result;
-    }
+    //     return result;
+    // }
 
     // Limpar as camadas do documento
     async function clearAllLayers() {
@@ -739,6 +739,154 @@ export default function EmailBuilder() {
         }
     }
 
+    async function bannerBuild() {
+        const formattedBannerHeadlineValue = limitCharsPerLine(bannerHeadlineValue || '', 27);
+        const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 60);
+
+        try {
+            if (selectedBanner === "") {
+                console.warn('Banner n\u00e3o selecionado');
+                bannerHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
+                return; // Retorna imediatamente se o plugin n\u00e3o estiver selecionado
+            } else {
+            }
+
+            const fs = storage.localFileSystem;
+            const pluginDir = await fs.getPluginFolder();
+
+            let bannerFilePath;
+
+            if (selectedBanner === 'left') {
+                bannerFilePath = 'assets/banners/left.psd';
+            } else if (selectedBanner === 'right') {
+                bannerFilePath = 'assets/banners/right.psd';
+            } else {
+                bannerFilePath = null;
+            }
+
+            const fileEntry = await pluginDir.getEntry(bannerFilePath)
+
+            const targetFunction = async (executionContext) => {
+                try {
+                    await app.open(fileEntry);
+                    const secondDocument = app.documents[1];
+                    const bannerWidth = secondDocument.width;
+                    bannerHeight = secondDocument.height;
+
+                    const batchChangeBannerCopy = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Headline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedBannerHeadlineValue } },
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedBannerCopyValue } },
+                        { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Banner Headline" },], },
+                    ];
+
+                    const resultBoundingBoxBannerHeadline = await batchPlay(batchChangeBannerCopy, {});
+                    const boundingBoxBannerHeadline = resultBoundingBoxBannerHeadline[4].boundingBox;
+                    const bannerCopyPadding = 16;
+                    const newBannerCopyPosition = boundingBoxBannerHeadline.height._value + bannerCopyPadding;
+
+                    const offsetBannerCopy = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _name: "Banner Copy", }], makeVisible: false, layerID: [2125], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newBannerCopyPosition, } }, _options: { dialogOptions: "dontDisplay" }, },
+                        { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Banner Copy" },], },
+                    ];
+
+                    const resultBannerCopyBoundingBox = await batchPlay(offsetBannerCopy, {});
+                    const boundingBoxBannerCopy = resultBannerCopyBoundingBox[2].boundingBox;
+                    const ctaPadding = bannerCopyPadding + 18;
+                    const newCtaPosition = boundingBoxBannerCopy.height._value + boundingBoxBannerHeadline.height._value + ctaPadding;
+
+                    const changeCtaCopy = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: bannerCtaValue } },
+                        { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "CTA Copy" },], },
+                    ]
+
+                    const resultCtaCopyBoundingBox = await batchPlay(changeCtaCopy, {});
+                    const boundingBoxCtaCopy = resultCtaCopyBoundingBox[2].boundingBox;
+                    const newBorderCta = boundingBoxCtaCopy.width._value + 20
+
+                    const resizeCtaBorder = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], makeVisible: false, layerID: [7772], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "transform", _target: [{ _ref: "path", _enum: "ordinal", _value: "targetEnum" }], freeTransformCenterState: { _enum: "quadCenterState", _value: "QCSAverage" }, offset: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0 }, vertical: { _unit: "pixelsUnit", _value: 0 } }, width: { _unit: "pixelsUnit", _value: newBorderCta }, },
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [7771], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [7772, 7770, 7771], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+                    ]
+
+                    await batchPlay(resizeCtaBorder, {});
+
+                    const offsetCta = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [9845], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _name: "CTA", }], makeVisible: false, layerID: [9845], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newCtaPosition, } }, _options: { dialogOptions: "dontDisplay" }, }
+                    ];
+
+                    await batchPlay(offsetCta, {});
+
+                    const alignCopyVertical = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Copy" }], makeVisible: false, layerID: [7739], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Image" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelection" }, makeVisible: false, layerID: [7739, 7743], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _options: { dialogOptions: "dontDisplay" } }
+                    ]
+
+                    await batchPlay(alignCopyVertical, {});
+
+                    const finalCrop = [
+                        { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 210 }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 210 }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
+                    ]
+
+                    await batchPlay(finalCrop, {});
+
+                    const batchBannerCopyAndPaste = [
+                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+                    ]
+
+                    await batchPlay(batchBannerCopyAndPaste, {});
+
+
+                    const activeDocument = app.activeDocument;
+                    await activeDocument.paste();
+
+                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+                    const docWidth = activeDocument.width;
+                    const docHeight = activeDocument.height;
+
+
+                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (bannerWidth / 2) + 25);
+                    let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyHeight + heroHeight + pluginHeight + fpoHeight;
+                    const offsetY = (0 - (docHeight / 2) + (bannerHeight / 2) + offsetModules);
+
+                    pastedGroup.translate(offsetX, offsetY);
+
+                    console.log('%cBanner inserido com sucesso!', 'color: #00EAADFF;');
+                } catch (error) {
+                    console.error('Erro ao inserir o Banner:', error);
+                }
+            };
+
+            const options = {
+                commandName: 'Inserir Banner',
+                interactive: true,
+            };
+
+            await core.executeAsModal(targetFunction, options);
+        } catch (error) {
+            console.error('Erro ao encontrar o arquivo do Banner:', error);
+        }
+    };
+
+    // Fim da fun\u00e7\u00e3o de importar o Banner
+
+    console.log("Banner Copy values", bannerCopyValues)
+
     const handleBuild = async () => {
         try {
             await clearAllLayers();
@@ -750,6 +898,7 @@ export default function EmailBuilder() {
             var heroHeight = await heroBuild(slHeight, headerHeight, fundingHeight, skinnyHeight)
             var pluginHeight = await pluginBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight)
             var fpoHeight = await fpoBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight)
+            var bannerHeight = await bannerBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight);
 
             console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
         } catch (error) {

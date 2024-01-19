@@ -1,63 +1,95 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import useAppContext from './hook/useAppContext.jsx';
 
-export default function BannerSelector({ handleBannerPositionSelected, onBannerCopyChange }) {
+export default function BannerSelector() {
 
-    const [selectedBannerPosition, setSelectedBannerPosition] = useState(null);
+    const { csvValues, setCsvValues, selectedBanner, setSelectedBanner, bannerCopyValues, setBannerCopyValues } = useAppContext();
 
-    const handleBannerPositionClick = (banner) => {
-        setSelectedBannerPosition(banner);
-        handleBannerPositionSelected(banner);
+    const {
+        bannerHeadlineValue,
+        bannerCopyValue,
+        bannerCtaValue
+    } = bannerCopyValues || {};
+
+
+    const handleBannerClick = (selectedBanner) => {
+        setSelectedBanner(selectedBanner);;
     };
 
-    const useFormState = (initialState) => {
-        const [formState, setFormState] = useState(initialState);
-
-        const handleInputChange = (key, value) => {
-            setFormState({
-                ...formState,
-                [key]: value,
-            });
-
-            onBannerCopyChange({ ...formState, [key]: value });
-        };
-
-        return [formState, handleInputChange];
-    };
-
-    const [
-        {
-            bannerHeadlineValue,
-            bannerCopyValue,
-            bannerCtaValue
-        },
-        setFormValue,
-    ] = useFormState({
-        bannerHeadlineValue: "",
-        bannerCopyValue: "",
-        bannerCtaValue: ""
+    const [formState, setFormState] = useState({
+        bannerHeadlineValue: csvValues['Badge Text'] || "",
+        bannerCopyValue: csvValues['Headline Text'] || "",
+        bannerCtaValue: csvValues['SHL'] || "",
     });
 
-    const [valid, setValid] = useState({});
+    const [tempFormState, setTempFormState] = useState({
+        bannerHeadlineValue: "",
+        bannerCopyValue: "",
+        bannerCtaValue: "",
+    });
 
-    // Função para validar um campo específico
-    const validateField = (value) => {
-        return value !== "";
-    };
+    const [valid, setValid] = useState({
+        bannerHeadlineValue: false,
+        bannerCopyValue: false,
+        bannerCtaValue: false,
+    });
 
-    // Função para manipular a mudança no valor do campo
-    const handleInputChange = (key) => (event) => {
-        const value = event.target.value;
-        setFormValue(key, value);
-    };
+    useEffect(() => {
 
-    // Função para manipular o blur do campo e atualizar a validação
-    const handleBlur = (key, value) => {
-        const isValid = validateField(value);
+        // Limpe o estado temporário ao montar o componente
+        setTempFormState({
+            bannerHeadlineValue: bannerHeadlineValue || "",
+            bannerCopyValue: bannerCopyValue || "",
+            bannerCtaValue: bannerCtaValue || "",
+        });
+
+        // Limpe o estado ao montar o componente
+        setFormState({
+            bannerHeadlineValue: bannerHeadlineValue || "",
+            bannerCopyValue: bannerCopyValue || "",
+            bannerCtaValue: bannerCtaValue || "",
+        });
+
+    }, [selectedBanner]);
+
+    const handleInputChange = (key, value) => {
+        setTempFormState((prevTempFormState) => ({
+            ...prevTempFormState,
+            [key]: value,
+        }));
+
         setValid((prevValid) => ({
             ...prevValid,
-            [key]: isValid,
+            [key]: value !== "",
         }));
     };
+
+    const handleBlur = (key) => {
+        // Atualize o CsvContext com os valores editados
+        setCsvValues({
+            ...csvValues,
+            [key]: tempFormState[key],
+        });
+
+        // Atualize diretamente os valores no contexto
+        setBannerCopyValues((prevBannerCopyValues) => ({
+            ...prevBannerCopyValues,
+            [key]: tempFormState[key],
+        }));
+
+        // Atualize o estado final com os valores do estado temporário
+        setFormState({
+            ...formState,
+            [key]: tempFormState[key],
+        });
+    };
+
+    // const [isEditClicked, setIsEditClicked] = useState(false);
+
+    // const handleEditClick = () => {
+    //     setIsEditClicked((prevIsEditClicked) => !prevIsEditClicked);
+    // };
+
 
 
     return (
@@ -67,14 +99,14 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerC
                 <sp-field-group style={{ display: "flex", flexDirection: "column", margin: "0 4px" }}>
                     <sp-picker style={{ margin: "0 4px" }} placeholder="Lado da imagem do Banner" id="picker-m" size="m" label="Selection type">
                         <sp-menu>
-                            <sp-menu-item onClick={() => handleBannerPositionClick(null)}>None</sp-menu-item>
-                            <sp-menu-item onClick={() => handleBannerPositionClick('left')}>Left</sp-menu-item>
-                            <sp-menu-item onClick={() => handleBannerPositionClick('right')}>Right</sp-menu-item>
+                            <sp-menu-item onClick={() => handleBannerClick("")}>None</sp-menu-item>
+                            <sp-menu-item onClick={() => handleBannerClick('left')}>Left</sp-menu-item>
+                            <sp-menu-item onClick={() => handleBannerClick('right')}>Right</sp-menu-item>
                         </sp-menu>
                     </sp-picker>
                 </sp-field-group>
 
-                {selectedBannerPosition !== null && (
+                {selectedBanner !== null && (
 
 
                     <>
@@ -84,30 +116,36 @@ export default function BannerSelector({ handleBannerPositionSelected, onBannerC
                                 <sp-textarea
                                     id="banner-hl-field"
                                     placeholder="Insira o Banner Headline"
-                                    value={bannerHeadlineValue}
-                                    onInput={handleInputChange('bannerHeadlineValue')}
+                                    value={tempFormState.bannerHeadlineValue}
+                                    onInput={(e) => handleInputChange('bannerHeadlineValue', e.target.value)}
                                     onBlur={() => handleBlur('bannerHeadlineValue')}
-                                    valid={valid['bannerHeadlineValue']} multiline></sp-textarea>
+                                    valid={valid.bannerHeadlineValue}
+                                    multiline>
+                                </sp-textarea>
                             </div>
                             <div style={{ display: "flex", flexDirection: "column", margin: "0 4px" }}>
                                 <sp-detail>COPY</sp-detail>
                                 <sp-textarea
                                     id="banner-copy-field"
                                     placeholder="Insira o Banner Copy"
-                                    value={bannerCopyValue}
-                                    onInput={handleInputChange('bannerCopyValue')}
+                                    value={tempFormState.bannerCopyValue}
+                                    onInput={(e) => handleInputChange('bannerCopyValue', e.target.value)}
                                     onBlur={() => handleBlur('bannerCopyValue')}
-                                    valid={valid['bannerCopyValue']} multiline></sp-textarea>
+                                    valid={valid.bannerCopyValue}
+                                    multiline>
+                                </sp-textarea>
                             </div>
                             <div style={{ display: "flex", flexDirection: "column", margin: "0 4px" }}>
                                 <sp-detail>CTA</sp-detail>
                                 <sp-textarea
                                     id="banner-cta-field"
                                     placeholder="Insira o CTA"
-                                    value={bannerCtaValue}
-                                    onInput={handleInputChange('bannerCtaValue')}
+                                    value={tempFormState.bannerCtaValue}
+                                    onInput={(e) => handleInputChange('bannerCtaValue', e.target.value)}
                                     onBlur={() => handleBlur('bannerCtaValue')}
-                                    valid={valid['bannerCtaValue']} multiline></sp-textarea>
+                                    valid={valid.bannerCtaValue}
+                                    multiline>
+                                </sp-textarea>
                             </div>
                         </div>
                     </>
