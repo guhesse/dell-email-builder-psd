@@ -224,6 +224,8 @@ export default function AppProvider({ children }) {
     const [selectedFpoSegment, setSelectedFpoSegment] = useState(null);
     const [selectedBanner, setSelectedBanner] = useState(null);
     const [selectedFooter, setSelectedFooter] = useState("");
+    const [selectedBirdseed, setSelectedBirdseed] = useState(null);
+    const [selectedBirdseedCopy, setSelectedBirdseedCopy] = useState(false);
 
     const [slValue, setSlValue] = useState("");
     const [sslValue, setSslValue] = useState("");
@@ -261,6 +263,16 @@ export default function AppProvider({ children }) {
         bannerCopyValue: "",
         bannerCtaValue: "",
     })
+
+    const [birdseedCopyValues, setBirdseedCopyValues] = useState('');
+
+    const [birdseedDate, setBirdseedDate] = useState({
+        selectedDay: "1",
+        selectedMonth: "1",
+        selectedYear: "2024",
+    });
+
+
 
     useEffect(() => {
 
@@ -349,7 +361,6 @@ export default function AppProvider({ children }) {
             });
         }
 
-
         setBannerCopyValues({
             bannerHeadlineValue: csvValues['Banner1 Headline'] || "",
             bannerCopyValue: csvValues['Banner1 Text'] || "",
@@ -363,6 +374,31 @@ export default function AppProvider({ children }) {
                 'Segment': "csb-four-btn"
             });
         }
+
+        const dateParts = (csvValues['Birdseed 2'] || "").split('/');
+
+        if (dateParts.length === 3) {
+            const [day, month, year] = dateParts;
+
+            // Atualize o estado com os valores extraídos da data
+            setBirdseedDate({
+                selectedDay: day,
+                selectedMonth: month,
+                selectedYear: year,
+            });
+        }
+
+        setSelectedBirdseedCopy(csvValues['Birdseed 1A'] || "");
+        if (csvValues['Birdseed 1A'] === "") {
+            setSelectedBirdseedCopy(false);
+        } else {
+            setSelectedBirdseedCopy(true);
+        }
+
+        setBirdseedCopyValues({
+            birdseedCopyValues: csvValues['Birdseed 1A'] || "",
+        });
+
 
     }, [
         csvValues.SL,
@@ -383,6 +419,9 @@ export default function AppProvider({ children }) {
         csvValues['Banner1 Text'],
         csvValues['Banner1 CTA Text'],
         csvValues['Segment'],
+        csvValues['Birdseed 1A'],
+        csvValues['Birdseed 2'],
+
     ]);
 
 
@@ -442,6 +481,14 @@ export default function AppProvider({ children }) {
             selectedFooter,
             setSelectedFooter,
 
+            selectedBirdseed,
+            setSelectedBirdseed,
+            selectedBirdseedCopy,
+            setSelectedBirdseedCopy,
+            birdseedCopyValues,
+            setBirdseedCopyValues,
+            birdseedDate,
+            setBirdseedDate,
         }}>
             {children}
         </AppContext.Provider>

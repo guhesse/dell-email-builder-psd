@@ -1,104 +1,123 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Theme } from "@swc-react/theme";
+import useAppContext from './hook/useAppContext.jsx';
 
 
+export default function BirdseedSelector() {
 
-export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedCopy, onBirdseedCopyChange, onDateChange }) {
+    const { csvValues, setCsvValues,
+        selectedBirdseed,
+        setSelectedBirdseed,
+        selectedBirdseedCopy,
+        setSelectedBirdseedCopy,
+        birdseedCopyValues,
+        setBirdseedCopyValues,
+        birdseedDate,
+        setBirdseedDate, } = useAppContext();
 
-    const [selectedBirdseed, setSelectedBirdseed] = useState(null);
+    const {
+        selectedDay,
+        selectedMonth,
+        selectedYear,
+    } = birdseedDate || {};
 
-    const handleBirdseedClick = (birdseed) => {
-        setSelectedBirdseed(birdseed);
-        handleBirdseedSelect(birdseed);
+
+    const handleBirdseedClick = (selectedBirdseed) => {
+        setSelectedBirdseed(selectedBirdseed);
     }
 
-    const [selectedBirdseedCopy, setSelectedBirdseedCopy] = useState(null)
-
-    const handleBirdseedCopyClick = (birdseedcopy) => {
-        if (selectedBirdseedCopy === birdseedcopy) {
-            setSelectedBirdseedCopy(null);
-            handleBirdseedCopy(null);
-        } else {
-            setSelectedBirdseedCopy(birdseedcopy);
-            handleBirdseedCopy(birdseedcopy);
-        }
-    }
-
-    const useFormState = (initialState) => {
-        const [formState, setFormState] = useState(initialState);
-
-        const handleInputChange = (key, value) => {
-            setFormState({
-                ...formState,
-                [key]: value,
-            });
-
-            // Assuming onFundingCopyChange is a prop or a function you have access to
-            onBirdseedCopyChange({ ...formState, [key]: value });
-        };
-
-        return [formState, handleInputChange];
+    const handleBirdseedCopyClick = () => {
+        setSelectedBirdseedCopy((prevSelectedBirdseedCopy) => !prevSelectedBirdseedCopy);
     };
 
-        const [
-            {
-                birdseedCopyValue,
-            },
-            setFormValue,
-        ] = useFormState({
-            birdseedCopyValue: "",
-        });
 
-        const [valid, setValid] = useState({});
+    const [formState, setFormState] = useState({
+        selectedDay: birdseedDate.selectedDay.day || "",
+        selectedMonth: birdseedDate.selectedMonth.month || "",
+        selectedYear: birdseedDate.selectedYear.year || "",
+        birdseedCopyValues: csvValues['Birdseed 1A'] || "",
+    });
 
-        // Função para validar um campo específico
-        const validateField = (value) => {
-            return value !== "";
-        };
+    const [tempFormState, setTempFormState] = useState({
+        selectedDay: "",
+        selectedMonth: "",
+        selectedYear: "",
+        birdseedCopyValues: "",
+    });
 
-        // Função para manipular a mudança no valor do campo
-        const handleInputChange = (key) => (event) => {
-            const value = event.target.value;
-            setFormValue(key, value);
-        };
-
-        // Função para manipular o blur do campo e atualizar a validação
-        const handleBlur = (key, value) => {
-            const isValid = validateField(value);
-            setValid((prevValid) => ({
-                ...prevValid,
-                [key]: isValid,
-            }));
-        };
-
-
-
-    const [selectedDay, setSelectedDay] = useState(1);
-    const [selectedMonth, setSelectedMonth] = useState(1);
-    const [selectedYear, setSelectedYear] = useState(2023);
-
-    const handleDateChange = ({ selectedDay, selectedMonth, selectedYear }) => {
-        setSelectedDay(selectedDay);
-        setSelectedMonth(selectedMonth);
-        setSelectedYear(selectedYear);
-
-        // Chamada para atualização externa, se necessário
-        onDateChange({ selectedDay, selectedMonth, selectedYear });
-    };
-
+    const [valid, setValid] = useState({
+        birdseedCopyValues: false,
+    });
 
     useEffect(() => {
+        // Limpe o estado temporário ao montar o componente
+        setTempFormState({
+            selectedDay: birdseedDate.selectedDay.day || "",
+            selectedMonth: birdseedDate.selectedMonth.month || "",
+            selectedYear: birdseedDate.selectedYear.year || "",
+            birdseedCopyValues: csvValues['Birdseed 1A'] || "",
+        });
 
-        // Chama a função externa para notificar sobre a mudança na data
-        onDateChange({ selectedDay, selectedMonth, selectedYear });
-    }, [selectedDay, selectedMonth, selectedYear, onDateChange]);
+        // Limpe o estado ao montar o componente
+        setFormState({
+            selectedDay: birdseedDate.selectedDay.day || "",
+            selectedMonth: birdseedDate.selectedMonth.month || "",
+            selectedYear: birdseedDate.selectedYear.year || "",
+            birdseedCopyValues: csvValues['Birdseed 1A'] || "",
+        });
+    }, [selectedBirdseed, birdseedDate, csvValues]);
+
+    console.log("birdseed depois do useeffect", birdseedDate)
 
 
+
+    const handleInputChange = (key, value) => {
+        setTempFormState((prevTempFormState) => ({
+            ...prevTempFormState,
+            [key]: value,
+        }));
+
+        setValid((prevValid) => ({
+            ...prevValid,
+            [key]: value !== "",
+        }));
+    };
+
+    const handleBlur = (key) => {
+        // Atualize o CsvContext com os valores editados
+        setCsvValues({
+            ...csvValues,
+            [key]: tempFormState[key],
+        });
+
+        // Atualize diretamente os valores no contexto
+        setBirdseedDate((prevBirdseedDate) => ({
+            ...prevBirdseedDate,
+            [key]: tempFormState[key],
+        }));
+
+        // Atualize diretamente os valores no contexto
+        setBirdseedCopyValues((prevBirdseedCopyValues) => ({
+            ...prevBirdseedCopyValues,
+            [key]: tempFormState[key],
+        }));
+
+        // Atualize o estado final com os valores do estado temporário
+        setFormState({
+            ...formState,
+            [key]: tempFormState[key],
+        });
+    };
+
+    const handleDateChange = ({ selectedDay, selectedMonth, selectedYear }) => {
+        console.log("Selected Date:", selectedDay, selectedMonth, selectedYear);
+    };
+
+    const isEditChecked = selectedBirdseedCopy
 
 
     return (
         <>
-
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group"><sp-label>Birdseed</sp-label>
                 <sp-field-group width={{ base: 'size-3000', L: "single-line-width" }}>
                     <div>
@@ -112,7 +131,6 @@ export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedC
                         </sp-picker>
                     </div>
                 </sp-field-group>
-
 
                 {selectedBirdseed === 'standard' && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -128,16 +146,22 @@ export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedC
                                 <sp-menu>
                                     <sp-menu-group>
                                         {[...Array(31)].map((_, index) => (
-                                            <sp-menu-item key={index + 1} onClick={() => {
-                                                setSelectedDay(index + 1);
-                                                handleDateChange({ selectedDay: index + 1, selectedMonth, selectedYear });
-                                            }}>
+                                            <sp-menu-item key={index + 1}
+                                                selected={index + 1 === selectedDay}
+                                                onClick={() => {
+                                                    setBirdseedDate((prevBirdseedDate) => ({
+                                                        ...prevBirdseedDate,
+                                                        selectedDay: index + 1,
+                                                    }));
+                                                    handleDateChange({ selectedDay: index + 1, selectedMonth, selectedYear });
+                                                }}>
                                                 {index + 1}
                                             </sp-menu-item>
                                         ))}
                                     </sp-menu-group>
                                 </sp-menu>
                             </sp-picker>
+
 
                             <sp-picker
                                 size="m"
@@ -148,10 +172,15 @@ export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedC
                                 <sp-menu>
                                     <sp-menu-group>
                                         {[...Array(12)].map((_, index) => (
-                                            <sp-menu-item key={index + 1} onClick={() => {
-                                                setSelectedMonth(index + 1);
-                                                handleDateChange({ selectedDay, selectedMonth: index + 1, selectedYear });
-                                            }}>
+                                            <sp-menu-item key={index + 1}
+                                                selected={index + 1 === selectedMonth}
+                                                onClick={() => {
+                                                    setBirdseedDate((prevBirdseedDate) => ({
+                                                        ...prevBirdseedDate,
+                                                        selectedMonth: index + 1,
+                                                    }));
+                                                    handleDateChange({ selectedDay, selectedMonth: index + 1, selectedYear });
+                                                }}>
                                                 {index + 1}
                                             </sp-menu-item>
                                         ))}
@@ -167,12 +196,17 @@ export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedC
                             >
                                 <sp-menu>
                                     <sp-menu-group>
-                                        {[...Array(2)].map((_, index) => (
-                                            <sp-menu-item key={2023 + index} onClick={() => {
-                                                setSelectedYear(2023 + index);
-                                                handleDateChange({ selectedDay, selectedMonth, selectedYear: 2023 + index });
-                                            }}>
-                                                {2023 + index}
+                                        {[...Array(1)].map((_, index) => (
+                                            <sp-menu-item key={2024 + index}
+                                                selected={index + 1 === selectedYear}
+                                                onClick={() => {
+                                                    setBirdseedDate((prevBirdseedDate) => ({
+                                                        ...prevBirdseedDate,
+                                                        selectedYear: 2024 + index,
+                                                    }));
+                                                    handleDateChange({ selectedDay, selectedMonth, selectedYear: 2023 + index });
+                                                }}>
+                                                {2024 + index}
                                             </sp-menu-item>
                                         ))}
                                     </sp-menu-group>
@@ -182,37 +216,37 @@ export default function BirdseedSelector({ handleBirdseedSelect, handleBirdseedC
                     </div>
                 )}
 
-                <div style={{margin:"-5px 0 0 10px",}}>
+                <div style={{ margin: "-5px 0 0 10px", }}>
                     {selectedBirdseed !== null && (
                         <>
                             <div>
                                 <sp-field-group>
-                                    <sp-checkbox size="m" onClick={() => handleBirdseedCopyClick('birdseedcopy')} >Copy extra</sp-checkbox>
+                                    <sp-checkbox checked={isEditChecked} size="m" onClick={() => handleBirdseedCopyClick(selectedBirdseedCopy)} >Copy extra</sp-checkbox>
                                 </sp-field-group>
                             </div>
                         </>
-                    )
-                    }
+                    )}
 
-                    {
-                        selectedBirdseedCopy === "birdseedcopy" && (
-                            <>
-                                <div style={{marginTop:"10px"}}>
-                                    <sp-textfield
-                                        id="birdseed-copy-field"
-                                        placeholder="Texto extra para o Birdseed"
-                                        value={birdseedCopyValue}
-                                        onInput={handleInputChange('birdseedCopyValue')}
-                                        onBlur={() => handleBlur('birdseedCopyValue')}
-                                        valid={valid['birdseedCopyValue']}
-                                    ></sp-textfield>
-                                </div>
-                            </>
-                        )
-                    }
+
+                    {selectedBirdseedCopy && (
+                        <>
+                            <div style={{ marginTop: "10px" }}>
+                                <sp-textfield
+                                    id="birdseed-copy-field"
+                                    placeholder="Texto extra para o Birdseed"
+                                    value={tempFormState.birdseedCopyValues}
+                                    onInput={(e) => handleInputChange('birdseedCopyValues', e.target.value)}
+                                    onBlur={() => handleBlur('birdseedCopyValues')}
+                                    valid={birdseedCopyValues !== "" ? valid.birdseedCopyValues : undefined}
+                                ></sp-textfield>
+                            </div>
+                        </>
+                    )}
+
+
                 </div>
-            </div>
 
+            </div>
         </>
     );
 }

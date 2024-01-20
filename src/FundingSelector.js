@@ -9,8 +9,6 @@ export default function FundingSelector() {
         setSelectedFunding(selectedFunding);
     };
 
-    console.log("selected funding", selectedFunding)
-
     useEffect(() => {
         handleFundingClick(csvValues['Vendor Funding Name']);
     }, [csvValues['Vendor Funding Name']]);
