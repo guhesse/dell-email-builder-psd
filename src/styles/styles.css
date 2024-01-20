@@ -15,6 +15,7 @@ body {
     margin: 10px 40px 30px 40px;
     height: 500px;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .dialog-inner-container {

@@ -217,12 +217,13 @@ export default function AppProvider({ children }) {
     // Values e estados dos inputs
 
     const [selectedHeader, setSelectedHeader] = useState("");
-    const [selectedFunding, setSelectedFunding] = useState("");
+    const [selectedFunding, setSelectedFunding] = useState(null);
     const [selectedSkinny, setSelectedSkinny] = useState("");
     const [selectedHero, setSelectedHero] = useState("");
     const [selectedPlugin, setSelectedPlugin] = useState("");
-    const [selectedFpoSegment, setSelectedFpoSegment] = useState("sb");
-    const [selectedBanner, setSelectedBanner] = useState("");
+    const [selectedFpoSegment, setSelectedFpoSegment] = useState(null);
+    const [selectedBanner, setSelectedBanner] = useState(null);
+    const [selectedFooter, setSelectedFooter] = useState("");
 
     const [slValue, setSlValue] = useState("");
     const [sslValue, setSslValue] = useState("");
@@ -234,10 +235,18 @@ export default function AppProvider({ children }) {
         headlineValue: "",
         subHeadlineValue: "",
         inlinePromoValue: "",
-        inlinePromo2Value: "",
+        // inlinePromo2Value: "",
         productNameValue: "",
+        //   productName2Value: '',
+        //   productName3Value: '',
+        //   specsValue: '',
+        //   specs2Value: '',
+        //   priceValue: '',
+        //   price2Value: '',
+        //   heroCtaValue: '',
         heroCtaValue: "",
     });
+
     const [pluginCopyValues, setPluginCopyValues] = useState({
         pluginCopyValue: "",
         leftPluginCopyValue: "",
@@ -271,8 +280,13 @@ export default function AppProvider({ children }) {
             })
         }
 
-        setSelectedFunding(csvValues['Vendor Funding Name'] || "no-vf");
-        if (csvValues['Vendor Funding Name'] === "Jumpstart Home") {
+        setSelectedFunding(csvValues['Vendor Funding Name'] || "");
+        if (csvValues['Vendor Funding Name'] === "") {
+            setCsvValues({
+                ...csvValues,
+                'Vendor Funding Name': "no-vf"
+            })
+        } else if (csvValues['Vendor Funding Name'] === "Jumpstart Home") {
             setCsvValues({
                 ...csvValues,
                 'Vendor Funding Name': "win11"
@@ -313,8 +327,17 @@ export default function AppProvider({ children }) {
 
         }
 
+        // setSelectedFpoSegment(selectedFpoSegment)
+
+        // setSelectedFpoValue(selectedFpoValue)
+
         setSelectedBanner(csvValues['Banner1 Layout'] || "");
-        if (csvValues['Banner1 Layout'] === "IMG RIGHT") {
+        if (csvValues['Banner1 Layout'] === "") {
+            setCsvValues({
+                ...csvValues,
+                'Banner1 Layout': null
+            })
+        } else if (csvValues['Banner1 Layout'] === "IMG RIGHT") {
             setCsvValues({
                 ...csvValues,
                 'Banner1 Layout': "right"
@@ -326,15 +349,20 @@ export default function AppProvider({ children }) {
             });
         }
 
+
         setBannerCopyValues({
             bannerHeadlineValue: csvValues['Banner1 Headline'] || "",
             bannerCopyValue: csvValues['Banner1 Text'] || "",
             bannerCtaValue: csvValues['Banner1 CTA Text'] || "",
         })
 
-        // setSelectedFpoSegment(selectedFpoSegment)
-
-        // setSelectedFpoValue(selectedFpoValue)
+        setSelectedFooter(csvValues['Segment'] || "");
+        if (csvValues['Segment'] === "CSB") {
+            setCsvValues({
+                ...csvValues,
+                'Segment': "csb-four-btn"
+            });
+        }
 
     }, [
         csvValues.SL,
@@ -353,8 +381,10 @@ export default function AppProvider({ children }) {
         csvValues['Banner1 Layout'],
         csvValues['Banner1 Headline'],
         csvValues['Banner1 Text'],
-        csvValues['Banner1 CTA Text'],        
+        csvValues['Banner1 CTA Text'],
+        csvValues['Segment'],
     ]);
+
 
     return (
         <AppContext.Provider value={{
@@ -409,6 +439,8 @@ export default function AppProvider({ children }) {
             bannerCopyValues,
             setBannerCopyValues,
 
+            selectedFooter,
+            setSelectedFooter,
 
         }}>
             {children}

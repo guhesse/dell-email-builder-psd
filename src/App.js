@@ -1,6 +1,6 @@
 // Import de todas as fun\u00e7\u00f5es 
 
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState } from 'react';
 import CsvReader from './CsvReader.js';
 import HeaderSelector from "./HeaderSelector.js";
 import SubjectLineSelector from './SubjectLineSelector.js';
@@ -14,7 +14,6 @@ import BannerSelector from './BannerSelector.js';
 import FooterSelector from './FooterSelector.js';
 import BirdseedSelector from './BirdseedSelector.js';
 import EmailBuilder from './components/EmailBuilder.jsx';
-import limitCharsPerLine from './hook/charLimiter.jsx';
 
 import { Theme } from "@swc-react/theme";
 export const { core, app } = require('photoshop');
@@ -23,117 +22,13 @@ export const { batchPlay } = require('photoshop').action;
 
 import AppProvider from './context/AppProvider.js';
 
+// Variáveis das alturas dos módulos
 
-// Aqui ele deve pegar os valores do CSV
-
-
-// Vari\u00e1veis das alturas dos m\u00f3dulos
-
-var footerHeight = "";
 var birdseedHeight = "";
-var skinnyBannerHeight = "";
-
 
 function App() {
 
-
-  // Fun\u00e7\u00e3o para limpar todas as alturas antes de montar o layout novamente 
-
-  async function clearAllHeights() {
-    headerHeight = "";
-    fundingHeight = "";
-    heroHeight = "";
-    pluginHeight = "";
-    fpoHeight = "";
-    bannerHeight = "";
-    footerHeight = "";
-    birdseedHeight = "";
-  }
-
-  // const [heroCopyValues, setHeroCopyValues] = useState({
-  //   badgeValue: '',
-  //   headlineValue: '',
-  //   subHeadlineValue: '',
-  //   inlinePromoValue: '',
-  //   inlinePromo2Value: '',
-  //   productNameValue: '',
-  //   productName2Value: '',
-  //   productName3Value: '',
-  //   specsValue: '',
-  //   specs2Value: '',
-  //   priceValue: '',
-  //   price2Value: '',
-  //   heroCtaValue: '',
-  // });
-
-
-  // Fun\u00e7\u00e3o de selecionar o Footer
-  const [selectedFooter, setSelectedFooter] = useState(null);
-
-  const handleFooterSelect = async (footer) => {
-    const footerFilePath = `assets/footers/${footer}.psd`;
-    const fs = storage.localFileSystem;
-    try {
-
-      if (!footer) {
-        console.warn('Footer n\u00e3o selecionado');
-        footerHeight = 0;
-        return;
-      }
-
-      const pluginDir = await fs.getPluginFolder();
-      const fileEntry = await pluginDir.getEntry(footerFilePath);
-
-      const targetFunction = async (executionContext) => {
-
-        try {
-          await app.open(fileEntry);
-          const secondDocument = app.documents[1];
-          const footerWidth = secondDocument.width;
-          footerHeight = secondDocument.height;
-
-          const footerSelect = [
-            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-          ];
-          await batchPlay(footerSelect, {});
-
-          const activeDocument = app.activeDocument;
-          await activeDocument.paste();
-
-
-          const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-          const docWidth = activeDocument.width;
-          const docHeight = activeDocument.height;
-
-          const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (footerWidth / 2) + 45);
-          // let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyBannerHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight;
-          const offsetY = (docHeight - docHeight) - (docHeight / 2) + (footerHeight / 2) + 10 + offsetModules;
-
-          pastedGroup.translate(offsetX, offsetY);
-
-          console.log('%cFooter inserido com sucesso!', 'color: #00EAADFF;');
-        } catch (error) {
-          console.error('Erro ao inserir o Footer:', error);
-        }
-      };
-
-      const options = {
-        commandName: 'Inserir Cabe\u00e7alho',
-        interactive: true,
-      };
-
-      await core.executeAsModal(targetFunction, options);
-    } catch (error) {
-      console.error('Erro ao encontrar o arquivo do Footer:', error);
-    }
-  };
-
-  // Fim de fun\u00e7\u00e3o de selecionar o Footer
-
-  // Fun\u00e7\u00e3o de selecionar o Birdseed
+  // Função de selecionar o Birdseed
 
   const [selectedBirdseed, setSelectedBirdseed] = useState(null);
   const [selectedBirdseedCopy, setSelectedBirdseedCopy] = useState(null);
@@ -322,9 +217,7 @@ function App() {
     }
   };
 
-  // Fim da Fun\u00e7\u00e3o de selecionar o Birdseed
-
-  // Fun\u00e7\u00e3o para ajustar o documento ap\u00f3s a coloca\u00e7\u00e3o dos m\u00f3dulos
+  // Função para ajustar o documento após a colocar os módulos
 
   async function fitToScreenPos() {
 
@@ -361,18 +254,11 @@ function App() {
     await core.executeAsModal(targetFunction, options);
   };
 
-  // Fim da fun\u00e7\u00e3o para ajustar o documento ap\u00f3s a coloca\u00e7\u00e3o dos m\u00f3dulos
-
-
   // Execu\u00e7\u00e3o de todas as fun\u00e7\u00f5es por bot\u00e3o
-
 
   const handleMontarLayoutClick = async () => {
 
     try {
-
-      var footerHeight = await handleFooterSelect(selectedFooter, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight);
-
       var birdseedHeight = await handleBirdseedSelect(selectedBirdseed, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, footerHeight);
 
       await fitToScreenPos(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
@@ -401,7 +287,7 @@ function App() {
         <PluginSelector />
         <FpoSelector />
         <BannerSelector />
-        <FooterSelector handleFooterSelect={setSelectedFooter} />
+        <FooterSelector />
         <BirdseedSelector handleBirdseedSelect={setSelectedBirdseed} handleBirdseedCopy={setSelectedBirdseedCopy} onDateChange={handleDateChange} onBirdseedCopyChange={handleBirdseedCopyChange} />
         {/* <sp-button style={{ marginTop: "8px" }} onClick={handleMontarLayoutClick}>
           Montar layout

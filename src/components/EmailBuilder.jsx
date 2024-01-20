@@ -19,7 +19,7 @@ export default function EmailBuilder() {
     var birdseedHeight = "";
     var skinnyBannerHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores, slValue, sslValue, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues } = useAppContext();
+    const { accentColor, secondaryColor, tertiaryColor, cores, slValue, sslValue, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter } = useAppContext();
 
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
@@ -28,26 +28,6 @@ export default function EmailBuilder() {
     const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
 
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
-
-
-    // function limitCharsPerLine(text, limit) {
-    //     const words = text.split(' ');
-    //     let currentLine = '';
-    //     let result = '';
-
-    //     for (const word of words) {
-    //         if ((currentLine + word).length <= limit) {
-    //             currentLine += (currentLine === '' ? '' : ' ') + word;
-    //         } else {
-    //             result += (result === '' ? '' : '\r') + currentLine;
-    //             currentLine = word;
-    //         }
-    //     }
-
-    //     result += (result === '' ? '' : '\r') + currentLine;
-
-    //     return result;
-    // }
 
     // Limpar as camadas do documento
     async function clearAllLayers() {
@@ -883,9 +863,71 @@ export default function EmailBuilder() {
         }
     };
 
-    // Fim da fun\u00e7\u00e3o de importar o Banner
+    async function footerBuild() {
+        const footerFilePath = `assets/footers/${selectedFooter}.psd`;
+        const fs = storage.localFileSystem;
+        try {
+            if (selectedFooter === "") {
+                console.warn('Footer n\u00e3o selecionado');
+                footerHeight = 0;
+                return;
+            }
 
-    console.log("Banner Copy values", bannerCopyValues)
+            const pluginDir = await fs.getPluginFolder();
+            const fileEntry = await pluginDir.getEntry(footerFilePath);
+
+            const targetFunction = async (executionContext) => {
+
+                try {
+                    await app.open(fileEntry);
+                    const secondDocument = app.documents[1];
+                    const footerWidth = secondDocument.width;
+                    footerHeight = secondDocument.height;
+
+                    const footerSelect = [
+                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+                    ];
+                    await batchPlay(footerSelect, {});
+
+                    const activeDocument = app.activeDocument;
+                    await activeDocument.paste();
+
+
+                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
+                    const docWidth = activeDocument.width;
+                    const docHeight = activeDocument.height;
+
+                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (footerWidth / 2) + 45);
+                    let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight;
+                    const offsetY = (docHeight - docHeight) - (docHeight / 2) + (footerHeight / 2) + 10 + offsetModules;
+
+                    pastedGroup.translate(offsetX, offsetY);
+
+                    console.log('%cFooter inserido com sucesso!', 'color: #00EAADFF;');
+                } catch (error) {
+                    console.error('Erro ao inserir o Footer:', error);
+                }
+            };
+
+            const options = {
+                commandName: 'Inserir Cabe\u00e7alho',
+                interactive: true,
+            };
+
+            await core.executeAsModal(targetFunction, options);
+        } catch (error) {
+            console.error('Erro ao encontrar o arquivo do Footer:', error);
+        }
+    }
+
+    async function birdseedBuild(){
+
+        
+    }
+
 
     const handleBuild = async () => {
         try {
@@ -899,6 +941,7 @@ export default function EmailBuilder() {
             var pluginHeight = await pluginBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight)
             var fpoHeight = await fpoBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight)
             var bannerHeight = await bannerBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight);
+            var footerHeight = await footerBuild(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight);
 
             console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
         } catch (error) {

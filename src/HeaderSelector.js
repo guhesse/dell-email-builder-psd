@@ -10,12 +10,10 @@ export default function HeaderSelector() {
         setSelectedHeader(selectedHeader);
     };
 
-
     useEffect(() => {
 
         handleHeaderClick(csvValues['Campaign Type']);
     }, [csvValues['Campaign Type']]);
-
 
     return (
         <div>

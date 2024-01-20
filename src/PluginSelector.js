@@ -13,7 +13,7 @@ export default function PluginSelector() {
     } = pluginCopyValues || {};
 
     const handlePluginClick = (selectedPlugin) => {
-        setSelectedPlugin(selectedPlugin); // Executa a função passada pelo pai
+        setSelectedPlugin(selectedPlugin);
     };
 
     const [formState, setFormState] = useState({
@@ -98,9 +98,9 @@ export default function PluginSelector() {
                 <div className="group"><sp-label>Plugin & Supercharger</sp-label>
 
                     <sp-radio-group style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} label="Medium" name="example">
-                        <sp-radio checked={selectedPlugin === "plugin"} onClick={() => handlePluginClick('plugin')}>Plugin</sp-radio>
-                        <sp-radio checked={selectedPlugin === "supercharger"} onClick={() => handlePluginClick('supercharger')}>Supercharger</sp-radio>
-                        <sp-radio checked={selectedPlugin === ""} onClick={() => handlePluginClick(null)}>Nenhum</sp-radio>
+                        <sp-radio selected={selectedPlugin === "plugin"} onClick={() => handlePluginClick('plugin')}>Plugin</sp-radio>
+                        <sp-radio selected={selectedPlugin === "supercharger"} onClick={() => handlePluginClick('supercharger')}>Supercharger</sp-radio>
+                        <sp-radio selected={selectedPlugin === ""} onClick={() => handlePluginClick(null)}>Nenhum</sp-radio>
                     </sp-radio-group>
 
                     {selectedPlugin === 'plugin' && (

@@ -134,7 +134,7 @@ export default function HeroSelector() {
             <div className="group">
                 <sp-label>Hero</sp-label>
                 <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
-                    <sp-picker placeholder="Selecione o hero" style={{ width: '45vw', padding: '0' }} id="picker-m" size="m" label="Selection type">
+                    <sp-picker placeholder="Selecione o hero" style={{ width: '45vw', padding: '0', margin: "0 4px 0 0" }} id="picker-m" size="m" label="Selection type">
                         <sp-menu>
                             {Object.entries(heroPaths).map(([hero, { path, name }]) => (
                                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={hero} onClick={() => handleHeroClick(hero)}>
@@ -175,7 +175,7 @@ export default function HeroSelector() {
                                         value={tempFormState.badgeValue}
                                         onInput={(e) => handleInputChange('badgeValue', e.target.value)}
                                         onBlur={() => handleBlur('badgeValue')}
-                                        valid={valid.badgeValue}
+                                        valid={badgeValue !== "" ? valid.badgeValue : undefined}
                                     ></sp-textfield>
                                 </div>
                                 <div style={{ margin: "4px" }}>
@@ -186,7 +186,7 @@ export default function HeroSelector() {
                                         value={tempFormState.headlineValue}
                                         onInput={(e) => handleInputChange('headlineValue', e.target.value)}
                                         onBlur={() => handleBlur('headlineValue')}
-                                        valid={valid.headlineValue}
+                                        valid={headlineValue !== "" ? valid.headlineValue : undefined}
                                     ></sp-textfield>
                                 </div>
                                 <div style={{ margin: "4px" }}>
@@ -197,7 +197,7 @@ export default function HeroSelector() {
                                         value={tempFormState.subHeadlineValue}
                                         onInput={(e) => handleInputChange('subHeadlineValue', e.target.value)}
                                         onBlur={() => handleBlur('subHeadlineValue')}
-                                        valid={valid.subHeadlineValue}
+                                        valid={subHeadlineValue !== "" ? valid.subHeadlineValue : undefined}
                                     ></sp-textfield>
                                 </div>
                                 <div style={{ margin: "4px" }}>
@@ -208,7 +208,7 @@ export default function HeroSelector() {
                                         value={tempFormState.productNameValue}
                                         onInput={(e) => handleInputChange('productNameValue', e.target.value)}
                                         onBlur={() => handleBlur('productNameValue')}
-                                        valid={valid.productNameValue}
+                                        valid={productNameValue !== "" ? valid.productNameValue : undefined}
                                     ></sp-textfield>
                                 </div>
                                 <div style={{ margin: "4px" }}>
@@ -218,7 +218,7 @@ export default function HeroSelector() {
                                         placeholder="Insira o CTA"
                                         value={tempFormState.heroCtaValue}
                                         onInput={(e) => handleInputChange('heroCtaValue', e.target.value)}
-                                        valid={valid.heroCtaValue}
+                                        valid={heroCtaValue !== "" ? valid.heroCtaValue : undefined}
                                     ></sp-textfield>
                                 </div>
                             </div>
