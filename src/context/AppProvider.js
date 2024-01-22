@@ -267,11 +267,10 @@ export default function AppProvider({ children }) {
     const [birdseedCopyValues, setBirdseedCopyValues] = useState('');
 
     const [birdseedDate, setBirdseedDate] = useState({
-        selectedDay: "1",
-        selectedMonth: "1",
-        selectedYear: "2024",
+        selectedDay: 1,
+        selectedMonth: 1,
+        selectedYear: 2024,
     });
-
 
 
     useEffect(() => {
@@ -375,124 +374,128 @@ export default function AppProvider({ children }) {
             });
         }
 
+        setSelectedBirdseed(csvValues['Campaign Type'] || "");
+        if (csvValues['Campaign Type'] !== "Outlet") {
+            setSelectedBirdseed("standard")
+        } else {
+            setSelectedBirdseed("outlet") 
+        }
+
         const dateParts = (csvValues['Birdseed 2'] || "").split('/');
 
-        if (dateParts.length === 3) {
-            const [day, month, year] = dateParts;
+    if (dateParts.length === 3) {
+        const [day, month, year] = dateParts.map(Number);;
 
-            // Atualize o estado com os valores extraídos da data
-            setBirdseedDate({
-                selectedDay: day,
-                selectedMonth: month,
-                selectedYear: year,
-            });
-        }
-
-        setSelectedBirdseedCopy(csvValues['Birdseed 1A'] || "");
-        if (csvValues['Birdseed 1A'] === "") {
-            setSelectedBirdseedCopy(false);
-        } else {
-            setSelectedBirdseedCopy(true);
-        }
-
-        setBirdseedCopyValues({
-            birdseedCopyValues: csvValues['Birdseed 1A'] || "",
+        // Atualize o estado com os valores extraídos da data
+        setBirdseedDate({
+            selectedDay: day || "",
+            selectedMonth: month || "",
+            selectedYear: year || "",
         });
+    }
+
+    setSelectedBirdseedCopy(csvValues['Birdseed 1A'] || "");
+    if (csvValues['Birdseed 1A'] === "") {
+        setSelectedBirdseedCopy(false);
+    } else {
+        setSelectedBirdseedCopy(true);
+    }
+
+    setBirdseedCopyValues(csvValues['Birdseed 1A'] || "");
 
 
-    }, [
-        csvValues.SL,
-        csvValues.SSL,
-        csvValues['Funding/WEP Content'],
-        csvValues['Campaign Type'],
-        csvValues['Badge Text'],
-        csvValues['Headline Text'],
-        csvValues['SHL'],
-        csvValues['HERO1 Product Inline Promo'],
-        csvValues['HERO2 Product Inline Promo'],
-        csvValues['HERO1 Product Name'],
-        csvValues['HERO CTA1 Text'],
-        csvValues['HERO Template'],
-        csvValues['Plugin1 Text'],
-        csvValues['Banner1 Layout'],
-        csvValues['Banner1 Headline'],
-        csvValues['Banner1 Text'],
-        csvValues['Banner1 CTA Text'],
-        csvValues['Segment'],
-        csvValues['Birdseed 1A'],
-        csvValues['Birdseed 2'],
+}, [
+    csvValues.SL,
+    csvValues.SSL,
+    csvValues['Funding/WEP Content'],
+    csvValues['Campaign Type'],
+    csvValues['Badge Text'],
+    csvValues['Headline Text'],
+    csvValues['SHL'],
+    csvValues['HERO1 Product Inline Promo'],
+    csvValues['HERO2 Product Inline Promo'],
+    csvValues['HERO1 Product Name'],
+    csvValues['HERO CTA1 Text'],
+    csvValues['HERO Template'],
+    csvValues['Plugin1 Text'],
+    csvValues['Banner1 Layout'],
+    csvValues['Banner1 Headline'],
+    csvValues['Banner1 Text'],
+    csvValues['Banner1 CTA Text'],
+    csvValues['Segment'],
+    csvValues['Birdseed 1A'],
+    csvValues['Birdseed 2'],
+]);
 
-    ]);
 
+return (
+    <AppContext.Provider value={{
+        csvValues,
+        setCsvValues,
+        loadDefaultValuesFromCsv,
 
-    return (
-        <AppContext.Provider value={{
-            csvValues,
-            setCsvValues,
-            loadDefaultValuesFromCsv,
+        accentColor,
+        secondaryColor,
+        tertiaryColor,
+        cores,
+        handleAccentColorChange,
+        handleSecondaryColorChange,
+        handleTertiaryColorChange,
 
-            accentColor,
-            secondaryColor,
-            tertiaryColor,
-            cores,
-            handleAccentColorChange,
-            handleSecondaryColorChange,
-            handleTertiaryColorChange,
+        setSlValue,
+        setSslValue,
+        slValue,
+        sslValue,
 
-            setSlValue,
-            setSslValue,
-            slValue,
-            sslValue,
+        selectedHeader,
+        setSelectedHeader,
 
-            selectedHeader,
-            setSelectedHeader,
+        selectedFunding,
+        setSelectedFunding,
+        fundingCopyValue,
+        setFundingCopyValue,
 
-            selectedFunding,
-            setSelectedFunding,
-            fundingCopyValue,
-            setFundingCopyValue,
+        selectedSkinny,
+        setSelectedSkinny,
+        skinnyTitleValue,
+        setSkinnyTitleValue,
+        skinnyCopyValue,
+        setSkinnyCopyValue,
 
-            selectedSkinny,
-            setSelectedSkinny,
-            skinnyTitleValue,
-            setSkinnyTitleValue,
-            skinnyCopyValue,
-            setSkinnyCopyValue,
+        selectedHero,
+        setSelectedHero,
+        heroCopyValues,
+        setHeroCopyValues,
 
-            selectedHero,
-            setSelectedHero,
-            heroCopyValues,
-            setHeroCopyValues,
+        selectedPlugin,
+        setSelectedPlugin,
+        pluginCopyValues,
 
-            selectedPlugin,
-            setSelectedPlugin,
-            pluginCopyValues,
+        selectedFpoSegment,
+        setSelectedFpoSegment,
+        selectedFpoValue,
+        setSelectedFpoValue,
 
-            selectedFpoSegment,
-            setSelectedFpoSegment,
-            selectedFpoValue,
-            setSelectedFpoValue,
+        selectedBanner,
+        setSelectedBanner,
+        bannerCopyValues,
+        setBannerCopyValues,
 
-            selectedBanner,
-            setSelectedBanner,
-            bannerCopyValues,
-            setBannerCopyValues,
+        selectedFooter,
+        setSelectedFooter,
 
-            selectedFooter,
-            setSelectedFooter,
-
-            selectedBirdseed,
-            setSelectedBirdseed,
-            selectedBirdseedCopy,
-            setSelectedBirdseedCopy,
-            birdseedCopyValues,
-            setBirdseedCopyValues,
-            birdseedDate,
-            setBirdseedDate,
-        }}>
-            {children}
-        </AppContext.Provider>
-    );
+        selectedBirdseed,
+        setSelectedBirdseed,
+        selectedBirdseedCopy,
+        setSelectedBirdseedCopy,
+        birdseedCopyValues,
+        setBirdseedCopyValues,
+        birdseedDate,
+        setBirdseedDate,
+    }}>
+        {children}
+    </AppContext.Provider>
+);
 };
 
 export const useAppContext = () => {
