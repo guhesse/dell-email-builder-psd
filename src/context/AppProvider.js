@@ -239,6 +239,7 @@ export default function AppProvider({ children }) {
         inlinePromoValue: "",
         // inlinePromo2Value: "",
         productNameValue: "",
+        productSuperchargerValue: "",
         //   productName2Value: '',
         //   productName3Value: '',
         //   specsValue: '',
@@ -321,6 +322,7 @@ export default function AppProvider({ children }) {
             inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || "",
             inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || "",
             productNameValue: csvValues['HERO1 Product Name'] || "",
+            productSuperchargerValue: csvValues['HERO1 Product Inline Promo'] || "",
             heroCtaValue: csvValues['HERO CTA1 Text'] || "",
         });
 
@@ -426,7 +428,6 @@ export default function AppProvider({ children }) {
     csvValues['Birdseed 1A'],
     csvValues['Birdseed 2'],
 ]);
-
 
 return (
     <AppContext.Provider value={{

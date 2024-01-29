@@ -26,6 +26,7 @@ export default function HeroSelector() {
         inlinePromoValue,
         inlinePromo2Value,
         productNameValue,
+        productSuperchargerValue,
         heroCtaValue,
     } = heroCopyValues || {};
 
@@ -40,6 +41,7 @@ export default function HeroSelector() {
         inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || "",
         inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || "",
         productNameValue: csvValues['HERO1 Product Name'] || "",
+        productSuperchargerValue: csvValues['HERO1 Product Inline Promo'] || "",
         heroCtaValue: csvValues['HERO CTA1 Text'] || "",
     });
 
@@ -50,6 +52,7 @@ export default function HeroSelector() {
         inlinePromoValue: "",
         inlinePromo2Value: "",
         productNameValue: "",
+        productSuperchargerValue: "",
         heroCtaValue: "",
     });
 
@@ -60,6 +63,7 @@ export default function HeroSelector() {
         inlinePromoValue: false,
         inlinePromo2Value: false,
         productNameValue: false,
+        productSuperchargerValue: false,
         heroCtaValue: false,
     });
 
@@ -73,6 +77,7 @@ export default function HeroSelector() {
             inlinePromoValue: inlinePromoValue || "",
             inlinePromo2Value: inlinePromo2Value || "",
             productNameValue: productNameValue || "",
+            productSuperchargerValue: productSuperchargerValue || "",
             heroCtaValue: heroCtaValue || "",
         });
 
@@ -84,6 +89,7 @@ export default function HeroSelector() {
             inlinePromoValue: inlinePromoValue || "",
             inlinePromo2Value: inlinePromo2Value || "",
             productNameValue: productNameValue || "",
+            productSuperchargerValue: productSuperchargerValue || "",
             heroCtaValue: heroCtaValue || "",
         });
 
@@ -209,6 +215,17 @@ export default function HeroSelector() {
                                         onInput={(e) => handleInputChange('productNameValue', e.target.value)}
                                         onBlur={() => handleBlur('productNameValue')}
                                         valid={productNameValue !== "" ? valid.productNameValue : undefined}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="pname-field">PRODUCT SUPERCHARGER</sp-detail>
+                                    <sp-textfield
+                                        id="pname-field"
+                                        placeholder="Insira o Supercharger do Produto"
+                                        value={tempFormState.productSuperchargerValue}
+                                        onInput={(e) => handleInputChange('productSuperchargerValue', e.target.value)}
+                                        onBlur={() => handleBlur('productSuperchargerValue')}
+                                        valid={productSuperchargerValue !== "" ? valid.productSuperchargerValue : undefined}
                                     ></sp-textfield>
                                 </div>
                                 <div style={{ margin: "4px" }}>

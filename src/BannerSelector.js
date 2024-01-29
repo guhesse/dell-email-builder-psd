@@ -3,7 +3,12 @@ import useAppContext from './hook/useAppContext.jsx';
 
 export default function BannerSelector() {
 
-    const { csvValues, setCsvValues, selectedBanner, setSelectedBanner, bannerCopyValues, setBannerCopyValues } = useAppContext();
+    const { csvValues,
+        setCsvValues,
+        selectedBanner,
+        setSelectedBanner,
+        bannerCopyValues,
+        setBannerCopyValues } = useAppContext();
 
     const {
         bannerHeadlineValue,

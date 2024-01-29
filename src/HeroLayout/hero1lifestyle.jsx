@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { batchPlay } from "../App.js";
 import limitCharsPerLine from '../hook/charLimiter.jsx';
 
-export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, heroCtaValue) {
+export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, productSuperchargerValue, heroCtaValue) {
 
 
     function formatHeadlineCopy(text) {
@@ -15,7 +15,6 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
         20
     );
     const formattedSubHeadlineValue = await limitCharsPerLine(subHeadlineValue || '', 55);
-
 
     const batchChangeColor = [
 
@@ -30,10 +29,6 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
 
         { _obj: "select", _target: [{ _ref: "layer", _name: "Pattern" }], makeVisible: false, layerID: [9653], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
         { _obj: "set", _target: [{ _ref: "property", _property: "layerEffects" }, { _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layerEffects", scale: { _unit: "percentUnit", _value: 100 }, solidFill: { _obj: "solidFill", enabled: true, present: true, showInDialog: true, mode: { _enum: "blendMode", _value: "normal" }, color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue }, opacity: { _unit: "percentUnit", _value: 100 } } }, _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-
-        { _obj: "select", _target: [{ _ref: "layer", _name: "Super Charger" }], makeVisible: false, layerID: [9651], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textStyle", textOverrideFeatureName: 808466226, typeStyleOperationType: 3, color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue } }, _isCommand: false, _options: { dialogOptions: "dontDisplay" } }
-
 
     ];
 
@@ -88,43 +83,45 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
     const productPadding = subheadlinePadding + 50;
     const newProductPosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + boundingBoxLifestyle.height._value + boundingBoxSubheadline.height._value + productPadding;
 
-    // Concatena o birdseedCopyValue antes do texto padr\u00e3o
-    // const specsCopy = inlinePromoValue + "\r" + productNameValue + "\r" + "R$" + priceValue + "00" + "\r" + specsValue;
+    // Certifique-se de ter acesso a headlineValue e subHeadlineValue
+    const formattedProductNameValue = await limitCharsPerLine(productNameValue || "Product Name", 13);
+    const formattedProductSuperchargerValue = await limitCharsPerLine(productSuperchargerValue ? formatHeadlineCopy(productSuperchargerValue) : 'Product supercharger', 13);
 
+    //Concatena o birdseedCopyValue antes do texto padr\u00e3o
+    const productCopy = formattedProductNameValue + "\r" + formattedProductSuperchargerValue;
 
-    // const specsCopyChange = [
-    //     { _obj: "select", _target: [{ _ref: "layer", _name: "Specs" }], makeVisible: false, layerID: [9906], _options: { dialogOptions: "dontDisplay" } },
+    const productCopyChange = [
+        { _obj: "select", _target: [{ _ref: "layer", _name: "Product Copy" }], makeVisible: false, layerID: [9651], _options: { dialogOptions: "dontDisplay" } },
 
-    //     {
-    //         _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: {
-    //             _obj: "textLayer", textKey: specsCopy, textStyleRange: [
+        {
+            _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: {
+                _obj: "textLayer", textKey: productCopy, textStyleRange: [
 
-    //                 { _obj: "textStyleRange", from: 0, to: inlinePromoValue.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Arial-BoldMT", fontName: "Arial", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 14 }, tracking: 30, fontCaps: { _enum: "fontCaps", _value: "allCaps" }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+                    { _obj: "textStyleRange", from: 0, to: formattedProductNameValue.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Light", fontName: "Roboto", fontStyleName: "Light", size: { _unit: "pointsUnit", _value: 28.75 }, tracking: 30, color: { _obj: "RGBColor", red: 255, green: 255, blue: 255 } } },
 
-    //                 { _obj: "textStyleRange", from: inlinePromoValue.length + 1, to: inlinePromoValue.length + productNameValue.length + 2, textStyle: { _obj: "textStyle", fontPostScriptName: "Arial-BoldMT", fontName: "Arial", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 16 }, tracking: 30, baselineShift: { _unit: "pointsUnit", _value: -3.3285999298095703 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -4.000004329476243 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+                    { _obj: "textStyleRange", from: formattedProductNameValue.length + 1, to: formattedProductNameValue.length + formattedProductSuperchargerValue.length + 2, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Light", fontName: "Roboto", fontStyleName: "Medium", size: { _unit: "pointsUnit", _value: 25.33 }, tracking: 30, baselineShift: { _unit: "pointsUnit", _value: -3.3285999298095703 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -4.000004329476243 }, color: { _obj: "RGBColor", red: secondaryRed, green: secondaryGreen, blue: secondaryBlue } } },
+                ]
+            },
 
-    //                 { _obj: "textStyleRange", from: inlinePromoValue.length + productNameValue.length + 2, to: inlinePromoValue.length + productNameValue.length + 4, textStyle: { _obj: "textStyle", fontPostScriptName: "Arial-BoldMT", fontName: "Arial", fontStyleName: "Bold", baseline: { _enum: "baseline", _value: "superScript" }, baselineShift: { _unit: "pointsUnit", _value: 2.4964499473571777 }, impliedBaselineShift: { _unit: "pointsUnit", _value: 3.0000032471071827 }, size: { _unit: "pointsUnit", _value: 25 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+            _isCommand: true
+        },
+    ];
 
-    //                 { _obj: "textStyleRange", from: inlinePromoValue.length + productNameValue.length + 4, to: inlinePromoValue.length + productNameValue.length + 4 + priceValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "Arial-BoldMT", fontName: "Arial", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 25 }, baselineShift: { _unit: "pointsUnit", _value: 2.4964499473571777 }, impliedBaselineShift: { _unit: "pointsUnit", _value: 3.0000032471071827 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+    await batchPlay(productCopyChange, {});
 
-    //                 { _obj: "textStyleRange", from: inlinePromoValue.length + productNameValue.length + 4 + priceValue.length, to: inlinePromoValue.length + productNameValue.length + 4 + priceValue.length + 2, textStyle: { _obj: "textStyle", fontPostScriptName: "Arial-BoldMT", fontName: "Arial", fontStyleName: "Bold", baseline: { _enum: "baseline", _value: "superScript" }, baselineShift: { _unit: "pointsUnit", _value: 2.4964499473571777 }, impliedBaselineShift: { _unit: "pointsUnit", _value: 3.0000032471071827 }, size: { _unit: "pointsUnit", _value: 25 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
-
-    //                 { _obj: "textStyleRange", from: inlinePromoValue.length + productNameValue.length + 4 + priceValue.length + 3, to: inlinePromoValue.length + productNameValue.length + 4 + priceValue.length + 3 + specsValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 11 }, leading: { _unit: "pointsUnit", _value: 10.817939758300781 }, impliedLeading: { _unit: "pointsUnit", _value: 13.000002037400721 }, tracking: 30, baselineShift: { _unit: "pointsUnit", _value: -4.992889881134033 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -5.9999944608172955 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
-    //             ]
-    //         },
-
-    //         _isCommand: true
-    //     },
-    // ];
-
-    // await batchPlay(specsCopyChange, {});
+    const offsetProductCopy = [
+        { _obj: "select", _target: [{ _ref: "layer", _name: "Product Copy" }], makeVisible: false, layerID: [9651], _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "select", _target: [{ _ref: "layer", _name: "Product Image" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelection" }, makeVisible: false, layerID: [9651, 9654], _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _options: { dialogOptions: "dontDisplay" } },
+    ]
+    await batchPlay(offsetProductCopy, {});
 
     const offsetProduct = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "Product" }], makeVisible: false, layerID: [9655], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "select", _target: [{ _ref: "layer", _name: "Specs" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [9653, 9654, 9655], _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "select", _target: [{ _ref: "layer", _name: "Product Copy" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [9651, 9653, 9654, 9655], _options: { dialogOptions: "dontDisplay" } },
         { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "select", _target: [{ _ref: "layer", _name: "Product" }], makeVisible: false, layerID: [9627], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "move", _target: [{ _ref: "layer", _name: "Product", }], makeVisible: false, layerID: [9627], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newProductPosition, } }, _options: { dialogOptions: "dontDisplay" }, },
+        { _obj: "select", _target: [{ _ref: "layer", _name: "Product" }], makeVisible: false, layerID: [9692], _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "move", _target: [{ _ref: "layer", _name: "Product", }], makeVisible: false, layerID: [9692], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newProductPosition, } }, _options: { dialogOptions: "dontDisplay" }, },
         { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Product" },], },
     ];
 

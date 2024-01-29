@@ -12,7 +12,7 @@ import FundingSelector from './FundingSelector.js';
 import FpoSelector from './FpoSelector.js';
 import BannerSelector from './BannerSelector.js';
 import FooterSelector from './FooterSelector.js';
-import BirdseedSelector from './BirdseedSelector.js';
+import BirdseedSelector from './BirdseedSelector.js'; 
 import EmailBuilder from './components/EmailBuilder.jsx';
 
 import { Theme } from "@swc-react/theme";
@@ -32,8 +32,6 @@ function App() {
     <Theme theme="spectrum" scale="medium" color="light">
       <AppProvider className="wrapper">
         <CsvReader />
-        <BirdseedSelector />
-        <EmailBuilder />
         <SubjectLineSelector />
         <ColorSelector />
         <div style={{ display: "flex", flexWrap: "wrap" }} className="group"><sp-label>Header & Funding</sp-label>
@@ -46,6 +44,8 @@ function App() {
         <FpoSelector />
         <BannerSelector />
         <FooterSelector />
+        <BirdseedSelector />
+        <EmailBuilder />
       </AppProvider>
     </Theme>
   );
