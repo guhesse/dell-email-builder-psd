@@ -18,9 +18,6 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
 
     const batchChangeColor = [
 
-        { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [9102], _options: { dialogOptions: "dontDisplay" }, },
-        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue }, }, _options: { dialogOptions: "dontDisplay" }, },
-
         { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], makeVisible: false, layerID: [9616], _options: { dialogOptions: "dontDisplay" }, },
         { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: tertiaryRed, grain: tertiaryGreen, blue: tertiaryBlue }, }, _options: { dialogOptions: "dontDisplay" }, },
 
@@ -35,13 +32,74 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
     await batchPlay(batchChangeColor, {});
 
     const ChangeHeroCopy = [
+
         { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [9102], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${badgeValue}`, } },
+
+        {
+            _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+            to: {
+                _obj: "textLayer", textKey: badgeValue, textStyleRange: [{
+                    _obj: "textStyleRange", from: 0, to: badgeValue.length, textStyle: {
+                        _obj: "textStyle",
+                        fontPostScriptName: "Roboto-Bold",
+                        fontName: "Roboto",
+                        fontStyleName: "Bold",
+                        size: { _unit: "pointsUnit", _value: 20 },
+                        color: { _obj: "RGBColor", red: secondaryRed, green: secondaryGreen, blue: secondaryBlue }, tracking: 40,
+                        fontCaps: { _enum: "fontCaps", _value: "allCaps" },
+                    }
+                }]
+            }, _isCommand: true
+        },
         { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Badge" },], },
+
+
         { _obj: "select", _target: [{ _ref: "layer", _name: "Headline" }], makeVisible: false, layerID: [9101], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${formattedHeadlineValue}`, } },
+        {
+            _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+            to: {
+                _obj: "textLayer", textKey: formattedHeadlineValue, textStyleRange: [{
+                    _obj: "textStyleRange", from: 0, to: formattedHeadlineValue.length,
+                    textStyle: {
+                        _obj: "textStyle",
+                        fontPostScriptName: "Roboto-Light",
+                        fontName: "Roboto",
+                        fontStyleName: "Light",
+                        size: { _unit: "pointsUnit", _value: 50 },
+                        color: { _obj: "RGBColor", red: 255, green: 255, blue: 255 },
+                        tracking: 0,
+                        autoLeading: false,
+                        leading: { _unit: "pointsUnit", _value: 50 },
+                        impliedLeading: { _unit: "pointsUnit", _value: 50 }
+                    }
+                }]
+            }, _isCommand: true
+        },
+
+
         { _obj: "select", _target: [{ _ref: "layer", _name: "Subheadline" }], makeVisible: false, layerID: [9100], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${formattedSubHeadlineValue}`, } },
+        {
+            _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+            to: {
+                _obj: "textLayer", textKey: formattedSubHeadlineValue, textStyleRange: [
+
+                    {
+                        _obj: "textStyleRange", from: 0, to: formattedSubHeadlineValue.length,
+                        textStyle: {
+                            _obj: "textStyle",
+                            fontPostScriptName: "Roboto-Regular",
+                            fontName: "Roboto",
+                            fontStyleName: "Regular",
+                            size: { _unit: "pointsUnit", _value: 20 },
+                            color: { _obj: "RGBColor", red: 255, green: 255, blue: 255 },
+                            tracking: 0,
+                            autoLeading: false,
+                            leading: { _unit: "pointsUnit", _value: 25 },
+                            impliedLeading: { _unit: "pointsUnit", _value: 25 }
+                        }
+                    }]
+            }, _isCommand: true
+        },
     ];
 
     const resultBoundingBoxBadge = await batchPlay(ChangeHeroCopy, {});
@@ -91,15 +149,53 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
     const productCopy = formattedProductNameValue + "\r" + formattedProductSuperchargerValue;
 
     const productCopyChange = [
-        { _obj: "select", _target: [{ _ref: "layer", _name: "Product Copy" }], makeVisible: false, layerID: [9651], _options: { dialogOptions: "dontDisplay" } },
+        {
+            _obj: "select",
+            _target: [{ _ref: "layer", _name: "Product Copy" }],
+            makeVisible: false,
+            layerID: [9651],
+            _options: { dialogOptions: "dontDisplay" }
+        },
 
         {
             _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: {
-                _obj: "textLayer", textKey: productCopy, textStyleRange: [
-
-                    { _obj: "textStyleRange", from: 0, to: formattedProductNameValue.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Light", fontName: "Roboto", fontStyleName: "Light", size: { _unit: "pointsUnit", _value: 28.75 }, tracking: 30, color: { _obj: "RGBColor", red: 255, green: 255, blue: 255 } } },
-
-                    { _obj: "textStyleRange", from: formattedProductNameValue.length + 1, to: formattedProductNameValue.length + formattedProductSuperchargerValue.length + 2, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Light", fontName: "Roboto", fontStyleName: "Medium", size: { _unit: "pointsUnit", _value: 25.33 }, tracking: 30, baselineShift: { _unit: "pointsUnit", _value: -3.3285999298095703 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -4.000004329476243 }, color: { _obj: "RGBColor", red: secondaryRed, green: secondaryGreen, blue: secondaryBlue } } },
+                _obj: "textLayer",
+                textKey: productCopy,
+                textStyleRange: [
+                    {
+                        _obj: "textStyleRange",
+                        from: 0,
+                        to: formattedProductNameValue.length + 1,
+                        textStyle: {
+                            _obj: "textStyle",
+                            fontPostScriptName: "Roboto-Light",
+                            fontName: "Roboto",
+                            fontStyleName: "Light",
+                            size: { _unit: "pointsUnit", _value: 28.75 },
+                            autoLeading: false,
+                            leading: { _unit: "pointsUnit", _value: 30 },
+                            tracking: 30,
+                            color: { _obj: "RGBColor", red: 255, green: 255, blue: 255 }
+                        }
+                    },
+                    {
+                        _obj: "textStyleRange",
+                        from: formattedProductNameValue.length + 1,
+                        to: formattedProductNameValue.length + formattedProductSuperchargerValue.length + 2,
+                        textStyle: {
+                            _obj: "textStyle",
+                            fontPostScriptName: "Roboto-Light",
+                            fontName: "Roboto",
+                            fontStyleName: "Medium",
+                            size: { _unit: "pointsUnit", _value: 25.33 },
+                            tracking: 30,
+                            autoLeading: false,
+                            leading: { _unit: "pointsUnit", _value: 30 },
+                            baselineShift: { _unit: "pointsUnit", _value: -4 },
+                            impliedBaselineShift: { _unit: "pointsUnit", _value: -4 },
+                            color: { _obj: "RGBColor", red: secondaryRed, green: secondaryGreen, blue: secondaryBlue }
+                        }
+                    },
                 ]
             },
 
