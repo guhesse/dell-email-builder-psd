@@ -71,7 +71,6 @@ export default function BirdseedSelector() {
 
 
 
-    // console.log("birdseed depois do useeffect", birdseedDate)
 
     const handleInputChange = (key, value) => {
         setTempFormState((prevTempFormState) => ({
@@ -132,7 +131,6 @@ export default function BirdseedSelector() {
         setIsEditClicked((prevIsEditClicked) => !prevIsEditClicked);
     };
 
-    console.log("Selected Birseed", selectedBirdseed)
 
     return (
         <>

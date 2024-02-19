@@ -3,6 +3,7 @@ import { core, app, batchPlay, storage } from '../App.js';
 import useAppContext from '../hook/useAppContext.jsx';
 import limitCharsPerLine from '../hook/charLimiter.jsx';
 import Hero1Lifestyle from '../HeroLayout/hero1lifestyle.jsx';
+import Hero1Standard from '../HeroLayout/hero1standard.jsx';
 import Hero2Promotion from '../HeroLayout/hero2promotion.jsx';
 
 export default function EmailBuilder() {
@@ -24,7 +25,7 @@ export default function EmailBuilder() {
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
     const { r: tertiaryRed, g: tertiaryGreen, b: tertiaryBlue } = cores[tertiaryColor] || {};
-    const { badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, inlinePromo2Value, productNameValue, productSuperchargerValue, heroCtaValue, } = heroCopyValues || {};
+    const { badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, inlinePromo2Value, productNameValue, productSuperchargerValue, heroCtaValue, } = heroCopyValues || {};
     const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
 
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
@@ -469,11 +470,20 @@ export default function EmailBuilder() {
 
                     if (selectedHero === 'hero1-lifestyle') {
                         try {
-                            await Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue,productSuperchargerValue, heroCtaValue);
+                            await Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, productSuperchargerValue, heroCtaValue);
                         } catch (error) {
                             console.error('Erro ao executar Hero1Lifestyle:', error);
                         }
-                    }
+                    } else { }
+
+
+                    if (selectedHero === 'hero1-standard') {
+                        try {
+                            await Hero1Standard(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, productNameValue, heroCtaValue);
+                        } catch (error) {
+                            console.error('Erro ao executar Hero1Standard:', error);
+                        }
+                    } else {}
 
                     if (selectedHero === 'hero2-promotion') {
                         try {
@@ -481,7 +491,7 @@ export default function EmailBuilder() {
                         } catch (error) {
                             console.error('Erro ao executar Hero2Promotion:', error);
                         }
-                    }
+                    } else { }
 
                     const heroWidth = secondDocument.width;
                     heroHeight = secondDocument.height;
@@ -1148,7 +1158,7 @@ export default function EmailBuilder() {
 
     return (
         <>
-            <sp-button variant="warning" onClick={handleBuild} >Aqui é o novo</sp-button>
+            <sp-button variant="warning" onClick={handleBuild} >Build Email</sp-button>
         </>
     )
 }

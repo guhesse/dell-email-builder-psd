@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import { batchPlay } from "../App.js";
 import limitCharsPerLine from '../hook/charLimiter.jsx';
 

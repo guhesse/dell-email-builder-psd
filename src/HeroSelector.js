@@ -22,6 +22,7 @@ export default function HeroSelector() {
     const {
         badgeValue,
         headlineValue,
+        OTValue,
         subHeadlineValue,
         inlinePromoValue,
         inlinePromo2Value,
@@ -48,6 +49,7 @@ export default function HeroSelector() {
     const [tempFormState, setTempFormState] = useState({
         badgeValue: "",
         headlineValue: "",
+        OTValue: "",
         subHeadlineValue: "",
         inlinePromoValue: "",
         inlinePromo2Value: "",
@@ -59,6 +61,7 @@ export default function HeroSelector() {
     const [valid, setValid] = useState({
         badgeValue: false,
         headlineValue: false,
+        OTValue: false,
         subHeadlineValue: false,
         inlinePromoValue: false,
         inlinePromo2Value: false,
@@ -73,6 +76,7 @@ export default function HeroSelector() {
         setTempFormState({
             badgeValue: badgeValue || "",
             headlineValue: headlineValue || "",
+            OTValue: OTValue || "",
             subHeadlineValue: subHeadlineValue || "",
             inlinePromoValue: inlinePromoValue || "",
             inlinePromo2Value: inlinePromo2Value || "",
@@ -85,6 +89,7 @@ export default function HeroSelector() {
         setFormState({
             badgeValue: badgeValue || "",
             headlineValue: headlineValue || "",
+            OTValue: OTValue || "",
             subHeadlineValue: subHeadlineValue || "",
             inlinePromoValue: inlinePromoValue || "",
             inlinePromo2Value: inlinePromo2Value || "",
@@ -133,7 +138,6 @@ export default function HeroSelector() {
         setIsEditClicked((prevIsEditClicked) => !prevIsEditClicked);
     };
 
-
     return (
         <>
 
@@ -164,6 +168,7 @@ export default function HeroSelector() {
                         </sp-action-button>
                     </div>
                 </sp-field-group>
+
 
 
 
@@ -244,76 +249,79 @@ export default function HeroSelector() {
                 )}
 
 
-                {/* {selectedHero === 'hero1-standard' && (
+                {selectedHero === 'hero1-standard' && (
                     <>
-                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="badge-field">BADGE</sp-detail>
-                                <sp-textfield
-                                    id="badge-field"
-                                    placeholder="Insira o Badge"
-                                    value={badgeValue}
-                                    onInput={handleBadgeChange}
-                                ></sp-textfield>
+                        {isEditClicked && (
+                            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="badge-field">BADGE</sp-detail>
+                                    <sp-textfield
+                                        id="badge-field"
+                                        placeholder="Insira o Badge"
+                                        value={tempFormState.badgeValue}
+                                        onInput={(e) => handleInputChange('badgeValue', e.target.value)}
+                                        onBlur={() => handleBlur('badgeValue')}
+                                        valid={badgeValue !== "" ? valid.badgeValue : undefined}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="headline-field">HEADLINE</sp-detail>
+                                    <sp-textfield
+                                        id="headline-field"
+                                        placeholder="Insira o Headline"
+                                        value={tempFormState.headlineValue}
+                                        onInput={(e) => handleInputChange('headlineValue', e.target.value)}
+                                        onBlur={() => handleBlur('headlineValue')}
+                                        valid={headlineValue !== "" ? valid.headlineValue : undefined}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="ot-field">OT</sp-detail>
+                                    <sp-textfield
+                                        id="ot-field"
+                                        placeholder="Insira o OT"
+                                        value={tempFormState.OTValue}
+                                        onInput={(e) => handleInputChange('OTValue', e.target.value)}
+                                        onBlur={() => handleBlur('OTValue')}
+                                        valid={OTValue !== "" ? valid.OTValue : undefined}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="pname-field">PRODUCT NAME</sp-detail>
+                                    <sp-textfield
+                                        id="pname-field"
+                                        placeholder="Insira o Product Name"
+                                        value={tempFormState.productNameValue}
+                                        onInput={(e) => handleInputChange('productNameValue', e.target.value)}
+                                        onBlur={() => handleBlur('productNameValue')}
+                                        valid={productNameValue !== "" ? valid.productNameValue : undefined}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="subheadline-field">SUBHEADLINE</sp-detail>
+                                    <sp-textfield
+                                        id="subheadline-field"
+                                        placeholder="Insira o SubHeadline"
+                                        value={tempFormState.subHeadlineValue}
+                                        onInput={(e) => handleInputChange('subHeadlineValue', e.target.value)}
+                                        onBlur={() => handleBlur('subHeadlineValue')}
+                                        valid={subHeadlineValue !== "" ? valid.subHeadlineValue : undefined}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
+                                    <sp-textfield
+                                        id="hero-cta-field"
+                                        placeholder="Insira o CTA"
+                                        value={tempFormState.heroCtaValue}
+                                        onInput={(e) => handleInputChange('heroCtaValue', e.target.value)}
+                                        valid={heroCtaValue !== "" ? valid.heroCtaValue : undefined}
+                                    ></sp-textfield>
+                                </div>
                             </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="headline-field">HEADLINE</sp-detail>
-                                <sp-textfield
-                                    id="headline-field"
-                                    placeholder="Insira o Headline"
-                                    value={headlineValue}
-                                    onInput={handleHeadlineChange}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="subheadline-field">SUBHEADLINE</sp-detail>
-                                <sp-textfield
-                                    id="subheadline-field"
-                                    placeholder="Insira o SubHeadline"
-                                    value={subHeadlineValue}
-                                    onInput={handleSubHeadlineChange}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="pname-field">PRODUCT NAME 1</sp-detail>
-                                <sp-textfield
-                                    id="pname-field"
-                                    placeholder="Insira o Product Name"
-                                    value={productNameValue}
-                                    onInput={handleProductNameChange}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="pname-field2">PRODUCT NAME 2</sp-detail>
-                                <sp-textfield
-                                    id="pname-field2"
-                                    placeholder="Insira o Product Name"
-                                    value={productNameValue}
-                                    onInput={handleProductNameChange}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="pname-field3">PRODUCT NAME 3</sp-detail>
-                                <sp-textfield
-                                    id="pname-field3"
-                                    placeholder="Insira o Product Name"
-                                    value={productNameValue}
-                                    onInput={handleProductNameChange}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
-                                <sp-textfield
-                                    id="hero-cta-field"
-                                    placeholder="Insira as Specs"
-                                    value={heroCtaValue}
-                                    onInput={handleHeroCtaChange}
-                                ></sp-textfield>
-                            </div>
-
-                        </div>
+                        )}
                     </>
-                )} */}
+                )}
 
                 {/* {selectedHero === 'hero1-business' && (
                     <>

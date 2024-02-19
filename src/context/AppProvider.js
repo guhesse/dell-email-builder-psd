@@ -235,6 +235,7 @@ export default function AppProvider({ children }) {
     const [heroCopyValues, setHeroCopyValues] = useState({
         badgeValue: "",
         headlineValue: "",
+        OTValue: "",
         subHeadlineValue: "",
         inlinePromoValue: "",
         // inlinePromo2Value: "",
