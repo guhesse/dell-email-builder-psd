@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Theme } from "@swc-react/theme";
 import useAppContext from './hook/useAppContext.jsx';
-
 
 export default function HeaderSelector() {
 
     const { csvValues, selectedHeader, setSelectedHeader } = useAppContext();
+
     const handleHeaderClick = (selectedHeader) => {
         setSelectedHeader(selectedHeader);
     };
 
-    useEffect(() => {
 
+    useEffect(() => {
         handleHeaderClick(csvValues['Campaign Type']);
     }, [csvValues['Campaign Type']]);
 
@@ -25,7 +24,7 @@ export default function HeaderSelector() {
                         <sp-menu-item selected={selectedHeader === 'outlet'}  onClick={() => handleHeaderClick('outlet')}>CSB Outlet</sp-menu-item>
                         <sp-menu-divider></sp-menu-divider>
                         <sp-menu-item selected={selectedHeader === 'sb-rd'}  onClick={() => handleHeaderClick('sb-rd')}>SB RD</sp-menu-item>
-                        <sp-menu-item selected={selectedHeader === 'sb-gdo'}  onClick={() => handleHeaderClick('sb-gdo')}>SB GDO</sp-menu-item>
+                        <sp-menu-item selected={selectedHeader === 'sb-gdo-dexn'}  onClick={() => handleHeaderClick('sb-gdo-dexn')}>SB GDO | DEXN</sp-menu-item>
                         <sp-menu-divider></sp-menu-divider>
                         <sp-menu-item selected={selectedHeader === 'alienware'}  onClick={() => handleHeaderClick('alienware')}>Alienware</sp-menu-item>
                     </sp-menu>

@@ -9,30 +9,41 @@ export default function CsvReader() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     async function readCSVFile(file) {
-        const contents = await file.read();
-        const rows = contents.split('\n');
-        const headerRow = rows[0].split(';');
-
-        const columnIndexBasicInfo = headerRow.indexOf('Basic Info');
-        const columnIndexEnterContent = headerRow.indexOf('Enter Content');
-
-        if (columnIndexBasicInfo !== -1 && columnIndexEnterContent !== -1) {
-            const loadedValues = {};
-            for (let i = 1; i < rows.length; i++) {
-                const columns = rows[i].split(';');
-                const basicInfoValue = columns[columnIndexBasicInfo];
-                const enterContentValue = columns[columnIndexEnterContent];
-
-                if (basicInfoValue !== '' && enterContentValue !== '') {
-                    loadedValues[basicInfoValue] = enterContentValue;
+        try {
+            const contents = await file.read();
+            const rows = contents.split('\n');
+            const headerRow = rows[0].split(';');
+    
+            const columnIndexBasicInfo = headerRow.indexOf('Basic Info');
+            const columnIndexEnterContent = headerRow.indexOf('Enter Content');
+    
+            if (columnIndexBasicInfo !== -1 && columnIndexEnterContent !== -1) {
+                const loadedValues = {};
+                for (let i = 1; i < rows.length; i++) {
+                    const columns = rows[i].split(';');
+                    const basicInfoValue = columns[columnIndexBasicInfo];
+                    const enterContentValue = columns[columnIndexEnterContent];
+    
+                    // Remover quebras de linha de cada célula usando expressão regular
+                    const cleanedBasicInfoValue = basicInfoValue ? basicInfoValue.replace(/\r\n?|\n/g, '') : '';
+                    const cleanedEnterContentValue = enterContentValue ? enterContentValue.replace(/\r\n?|\n/g, '') : '';
+    
+                    if (cleanedBasicInfoValue !== '' && cleanedEnterContentValue !== '') {
+                        loadedValues[cleanedBasicInfoValue] = cleanedEnterContentValue;
+                    }
                 }
+                return loadedValues;
+            } else {
+                console.log('Índices das colunas não encontrados.');
+                return {};
             }
-            return loadedValues;
-        } else {
-            console.log('Índices das colunas não encontrados.');
+        } catch (error) {
+            console.error('Erro ao ler o arquivo CSV:', error);
             return {};
         }
     }
+    
+    
 
     // Função para lidar com a mudança no input do arquivo
     async function handleFileInputChange() {

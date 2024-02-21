@@ -1,0 +1,228 @@
+﻿Template Information;Basic Info;Enter Content;Instructions
+;URN;CS2103G0049_057;
+;Source File;622157_gl_cs_co_fy23q4_em_showcase_product.psd;
+;Campaign Name;BR_CSB_BAU_FY24Q3W11_EM-SHOWCASE-TECH-ESSENTIAL-2-OCT-17;
+;Delivery Label;EM-SHOWCASE-TECH-ESSENTIAL-2-OCT-17_CSB_T1-NTA_NTA_NTA_PT;
+;Deployment Date;20231017;Format - YYYYMMDD
+;Country;BR;
+;Segment;SB;
+;SL;"Começou: Ofertas do Consumidor em tecnologia para empresas iniciam
+agora.";
+;SSL;"Faça upgrade do setup da empresa de seus clientes com até R$XXX de
+desconto.";
+;From Name;Dell Technologies;
+;TFCID;;
+;Campaign Type;DEXN;RD Type is not ready yet
+;Inline Promo;No;
+;;;
+Vendor Funding;Basic Info;Enter Content;
+;Vendor Funding Name;Jumpstart Pro;
+;Funding/WEP Content;Garanta qualquer oportunidade.;Use HTML tag <br /> before a word if the word needs to start in new line.
+;;;
+CDT Banner;Basic Info;Enter Content;
+;Banner Text;;
+;Expiry Date/Time in BRT;;
+;;;
+Skinny Banner;;Enter Content;
+;Skinny Banner Headline;;
+;Skinny Banner Text;;
+;Skinny Banner Background Color;;Values should of Hexadecimal color code. Please refer color code sheet for the values.
+;Skinny Banner Text Color;;Values should of Hexadecimal color code. Please refer color code sheet for the values.
+;Skinny CTA Text;;
+;;;
+Header Plugin;;Enter Content;
+;Header Plugin Text;"Acabou a espera. Chegaram as Ofertas do Consumidor em nossa
+tecnologia mais recente.";"Use &nbsp; html code b/w words if 2 words wants appear together if the plugin appear in multiple lines. Always use the HTML code b/w last word of plugin and arrow symbol."
+;Header Plugin Text Color;#ffffff;Values should of Hexadecimal color code. Please refer color code sheet for the values.
+;Header Plugin Background Color;#DEDDFF;Values should of Hexadecimal color code. Please refer color code sheet for the values.
+;;;
+Hero Section;Basic Info;Enter Content;
+;HERO Template;HERO LAYOUT 1;
+;Badge Text;OFERTAS DO CONSUMIDOR;
+;Headline Text;DESCONTOS EM TECNOLOGIA DE PONTA;
+;HERO1 Image;"Background color: #743DD4 Accent Color: #DEDDFF Lifestyle: getty-
+1392145666-la3540nt-m3320w.psd";
+;HERO1 Product Name;Inspiron 3530;
+;HERO1 Product Inline Promo;;
+;HERO1 Product Description;;
+;HERO2 Image;;
+;HERO2 Product Name;;
+;HERO2 Product Inline Promo;;
+;HERO2 Product Description;;
+;HERO3 Image;;
+;HERO3 Product Name;;
+;HERO3 Product Inline Promo;;
+;HERO3 Product Description;;
+;HERO4 Image;;
+;HERO4 Product Name;;
+;HERO4 Product Inline Promo;;
+;HERO4 Product Description;;
+;HERO5 Image;;
+;HERO5 Product Name;;
+;HERO5 Product Inline Promo;;
+;HERO5 Product Description;;
+;SHL;"Chegou a hora de economizar para potencializar a produtividade dos
+seus clientes.";
+;HERO CTA1 Text;Compre Agora;
+;HERO CTA2 Text;;
+;;;
+Plugin 1;;Enter Content;
+;Plugin1 Image;;
+;Plugin1 Text;"CONFIRA AQUI AS OFERTAS EM ATÉ 12X SEM JUROS E COM
+FRETE GRÁTIS >";"Use &nbsp; html code between words that need to be together even if the Plugin breaks in multiple lines. Always use this code for the arrow symbol placed in the end of the Plugin."
+;Plugin1 Text Color;#ffffff;Values should of Hexadecimal color code. Please refer color code sheet for the values.
+;Plugin1 Background Color;#DEDDFF;Values should of Hexadecimal color code. Please refer color code sheet for the values.
+;;;
+Plugin 2;;Enter Content;Plugin 2 is not included in Master Template. Please provide the information on placement to include in template as changes during quarterly refresh.
+;Plugin2 Text;;"Use &nbsp; html code between words that need to be together even if the Plugin breaks in multiple lines. Always use this code for the arrow symbol placed in the end of the Plugin."
+;Plugin2 Text Color;;Values should of Hexadecimal color code. Please refer color code sheet for the values.
+;Plugin2 Background Color;;Values should of Hexadecimal color code. Please refer color code sheet for the values.
+;;;
+Dynamic OC;;Yes;Choose Yes or NO
+;Order_Code 1(Hero Product);;OC's should be available in Feedonomics
+;Order_Code 2(Hero Product);;For HERO LAYOUT 9 and 11, add OC's in Order Code 2 and 3.
+;Order_Code 3(Hero Product);;
+;Order_Code 4(Hero Product);;
+;Order_Code 5(Hero Product);;
+;Order_Code 6(Bundle 1);i3530w1009w;
+;Order_Code 7(Bundle 2);v3710w6505w;
+;Order_Code 8(Bundle 3);v3710w6505w;
+;Order_Code 9(Bundle 4);;
+;Order_Code 10(Bundle 5);;
+;;;
+Bundle Details;;Enter Content;
+;Bundle1_ProductName;;"Use &quot; html code to display double quotes symbol in email."
+;Bundle1_Inline_Promo;;
+;Bundle1_Description;;Replace ® with HTML equivalent <sup>®</sup>
+;Bundle1_Image;;
+;Bundle2_ProductName;;
+;Bundle2_Inline_Promo;;
+;Bundle2_Description;;
+;Bundle2_Image;;
+;Bundle3_ProductName;;
+;Bundle3_Inline_Promo;;
+;Bundle3_Description;;
+;Bundle3_Image;;
+;Bundle4_ProductName;;
+;Bundle4_Inline_Promo;;
+;Bundle4_Description;;
+;Bundle4_Image;;
+;Bundle5_ProductName;;
+;Bundle5_Inline_Promo;;
+;Bundle5_Description;;
+;Bundle5_Image;;
+;;;
+;;;
+Footer Banner 1;;Enter Content;
+;Banner1 Layout;IMG LEFT;
+;Banner1 Image;"Image:dellemc-per750xs-12x3-5-ff-emc-honeycomb-bezel.psd + dellper760-
+2u-dell-bazel-24x2-5-nvme-or-sas-sata-ssd-ff.psd Background:
+getty-1219688207.psd";
+;Banner1 Headline;OFERTAS DE SERVIDORES;
+;Banner1 Headline Image;;Use this field if Headline is a image. Hosted image as to be updated.
+;Banner1 Text;Computação potente, segurança integrada e automação inteligente para seus clientes. Ofertas de servidores com frete grátis para todo o Brasil.;
+;Banner1 Text Align;CENTER;
+;Banner1 Background Color;#ffffff;Values should of Hexadecimal color code. Please refer color code sheet for the values.
+;Banner1 Text Color;#444444 ;Values should of Hexadecimal color code. Please refer color code sheet for the values.
+;Banner1 CTA Text;Confira agora;
+;Banner1 Border;No;
+;;;
+Footer Banner 2;;Enter Content;
+;Banner2 Layout;;
+;Banner2 Image;;
+;Banner2 Headline;;
+;Banner2 Headline Image;;
+;Banner2 Text;;
+;Banner2 Text Align;;
+;Banner2 Background Color;;Values should of Hexadecimal color code. Please refer color code sheet for the values.
+;Banner2 Text Color;;Values should of Hexadecimal color code. Please refer color code sheet for the values.
+;Banner2 CTA Text;;
+;Banner2 Border;;
+;;;
+Birdseed;;Enter Content;
+;Birdseed 1A;;Use this field for 1st Paragraph.
+;Birdseed 1 Link Text;;
+;Birdseed 1B;;
+;Birdseed 2;02/06/2024;Offer Expiry Date of Footer content.
+;;;
+Link Section;;Enter Links;
+;Header Plugin Link;;All the Links should be raw URL( Landing page URL )
+;CDT Link;;
+;Skinny Banner Link;;
+;Headline Link;https://www.dell.com/pt-br/shop/deals/top-ofertas;
+;HERO1 Link;;Ignore if you are providing OC's
+;HERO2 Link;;Ignore if you are providing OC's
+;HERO3 Link;;Ignore if you are providing OC's
+;HERO4 Link;;Ignore if you are providing OC's
+;HERO5 Link;;Ignore if you are providing OC's
+;SHL Link;https://www.dell.com/pt-br/shop/deals/top-ofertas;
+;HERO CTA1 Link;https://www.dell.com/pt-br/shop/deals/top-ofertas;
+;HERO CTA2 Link;;
+;Plugin1 Link;https://www.dell.com/pt-br/shop/deals/promocao-monitor;
+;Plugin2 Link;;
+;Bundle1_Link;;Ignore if you are providing OC's
+;Bundle2_Link;;Ignore if you are providing OC's
+;Bundle3_Link;;Ignore if you are providing OC's
+;Bundle4_Link;;Ignore if you are providing OC's
+;Bundle5_Link;;Ignore if you are providing OC's
+;Banner1 Link;https://www.dell.com/pt-br/shop/lp/servicos-para-voce;
+;Banner2 Link;;
+;Birdseed 1 Link;;
+;;;
+;;;
+;;;
+;;;
+;;;
+;;;
+;;;
+Segment;Dynamic OC;;
+Choose One;Choose One;;
+SB;Yes;;
+CON;No;;
+CSB;;;
+;;;
+HERO Layout;;;
+Choose One;;;
+HERO LAYOUT 1;;;
+HERO LAYOUT 2;;;
+HERO LAYOUT 3;;;
+HERO LAYOUT 4;;;
+HERO LAYOUT 5;;;
+HERO LAYOUT 6;;;
+HERO LAYOUT 7;;;
+HERO LAYOUT 8;;;
+HERO LAYOUT 9;;;
+HERO LAYOUT 10;;;
+HERO LAYOUT 11;;;
+HERO LAYOUT 12;;;
+;;;
+;;;
+;;;
+Banner Layout;;;
+IMG LEFT;;;
+IMG RIGHT;;;
+;;;
+Text Layout;;;
+left;;;
+center;;;
+right;;;
+;;;
+;;;
+;;;
+Campaign Type;;;
+CSB;;;
+ISG;;;
+GAMING;;;
+SB;;;
+CON;;;
+AW;;;
+GDO;;;
+DEXN;;;
+RD(Not Ready);;;
+;;;
+;;;
+;;;
+;;;
+Inline Promo;;;
+Yes;;;
+No;;;

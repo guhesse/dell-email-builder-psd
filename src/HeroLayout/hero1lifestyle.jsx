@@ -1,8 +1,7 @@
 import { batchPlay } from "../App.js";
 import limitCharsPerLine from '../hook/charLimiter.jsx';
 
-export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, productSuperchargerValue, heroCtaValue) {
-
+export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, heroCtaValue) {
 
     function formatHeadlineCopy(text) {
         return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
@@ -30,7 +29,7 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
 
     await batchPlay(batchChangeColor, {});
 
-    const ChangeHeroCopy = [
+    const changeHeroCopy = [
 
         { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [9102], _options: { dialogOptions: "dontDisplay" } },
 
@@ -38,13 +37,14 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
             _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
             to: {
                 _obj: "textLayer", textKey: badgeValue, textStyleRange: [{
-                    _obj: "textStyleRange", from: 0, to: badgeValue.length, textStyle: {
+                    _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER, textStyle: {
                         _obj: "textStyle",
                         fontPostScriptName: "Roboto-Bold",
                         fontName: "Roboto",
                         fontStyleName: "Bold",
                         size: { _unit: "pointsUnit", _value: 20 },
-                        color: { _obj: "RGBColor", red: secondaryRed, green: secondaryGreen, blue: secondaryBlue }, tracking: 40,
+                        color: { _obj: "RGBColor", red: secondaryRed, green: secondaryGreen, blue: secondaryBlue },
+                        tracking: 40,
                         fontCaps: { _enum: "fontCaps", _value: "allCaps" },
                     }
                 }]
@@ -58,7 +58,7 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
             _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
             to: {
                 _obj: "textLayer", textKey: formattedHeadlineValue, textStyleRange: [{
-                    _obj: "textStyleRange", from: 0, to: formattedHeadlineValue.length,
+                    _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER,
                     textStyle: {
                         _obj: "textStyle",
                         fontPostScriptName: "Roboto-Light",
@@ -83,7 +83,7 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
                 _obj: "textLayer", textKey: formattedSubHeadlineValue, textStyleRange: [
 
                     {
-                        _obj: "textStyleRange", from: 0, to: formattedSubHeadlineValue.length,
+                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER,
                         textStyle: {
                             _obj: "textStyle",
                             fontPostScriptName: "Roboto-Regular",
@@ -101,7 +101,7 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
         },
     ];
 
-    const resultBoundingBoxBadge = await batchPlay(ChangeHeroCopy, {});
+    const resultBoundingBoxBadge = await batchPlay(changeHeroCopy, {});
     const boundingBoxBadge = resultBoundingBoxBadge[2].boundingBox;
     const headlinePadding = 30;
     const newHeadlinePosition = boundingBoxBadge.height._value + headlinePadding;
@@ -114,20 +114,8 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
 
     const resultHeadlineBoundingBox = await batchPlay(offsetHeadline, {});
     const boundingBoxHeadline = resultHeadlineBoundingBox[2].boundingBox;
-    const lifestylePadding = headlinePadding + 30;
-    const newLifestylePosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + lifestylePadding;
-
-    const offsetLifestyle = [
-        { _obj: "select", _target: [{ _ref: "layer", _name: "Lifestyle" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "move", _target: [{ _ref: "layer", _name: "Lifestyle", }], makeVisible: false, layerID: [2125], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newLifestylePosition, } }, _options: { dialogOptions: "dontDisplay" }, },
-        { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Lifestyle" },], },
-    ];
-
-    const resultLifestyleBoundingBox = await batchPlay(offsetLifestyle, {});
-    const boundingBoxLifestyle = resultLifestyleBoundingBox[2].bounds;
-    const subheadlinePadding = lifestylePadding + 40;
-    const newSubheadlinePosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + boundingBoxLifestyle.height._value + subheadlinePadding;
-
+    const subheadlinePadding = headlinePadding + 25;
+    const newSubheadlinePosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + subheadlinePadding;
 
     const offsetSubheadline = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "Subheadline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
@@ -137,94 +125,9 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
 
     const resultSubheadlineBoundingBox = await batchPlay(offsetSubheadline, {});
     const boundingBoxSubheadline = resultSubheadlineBoundingBox[2].boundingBox;
-    const productPadding = subheadlinePadding + 50;
-    const newProductPosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + boundingBoxLifestyle.height._value + boundingBoxSubheadline.height._value + productPadding;
-
-    // Certifique-se de ter acesso a headlineValue e subHeadlineValue
-    const formattedProductNameValue = await limitCharsPerLine(productNameValue || "Product Name", 13);
-    const formattedProductSuperchargerValue = await limitCharsPerLine(productSuperchargerValue ? formatHeadlineCopy(productSuperchargerValue) : 'Product supercharger', 13);
-
-    //Concatena o birdseedCopyValue antes do texto padr\u00e3o
-    const productCopy = formattedProductNameValue + "\r" + formattedProductSuperchargerValue;
-
-    const productCopyChange = [
-        {
-            _obj: "select",
-            _target: [{ _ref: "layer", _name: "Product Copy" }],
-            makeVisible: false,
-            layerID: [9651],
-            _options: { dialogOptions: "dontDisplay" }
-        },
-
-        {
-            _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: {
-                _obj: "textLayer",
-                textKey: productCopy,
-                textStyleRange: [
-                    {
-                        _obj: "textStyleRange",
-                        from: 0,
-                        to: formattedProductNameValue.length + 1,
-                        textStyle: {
-                            _obj: "textStyle",
-                            fontPostScriptName: "Roboto-Light",
-                            fontName: "Roboto",
-                            fontStyleName: "Light",
-                            size: { _unit: "pointsUnit", _value: 28.75 },
-                            autoLeading: false,
-                            leading: { _unit: "pointsUnit", _value: 30 },
-                            tracking: 30,
-                            color: { _obj: "RGBColor", red: 255, green: 255, blue: 255 }
-                        }
-                    },
-                    {
-                        _obj: "textStyleRange",
-                        from: formattedProductNameValue.length + 1,
-                        to: formattedProductNameValue.length + formattedProductSuperchargerValue.length + 2,
-                        textStyle: {
-                            _obj: "textStyle",
-                            fontPostScriptName: "Roboto-Light",
-                            fontName: "Roboto",
-                            fontStyleName: "Medium",
-                            size: { _unit: "pointsUnit", _value: 25.33 },
-                            tracking: 30,
-                            autoLeading: false,
-                            leading: { _unit: "pointsUnit", _value: 30 },
-                            baselineShift: { _unit: "pointsUnit", _value: -4 },
-                            impliedBaselineShift: { _unit: "pointsUnit", _value: -4 },
-                            color: { _obj: "RGBColor", red: secondaryRed, green: secondaryGreen, blue: secondaryBlue }
-                        }
-                    },
-                ]
-            },
-
-            _isCommand: true
-        },
-    ];
-
-    await batchPlay(productCopyChange, {});
-
-    const offsetProductCopy = [
-        { _obj: "select", _target: [{ _ref: "layer", _name: "Product Copy" }], makeVisible: false, layerID: [9651], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "select", _target: [{ _ref: "layer", _name: "Product Image" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelection" }, makeVisible: false, layerID: [9651, 9654], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _options: { dialogOptions: "dontDisplay" } },
-    ]
-    await batchPlay(offsetProductCopy, {});
-
-    const offsetProduct = [
-        { _obj: "select", _target: [{ _ref: "layer", _name: "Product" }], makeVisible: false, layerID: [9655], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "select", _target: [{ _ref: "layer", _name: "Product Copy" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [9651, 9653, 9654, 9655], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "select", _target: [{ _ref: "layer", _name: "Product" }], makeVisible: false, layerID: [9692], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "move", _target: [{ _ref: "layer", _name: "Product", }], makeVisible: false, layerID: [9692], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newProductPosition, } }, _options: { dialogOptions: "dontDisplay" }, },
-        { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Product" },], },
-    ];
-
-    const resultProductBoundingBox = await batchPlay(offsetProduct, {});
-    const boundingBoxProduct = resultProductBoundingBox[5].bounds;
 
     const changeCtaCopy = [
-        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Copy" }], makeVisible: false, layerID: [9617], _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Copy" }], makeVisible: false, layerID: [11492], _options: { dialogOptions: "dontDisplay" } },
         { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: heroCtaValue } },
         { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "CTA Copy" },], },
     ]
@@ -246,9 +149,8 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
     ]
     await batchPlay(resizeCtaBorder, {});
 
-
-    const ctaPadding = productPadding + 50;
-    const newCtaPosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + boundingBoxLifestyle.height._value + boundingBoxSubheadline.height._value + boundingBoxProduct.height._value + ctaPadding;
+    const ctaPadding = subheadlinePadding + 40;
+    const newCtaPosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + boundingBoxSubheadline.height._value + ctaPadding;
 
     const offsetCta = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [9845], _options: { dialogOptions: "dontDisplay" } },

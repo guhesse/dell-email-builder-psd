@@ -2,13 +2,17 @@ import React, { useState, useEffect } from "react";
 import useAppContext from "./hook/useAppContext.jsx";
 
 const heroPaths = {
+    'hero1-lifestyle-product': {
+        path: 'assets/heros/images/hero1-lifestyle-product.png',
+        name: 'Hero Layout 1 - Lifestyle & Product',
+    },
     'hero1-lifestyle': {
         path: 'assets/heros/images/hero1-lifestyle.png',
-        name: 'Hero Layout 1 - Lifestyle',
+        name: 'Hero Layout 1 - Only Lifestyle',
     },
-    'hero1-standard': {
-        path: 'assets/heros/images/hero1-standard.png',
-        name: 'Hero Layout 1 - Standard',
+    'hero1-product': {
+        path: 'assets/heros/images/hero1-product.png',
+        name: 'Hero Layout 1 - Only Product',
     },
     'hero2-promotion': {
         path: 'assets/heros/images/hero2-promotion.png',
@@ -174,7 +178,7 @@ export default function HeroSelector() {
 
                 {/* Inputs for hero selection */}
 
-                {selectedHero === 'hero1-lifestyle' && (
+                {selectedHero === 'hero1-lifestyle-product' && (
                     <>
                         {isEditClicked && (
                             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
@@ -240,6 +244,60 @@ export default function HeroSelector() {
                                         placeholder="Insira o CTA"
                                         value={tempFormState.heroCtaValue}
                                         onInput={(e) => handleInputChange('heroCtaValue', e.target.value)}
+                                        onBlur={() => handleBlur('heroCtaValue')}
+                                        valid={heroCtaValue !== "" ? valid.heroCtaValue : undefined}
+                                    ></sp-textfield>
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
+
+                {selectedHero === 'hero1-lifestyle' && (
+                    <>
+                        {isEditClicked && (
+                            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="badge-field">BADGE</sp-detail>
+                                    <sp-textfield
+                                        id="badge-field"
+                                        placeholder="Insira o Badge"
+                                        value={tempFormState.badgeValue}
+                                        onInput={(e) => handleInputChange('badgeValue', e.target.value)}
+                                        onBlur={() => handleBlur('badgeValue')}
+                                        valid={badgeValue !== "" ? valid.badgeValue : undefined}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="headline-field">HEADLINE</sp-detail>
+                                    <sp-textfield
+                                        id="headline-field"
+                                        placeholder="Insira o Headline"
+                                        value={tempFormState.headlineValue}
+                                        onInput={(e) => handleInputChange('headlineValue', e.target.value)}
+                                        onBlur={() => handleBlur('headlineValue')}
+                                        valid={headlineValue !== "" ? valid.headlineValue : undefined}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="subheadline-field">SUBHEADLINE</sp-detail>
+                                    <sp-textfield
+                                        id="subheadline-field"
+                                        placeholder="Insira o SubHeadline"
+                                        value={tempFormState.subHeadlineValue}
+                                        onInput={(e) => handleInputChange('subHeadlineValue', e.target.value)}
+                                        onBlur={() => handleBlur('subHeadlineValue')}
+                                        valid={subHeadlineValue !== "" ? valid.subHeadlineValue : undefined}
+                                    ></sp-textfield>
+                                </div>
+                                <div style={{ margin: "4px" }}>
+                                    <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
+                                    <sp-textfield
+                                        id="hero-cta-field"
+                                        placeholder="Insira o CTA"
+                                        value={tempFormState.heroCtaValue}
+                                        onInput={(e) => handleInputChange('heroCtaValue', e.target.value)}
+                                        onBlur={() => handleBlur('heroCtaValue')}
                                         valid={heroCtaValue !== "" ? valid.heroCtaValue : undefined}
                                     ></sp-textfield>
                                 </div>
@@ -249,7 +307,7 @@ export default function HeroSelector() {
                 )}
 
 
-                {selectedHero === 'hero1-standard' && (
+                {selectedHero === 'hero1-product' && (
                     <>
                         {isEditClicked && (
                             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
@@ -315,6 +373,7 @@ export default function HeroSelector() {
                                         placeholder="Insira o CTA"
                                         value={tempFormState.heroCtaValue}
                                         onInput={(e) => handleInputChange('heroCtaValue', e.target.value)}
+                                        onBlur={() => handleBlur('heroCtaValue')}
                                         valid={heroCtaValue !== "" ? valid.heroCtaValue : undefined}
                                     ></sp-textfield>
                                 </div>

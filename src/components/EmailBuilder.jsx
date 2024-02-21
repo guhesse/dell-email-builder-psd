@@ -2,23 +2,14 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { core, app, batchPlay, storage } from '../App.js';
 import useAppContext from '../hook/useAppContext.jsx';
 import limitCharsPerLine from '../hook/charLimiter.jsx';
+import Hero1LifestyleProduct from '../HeroLayout/hero1LifestyleProduct.jsx';
 import Hero1Lifestyle from '../HeroLayout/hero1lifestyle.jsx';
-import Hero1Standard from '../HeroLayout/hero1standard.jsx';
+import Hero1Product from '../HeroLayout/hero1Product.jsx';
 import Hero2Promotion from '../HeroLayout/hero2promotion.jsx';
 
 export default function EmailBuilder() {
 
-    var slHeight = "";
-    var headerHeight = "";
-    var fundingHeight = "";
-    var skinnyHeight = ""
-    var heroHeight = "";
-    var pluginHeight = "";
-    var fpoHeight = "";
-    var bannerHeight = "";
-    var footerHeight = "";
-    var birdseedHeight = "";
-    var skinnyBannerHeight = "";
+    var slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight, skinnyBannerHeight = "";
 
     const { accentColor, secondaryColor, tertiaryColor, cores, slValue, sslValue, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedDate, selectedBirdseedCopy, birdseedCopyValues } = useAppContext();
 
@@ -27,7 +18,6 @@ export default function EmailBuilder() {
     const { r: tertiaryRed, g: tertiaryGreen, b: tertiaryBlue } = cores[tertiaryColor] || {};
     const { badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, inlinePromo2Value, productNameValue, productSuperchargerValue, heroCtaValue, } = heroCopyValues || {};
     const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
-
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
     const { selectedDay, selectedMonth, selectedYear, } = birdseedDate || {};
 
@@ -61,6 +51,10 @@ export default function EmailBuilder() {
         };
 
         await core.executeAsModal(targetFunction, options);
+    }
+
+    function captalizeCopy(text) {
+        return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
     }
 
     // Ajusta o documento para entrada dos modulos
@@ -148,6 +142,8 @@ export default function EmailBuilder() {
 
                     const activeDocument = app.activeDocument;
                     await activeDocument.paste();
+
+
 
                     const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
                     const docWidth = activeDocument.width;
@@ -468,28 +464,36 @@ export default function EmailBuilder() {
                     await app.open(fileEntry);
                     const secondDocument = app.documents[1];
 
+                    if (selectedHero === 'hero1-lifestyle-product') {
+                        try {
+                            await Hero1LifestyleProduct(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, productSuperchargerValue, heroCtaValue);
+                        } catch (error) {
+                            console.error('Erro ao executar Hero 1 - Lifestyle + Product:', error);
+                        }
+                    } else { }
+
                     if (selectedHero === 'hero1-lifestyle') {
                         try {
-                            await Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, productSuperchargerValue, heroCtaValue);
+                            await Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, heroCtaValue);
                         } catch (error) {
-                            console.error('Erro ao executar Hero1Lifestyle:', error);
+                            console.error('Erro ao executar Hero 1 - Only Lifestyle:', error);
                         }
                     } else { }
 
 
-                    if (selectedHero === 'hero1-standard') {
+                    if (selectedHero === 'hero1-product') {
                         try {
-                            await Hero1Standard(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, productNameValue, heroCtaValue);
+                            await Hero1Product(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, productNameValue, heroCtaValue);
                         } catch (error) {
-                            console.error('Erro ao executar Hero1Standard:', error);
+                            console.error('Erro ao executar Hero 1 - Only Product:', error);
                         }
-                    } else {}
+                    } else { }
 
                     if (selectedHero === 'hero2-promotion') {
                         try {
                             await Hero2Promotion();
                         } catch (error) {
-                            console.error('Erro ao executar Hero2Promotion:', error);
+                            console.error('Erro ao executar Hero2 - Promotion:', error);
                         }
                     } else { }
 
@@ -731,7 +735,11 @@ export default function EmailBuilder() {
     }
 
     async function bannerBuild() {
-        const formattedBannerHeadlineValue = limitCharsPerLine(bannerHeadlineValue || '', 27);
+        
+        const formattedBannerHeadlineValue = await limitCharsPerLine(
+            bannerHeadlineValue ? captalizeCopy(bannerHeadlineValue) : '',
+            27
+        );
         const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 60);
 
         try {
