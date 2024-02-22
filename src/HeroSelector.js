@@ -30,6 +30,8 @@ export default function HeroSelector() {
         subHeadlineValue,
         inlinePromoValue,
         inlinePromo2Value,
+        specsValue,
+        priceValue,
         productNameValue,
         productSuperchargerValue,
         heroCtaValue,
@@ -45,6 +47,8 @@ export default function HeroSelector() {
         subHeadlineValue: csvValues['SHL'] || "",
         inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || "",
         inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || "",
+        specsValue: csvValues['HERO1 Product Description'] || "",
+        priceValue: "",
         productNameValue: csvValues['HERO1 Product Name'] || "",
         productSuperchargerValue: csvValues['HERO1 Product Inline Promo'] || "",
         heroCtaValue: csvValues['HERO CTA1 Text'] || "",
@@ -58,6 +62,8 @@ export default function HeroSelector() {
         inlinePromoValue: "",
         inlinePromo2Value: "",
         productNameValue: "",
+        specsValue: "",
+        priceValue: "",
         productSuperchargerValue: "",
         heroCtaValue: "",
     });
@@ -69,6 +75,8 @@ export default function HeroSelector() {
         subHeadlineValue: false,
         inlinePromoValue: false,
         inlinePromo2Value: false,
+        specsValue: false,
+        priceValue: false,
         productNameValue: false,
         productSuperchargerValue: false,
         heroCtaValue: false,
@@ -84,6 +92,8 @@ export default function HeroSelector() {
             subHeadlineValue: subHeadlineValue || "",
             inlinePromoValue: inlinePromoValue || "",
             inlinePromo2Value: inlinePromo2Value || "",
+            specsValue: specsValue || "",
+            priceValue: priceValue || "",
             productNameValue: productNameValue || "",
             productSuperchargerValue: productSuperchargerValue || "",
             heroCtaValue: heroCtaValue || "",
@@ -97,6 +107,8 @@ export default function HeroSelector() {
             subHeadlineValue: subHeadlineValue || "",
             inlinePromoValue: inlinePromoValue || "",
             inlinePromo2Value: inlinePromo2Value || "",
+            specsValue: specsValue || "",
+            priceValue: priceValue || "",
             productNameValue: productNameValue || "",
             productSuperchargerValue: productSuperchargerValue || "",
             heroCtaValue: heroCtaValue || "",
@@ -382,6 +394,102 @@ export default function HeroSelector() {
                     </>
                 )}
 
+                {selectedHero === 'hero2-promotion' && (
+                    <>
+                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
+                            <div style={{ margin: "4px" }}>
+                                <sp-detail for="badge-field">BADGE</sp-detail>
+                                <sp-textfield
+                                    id="badge-field"
+                                    placeholder="Insira o Badge"
+                                    value={tempFormState.badgeValue}
+                                    onInput={(e) => handleInputChange('badgeValue', e.target.value)}
+                                    onBlur={() => handleBlur('badgeValue')}
+                                    valid={badgeValue !== "" ? valid.badgeValue : undefined}
+                                ></sp-textfield>
+                            </div>
+                            <div style={{ margin: "4px" }}>
+                                <sp-detail for="headline-field">HEADLINE</sp-detail>
+                                <sp-textfield
+                                    id="headline-field"
+                                    placeholder="Insira o Headline"
+                                    value={tempFormState.headlineValue}
+                                    onInput={(e) => handleInputChange('headlineValue', e.target.value)}
+                                    onBlur={() => handleBlur('headlineValue')}
+                                    valid={headlineValue !== "" ? valid.headlineValue : undefined}
+                                ></sp-textfield>
+                            </div>
+                            <div style={{ margin: "4px" }}>
+                                <sp-detail for="subheadline-field">SUBHEADLINE</sp-detail>
+                                <sp-textfield
+                                    id="subheadline-field"
+                                    placeholder="Insira o SubHeadline"
+                                    value={tempFormState.subHeadlineValue}
+                                    onInput={(e) => handleInputChange('subHeadlineValue', e.target.value)}
+                                    onBlur={() => handleBlur('subHeadlineValue')}
+                                    valid={subHeadlineValue !== "" ? valid.subHeadlineValue : undefined}
+                                ></sp-textfield>
+                            </div>
+                            <div style={{ margin: "4px" }}>
+                                <sp-detail for="pname-field">INLINE PROMO</sp-detail>
+                                <sp-textfield
+                                    id="inline-promo-field"
+                                    placeholder="Insira o Inline Promo"
+                                    value={tempFormState.inlinePromoValue}
+                                    onInput={(e) => handleInputChange('inlinePromoValue', e.target.value)}
+                                    onBlur={() => handleBlur('inlinePromoValue')}
+                                    valid={inlinePromoValue !== "" ? valid.inlinePromoValue : undefined}
+                                ></sp-textfield>
+                            </div>
+                            <div style={{ margin: "4px" }}>
+                                <sp-detail for="pname-field">PRODUCT NAME</sp-detail>
+                                <sp-textfield
+                                    id="pname-field"
+                                    placeholder="Insira o Product Name"
+                                    value={tempFormState.productNameValue}
+                                    onInput={(e) => handleInputChange('productNameValue', e.target.value)}
+                                    onBlur={() => handleBlur('productNameValue')}
+                                    valid={productNameValue !== "" ? valid.productNameValue : undefined}
+                                ></sp-textfield>
+                            </div>
+                            <div style={{ margin: "4px" }}>
+                                <sp-detail for="specs-field">SPECS</sp-detail>
+                                <sp-textfield
+                                    id="specs-field"
+                                    placeholder="Insira as Specs"
+                                    value={tempFormState.specsValue}
+                                    onInput={(e) => handleInputChange('specsValue', e.target.value)}
+                                    onBlur={() => handleBlur('specsValue')}
+                                    valid={specsValue !== "" ? valid.specsValue : undefined}
+                                ></sp-textfield>
+                            </div>
+                            <div style={{ margin: "4px" }}>
+                                <sp-detail for="price-field">PRICE</sp-detail>
+                                <sp-textfield
+                                    id="price-field"
+                                    placeholder="Insira o Valor"
+                                    value={tempFormState.priceValue}
+                                    onInput={(e) => handleInputChange('priceValue', e.target.value)}
+                                    onBlur={() => handleBlur('priceValue')}
+                                    valid={priceValue !== "" ? valid.priceValue : undefined}
+                                ></sp-textfield>
+                            </div>
+                            <div style={{ margin: "4px" }}>
+                                <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
+                                <sp-textfield
+                                    id="hero-cta-field"
+                                    placeholder="Insira o CTA"
+                                    value={tempFormState.heroCtaValue}
+                                    onInput={(e) => handleInputChange('heroCtaValue', e.target.value)}
+                                    onBlur={() => handleBlur('heroCtaValue')}
+                                    valid={heroCtaValue !== "" ? valid.heroCtaValue : undefined}
+                                ></sp-textfield>
+                            </div>
+
+                        </div>
+                    </>
+                )}
+
                 {/* {selectedHero === 'hero1-business' && (
                     <>
                         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
@@ -515,85 +623,7 @@ export default function HeroSelector() {
                     </>
                 )}
 
-                {selectedHero === 'hero2-promotion' && (
-                    <>
-                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="badge-field">BADGE</sp-detail>
-                                <sp-textfield
-                                    id="badge-field"
-                                    placeholder="Insira o Badge"
-                                    value={badgeValue}
-                                    onInput={handleBadgeChange}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="headline-field">HEADLINE</sp-detail>
-                                <sp-textfield
-                                    id="headline-field"
-                                    placeholder="Insira o Headline"
-                                    value={headlineValue}
-                                    onInput={handleHeadlineChange}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="subheadline-field">SUBHEADLINE</sp-detail>
-                                <sp-textfield
-                                    id="subheadline-field"
-                                    placeholder="Insira o SubHeadline"
-                                    value={subHeadlineValue}
-                                    onInput={handleSubHeadlineChange}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="inline-promo-field">INLINE PROMO</sp-detail>
-                                <sp-textfield
-                                    id="inline-promo-field"
-                                    placeholder="Insira o Inline Promo"
-                                    value={inlinePromoValue}
-                                    onInput={handleInlinePromoChange}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="pname-field">PRODUCT NAME</sp-detail>
-                                <sp-textfield
-                                    id="pname-field"
-                                    placeholder="Insira o Product Name"
-                                    value={productNameValue}
-                                    onInput={handleProductNameChange}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="specs-field">SPECS</sp-detail>
-                                <sp-textfield
-                                    id="specs-field"
-                                    placeholder="Insira as Specs"
-                                    value={specsValue}
-                                    onInput={handleSpecsChange}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="price-field">PRICE</sp-detail>
-                                <sp-textfield
-                                    id="price-field"
-                                    placeholder="Insira o Valor"
-                                    value={priceValue}
-                                    onInput={handlePriceChange}
-                                ></sp-textfield>
-                            </div>
-                            <div style={{ margin: "4px" }}>
-                                <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
-                                <sp-textfield
-                                    id="hero-cta-field"
-                                    placeholder="Insira as Specs"
-                                    value={heroCtaValue}
-                                    onInput={handleHeroCtaChange}
-                                ></sp-textfield>
-                            </div>
-
-                        </div>
-                    </>
-                )}
+                
 
                 {selectedHero === 'hero3-promotion' && (
                     <>

@@ -238,15 +238,10 @@ export default function AppProvider({ children }) {
         OTValue: "",
         subHeadlineValue: "",
         inlinePromoValue: "",
-        // inlinePromo2Value: "",
+        specsValue: "",
+        priceValue: "",
         productNameValue: "",
         productSuperchargerValue: "",
-        //   productName2Value: '',
-        //   productName3Value: '',
-        //   specsValue: '',
-        //   specs2Value: '',
-        //   priceValue: '',
-        //   price2Value: '',
         heroCtaValue: "",
     });
 
@@ -279,8 +274,8 @@ export default function AppProvider({ children }) {
         // const processedValue = (value) => value.replace(/\r?\n/g, '').replace(/^"|"$/g, '');
 
         setSlValue((csvValues.SL) || "");
-        setSslValue((csvValues.SSL) || "");        
-        
+        setSslValue((csvValues.SSL) || "");
+
 
         if (csvValues['Campaign Type'] === "CSB") {
             setSelectedHeader("csb");
@@ -366,6 +361,8 @@ export default function AppProvider({ children }) {
             subHeadlineValue: csvValues['SHL'] || "",
             inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || "",
             inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || "",
+            specsValue: csvValues['HERO1 Product Description'] || "",
+            priceValue: "XXX",
             productNameValue: csvValues['HERO1 Product Name'] || "",
             productSuperchargerValue: csvValues['HERO1 Product Inline Promo'] || "",
             heroCtaValue: csvValues['HERO CTA1 Text'] || "",
@@ -446,15 +443,9 @@ export default function AppProvider({ children }) {
             });
         }
 
-        setSelectedBirdseedCopy(csvValues['Birdseed 1A'] || "");
-        if (csvValues['Birdseed 1A'] === "") {
-            setSelectedBirdseedCopy(false);
-        } else {
-            setSelectedBirdseedCopy(true);
-        }
+        setSelectedBirdseedCopy(!!csvValues['Birdseed 1A']);
 
         setBirdseedCopyValues(csvValues['Birdseed 1A'] || "");
-
 
     }, [
         csvValues.SL,
@@ -466,6 +457,7 @@ export default function AppProvider({ children }) {
         csvValues['SHL'],
         csvValues['HERO1 Product Inline Promo'],
         csvValues['HERO2 Product Inline Promo'],
+        csvValues['HERO1 Product Description'],
         csvValues['HERO1 Product Name'],
         csvValues['HERO CTA1 Text'],
         csvValues['HERO Template'],
@@ -478,6 +470,9 @@ export default function AppProvider({ children }) {
         csvValues['Birdseed 1A'],
         csvValues['Birdseed 2'],
     ]);
+
+    console.log(heroCopyValues.inlinePromoValue)
+    console.log(heroCopyValues.specsValue)
 
 
     return (

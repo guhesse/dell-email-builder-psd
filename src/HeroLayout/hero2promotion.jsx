@@ -1,12 +1,7 @@
-import React, { useState, useEffect } from 'react';
 import { batchPlay } from "../App.js";
 import limitCharsPerLine from '../hook/charLimiter.jsx';
 
-export default async function Hero2Promotion(heroCopyValues, colorValues) {
-
-    const { red, green, blue } = colorValues;
-
-    const { badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, specsValue, priceValue, heroCtaValue } = heroCopyValues;
+export default async function Hero2Promotion(accentRed, accentGreen, accentBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, priceValue, specsValue, heroCtaValue) {
 
     function formatHeadlineCopy(text) {
         return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
@@ -21,19 +16,19 @@ export default async function Hero2Promotion(heroCopyValues, colorValues) {
 
     const batchChangeColor = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" }, },
-        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: red, grain: green, blue: blue }, }, _options: { dialogOptions: "dontDisplay" }, },
+        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: accentRed, grain: accentGreen, blue: accentBlue }, }, _options: { dialogOptions: "dontDisplay" }, },
     ];
 
     await batchPlay(batchChangeColor, {});
 
     const ChangeHeroCopy = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${badgeValue}`, } },
+        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: badgeValue, } },
         { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Badge" },], },
         { _obj: "select", _target: [{ _ref: "layer", _name: "Headline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${formattedHeadlineValue}`, } },
+        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedHeadlineValue, } },
         { _obj: "select", _target: [{ _ref: "layer", _name: "Subheadline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `${formattedSubHeadlineValue}`, } },
+        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedSubHeadlineValue, } },
     ];
 
     const resultBoundingBoxBadge = await batchPlay(ChangeHeroCopy, {});
@@ -64,10 +59,15 @@ export default async function Hero2Promotion(heroCopyValues, colorValues) {
     const productPadding = subheadlinePadding + 40;
     const newProductPosition = boundingBoxBadge.height._value + boundingBoxHeadline.height._value + boundingBoxSubheadline.height._value + productPadding;
 
-    // Concatena o birdseedCopyValue antes do texto padr\u00e3o
-    const specsCopy = inlinePromoValue + "\r" + productNameValue + "\r" + "R$" + priceValue + "00" + "\r" + specsValue;
+    var specsCopy = ""
 
+    if (priceValue === "XXX"){
+        var specsCopy = inlinePromoValue + "\r" + productNameValue + "\r" + "R$" + priceValue + "xx" + "\r" + specsValue;
+    } else {
+        var specsCopy = inlinePromoValue + "\r" + productNameValue + "\r" + "R$" + priceValue + "00" + "\r" + specsValue;
+    }
 
+    
     const specsCopyChange = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "Specs" }], makeVisible: false, layerID: [9906], _options: { dialogOptions: "dontDisplay" } },
 
@@ -92,6 +92,8 @@ export default async function Hero2Promotion(heroCopyValues, colorValues) {
             _isCommand: true
         },
     ];
+
+
     await batchPlay(specsCopyChange, {});
 
     const offsetProduct = [

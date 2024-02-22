@@ -7,6 +7,7 @@ import Hero1Lifestyle from '../HeroLayout/hero1lifestyle.jsx';
 import Hero1Product from '../HeroLayout/hero1Product.jsx';
 import Hero2Promotion from '../HeroLayout/hero2promotion.jsx';
 
+
 export default function EmailBuilder() {
 
     var slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight, skinnyBannerHeight = "";
@@ -16,10 +17,11 @@ export default function EmailBuilder() {
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
     const { r: tertiaryRed, g: tertiaryGreen, b: tertiaryBlue } = cores[tertiaryColor] || {};
-    const { badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, inlinePromo2Value, productNameValue, productSuperchargerValue, heroCtaValue, } = heroCopyValues || {};
+    const { badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, specsValue, priceValue, productSuperchargerValue, heroCtaValue, } = heroCopyValues || {};
     const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
     const { selectedDay, selectedMonth, selectedYear, } = birdseedDate || {};
+
 
     // Limpar as camadas do documento
     async function clearAllLayers() {
@@ -491,7 +493,7 @@ export default function EmailBuilder() {
 
                     if (selectedHero === 'hero2-promotion') {
                         try {
-                            await Hero2Promotion();
+                            await Hero2Promotion(accentRed, accentGreen, accentBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, priceValue, specsValue, heroCtaValue);
                         } catch (error) {
                             console.error('Erro ao executar Hero2 - Promotion:', error);
                         }
@@ -735,7 +737,7 @@ export default function EmailBuilder() {
     }
 
     async function bannerBuild() {
-        
+
         const formattedBannerHeadlineValue = await limitCharsPerLine(
             bannerHeadlineValue ? captalizeCopy(bannerHeadlineValue) : '',
             27

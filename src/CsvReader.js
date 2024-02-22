@@ -25,14 +25,8 @@ export default function CsvReader() {
                     const enterContentValue = columns[columnIndexEnterContent];
     
                     // Remover quebras de linha de cada célula usando expressão regular
-                    const cleanedBasicInfoValue = basicInfoValue ? basicInfoValue.replace(/\r?\n/g, ' ') : '';
-                    console.log("🚀 ~ readCSVFile ~ cleanedBasicInfoValue:", cleanedBasicInfoValue);
-                    const cleanedEnterContentValue = enterContentValue ? enterContentValue.replace(/\r?\n/g, ' ') : '';
-                    console.log("🚀 ~ readCSVFile ~ cleanedEnterContentValue:", cleanedEnterContentValue);
-                    
-
-                
-                    
+                    const cleanedBasicInfoValue = basicInfoValue ? basicInfoValue.replace(/\r?\n/g, ' ').replace(/^"|"$/g, '') : '';
+                    const cleanedEnterContentValue = enterContentValue ? enterContentValue.replace(/\r?\n/g, ' ').replace(/^"|"$/g, '') : '';
     
                     if (cleanedBasicInfoValue !== '' && cleanedEnterContentValue !== '') {
                         loadedValues[cleanedBasicInfoValue] = cleanedEnterContentValue;
@@ -48,6 +42,7 @@ export default function CsvReader() {
             return {};
         }
     }
+    
     
     
 
