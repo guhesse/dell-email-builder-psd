@@ -6,12 +6,12 @@ import useAppContext from './hook/useAppContext.jsx';
 
 export default function CsvReader() {
     const { csvValues, setCsvValues } = useAppContext();
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
 
     async function readCSVFile(file) {
         try {
             const contents = await file.read();
-            const rows = contents.split('\n');
+            const rows = contents.split(/\n(?=;)/);
             const headerRow = rows[0].split(';');
     
             const columnIndexBasicInfo = headerRow.indexOf('Basic Info');
@@ -25,8 +25,14 @@ export default function CsvReader() {
                     const enterContentValue = columns[columnIndexEnterContent];
     
                     // Remover quebras de linha de cada célula usando expressão regular
-                    const cleanedBasicInfoValue = basicInfoValue ? basicInfoValue.replace(/\r\n?|\n/g, '') : '';
-                    const cleanedEnterContentValue = enterContentValue ? enterContentValue.replace(/\r\n?|\n/g, '') : '';
+                    const cleanedBasicInfoValue = basicInfoValue ? basicInfoValue.replace(/\r?\n/g, ' ') : '';
+                    console.log("🚀 ~ readCSVFile ~ cleanedBasicInfoValue:", cleanedBasicInfoValue);
+                    const cleanedEnterContentValue = enterContentValue ? enterContentValue.replace(/\r?\n/g, ' ') : '';
+                    console.log("🚀 ~ readCSVFile ~ cleanedEnterContentValue:", cleanedEnterContentValue);
+                    
+
+                
+                    
     
                     if (cleanedBasicInfoValue !== '' && cleanedEnterContentValue !== '') {
                         loadedValues[cleanedBasicInfoValue] = cleanedEnterContentValue;

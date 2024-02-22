@@ -479,8 +479,6 @@ export default function AppProvider({ children }) {
         csvValues['Birdseed 2'],
     ]);
 
-    console.log("🚀 ~ useEffect ~ setSlValue:", slValue)
-    console.log("🚀 ~ useEffect ~ setSlValue:", sslValue)
 
     return (
         <AppContext.Provider value={{
