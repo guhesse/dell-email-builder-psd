@@ -564,8 +564,8 @@ export default function EmailBuilder() {
             const pluginDir = await fs.getPluginFolder();
             const fileEntry = await pluginDir.getEntry(pluginFilePath);
 
-            const formattedPluginCopyValue = limitCharsPerLine(pluginCopyValue || '', 60);
-            const formattedleftCopyValue = limitCharsPerLine(leftPluginCopyValue || '', 13);
+            const formattedPluginCopyValue = limitCharsPerLine(pluginCopyValue || '', 65);
+            const formattedLeftCopyValue = limitCharsPerLine(leftPluginCopyValue || '', 13);
             const formattedCenterCopyValue = limitCharsPerLine(centerPluginCopyValue || '', 13);
             const formattedRightCopyValue = limitCharsPerLine(rightPluginCopyValue || '', 13);
 
@@ -582,9 +582,20 @@ export default function EmailBuilder() {
                     if (selectedPlugin === 'supercharger') {
 
                         const batchChangeColor = [
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [3402], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textStyle", textOverrideFeatureName: 808466226, typeStyleOperationType: 3, color: { _obj: "RGBColor", red: accentRed, grain: accentGreen, blue: accentBlue } }, _options: { dialogOptions: "dontDisplay" } },
+                            // { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [3402], _options: { dialogOptions: "dontDisplay" } },
+                            // { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
+                            // {
+                            //     _obj: "set",
+                            //     _target: [{ _ref: "property", _property: "textStyle" },
+                            //     { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+                            //     to: {
+                            //         _obj: "textStyle",
+                            //         textOverrideFeatureName: 808466226,
+                            //         typeStyleOperationType: 3,
+                            //         color: { _obj: "RGBColor", red: accentRed, grain: accentGreen, blue: accentBlue }
+                            //     },
+                            //     _options: { dialogOptions: "dontDisplay" }
+                            // },
 
                             { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
                             { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue } }, _options: { dialogOptions: "dontDisplay" } },
@@ -594,11 +605,85 @@ export default function EmailBuilder() {
 
                         const batchPluginChange = [
                             { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedleftCopyValue } },
+                            {
+                                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+                                to: {
+                                    _obj: "textLayer", textKey: formattedLeftCopyValue, textStyleRange: [{
+                                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER, textStyle: {
+                                            _obj: "textStyle",
+                                            fontPostScriptName: "Roboto-Light",
+                                            fontName: "Roboto",
+                                            fontStyleName: "Light",
+                                            size: { _unit: "pointsUnit", _value: 5.76 },
+                                            color: {
+                                                _obj: "RGBColor",
+                                                red: accentRed,
+                                                green: accentGreen,
+                                                blue: accentBlue
+                                            },
+                                            tracking: 5,
+                                            fontCaps: { _enum: "fontCaps", _value: "normal" },
+                                            autoLeading: false,
+                                            leading: { _unit: "pointsUnit", _value: 5.76 },
+                                            impliedLeading: { _unit: "pointsUnit", _value: 5.76 }
+                                        }
+                                    }]
+                                }, _isCommand: true
+                            },
                             { _obj: "select", _target: [{ _ref: "layer", _name: "2" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedCenterCopyValue } },
+                            {
+                                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+                                to: {
+                                    _obj: "textLayer", textKey: formattedCenterCopyValue, textStyleRange: [{
+                                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER, textStyle: {
+                                            _obj: "textStyle",
+                                            fontPostScriptName: "Roboto-Light",
+                                            fontName: "Roboto",
+                                            fontStyleName: "Light",
+                                            size: { _unit: "pointsUnit", _value: 5.76 },
+                                            color: {
+                                                _obj: "RGBColor",
+                                                red: accentRed,
+                                                green: accentGreen,
+                                                blue: accentBlue
+                                            },
+                                            tracking: 5,
+                                            fontCaps: { _enum: "fontCaps", _value: "normal" },
+                                            autoLeading: false,
+                                            leading: { _unit: "pointsUnit", _value: 5.76 },
+                                            impliedLeading: { _unit: "pointsUnit", _value: 5.76 }
+                                        }
+                                    }]
+                                }, _isCommand: true
+                            },
+                            // { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedCenterCopyValue } },
                             { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedRightCopyValue } },
+                            {
+                                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+                                to: {
+                                    _obj: "textLayer", textKey: formattedRightCopyValue, textStyleRange: [{
+                                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER, textStyle: {
+                                            _obj: "textStyle",
+                                            fontPostScriptName: "Roboto-Light",
+                                            fontName: "Roboto",
+                                            fontStyleName: "Light",
+                                            size: { _unit: "pointsUnit", _value: 5.76 },
+                                            color: {
+                                                _obj: "RGBColor",
+                                                red: accentRed,
+                                                green: accentGreen,
+                                                blue: accentBlue
+                                            },
+                                            tracking: 5,
+                                            fontCaps: { _enum: "fontCaps", _value: "normal" },
+                                            autoLeading: false,
+                                            leading: { _unit: "pointsUnit", _value: 5.76 },
+                                            impliedLeading: { _unit: "pointsUnit", _value: 5.76 }
+                                        }
+                                    }]
+                                }, _isCommand: true
+                            },
+                            // { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedRightCopyValue } },
                             { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [3402], _options: { dialogOptions: "dontDisplay" } },
                             { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3334, 3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
                             { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _options: { dialogOptions: "dontDisplay" } },
@@ -613,8 +698,35 @@ export default function EmailBuilder() {
                     } else if (selectedPlugin === 'plugin') {
 
                         const batchChangeColor = [
-                            { _obj: "select", _target: [{ _ref: "textLayer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3335], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: accentRed, grain: accentGreen, blue: accentBlue }, }, _options: { dialogOptions: "dontDisplay" }, },
+                            {
+                                _obj: "select",
+                                _target: [{ _ref: "textLayer", _name: "Plugin Copy" }],
+                                makeVisible: false,
+                                layerID: [3335],
+                                _options: { dialogOptions: "dontDisplay" }
+                            },
+                            {
+                                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+                                to: {
+                                    _obj: "textLayer", textKey: formattedPluginCopyValue, textStyleRange: [{
+                                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER, textStyle: {
+                                            _obj: "textStyle",
+                                            fontPostScriptName: "Arial-Regular",
+                                            fontName: "Arial",
+                                            fontStyleName: "Regular",
+                                            size: { _unit: "pointsUnit", _value: 2.93 },
+                                            color: {
+                                                _obj: "RGBColor",
+                                                red: accentRed,
+                                                green: accentGreen,
+                                                blue: accentBlue
+                                            },
+                                            tracking: 20,
+                                            fontCaps: { _enum: "fontCaps", _value: "allCaps" },
+                                        }
+                                    }]
+                                }, _isCommand: true
+                            },
 
                             { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
                             { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue } }, _options: { dialogOptions: "dontDisplay" } },
@@ -623,8 +735,6 @@ export default function EmailBuilder() {
                         await batchPlay(batchChangeColor, {});
 
                         const batchPluginChange = [
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedPluginCopyValue } },
                             { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
                             { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }, { _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3320, 3325], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
                             { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersH" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" }, },

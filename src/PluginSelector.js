@@ -3,7 +3,7 @@ import useAppContext from "./hook/useAppContext.jsx";
 
 export default function PluginSelector() {
 
-    const { csvValues, setCsvValues, selectedPlugin, setSelectedPlugin, pluginCopyValues } = useAppContext();
+    const { csvValues, setCsvValues, selectedPlugin, setSelectedPlugin, pluginCopyValues, setPluginCopyValues } = useAppContext();
 
     const {
         pluginCopyValue,
@@ -36,8 +36,6 @@ export default function PluginSelector() {
         centerPluginCopyValue: false,
         rightPluginCopyValue: false,
     });
-
-
 
     useEffect(() => {
 

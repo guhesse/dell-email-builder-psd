@@ -166,6 +166,23 @@ export default function AppProvider({ children }) {
         return updatedValues;
     };
 
+    function hexToRgb(hex) {
+        // Remove o caractere '#' se estiver presente
+        hex = hex.replace(/^#/, '');
+
+        // Verifica se o valor hex corresponde a alguma cor no objeto cores
+        const matchingColor = Object.entries(cores).find(([name, rgb]) => {
+            return rgb.r === parseInt(hex.substring(0, 2), 16) &&
+                rgb.g === parseInt(hex.substring(2, 4), 16) &&
+                rgb.b === parseInt(hex.substring(4, 6), 16);
+        });
+
+        // Se encontrar uma correspondência, retorna o nome da cor, caso contrário, retorna o valor RGB formatado
+        return matchingColor ? matchingColor[0] : `rgb(${parseInt(hex.substring(0, 2), 16)}, ${parseInt(hex.substring(2, 4), 16)}, ${parseInt(hex.substring(4, 6), 16)})`;
+    }
+
+
+
     // Seletor de Cores
 
     const cores = {
@@ -173,46 +190,70 @@ export default function AppProvider({ children }) {
         quartz: { r: 238, g: 238, b: 238 },
         granite: { r: 200, g: 201, b: 199 },
         gray: { r: 128, g: 128, b: 128 },
+        steel: { r: 110, g: 110, b: 110 },
         carbon: { r: 68, g: 68, b: 68 },
         black: { r: 0, g: 0, b: 0 },
-        sky: { r: 128, g: 199, b: 251 },
-        dellBlue: { r: 6, g: 114, b: 203 },
-        royal: { r: 12, g: 50, b: 164 },
         glacier: { r: 229, g: 248, b: 255 },
+        mist: { r: 203, g: 238, b: 255 },
+        pool: { r: 159, g: 221, b: 255 },
+        sky: { r: 128, g: 199, b: 251 },
+        cornflower: { r: 88, g: 165, b: 230 },
+        dellBlue: { r: 6, g: 114, b: 203 },
+        coblat: { r: 29, g: 86, b: 192 },
+        royal: { r: 12, g: 50, b: 164 },
+        navy: { r: 0, g: 34, b: 127 },
         midnight: { r: 13, g: 33, b: 85 },
         teaGreen: { r: 228, g: 255, b: 214 },
         honeydew: { r: 191, g: 255, b: 183 },
         lime: { r: 159, g: 255, b: 153 },
+        mint: { r: 123, g: 252, b: 118 },
+        grass: { r: 78, g: 231, b: 96 },
         basil: { r: 55, g: 204, b: 92 },
+        kelly: { r: 52, g: 158, b: 95 },
         hunter: { r: 36, g: 117, b: 84 },
+        forest: { r: 27, g: 87, b: 68 },
         deepGreen: { r: 36, g: 71, b: 57 },
         periwinkle: { r: 222, g: 221, b: 255 },
+        lilac: { r: 200, g: 192, b: 255 },
         lavender: { r: 190, g: 175, b: 255 },
+        wisteria: { r: 170, g: 150, b: 250 },
+        iris: { r: 159, g: 120, b: 252 },
         amethyst: { r: 142, g: 92, b: 239 },
+        violet: { r: 116, g: 61, b: 212 },
         plum: { r: 97, g: 44, b: 176 },
+        eggplant: { r: 80, g: 10, b: 150 },
         raisin: { r: 42, g: 20, b: 90 },
         sand: { r: 251, g: 238, b: 206 },
+        marigold: { r: 249, g: 214, b: 116 },
         apricot: { r: 244, g: 187, b: 94 },
+        orange: { r: 225, g: 127, b: 63 },
         coral: { r: 225, g: 99, b: 63 },
+        cherry: { r: 210, g: 51, b: 61 },
         scarlet: { r: 179, g: 11, b: 55 },
-        burgundy: { r: 105, g: 29, b: 63 }
+        ruby: { r: 133, g: 19, b: 63 },
+        burgundy: { r: 105, g: 29, b: 63 },
+        wine: { r: 74, g: 25, b: 58 }
     };
 
-    const [accentColor, setAccentColor] = useState("deepGreen");
-    const [secondaryColor, setSecondaryColor] = useState("lime");
-    const [tertiaryColor, setTertiaryColor] = useState("honeydew");
+    const [accentColor, setAccentColor] = useState("");
+    const [secondaryColor, setSecondaryColor] = useState("");
+    const [tertiaryColor, setTertiaryColor] = useState("");
 
     const handleAccentColorChange = (color) => {
-        setAccentColor(color);
+        const colorString = typeof color === 'string' ? color : hexToRgb(color);
+        setAccentColor(colorString);
     };
 
     const handleSecondaryColorChange = (color) => {
-        setSecondaryColor(color);
+        const colorString = typeof color === 'string' ? color : hexToRgb(color);
+        setSecondaryColor(colorString);
     };
 
     const handleTertiaryColorChange = (color) => {
-        setTertiaryColor(color);
+        const colorString = typeof color === 'string' ? color : hexToRgb(color);
+        setTertiaryColor(colorString);
     };
+
 
     // Values e estados dos inputs
 
@@ -270,8 +311,24 @@ export default function AppProvider({ children }) {
 
 
     useEffect(() => {
+        
+        if (csvValues['HERO1 Image'].match(/background color:\s*#([0-9A-Fa-f]{6})/i) || "deepGreen") {
+            const accentColorMatch = csvValues['HERO1 Image'].match(/background color:\s*#([0-9A-Fa-f]{6})/i);
+            setAccentColor(accentColorMatch ? hexToRgb(`#${accentColorMatch[1]}`) : "deepGreen");
+        }
 
-        // const processedValue = (value) => value.replace(/\r?\n/g, '').replace(/^"|"$/g, '');
+        if (csvValues['HERO1 Image'].match(/accent color:\s*#([0-9A-Fa-f]{6})/i) || "mint") {
+            const secondaryColorMatch = csvValues['HERO1 Image'].match(/accent color:\s*#([0-9A-Fa-f]{6})/i);
+            setSecondaryColor(secondaryColorMatch ? hexToRgb(`#${secondaryColorMatch[1]}`) : "mint");
+        }
+
+        if (csvValues['HERO1 Image'].match(/accent color:\s*#([0-9A-Fa-f]{6})/i) || "teaGreen") {
+            const tertiaryColorMatch = csvValues['HERO1 Image'].match(/accent color:\s*#([0-9A-Fa-f]{6})/i);
+            setTertiaryColor(tertiaryColorMatch ? hexToRgb(`#${tertiaryColorMatch[1]}`) : "teaGreen");
+        }
+
+        // console.log("Accent color", accentColor)
+        // console.log("Secondary color", secondaryColor)
 
         setSlValue((csvValues.SL) || "");
         setSslValue((csvValues.SSL) || "");
@@ -448,6 +505,7 @@ export default function AppProvider({ children }) {
         setBirdseedCopyValues(csvValues['Birdseed 1A'] || "");
 
     }, [
+        csvValues['HERO1 Image'],
         csvValues.SL,
         csvValues.SSL,
         csvValues['Funding/WEP Content'],
@@ -470,9 +528,6 @@ export default function AppProvider({ children }) {
         csvValues['Birdseed 1A'],
         csvValues['Birdseed 2'],
     ]);
-
-    console.log(heroCopyValues.inlinePromoValue)
-    console.log(heroCopyValues.specsValue)
 
 
     return (
@@ -517,6 +572,7 @@ export default function AppProvider({ children }) {
             selectedPlugin,
             setSelectedPlugin,
             pluginCopyValues,
+            setPluginCopyValues,
 
             selectedFpoSegment,
             setSelectedFpoSegment,

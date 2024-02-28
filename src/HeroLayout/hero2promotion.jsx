@@ -61,13 +61,13 @@ export default async function Hero2Promotion(accentRed, accentGreen, accentBlue,
 
     var specsCopy = ""
 
-    if (priceValue === "XXX"){
+    if (priceValue === "XXX") {
         var specsCopy = inlinePromoValue + "\r" + productNameValue + "\r" + "R$" + priceValue + "xx" + "\r" + specsValue;
     } else {
         var specsCopy = inlinePromoValue + "\r" + productNameValue + "\r" + "R$" + priceValue + "00" + "\r" + specsValue;
     }
 
-    
+
     const specsCopyChange = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "Specs" }], makeVisible: false, layerID: [9906], _options: { dialogOptions: "dontDisplay" } },
 
