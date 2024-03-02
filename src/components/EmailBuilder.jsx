@@ -24,36 +24,50 @@ export default function EmailBuilder() {
 
 
     // Limpar as camadas do documento
+    // Limpar as camadas do documento
+    // Limpar as camadas do documento
     async function clearAllLayers() {
-        const targetFunction = async () => {
+        const targetFunction = async (executionContext) => {
             try {
+                // Tenta obter informações da camada no índice 1
+                const getLayerIndex = [
+                    {
+                        _obj: 'get',
+                        _target: [{ _ref: 'layer', _index: 2 }],
+                    },
+                ];
+
+                await batchPlay(getLayerIndex, {});
+
+                console.log('%cCamada encontrada no índice 2. Procedendo para deletar todas as camadas...', 'color: #00EAADFF;');
+
                 // Deleta todas as camadas
                 const deleteAllLayers = [
-                    { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "delete", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], layerID: [3155, 3156, 3157], _options: { dialogOptions: "dontDisplay" } }
+                    { _obj: 'selectAllLayers', _target: [{ _ref: 'layer', _enum: 'ordinal', _value: 'targetEnum' }], _options: { dialogOptions: 'dontDisplay' } },
+                    { _obj: 'delete', _target: [{ _ref: 'layer', _enum: 'ordinal', _value: 'targetEnum' }], _options: { dialogOptions: 'dontDisplay' } },
                 ];
 
                 await batchPlay(deleteAllLayers, {});
 
                 console.log('%cCamadas deletadas com sucesso!', 'color: #00EAADFF;');
             } catch (error) {
-                // Ignora o erro relacionado à seleção de camadas
-                if (error.message.includes('select')) {
-                    // Não faz nada ou lida com o erro silenciosamente se preferir
-                    // Por exemplo, console.log('Não foi possível selecionar as camadas para deletar.');
+                // Verifica se o erro está relacionado à ausência de camadas no índice 1
+                if (error.message.includes('The object “Layer 1” is not currently available.')) {
+                    console.log('%cNenhuma camada encontrada no índice 1. A função não será executada.', 'color: #FF5733;');
                 } else {
                     console.error('Não foi possível deletar as Camadas', error);
                 }
             }
-        };
+        }; // Fechando corretamente a declaração da targetFunction
 
         const options = {
-            commandName: 'Deletar todas as camadas',
+            commandName: 'Limpar camadas',
             interactive: true,
         };
 
         await core.executeAsModal(targetFunction, options);
     }
+
 
     function captalizeCopy(text) {
         return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
@@ -234,7 +248,7 @@ export default function EmailBuilder() {
 
     // Importa o funding
     async function fundingBuild() {
-
+        console.log(fundingCopyValue)
         const fundingFilePath = `assets/fundings/${selectedFunding}.psd`;
         try {
             const fs = storage.localFileSystem;
@@ -246,20 +260,42 @@ export default function EmailBuilder() {
                     await app.open(fileEntry);
                     const secondDocument = app.documents[1];
 
-                    const formattedfundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 20);
+                    const formattedFundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 20);
+
+
 
                     let batchFundingCopy;
 
                     if (fundingCopyValue === '') {
                         batchFundingCopy = [
                             { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: formattedfundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
+                            {
+                                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+                                to: {
+                                    _obj: "textLayer", textKey: "Visualize no navegador.",
+                                    textStyleRange: [{
+                                        _obj: "textStyleRange", from: 0, to: formattedFundingCopyValue.length + 1 + "Visualize no navegador.".length,
+                                        textStyle: {
+                                            _obj: "textStyle",
+                                            fontPostScriptName: "ArialMT",
+                                            fontName: "Arial",
+                                            fontStyleName: "Regular",
+                                            size: { _unit: "pointsUnit", _value: 2.4208344268798827 },
+                                            impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 },
+                                            baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 },
+                                            impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 },
+                                            color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 }
+                                        }
+                                    }]
+                                },
+                                _isCommand: true
+                            },
                             { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Funding Copy" },], },
                         ]
                     } else {
                         batchFundingCopy = [
                             { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedfundingCopyValue + "\r" + "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: formattedfundingCopyValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } }, { _obj: "textStyleRange", from: formattedfundingCopyValue.length + 1, to: fundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
+                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedFundingCopyValue + "\r" + "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: formattedFundingCopyValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } }, { _obj: "textStyleRange", from: formattedFundingCopyValue.length + 1, to: formattedFundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
                             { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Funding Copy" },], },
                         ]
                     };
@@ -511,6 +547,7 @@ export default function EmailBuilder() {
 
                     await batchPlay(copyAllHero, {});
 
+
                     const activeDocument = app.activeDocument;
                     await activeDocument.paste();
 
@@ -527,6 +564,8 @@ export default function EmailBuilder() {
                     let offsetModules = ((slHeight + 30) + (fundingHeight + 20) + (skinnyHeight));
                     const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
                     pastedGroup.translate(offsetX, offsetY);
+
+
 
                     console.log('%cHero inserido com sucesso!', 'color: #00EAADFF;');
                 } catch (error) {
@@ -1253,6 +1292,165 @@ export default function EmailBuilder() {
         await core.executeAsModal(targetFunction, options);
     };
 
+    async function organizeDocument() {
+
+        const targetFunction = async (executionContext) => {
+            try {
+                const sslOrganize = [
+                    { _obj: "select", _target: [{ _ref: "layer", _name: "SL + SSL" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                    { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                    { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                    {
+                        _obj: "set",
+                        _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                        to: { _obj: "layer", name: "SL + SSL", color: { _enum: "color", _value: "gray" } },
+                        _options: { dialogOptions: "dontDisplay" }
+                    },
+                ]
+                await batchPlay(sslOrganize, {});
+
+                const fundingOrganize = [
+                    { _obj: "select", _target: [{ _ref: "layer", _name: "Funding" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                    { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                    { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                    {
+                        _obj: "set",
+                        _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                        to: { _obj: "layer", name: "Funding", color: { _enum: "color", _value: "indigo" } },
+                        _options: { dialogOptions: "dontDisplay" }
+                    },
+                ]
+                await batchPlay(fundingOrganize, {});
+
+                if (selectedHeader !== "") {
+                    const headerOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Header" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "Header", color: { _enum: "color", _value: "blue" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(headerOrganize, {});
+                }
+
+                if (selectedSkinny !== "") {
+                    const skinnyOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Skinny Banner" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "Skinny Banner", color: { _enum: "color", _value: "magenta" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(skinnyOrganize, {});
+                }
+
+                const heroOrganize = [
+                    { _obj: "select", _target: [{ _ref: "layer", _name: "Hero / Layout 1 / Lifestyle" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                    { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                    { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                    {
+                        _obj: "set",
+                        _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                        to: { _obj: "layer", name: "Hero", color: { _enum: "color", _value: "fuchsia" } },
+                        _options: { dialogOptions: "dontDisplay" }
+                    },
+                ]
+                await batchPlay(heroOrganize, {});
+
+                if (selectedPlugin !== "") {
+                    const pluginOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "Plugin", color: { _enum: "color", _value: "violet" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(pluginOrganize, {});
+                }
+
+                if (selectedFpoValue !== null) {
+                    const fpoOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "FPOs" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "FPO", color: { _enum: "color", _value: "red" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(fpoOrganize, {});
+                }
+                
+                if (selectedBanner !== "") {
+                    const bannerOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Banner" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "Banner", color: { _enum: "color", _value: "orange" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(bannerOrganize, {});
+                }
+
+                const footerOrganize = [
+                    { _obj: "select", _target: [{ _ref: "layer", _name: "Footer" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                    { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                    { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                    {
+                        _obj: "set",
+                        _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                        to: { _obj: "layer", name: "Footer", color: { _enum: "color", _value: "yellowColor" } },
+                        _options: { dialogOptions: "dontDisplay" }
+                    },
+                ]
+                await batchPlay(footerOrganize, {});
+
+                const birdseedOrganize = [
+                    { _obj: "select", _target: [{ _ref: "layer", _name: "Birdseed" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                    { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                    { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                    {
+                        _obj: "set",
+                        _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                        to: { _obj: "layer", name: "Birdseed", color: { _enum: "color", _value: "green" } },
+                        _options: { dialogOptions: "dontDisplay" }
+                    },
+                ]
+                await batchPlay(birdseedOrganize, {});
+
+
+                console.log('%cFit final executado com sucesso!', 'color: #00EAADFF;');
+            } catch (error) {
+                console.error('N\u00e3o foi poss\u00edvel ajustar o zoom para "Fit on Screen Pos":', error);
+            }
+        }
+
+        const options = {
+            commandName: 'Ajuste de documento pos montagem',
+            interactive: true,
+        };
+
+        await core.executeAsModal(targetFunction, options);
+    };
+
 
     const handleBuild = async () => {
         try {
@@ -1269,6 +1467,7 @@ export default function EmailBuilder() {
             var footerHeight = await footerBuild(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight);
             var birdseedHeight = await birdseedBuild(selectedBirdseed, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight);
             await fitToScreenPos(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
+            await organizeDocument();
 
             console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
         } catch (error) {

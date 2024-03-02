@@ -39,7 +39,6 @@ export default function FundingSelector() {
 
     }, [selectedFunding]);
 
-
     const handleInputChange = (key, value) => {
         setTempFormState((prevTempFormState) => ({
             ...prevTempFormState,
@@ -52,7 +51,6 @@ export default function FundingSelector() {
         }));
     };
 
-
     const handleBlur = (key) => {
         // Atualize o CsvContext com os valores editados
         setCsvValues({
@@ -61,10 +59,7 @@ export default function FundingSelector() {
         });
 
         // Atualize diretamente os valores no contexto
-        setFundingCopyValue((prevfundingCopyValue) => ({
-            ...prevfundingCopyValue,
-            [key]: tempFormState[key],
-        }));
+        setFundingCopyValue(tempFormState[key]);
 
         // Atualize o estado final com os valores do estado temporário
         setFormState({
@@ -79,6 +74,7 @@ export default function FundingSelector() {
         setIsEditClicked((prevIsEditClicked) => !prevIsEditClicked);
     };
 
+    console.log("funding copy", fundingCopyValue)
 
     return (
         <>
@@ -132,10 +128,10 @@ export default function FundingSelector() {
                             <sp-textfield
                                 id="funding-copy-field"
                                 placeholder="Insira o Funding Copy"
-                                value={formState.fundingCopyValue}
-                                onInput={(event) => handleInputChange("fundingCopyValue", event.target.value)}
-                                onBlur={() => handleBlur("fundingCopyValue")}
-                                valid={formState.fundingCopyValue !== "" ? true : undefined} // Ajuste para sempre ser válido enquanto você não implementa a validação específica
+                                value={tempFormState.fundingCopyValue}
+                                onInput={(e) => handleInputChange('fundingCopyValue', e.target.value)}
+                                onBlur={() => handleBlur('fundingCopyValue')}
+                                valid={valid.fundingCopyValue}
                             ></sp-textfield>
                         </div>
                     )}

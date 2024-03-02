@@ -188,9 +188,6 @@ export default function colorSelector() {
         handleTertiaryColorChange(cor);
     };
 
-    console.log("accent", accentColor)
-    console.log("selected accent", accentSelectedColor)
-
     return (
         <>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group"><sp-label>Colors</sp-label>
