@@ -33,7 +33,7 @@ export default function FooterSelector() {
                                 <sp-menu-item disabled selected={selectedFooter === 'gaming'} onClick={() => handleFooterClick('gaming')}>Gaming</sp-menu-item>
                                 <sp-menu-divider></sp-menu-divider>
                                 <sp-menu-item disabled selected={selectedFooter === 'outlet'} onClick={() => handleFooterClick('outlet')}>Outlet</sp-menu-item>
-                                <sp-menu-item disabled selected={selectedFooter === 'experts'} onClick={() => handleFooterClick('experts')}>Experts</sp-menu-item>
+                                <sp-menu-item selected={selectedFooter === 'experts'} onClick={() => handleFooterClick('experts')}>Experts</sp-menu-item>
                             </sp-menu>
                         </sp-picker>
                     </div>

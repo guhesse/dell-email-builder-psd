@@ -74,7 +74,6 @@ export default function FundingSelector() {
         setIsEditClicked((prevIsEditClicked) => !prevIsEditClicked);
     };
 
-    console.log("funding copy", fundingCopyValue)
 
     return (
         <>

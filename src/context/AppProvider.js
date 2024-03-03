@@ -262,7 +262,7 @@ export default function AppProvider({ children }) {
     const [selectedSkinny, setSelectedSkinny] = useState("");
     const [selectedHero, setSelectedHero] = useState("");
     const [selectedPlugin, setSelectedPlugin] = useState("");
-    const [selectedFpoSegment, setSelectedFpoSegment] = useState(null);
+    const [selectedFpoSegment, setSelectedFpoSegment] = useState("");
     const [selectedBanner, setSelectedBanner] = useState(null);
     const [selectedFooter, setSelectedFooter] = useState("");
     const [selectedBirdseed, setSelectedBirdseed] = useState(null);
@@ -293,7 +293,7 @@ export default function AppProvider({ children }) {
         rightPluginCopyValue: "",
     });
 
-    const [selectedFpoValue, setSelectedFpoValue] = useState(null);
+    const [selectedFpoValue, setSelectedFpoValue] = useState("");
 
     const [bannerCopyValues, setBannerCopyValues] = useState({
         bannerHeadlineValue: "",
@@ -311,7 +311,7 @@ export default function AppProvider({ children }) {
 
 
     useEffect(() => {
-        
+
         if (csvValues['HERO1 Image'].match(/background color:\s*#([0-9A-Fa-f]{6})/i) || "deepGreen") {
             const accentColorMatch = csvValues['HERO1 Image'].match(/background color:\s*#([0-9A-Fa-f]{6})/i);
             setAccentColor(accentColorMatch ? hexToRgb(`#${accentColorMatch[1]}`) : "deepGreen");
@@ -327,12 +327,8 @@ export default function AppProvider({ children }) {
             setTertiaryColor(tertiaryColorMatch ? hexToRgb(`#${tertiaryColorMatch[1]}`) : "teaGreen");
         }
 
-        // console.log("Accent color", accentColor)
-        // console.log("Secondary color", secondaryColor)
-
         setSlValue((csvValues.SL) || "");
         setSslValue((csvValues.SSL) || "");
-
 
         if (csvValues['Campaign Type'] === "CSB") {
             setSelectedHeader("csb");
@@ -411,7 +407,6 @@ export default function AppProvider({ children }) {
             });
         }
 
-
         setHeroCopyValues({
             badgeValue: csvValues['Badge Text'] || "",
             headlineValue: csvValues['Headline Text'] || "",
@@ -436,10 +431,39 @@ export default function AppProvider({ children }) {
         if (csvValues['Plugin1 Text'] !== "") {
             setSelectedPlugin("plugin");
         } else {
-
         }
 
-        // setSelectedFpoSegment(selectedFpoSegment)
+        if (csvValues['Order_Code 10(Bundle 5)'] !== undefined && csvValues['Order_Code 10(Bundle 5)'] !== "") {
+            console.log("Condition 5");
+            setSelectedFpoValue(5);
+        } else if (csvValues['Order_Code 9(Bundle 4)'] !== "") {
+            console.log("Condition 4");
+            setSelectedFpoValue(4);
+        } else if (csvValues['Order_Code 8(Bundle 3)'] !== "") {
+            console.log("Condition 3");
+            setSelectedFpoValue(3);
+        } else if (csvValues['Order_Code 7(Bundle 2)'] !== "") {
+            console.log("Condition 2");
+            setSelectedFpoValue(2);
+        } else if (csvValues['Order_Code 6(Bundle 1)'] !== "") {
+            console.log("Condition 1");
+            setSelectedFpoValue(1);
+        } 
+
+        console.log("FPO Value", selectedFpoValue)
+        console.log("FPO Segment", selectedFpoSegment)
+
+
+        if (csvValues['Campaign Type'] === "CSB") {
+            setSelectedFpoSegment("sb");
+            setSelectedFooter("csb-four-btn");
+        } else if (csvValues['Campaign Type'] === "sb") {
+            setSelectedFpoSegment("sb");
+            setSelectedFooter("sb-four-btn");
+        } else if (csvValues['Campaign Type'] === "DEXN") {
+            setSelectedFpoSegment("sb");
+            setSelectedFooter("experts");
+        }
 
         // setSelectedFpoValue(selectedFpoValue)
 
@@ -467,18 +491,23 @@ export default function AppProvider({ children }) {
             bannerCtaValue: csvValues['Banner1 CTA Text'] || "",
         })
 
-        setSelectedFooter(csvValues['Segment'] || "");
-        if (csvValues['Segment'] === "CSB") {
-            setCsvValues({
-                ...csvValues,
-                'Segment': "csb-four-btn"
-            });
-        } else if (csvValues['Segment'] === "SB") {
-            setCsvValues({
-                ...csvValues,
-                'Segment': "sb-four-btn"
-            });
-        }
+
+        // setSelectedFooter(csvValues['Segment'] || "");
+        // if (csvValues['Segment'] === "CSB") {
+        //     setCsvValues({
+        //         ...csvValues,
+        //         'Segment': "csb-four-btn"
+        //     });
+        // } else if (csvValues['Segment'] === "SB") {
+        //     setCsvValues({
+        //         ...csvValues,
+        //         'Segment': "sb-four-btn"
+        //     });
+        // } else if ((csvValues['Segment'] === "SB") && (csvValues['Campaign Type'] === "DEXN")) {
+        //     setSelectedFooter("experts")
+        // }
+
+        console.log("selected footer", selectedFooter)
 
         setSelectedBirdseed(csvValues['Campaign Type'] || "");
         if (csvValues['Campaign Type'] !== "Outlet") {
@@ -520,6 +549,11 @@ export default function AppProvider({ children }) {
         csvValues['HERO CTA1 Text'],
         csvValues['HERO Template'],
         csvValues['Plugin1 Text'],
+        csvValues['Order_Code 6(Bundle 1)'],
+        csvValues['Order_Code 7(Bundle 2)'],
+        csvValues['Order_Code 8(Bundle 3)'],
+        csvValues['Order_Code 9(Bundle 4)'],
+        csvValues['Order_Code 10(Bundle 5)'],
         csvValues['Banner1 Layout'],
         csvValues['Banner1 Headline'],
         csvValues['Banner1 Text'],

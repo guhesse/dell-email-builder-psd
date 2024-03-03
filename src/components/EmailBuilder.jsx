@@ -1070,7 +1070,13 @@ export default function EmailBuilder() {
                     const docWidth = activeDocument.width;
                     const docHeight = activeDocument.height;
 
-                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (footerWidth / 2) + 45);
+                    var offsetX;
+
+                    if (selectedFooter === "experts") {
+                        var offsetX = ((docWidth - docWidth) - (docWidth / 2) + (footerWidth / 2) + 25);
+                    } else {
+                        var offsetX = ((docWidth - docWidth) - (docWidth / 2) + (footerWidth / 2) + 45);
+                    }
                     let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyHeight + heroHeight + pluginHeight + fpoHeight + bannerHeight;
                     const offsetY = (docHeight - docHeight) - (docHeight / 2) + (footerHeight / 2) + 10 + offsetModules;
 
@@ -1394,7 +1400,7 @@ export default function EmailBuilder() {
                     ]
                     await batchPlay(fpoOrganize, {});
                 }
-                
+
                 if (selectedBanner !== "") {
                     const bannerOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Banner" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
