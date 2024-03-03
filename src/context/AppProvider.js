@@ -436,19 +436,21 @@ export default function AppProvider({ children }) {
         if (csvValues['Order_Code 10(Bundle 5)'] !== undefined && csvValues['Order_Code 10(Bundle 5)'] !== "") {
             console.log("Condition 5");
             setSelectedFpoValue(5);
-        } else if (csvValues['Order_Code 9(Bundle 4)'] !== "") {
+        } else if (csvValues['Order_Code 9(Bundle 4)'] !== undefined && csvValues['Order_Code 9(Bundle 4)'] !== "") {
             console.log("Condition 4");
             setSelectedFpoValue(4);
-        } else if (csvValues['Order_Code 8(Bundle 3)'] !== "") {
+        } else if (csvValues['Order_Code 8(Bundle 3)'] !== undefined && csvValues['Order_Code 8(Bundle 3)'] !== "") {
             console.log("Condition 3");
             setSelectedFpoValue(3);
-        } else if (csvValues['Order_Code 7(Bundle 2)'] !== "") {
+        } else if (csvValues['Order_Code 7(Bundle 2)'] !== undefined && csvValues['Order_Code 7(Bundle 2)'] !== "") {
             console.log("Condition 2");
             setSelectedFpoValue(2);
-        } else if (csvValues['Order_Code 6(Bundle 1)'] !== "") {
+        } else if (csvValues['Order_Code 6(Bundle 1)'] !== undefined && csvValues['Order_Code 6(Bundle 1)'] !== "") {
             console.log("Condition 1");
             setSelectedFpoValue(1);
-        } 
+        }
+        
+        
 
         console.log("FPO Value", selectedFpoValue)
         console.log("FPO Segment", selectedFpoSegment)

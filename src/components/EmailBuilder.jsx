@@ -248,7 +248,6 @@ export default function EmailBuilder() {
 
     // Importa o funding
     async function fundingBuild() {
-        console.log(fundingCopyValue)
         const fundingFilePath = `assets/fundings/${selectedFunding}.psd`;
         try {
             const fs = storage.localFileSystem;

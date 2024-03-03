@@ -246,7 +246,7 @@ export default function colorSelector() {
                                                 style={{ display: "flex", alignItems: "center" }}>
                                                 <span
                                                     style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
-                                                {cor.charAt(0).toUpperCase() + cor.slice(1)}
+                                                {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}
                                                 <span
                                                     style={{ color: "gray", marginLeft: "10px" }}>{coresHEX[cor]}</span>
                                             </div>
@@ -268,7 +268,7 @@ export default function colorSelector() {
                                         <sp-menu-item selected={secondarySelectedColor === cor} style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                                             <div style={{ display: "flex", alignItems: "center" }}>
                                                 <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
-                                                {cor.charAt(0).toUpperCase() + cor.slice(1)}
+                                                {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}
                                                 <span style={{ color: "gray", marginLeft: "10px" }}>{coresHEX[cor]}</span>
                                             </div>
                                         </sp-menu-item>
@@ -289,7 +289,7 @@ export default function colorSelector() {
                                         <sp-menu-item selected={tertiarySelectedColor === cor} style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                                             <div style={{ display: "flex", alignItems: "center" }}>
                                                 <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
-                                                {cor.charAt(0).toUpperCase() + cor.slice(1)}
+                                                {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}
                                                 <span style={{ color: "gray", marginLeft: "10px" }}>{coresHEX[cor]}</span>
                                             </div>
                                         </sp-menu-item>
