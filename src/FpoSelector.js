@@ -13,8 +13,6 @@ export default function FpoSelector() {
         setSelectedFpoValue(selectedFpoValue);
     };
 
-    console.log("FPO Value no selector", selectedFpoValue)
-
     return (
         <>
 

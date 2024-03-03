@@ -259,7 +259,7 @@ export default function EmailBuilder() {
                     await app.open(fileEntry);
                     const secondDocument = app.documents[1];
 
-                    const formattedFundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 20);
+                    const formattedFundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 30);
 
 
 
@@ -397,7 +397,7 @@ export default function EmailBuilder() {
                     const skinnyWidth = secondDocument.width;
 
                     const formattedTitleCopyValue = limitCharsPerLine(skinnyTitleValue || '', 60);
-                    const formattedSkinnyCopyValue = limitCharsPerLine(skinnyCopyValue || '', 60);
+                    const formattedSkinnyCopyValue = limitCharsPerLine(skinnyCopyValue || '', 65);
 
                     const skinnyBannerCopy = formattedTitleCopyValue + "\r" + formattedSkinnyCopyValue
 
@@ -409,9 +409,9 @@ export default function EmailBuilder() {
                             to: {
                                 _obj: "textLayer", textKey: skinnyBannerCopy, textStyleRange: [
 
-                                    { _obj: "textStyleRange", from: 0, to: skinnyTitleValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Bold", fontName: "Roboto", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 20.75 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
+                                    { _obj: "textStyleRange", from: 0, to: skinnyTitleValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Bold", fontName: "Roboto", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 18.5 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
 
-                                    { _obj: "textStyleRange", from: skinnyTitleValue.length + 1, to: skinnyTitleValue.length + skinnyCopyValue.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Regular", fontName: "Roboto", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 20.75 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
+                                    { _obj: "textStyleRange", from: skinnyTitleValue.length + 1, to: skinnyTitleValue.length + skinnyCopyValue.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Regular", fontName: "Roboto", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 18.5 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
                                 ]
                             }, _isCommand: true
                         },
@@ -1110,6 +1110,12 @@ export default function EmailBuilder() {
             const pluginDir = await fs.getPluginFolder();
             const fileEntry = await pluginDir.getEntry(birdseedFilePath);
 
+            const formattedDay = selectedDay < 10 ? `0${selectedDay}` : selectedDay;
+            const formattedMonth = selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth;
+
+            console.log("Day Formatted", formattedDay)
+            console.log("Month Formatted", formattedMonth)
+
             const targetFunction = async (executionContext) => {
                 try {
                     await app.open(fileEntry);
@@ -1118,7 +1124,7 @@ export default function EmailBuilder() {
 
                     if (selectedBirdseedCopy === true) {
 
-                        const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${selectedDay}/${selectedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
+                        const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${formattedDay}/${formattedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
 
                         const defaultTextURLOne = ` www.dell.com.br.\r\r`
 
@@ -1161,7 +1167,7 @@ export default function EmailBuilder() {
 
                     } else if (selectedBirdseedCopy === false) {
 
-                        const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${selectedDay}/${selectedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
+                        const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${formattedDay}/${formattedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
 
                         const defaultTextURLOne = ` www.dell.com.br.\r\r`
 

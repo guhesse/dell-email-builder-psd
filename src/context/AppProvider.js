@@ -181,10 +181,6 @@ export default function AppProvider({ children }) {
         return matchingColor ? matchingColor[0] : `rgb(${parseInt(hex.substring(0, 2), 16)}, ${parseInt(hex.substring(2, 4), 16)}, ${parseInt(hex.substring(4, 6), 16)})`;
     }
 
-
-
-    // Seletor de Cores
-
     const cores = {
         white: { r: 254, g: 254, b: 254 },
         quartz: { r: 238, g: 238, b: 238 },
@@ -380,6 +376,14 @@ export default function AppProvider({ children }) {
 
         setFundingCopyValue(csvValues['Funding/WEP Content'] || "");
 
+        setSkinnyTitleValue(csvValues['Skinny Banner Headline'] || "")
+
+        setSkinnyCopyValue(csvValues['Skinny Banner Text'] || "")
+
+        if (csvValues['Skinny Banner Headline'] !== undefined && csvValues['Skinny Banner Headline'] !== "") {
+            setSelectedSkinny("left")
+        }
+
         setSelectedHero(csvValues['HERO Template'] || "");
         if (
             csvValues['HERO Template'] === "HERO LAYOUT 1" &&
@@ -434,26 +438,16 @@ export default function AppProvider({ children }) {
         }
 
         if (csvValues['Order_Code 10(Bundle 5)'] !== undefined && csvValues['Order_Code 10(Bundle 5)'] !== "") {
-            console.log("Condition 5");
             setSelectedFpoValue(5);
         } else if (csvValues['Order_Code 9(Bundle 4)'] !== undefined && csvValues['Order_Code 9(Bundle 4)'] !== "") {
-            console.log("Condition 4");
             setSelectedFpoValue(4);
         } else if (csvValues['Order_Code 8(Bundle 3)'] !== undefined && csvValues['Order_Code 8(Bundle 3)'] !== "") {
-            console.log("Condition 3");
             setSelectedFpoValue(3);
         } else if (csvValues['Order_Code 7(Bundle 2)'] !== undefined && csvValues['Order_Code 7(Bundle 2)'] !== "") {
-            console.log("Condition 2");
             setSelectedFpoValue(2);
         } else if (csvValues['Order_Code 6(Bundle 1)'] !== undefined && csvValues['Order_Code 6(Bundle 1)'] !== "") {
-            console.log("Condition 1");
             setSelectedFpoValue(1);
         }
-        
-        
-
-        console.log("FPO Value", selectedFpoValue)
-        console.log("FPO Segment", selectedFpoSegment)
 
 
         if (csvValues['Campaign Type'] === "CSB") {
@@ -509,8 +503,6 @@ export default function AppProvider({ children }) {
         //     setSelectedFooter("experts")
         // }
 
-        console.log("selected footer", selectedFooter)
-
         setSelectedBirdseed(csvValues['Campaign Type'] || "");
         if (csvValues['Campaign Type'] !== "Outlet") {
             setSelectedBirdseed("standard")
@@ -541,6 +533,8 @@ export default function AppProvider({ children }) {
         csvValues.SSL,
         csvValues['Funding/WEP Content'],
         csvValues['Campaign Type'],
+        csvValues['Skinny Banner Headline'],
+        csvValues['Skinny Banner Text'],
         csvValues['Badge Text'],
         csvValues['Headline Text'],
         csvValues['SHL'],
@@ -564,7 +558,6 @@ export default function AppProvider({ children }) {
         csvValues['Birdseed 1A'],
         csvValues['Birdseed 2'],
     ]);
-
 
     return (
         <AppContext.Provider value={{

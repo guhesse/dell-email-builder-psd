@@ -24,8 +24,8 @@ CDT Banner;Basic Info;Enter Content;
 ;Expiry Date/Time in BRT;;
 ;;;
 Skinny Banner;;Enter Content;
-;Skinny Banner Headline;;
-;Skinny Banner Text;;
+;Skinny Banner Headline;Acabou a espera.;
+;Skinny Banner Text;Chegaram as Ofertas do Consumidor com tecnologia mais recente.;
 ;Skinny Banner Background Color;;Values should of Hexadecimal color code. Please refer color code sheet for the values.
 ;Skinny Banner Text Color;;Values should of Hexadecimal color code. Please refer color code sheet for the values.
 ;Skinny CTA Text;;
@@ -143,7 +143,7 @@ Birdseed;;Enter Content;
 ;Birdseed 1A;;Use this field for 1st Paragraph.
 ;Birdseed 1 Link Text;;
 ;Birdseed 1B;;
-;Birdseed 2;02/06/2024;Offer Expiry Date of Footer content.
+;Birdseed 2;27/02/2024;Offer Expiry Date of Footer content.
 ;;;
 Link Section;;Enter Links;
 ;Header Plugin Link;;All the Links should be raw URL( Landing page URL )
