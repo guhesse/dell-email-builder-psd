@@ -110,7 +110,26 @@ export default async function Hero2Promotion(accentRed, accentGreen, accentBlue,
 
     const changeCtaCopy = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Copy" }], makeVisible: false, layerID: [9628], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: heroCtaValue } },
+        {
+            _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+            to: {
+                _obj: "textLayer", textKey: heroCtaValue, textStyleRange: [
+
+                    {
+                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER,
+                        textStyle: {
+                            _obj: "textStyle",
+                            fontPostScriptName: "Roboto-Medium",
+                            fontName: "Roboto",
+                            fontStyleName: "Medium",
+                            size: { _unit: "pointsUnit", _value: 18 },
+                            color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 },
+                            tracking: 0,
+                            autoLeading: true,
+                        }
+                    }]
+            }, _isCommand: true
+        },
         { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "CTA Copy" },], },
     ]
 

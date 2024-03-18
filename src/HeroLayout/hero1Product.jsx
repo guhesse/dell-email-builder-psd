@@ -42,29 +42,6 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
 
         {
             _obj: "select",
-            _target: [{ _ref: "layer", _name: "CTA Copy" }],
-            makeVisible: false,
-            layerID: [5980],
-            _options: { dialogOptions: "dontDisplay" },
-        },
-        {
-            _obj: "set",
-            _target: [{ _ref: "property", _property: "textStyle" },
-            { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },],
-            to: {
-                _obj: "textStyle",
-                color: {
-                    _obj: "RGBColor",
-                    red: accentRed,
-                    grain: accentGreen,
-                    blue: accentBlue
-                },
-            },
-            _options: { dialogOptions: "dontDisplay" },
-        },
-
-        {
-            _obj: "select",
             _target: [{ _ref: "layer", _name: "Pattern" }],
             makeVisible: false,
             layerID: [9582],
@@ -207,7 +184,7 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
                 _obj: "textLayer", textKey: formattedSubHeadlineValue, textStyleRange: [
 
                     {
-                        _obj: "textStyleRange", from: 0, to: formattedSubHeadlineValue.length,
+                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER,
                         textStyle: {
                             _obj: "textStyle",
                             fontPostScriptName: "Roboto-Regular",
@@ -457,9 +434,24 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
         },
 
         {
-            _obj: "set",
-            _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
-            to: { _obj: "textLayer", textKey: heroCtaValue }
+            _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+            to: {
+                _obj: "textLayer", textKey: heroCtaValue, textStyleRange: [
+
+                    {
+                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER,
+                        textStyle: {
+                            _obj: "textStyle",
+                            fontPostScriptName: "Roboto-Medium",
+                            fontName: "Roboto",
+                            fontStyleName: "Medium",
+                            size: { _unit: "pointsUnit", _value: 18 },
+                            color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue },
+                            tracking: 0,
+                            autoLeading: true,
+                        }
+                    }]
+            }, _isCommand: true
         },
 
         {
@@ -471,7 +463,7 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
 
     const resultCtaCopyBoundingBox = await batchPlay(changeCtaCopy, {});
     const boundingBoxCtaCopy = resultCtaCopyBoundingBox[2].boundingBox;
-    const newBorderCta = boundingBoxCtaCopy.width._value + 20;
+    const newBorderCta = boundingBoxCtaCopy.width._value + 15;
 
     const resizeCtaBorder = [
         {

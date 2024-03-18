@@ -22,7 +22,7 @@ export default function FpoSelector() {
                     <sp-field-group style={{ display: "flex", flexDirection: "row" }}>
                         <sp-picker placeholder="Selecione quantos FPO's" style={{ padding: "0" }} id="picker-m" size="m" label="Selection type">
                             <sp-menu>
-                                <sp-menu-item onClick={() => handleFpoValueClick("")}>None</sp-menu-item>
+                                <sp-menu-item onClick={() => handleFpoValueClick(null)}>None</sp-menu-item>
                                 <sp-menu-item onClick={() => handleFpoValueClick(1)}>1</sp-menu-item>
                                 <sp-menu-item onClick={() => handleFpoValueClick(2)}>2</sp-menu-item>
                                 <sp-menu-item onClick={() => handleFpoValueClick(3)}>3</sp-menu-item>
@@ -33,7 +33,7 @@ export default function FpoSelector() {
                     </sp-field-group>
                 </div>
 
-                {selectedFpoValue !== "" && (
+                {selectedFpoValue !== null && (
                     <div style={{ display: "flex", flexDirection: "column" }}>
                         <sp-detail for="fpo-segment-field">SEGUIMENTO</sp-detail>
                         <sp-field-group>

@@ -19,9 +19,6 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
         { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], makeVisible: false, layerID: [9616], _options: { dialogOptions: "dontDisplay" }, },
         { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: tertiaryRed, grain: tertiaryGreen, blue: tertiaryBlue }, }, _options: { dialogOptions: "dontDisplay" }, },
 
-        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Copy" }], makeVisible: false, layerID: [9617], _options: { dialogOptions: "dontDisplay" }, },
-        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: accentRed, grain: accentGreen, blue: accentBlue }, }, _options: { dialogOptions: "dontDisplay" }, },
-
         { _obj: "select", _target: [{ _ref: "layer", _name: "Pattern" }], makeVisible: false, layerID: [9653], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
         { _obj: "set", _target: [{ _ref: "property", _property: "layerEffects" }, { _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layerEffects", scale: { _unit: "percentUnit", _value: 100 }, solidFill: { _obj: "solidFill", enabled: true, present: true, showInDialog: true, mode: { _enum: "blendMode", _value: "normal" }, color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue }, opacity: { _unit: "percentUnit", _value: 100 } } }, _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
 
@@ -128,13 +125,32 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
 
     const changeCtaCopy = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Copy" }], makeVisible: false, layerID: [11492], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: heroCtaValue } },
+        {
+            _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+            to: {
+                _obj: "textLayer", textKey: heroCtaValue, textStyleRange: [
+
+                    {
+                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER,
+                        textStyle: {
+                            _obj: "textStyle",
+                            fontPostScriptName: "Roboto-Medium",
+                            fontName: "Roboto",
+                            fontStyleName: "Medium",
+                            size: { _unit: "pointsUnit", _value: 18 },
+                            color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue },
+                            tracking: 0,
+                            autoLeading: true,
+                        }
+                    }]
+            }, _isCommand: true
+        },
         { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "CTA Copy" },], },
     ]
 
     const resultCtaCopyBoundingBox = await batchPlay(changeCtaCopy, {});
     const boundingBoxCtaCopy = resultCtaCopyBoundingBox[2].boundingBox;
-    const newBorderCta = boundingBoxCtaCopy.width._value + 20;
+    const newBorderCta = boundingBoxCtaCopy.width._value + 15;
 
     const resizeCtaBorder = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], makeVisible: false, layerID: [9616], _options: { dialogOptions: "dontDisplay" } },

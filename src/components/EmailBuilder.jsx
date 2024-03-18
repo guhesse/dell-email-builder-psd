@@ -821,9 +821,10 @@ export default function EmailBuilder() {
         }
     }
 
+
     async function fpoBuild() {
 
-        if (selectedFpoValue === null) {
+        if (selectedFpoValue === null || selectedFpoSegment === undefined) {
             console.warn('Fpo n\u00e3o selecionado');
             fpoHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
             return; // Retorna imediatamente se o plugin n\u00e3o estiver selecionado
@@ -1363,18 +1364,59 @@ export default function EmailBuilder() {
                     await batchPlay(skinnyOrganize, {});
                 }
 
-                const heroOrganize = [
-                    { _obj: "select", _target: [{ _ref: "layer", _name: "Hero / Layout 1 / Lifestyle" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
-                    {
-                        _obj: "set",
-                        _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
-                        to: { _obj: "layer", name: "Hero", color: { _enum: "color", _value: "fuchsia" } },
-                        _options: { dialogOptions: "dontDisplay" }
-                    },
-                ]
-                await batchPlay(heroOrganize, {});
+                if (selectedHero === "hero1-lifestyle-product") {
+                    const heroOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Hero / Layout 1 / Lifestyle & Product" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "Hero", color: { _enum: "color", _value: "fuchsia" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(heroOrganize, {});
+                } else if (selectedHero === "hero1-lifestyle") {
+                    const heroOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Hero / Layout 1 / Lifestyle" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "Hero", color: { _enum: "color", _value: "fuchsia" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(heroOrganize, {});
+                } else if (selectedHero === "hero1-product") {
+                    const heroOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Hero / Layout 1 / Product" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "Hero", color: { _enum: "color", _value: "fuchsia" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(heroOrganize, {});
+                } else if (selectedHero === "hero2-promotion") {
+                    const heroOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Hero / Layout 2 / Promotion" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "Hero", color: { _enum: "color", _value: "fuchsia" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(heroOrganize, {});
+                }
 
                 if (selectedPlugin !== "") {
                     const pluginOrganize = [
@@ -1420,19 +1462,20 @@ export default function EmailBuilder() {
                     ]
                     await batchPlay(bannerOrganize, {});
                 }
-
-                const footerOrganize = [
-                    { _obj: "select", _target: [{ _ref: "layer", _name: "Footer" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
-                    {
-                        _obj: "set",
-                        _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
-                        to: { _obj: "layer", name: "Footer", color: { _enum: "color", _value: "yellowColor" } },
-                        _options: { dialogOptions: "dontDisplay" }
-                    },
-                ]
-                await batchPlay(footerOrganize, {});
+                if (selectedFooter !== "") {
+                    const footerOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Footer" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "Footer", color: { _enum: "color", _value: "yellowColor" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(footerOrganize, {});
+                }
 
                 const birdseedOrganize = [
                     { _obj: "select", _target: [{ _ref: "layer", _name: "Birdseed" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },

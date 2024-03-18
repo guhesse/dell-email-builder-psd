@@ -447,6 +447,8 @@ export default function AppProvider({ children }) {
             setSelectedFpoValue(2);
         } else if (csvValues['Order_Code 6(Bundle 1)'] !== undefined && csvValues['Order_Code 6(Bundle 1)'] !== "") {
             setSelectedFpoValue(1);
+        } else {
+            setSelectedFpoValue(null)
         }
 
 
