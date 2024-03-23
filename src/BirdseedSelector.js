@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Theme } from "@swc-react/theme";
 import useAppContext from './hook/useAppContext.jsx';
 
-
 export default function BirdseedSelector() {
 
     const { csvValues, setCsvValues,
@@ -21,7 +20,6 @@ export default function BirdseedSelector() {
         selectedYear,
     } = birdseedDate || {};
 
-
     const handleBirdseedClick = (selectedBirdseed) => {
         setSelectedBirdseed(selectedBirdseed);
     }
@@ -37,14 +35,12 @@ export default function BirdseedSelector() {
         birdseedCopyValues: csvValues['Birdseed 1A'] || "",
     });
 
-
     const [tempFormState, setTempFormState] = useState({
         selectedDay: "",
         selectedMonth: "",
         selectedYear: "",
         birdseedCopyValues: "",
     });
-
 
     const [valid, setValid] = useState({
         birdseedCopyValues: false,
@@ -68,9 +64,6 @@ export default function BirdseedSelector() {
         });
 
     }, [selectedBirdseed, birdseedDate, csvValues]);
-
-
-
 
     const handleInputChange = (key, value) => {
         setTempFormState((prevTempFormState) => ({
@@ -118,7 +111,6 @@ export default function BirdseedSelector() {
         });
     };
 
-
     const [isChecked, setChecked] = useState(false);
 
     const handleCheckboxChange = () => {
@@ -130,7 +122,6 @@ export default function BirdseedSelector() {
     const handleEditClick = () => {
         setIsEditClicked((prevIsEditClicked) => !prevIsEditClicked);
     };
-
 
     return (
         <>
@@ -156,8 +147,6 @@ export default function BirdseedSelector() {
                         </sp-action-button>
                     </div>
                 </sp-field-group>
-
-
 
                 {selectedBirdseed === 'standard' && (
                     <>

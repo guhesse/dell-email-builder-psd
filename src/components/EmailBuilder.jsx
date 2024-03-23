@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { core, app, batchPlay, storage } from '../App.js';
 import useAppContext from '../hook/useAppContext.jsx';
 import limitCharsPerLine from '../hook/charLimiter.jsx';
+import { selectLayer } from '../hook/hooksJSON.jsx';
 import Hero1LifestyleProduct from '../HeroLayout/hero1LifestyleProduct.jsx';
 import Hero1Lifestyle from '../HeroLayout/hero1lifestyle.jsx';
 import Hero1Product from '../HeroLayout/hero1Product.jsx';
@@ -22,9 +23,6 @@ export default function EmailBuilder() {
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
     const { selectedDay, selectedMonth, selectedYear, } = birdseedDate || {};
 
-
-    // Limpar as camadas do documento
-    // Limpar as camadas do documento
     // Limpar as camadas do documento
     async function clearAllLayers() {
         const targetFunction = async (executionContext) => {
@@ -43,8 +41,8 @@ export default function EmailBuilder() {
 
                 // Deleta todas as camadas
                 const deleteAllLayers = [
-                    { _obj: 'selectAllLayers', _target: [{ _ref: 'layer', _enum: 'ordinal', _value: 'targetEnum' }], _options: { dialogOptions: 'dontDisplay' } },
-                    { _obj: 'delete', _target: [{ _ref: 'layer', _enum: 'ordinal', _value: 'targetEnum' }], _options: { dialogOptions: 'dontDisplay' } },
+                    { _obj: 'selectAllLayers', _target: [{ _ref: 'layer', _enum: 'ordinal', _value: 'targetEnum' }], _options: { dialogOptions: 'silent' } },
+                    { _obj: 'delete', _target: [{ _ref: 'layer', _enum: 'ordinal', _value: 'targetEnum' }], _options: { dialogOptions: 'silent' } },
                 ];
 
                 await batchPlay(deleteAllLayers, {});
@@ -134,11 +132,23 @@ export default function EmailBuilder() {
                     const slWidth = secondDocument.width;
                     slHeight = secondDocument.height;
 
-                    // Fun\u00e7\u00e3o que troca o texto do SL e SSL
+                    const selectSl = selectLayer({
+                        Type: "layer",
+                        Name: "SL",
+                        // ID: 2125
+                    });
+
+                    const selectSsl = selectLayer({
+                        Type: "layer",
+                        Name: "SSL",
+                        // ID: 2125
+                    });
+
+                    // Fun\u00e7\u00e3o que troca o texto do SL e SSL 
                     const changeSLCopy = [
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "SL" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+                        selectSl,
                         { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `Subject Line:  ${slValue}`, } },
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "SSL" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
+                        selectSsl,
                         { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `Super Subject Line :  ${sslValue}`, } }
                     ];
 
@@ -342,7 +352,7 @@ export default function EmailBuilder() {
                     }
                     pastedGroup.translate(offsetX, offsetY);
 
-                    if (selectedHeader !== null) {
+                    if (selectedHeader !== "") {
 
                         const alignToHeader = [
                             { _obj: "select", _target: [{ _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
@@ -774,7 +784,10 @@ export default function EmailBuilder() {
 
                         const batchPluginChange = [
                             { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }, { _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3320, 3325], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+                            {
+                                _obj: "select", _target: [{ _ref: "layer", _name: "Background" },
+                                { _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3320, 3325], _isCommand: false, _options: { dialogOptions: "dontDisplay" }
+                            },
                             { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersH" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" }, },
                             { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
                             { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
@@ -1113,9 +1126,6 @@ export default function EmailBuilder() {
 
             const formattedDay = selectedDay < 10 ? `0${selectedDay}` : selectedDay;
             const formattedMonth = selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth;
-
-            console.log("Day Formatted", formattedDay)
-            console.log("Month Formatted", formattedMonth)
 
             const targetFunction = async (executionContext) => {
                 try {
