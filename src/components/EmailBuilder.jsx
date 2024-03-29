@@ -2,11 +2,13 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { core, app, batchPlay, storage } from '../App.js';
 import useAppContext from '../hook/useAppContext.jsx';
 import limitCharsPerLine from '../hook/charLimiter.jsx';
-import { selectLayer } from '../hook/hooksJSON.jsx';
 import Hero1LifestyleProduct from '../HeroLayout/hero1LifestyleProduct.jsx';
 import Hero1Lifestyle from '../HeroLayout/hero1lifestyle.jsx';
 import Hero1Product from '../HeroLayout/hero1Product.jsx';
 import Hero2Promotion from '../HeroLayout/hero2promotion.jsx';
+import { getBoundsAndPosition } from '../hook/getBoundsAndPosition.jsx';
+
+import { selectLayer, selectGroup, makeSmartObj, setFontStyle, getBounds, setOffset, setSolidFill, setOverlayColor, selectAllAndCopy, alignGroupX, alignGroupY } from "../hook/hooksJSON.jsx";
 
 
 export default function EmailBuilder() {
@@ -22,6 +24,13 @@ export default function EmailBuilder() {
     const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
     const { selectedDay, selectedMonth, selectedYear, } = birdseedDate || {};
+
+    // Fazer depois a função para deletar artboard caso exista uma 
+
+    // { _obj: "make", _target: [{ _ref: "layer" }], using: { _obj: "layer", name: "Background" }, layerID: 6, _options: { dialogOptions: "dontDisplay" } },
+    // { _obj: "make", _target: [{ _ref: "backgroundLayer" }], using: { _ref: "layer", _enum: "ordinal", _value: "targetEnum" }, _options: { dialogOptions: "dontDisplay" } },
+    // { _obj: "select", _target: [{ _ref: "layer", _name: "Artboard 1" }], makeVisible: false, layerID: [3], _options: { dialogOptions: "dontDisplay" } },
+    // { _obj: "delete", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], layerID: [4, 3], _options: { dialogOptions: "dontDisplay" } }
 
     // Limpar as camadas do documento
     async function clearAllLayers() {
@@ -64,11 +73,6 @@ export default function EmailBuilder() {
         };
 
         await core.executeAsModal(targetFunction, options);
-    }
-
-
-    function captalizeCopy(text) {
-        return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
     }
 
     // Ajusta o documento para entrada dos modulos
@@ -132,44 +136,44 @@ export default function EmailBuilder() {
                     const slWidth = secondDocument.width;
                     slHeight = secondDocument.height;
 
-                    const selectSl = selectLayer({
-                        Type: "layer",
-                        Name: "SL",
-                        // ID: 2125
-                    });
-
-                    const selectSsl = selectLayer({
-                        Type: "layer",
-                        Name: "SSL",
-                        // ID: 2125
-                    });
-
-                    // Fun\u00e7\u00e3o que troca o texto do SL e SSL 
+                    // Troca o texto do SL e SSL 
                     const changeSLCopy = [
-                        selectSl,
-                        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `Subject Line:  ${slValue}`, } },
-                        selectSsl,
-                        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: `Super Subject Line :  ${sslValue}`, } }
+                        setFontStyle({
+                            Name: "SL",
+                            Value: "Subject Line: " + slValue,
+                            FontScript: "ArialMT",
+                            FontName: "Arial",
+                            FontWeight: "Regular",
+                            Size: 12,
+                            RedColor: 255,
+                            GreenColor: 255,
+                            BlueColor: 255,
+                            FontCaps: false,
+                            AutoLeading: true,
+                        }),
+                        setFontStyle({
+                            Name: "SSL",
+                            Value: "Super Subject Line: " + sslValue,
+                            FontScript: "ArialMT",
+                            FontName: "Arial",
+                            FontWeight: "Regular",
+                            Size: 12,
+                            RedColor: 255,
+                            GreenColor: 255,
+                            BlueColor: 255,
+                            FontCaps: false,
+                            AutoLeading: true,
+                        }),
                     ];
 
                     await batchPlay(changeSLCopy, {});
 
-
-                    // Fun\u00e7\u00e3o que copia e cola o m\u00f3dulo
-                    const selectAndCopy = [
-                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-                    ];
-
+                    // Copia e cola o modulo
+                    const selectAndCopy = selectAllAndCopy()
                     await batchPlay(selectAndCopy, {});
-
 
                     const activeDocument = app.activeDocument;
                     await activeDocument.paste();
-
-
 
                     const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
                     const docWidth = activeDocument.width;
@@ -195,10 +199,11 @@ export default function EmailBuilder() {
         }
     };
 
+
     // Importa o header
     async function headerBuild() {
 
-        if (selectedHeader === "") {
+        if (selectedHeader === "" || selectedHeader === null) {
             console.warn('Header n&#xe3;o selecionado');
             headerHeight = 0;
             return;
@@ -217,15 +222,9 @@ export default function EmailBuilder() {
                     const headerWidth = secondDocument.width;
                     headerHeight = secondDocument.height;
 
-                    // Seleciona o Header, copia e cola
-                    const headerSelect = [
-                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-                    ];
-
-                    await batchPlay(headerSelect, {});
+                    // Copia e cola o modulo
+                    const selectAndCopy = selectAllAndCopy()
+                    await batchPlay(selectAndCopy, {});
 
                     const activeDocument = app.activeDocument;
                     await activeDocument.paste();
@@ -258,7 +257,15 @@ export default function EmailBuilder() {
 
     // Importa o funding
     async function fundingBuild() {
-        const fundingFilePath = `assets/fundings/${selectedFunding}.psd`;
+
+        let fundingFilePath
+
+        if (selectedFunding !== "" && selectedFunding !== null) {
+            fundingFilePath = `assets/fundings/${selectedFunding}.psd`;
+        } else {
+            fundingFilePath = `assets/fundings/no-vf.psd`;
+        }
+
         try {
             const fs = storage.localFileSystem;
             const pluginDir = await fs.getPluginFolder();
@@ -269,7 +276,7 @@ export default function EmailBuilder() {
                     await app.open(fileEntry);
                     const secondDocument = app.documents[1];
 
-                    const formattedFundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 30);
+                    const formattedFundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 30, "capitalized");
 
 
 
@@ -325,12 +332,8 @@ export default function EmailBuilder() {
 
                     fundingHeight = secondDocument.height;
 
-                    const selectAndCopy = [
-                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-                    ]
+                    // Copia e cola o modulo
+                    const selectAndCopy = selectAllAndCopy()
                     await batchPlay(selectAndCopy, {});
 
                     const activeDocument = app.activeDocument;
@@ -352,7 +355,7 @@ export default function EmailBuilder() {
                     }
                     pastedGroup.translate(offsetX, offsetY);
 
-                    if (selectedHeader !== "") {
+                    if (selectedHeader !== "" && selectedHeader !== null) {
 
                         const alignToHeader = [
                             { _obj: "select", _target: [{ _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
@@ -385,7 +388,7 @@ export default function EmailBuilder() {
     // Importa o skinny banner
     async function skinnyBuild() {
 
-        if (selectedSkinny === "") {
+        if (selectedSkinny === "" || selectedSkinny === null) {
             console.warn('Skinny não selecionado');
             skinnyHeight = 0;
             return;
@@ -406,10 +409,12 @@ export default function EmailBuilder() {
                     const secondDocument = app.documents[1];
                     const skinnyWidth = secondDocument.width;
 
-                    const formattedTitleCopyValue = limitCharsPerLine(skinnyTitleValue || '', 60);
-                    const formattedSkinnyCopyValue = limitCharsPerLine(skinnyCopyValue || '', 65);
+                    let formattedSkinnyTitle = limitCharsPerLine(
+                        skinnyTitleValue || '', 60, "capitalized");
+                    let formattedSkinnyCopy = limitCharsPerLine(
+                        skinnyCopyValue || '', 65, "capitalized");
 
-                    const skinnyBannerCopy = formattedTitleCopyValue + "\r" + formattedSkinnyCopyValue
+                    const skinnyBannerCopy = formattedSkinnyTitle + "\r" + formattedSkinnyCopy
 
                     const changeSkinnyBannerCopy = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Copy" }], makeVisible: false, layerID: [4], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
@@ -419,9 +424,9 @@ export default function EmailBuilder() {
                             to: {
                                 _obj: "textLayer", textKey: skinnyBannerCopy, textStyleRange: [
 
-                                    { _obj: "textStyleRange", from: 0, to: skinnyTitleValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Bold", fontName: "Roboto", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 18.5 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
+                                    { _obj: "textStyleRange", from: 0, to: formattedSkinnyTitle.length, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Bold", fontName: "Roboto", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 18.5 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
 
-                                    { _obj: "textStyleRange", from: skinnyTitleValue.length + 1, to: skinnyTitleValue.length + skinnyCopyValue.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Regular", fontName: "Roboto", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 18.5 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
+                                    { _obj: "textStyleRange", from: formattedSkinnyTitle.length + 1, to: formattedSkinnyTitle.length + formattedSkinnyCopy.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Regular", fontName: "Roboto", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 18.5 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
                                 ]
                             }, _isCommand: true
                         },
@@ -451,13 +456,8 @@ export default function EmailBuilder() {
 
                     skinnyHeight = secondDocument.height;
 
-                    const selectAndCopy = [
-                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-                    ];
-
+                    // Copia e cola o modulo
+                    const selectAndCopy = selectAllAndCopy()
                     await batchPlay(selectAndCopy, {});
 
                     const activeDocument = app.activeDocument;
@@ -494,7 +494,7 @@ export default function EmailBuilder() {
 
     // Importa o Hero
     async function heroBuild() {
-        if (selectedHero === "") {
+        if (selectedHero === "" || selectedHero === null) {
             console.warn('Hero não selecionado');
             heroHeight = 0;
             return;
@@ -547,15 +547,9 @@ export default function EmailBuilder() {
                     const heroWidth = secondDocument.width;
                     heroHeight = secondDocument.height;
 
-                    const copyAllHero = [
-                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-                    ]
-
-                    await batchPlay(copyAllHero, {});
-
+                    // Copia e cola o modulo
+                    const selectAndCopy = selectAllAndCopy()
+                    await batchPlay(selectAndCopy, {});
 
                     const activeDocument = app.activeDocument;
                     await activeDocument.paste();
@@ -573,7 +567,6 @@ export default function EmailBuilder() {
                     let offsetModules = ((slHeight + 30) + (fundingHeight + 20) + (skinnyHeight));
                     const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
                     pastedGroup.translate(offsetX, offsetY);
-
 
 
                     console.log('%cHero inserido com sucesso!', 'color: #00EAADFF;');
@@ -612,10 +605,10 @@ export default function EmailBuilder() {
             const pluginDir = await fs.getPluginFolder();
             const fileEntry = await pluginDir.getEntry(pluginFilePath);
 
-            const formattedPluginCopyValue = limitCharsPerLine(pluginCopyValue || '', 65);
-            const formattedLeftCopyValue = limitCharsPerLine(leftPluginCopyValue || '', 13);
-            const formattedCenterCopyValue = limitCharsPerLine(centerPluginCopyValue || '', 13);
-            const formattedRightCopyValue = limitCharsPerLine(rightPluginCopyValue || '', 13);
+            const formattedPluginCopyValue = limitCharsPerLine(pluginCopyValue || '', 65, "upper");
+            const formattedLeftCopyValue = limitCharsPerLine(leftPluginCopyValue || '', 13, "captitalized");
+            const formattedCenterCopyValue = limitCharsPerLine(centerPluginCopyValue || '', 13, "captitalized");
+            const formattedRightCopyValue = limitCharsPerLine(rightPluginCopyValue || '', 13, "captitalized");
 
             const targetFunction = async (executionContext) => {
                 try {
@@ -625,185 +618,134 @@ export default function EmailBuilder() {
                     const pluginWidth = secondDocument.width;
                     pluginHeight = secondDocument.height;
 
-                    let batchPluginChange = []
-
                     if (selectedPlugin === 'supercharger') {
 
-                        const batchChangeColor = [
-                            // { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [3402], _options: { dialogOptions: "dontDisplay" } },
-                            // { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
-                            // {
-                            //     _obj: "set",
-                            //     _target: [{ _ref: "property", _property: "textStyle" },
-                            //     { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
-                            //     to: {
-                            //         _obj: "textStyle",
-                            //         textOverrideFeatureName: 808466226,
-                            //         typeStyleOperationType: 3,
-                            //         color: { _obj: "RGBColor", red: accentRed, grain: accentGreen, blue: accentBlue }
-                            //     },
-                            //     _options: { dialogOptions: "dontDisplay" }
-                            // },
+                        const superchargerBuild = [
+                            setSolidFill({
+                                Name: "Background",
+                                RedColor: secondaryRed,
+                                GreenColor: secondaryGreen,
+                                BlueColor: secondaryBlue
+                            }),
 
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue } }, _options: { dialogOptions: "dontDisplay" } },
+                            setFontStyle({
+                                Name: "1",
+                                Value: formattedLeftCopyValue,
+                                FontName: "Roboto",
+                                FontWeight: "Light",
+                                Size: 24,
+                                RedColor: accentRed,
+                                GreenColor: accentGreen,
+                                BlueColor: accentBlue,
+                                FontCaps: false,
+                                AutoLeading: false,
+                                Leading: 24
+                            }),
+
+                            setFontStyle({
+                                Name: "2",
+                                Value: formattedCenterCopyValue,
+                                FontName: "Roboto",
+                                FontWeight: "Light",
+                                Size: 24,
+                                RedColor: accentRed,
+                                GreenColor: accentGreen,
+                                BlueColor: accentBlue,
+                                FontCaps: false,
+                                AutoLeading: false,
+                                Leading: 24
+                            }),
+
+                            setFontStyle({
+                                Name: "3",
+                                Value: formattedRightCopyValue,
+                                FontName: "Roboto",
+                                FontWeight: "Light",
+                                Size: 24,
+                                RedColor: accentRed,
+                                GreenColor: accentGreen,
+                                BlueColor: accentBlue,
+                                FontCaps: false,
+                                AutoLeading: false,
+                                Leading: 24
+                            }),
+
                         ];
+                        await batchPlay(superchargerBuild, {});
 
-                        await batchPlay(batchChangeColor, {});
+                        const alignSuperchargerCopy = [
+                            selectGroup({
+                                FirstName: "3",
+                                LastName: "Background"
+                            }),
+                            alignGroupY(),
 
-                        const batchPluginChange = [
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                            {
-                                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
-                                to: {
-                                    _obj: "textLayer", textKey: formattedLeftCopyValue, textStyleRange: [{
-                                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER, textStyle: {
-                                            _obj: "textStyle",
-                                            fontPostScriptName: "Roboto-Light",
-                                            fontName: "Roboto",
-                                            fontStyleName: "Light",
-                                            size: { _unit: "pointsUnit", _value: 5.76 },
-                                            color: {
-                                                _obj: "RGBColor",
-                                                red: accentRed,
-                                                green: accentGreen,
-                                                blue: accentBlue
-                                            },
-                                            tracking: 5,
-                                            fontCaps: { _enum: "fontCaps", _value: "normal" },
-                                            autoLeading: false,
-                                            leading: { _unit: "pointsUnit", _value: 5.76 },
-                                            impliedLeading: { _unit: "pointsUnit", _value: 5.76 }
-                                        }
-                                    }]
-                                }, _isCommand: true
-                            },
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "2" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                            {
-                                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
-                                to: {
-                                    _obj: "textLayer", textKey: formattedCenterCopyValue, textStyleRange: [{
-                                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER, textStyle: {
-                                            _obj: "textStyle",
-                                            fontPostScriptName: "Roboto-Light",
-                                            fontName: "Roboto",
-                                            fontStyleName: "Light",
-                                            size: { _unit: "pointsUnit", _value: 5.76 },
-                                            color: {
-                                                _obj: "RGBColor",
-                                                red: accentRed,
-                                                green: accentGreen,
-                                                blue: accentBlue
-                                            },
-                                            tracking: 5,
-                                            fontCaps: { _enum: "fontCaps", _value: "normal" },
-                                            autoLeading: false,
-                                            leading: { _unit: "pointsUnit", _value: 5.76 },
-                                            impliedLeading: { _unit: "pointsUnit", _value: 5.76 }
-                                        }
-                                    }]
-                                }, _isCommand: true
-                            },
-                            // { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedCenterCopyValue } },
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "3" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                            {
-                                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
-                                to: {
-                                    _obj: "textLayer", textKey: formattedRightCopyValue, textStyleRange: [{
-                                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER, textStyle: {
-                                            _obj: "textStyle",
-                                            fontPostScriptName: "Roboto-Light",
-                                            fontName: "Roboto",
-                                            fontStyleName: "Light",
-                                            size: { _unit: "pointsUnit", _value: 5.76 },
-                                            color: {
-                                                _obj: "RGBColor",
-                                                red: accentRed,
-                                                green: accentGreen,
-                                                blue: accentBlue
-                                            },
-                                            tracking: 5,
-                                            fontCaps: { _enum: "fontCaps", _value: "normal" },
-                                            autoLeading: false,
-                                            leading: { _unit: "pointsUnit", _value: 5.76 },
-                                            impliedLeading: { _unit: "pointsUnit", _value: 5.76 }
-                                        }
-                                    }]
-                                }, _isCommand: true
-                            },
-                            // { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedRightCopyValue } },
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "1" }], makeVisible: false, layerID: [3402], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [3334, 3335, 3398, 3402], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-                        ];
+                            selectGroup({
+                                FirstName: "2",
+                                LastName: "Background"
+                            }),
+                            alignGroupY(),
 
-                        await batchPlay(batchPluginChange, {});
+                            selectGroup({
+                                FirstName: "1",
+                                LastName: "Background"
+                            }),
+                            alignGroupY(),
+                        ]
+                        await batchPlay(alignSuperchargerCopy, {});
+
+                        const selectAndCopy = selectAllAndCopy()
+                        await batchPlay(selectAndCopy, {});
 
                     } else if (selectedPlugin === 'plugin') {
 
-                        const batchChangeColor = [
-                            {
-                                _obj: "select",
-                                _target: [{ _ref: "textLayer", _name: "Plugin Copy" }],
-                                makeVisible: false,
-                                layerID: [3335],
-                                _options: { dialogOptions: "dontDisplay" }
-                            },
-                            {
-                                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
-                                to: {
-                                    _obj: "textLayer", textKey: formattedPluginCopyValue, textStyleRange: [{
-                                        _obj: "textStyleRange", from: 0, to: Number.MAX_SAFE_INTEGER, textStyle: {
-                                            _obj: "textStyle",
-                                            fontPostScriptName: "Arial-Regular",
-                                            fontName: "Arial",
-                                            fontStyleName: "Regular",
-                                            size: { _unit: "pointsUnit", _value: 2.93 },
-                                            color: {
-                                                _obj: "RGBColor",
-                                                red: accentRed,
-                                                green: accentGreen,
-                                                blue: accentBlue
-                                            },
-                                            tracking: 20,
-                                            fontCaps: { _enum: "fontCaps", _value: "allCaps" },
-                                        }
-                                    }]
-                                }, _isCommand: true
-                            },
+                        const pluginBuild = [
+                            setFontStyle({
+                                Name: "Plugin Copy",
+                                Value: formattedPluginCopyValue,
+                                FontName: "Arial",
+                                FontWeight: "Regular",
+                                Size: 12,
+                                RedColor: accentRed,
+                                GreenColor: accentGreen,
+                                BlueColor: accentBlue,
+                                Tracking: 20,
+                                FontCaps: true,
+                                AutoLeading: true,
+                            }),
 
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Background" }], makeVisible: false, layerID: [3332], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "set", _target: [{ _ref: "contentLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue } }, _options: { dialogOptions: "dontDisplay" } },
+                            selectLayer({
+                                Name: "Background",
+                            }),
+
+                            setSolidFill({
+                                Name: "Background",
+                                RedColor: secondaryRed,
+                                GreenColor: secondaryGreen,
+                                BlueColor: secondaryBlue
+                            })
                         ];
+                        await batchPlay(pluginBuild, {});
 
-                        await batchPlay(batchChangeColor, {});
-
-                        const batchPluginChange = [
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3325], _options: { dialogOptions: "dontDisplay" } },
-                            {
-                                _obj: "select", _target: [{ _ref: "layer", _name: "Background" },
-                                { _ref: "layer", _name: "Plugin Copy" }], makeVisible: false, layerID: [3320, 3325], _isCommand: false, _options: { dialogOptions: "dontDisplay" }
-                            },
-                            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersH" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" }, },
-                            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } },
+                        const alignPluginCopy = [
+                            selectGroup({
+                                FirstName: "Plugin Copy",
+                                LastName: "Background"
+                            }),
+                            alignGroupX(),
+                            alignGroupY(),
                         ];
+                        await batchPlay(alignPluginCopy, {});
 
-                        await batchPlay(batchPluginChange, {});
+                        const selectAndCopy = selectAllAndCopy()
+                        await batchPlay(selectAndCopy, {});
 
                     } else {
                         console.error('Plugin n\u00e3o selecionado')
                         return;
                     }
 
-                    await batchPlay(batchPluginChange, {});
+                    // await batchPlay(batchPluginChange, {});
 
                     const activeDocument = app.activeDocument;
                     await activeDocument.paste();
@@ -837,10 +779,10 @@ export default function EmailBuilder() {
 
     async function fpoBuild() {
 
-        if (selectedFpoValue === null || selectedFpoSegment === undefined) {
+        if (selectedFpoValue === null || selectedFpoValue === 0 || selectedFpoSegment === undefined) {
             console.warn('Fpo n\u00e3o selecionado');
-            fpoHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
-            return; // Retorna imediatamente se o plugin n\u00e3o estiver selecionado
+            fpoHeight = 0;
+            return; 
         } else {
         }
 
@@ -859,14 +801,9 @@ export default function EmailBuilder() {
                     const fpoWidth = secondDocument.width;
                     fpoHeight = secondDocument.height;
 
-                    const batchFPO = [
-                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-                    ];
-
-                    await batchPlay(batchFPO, {});
+                    // Copia e cola o modulo
+                    const selectAndCopy = selectAllAndCopy()
+                    await batchPlay(selectAndCopy, {});
 
                     const activeDocument = app.activeDocument;
                     await activeDocument.paste();
@@ -900,17 +837,14 @@ export default function EmailBuilder() {
 
     async function bannerBuild() {
 
-        const formattedBannerHeadlineValue = await limitCharsPerLine(
-            bannerHeadlineValue ? captalizeCopy(bannerHeadlineValue) : '',
-            27
-        );
-        const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 60);
+        const formattedBannerHeadlineValue = await limitCharsPerLine(bannerHeadlineValue || '', 27, "capitalized");
+        const formattedBannerCopyValue = await limitCharsPerLine(bannerCopyValue || '', 60, "capitalized");
 
         try {
-            if (selectedBanner === "") {
+            if (selectedBanner === "" || selectedBanner === null) {
                 console.warn('Banner n\u00e3o selecionado');
-                bannerHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
-                return; // Retorna imediatamente se o plugin n\u00e3o estiver selecionado
+                bannerHeight = 0;
+                return;
             } else {
             }
 
@@ -1005,15 +939,9 @@ export default function EmailBuilder() {
 
                     await batchPlay(finalCrop, {});
 
-                    const batchBannerCopyAndPaste = [
-                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-                    ]
-
-                    await batchPlay(batchBannerCopyAndPaste, {});
-
+                    // Copia e cola o modulo
+                    const selectAndCopy = selectAllAndCopy()
+                    await batchPlay(selectAndCopy, {});
 
                     const activeDocument = app.activeDocument;
                     await activeDocument.paste();
@@ -1050,7 +978,7 @@ export default function EmailBuilder() {
         const footerFilePath = `assets/footers/${selectedFooter}.psd`;
         const fs = storage.localFileSystem;
         try {
-            if (selectedFooter === "") {
+            if (selectedFooter === "" || selectedFooter === null) {
                 console.warn('Footer n\u00e3o selecionado');
                 footerHeight = 0;
                 return;
@@ -1067,17 +995,12 @@ export default function EmailBuilder() {
                     const footerWidth = secondDocument.width;
                     footerHeight = secondDocument.height;
 
-                    const footerSelect = [
-                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-                    ];
-                    await batchPlay(footerSelect, {});
+                    // Copia e cola o modulo
+                    const selectAndCopy = selectAllAndCopy()
+                    await batchPlay(selectAndCopy, {});
 
                     const activeDocument = app.activeDocument;
                     await activeDocument.paste();
-
 
                     const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
                     const docWidth = activeDocument.width;
@@ -1113,11 +1036,11 @@ export default function EmailBuilder() {
     }
 
     async function birdseedBuild() {
-        // if (selectedBirdseed !== "") {
-        //     console.warn('Birdseed n\u00e3o selecionado');
-        //     birdseedHeight = 0;
-        //     return;
-        // }
+        if (selectedBirdseed === "" || selectedBirdseed === null) {
+            console.warn('Birdseed n\u00e3o selecionado');
+            birdseedHeight = 0;
+            return;
+        }
         const birdseedFilePath = `assets/birdseeds/${selectedBirdseed}.psd`;
         const fs = storage.localFileSystem;
         try {
@@ -1239,12 +1162,8 @@ export default function EmailBuilder() {
                     const birdseedWidth = secondDocument.width;
                     birdseedHeight = secondDocument.height;
 
-                    const selectAndCopy = [
-                        { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
-                    ]
+                    // Copia e cola o modulo
+                    const selectAndCopy = selectAllAndCopy()
                     await batchPlay(selectAndCopy, {});
 
                     const activeDocument = app.activeDocument;
@@ -1344,7 +1263,7 @@ export default function EmailBuilder() {
                 ]
                 await batchPlay(fundingOrganize, {});
 
-                if (selectedHeader !== "") {
+                if (selectedHeader !== "" && selectedHeader !== null) {
                     const headerOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Header" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
                         { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
@@ -1359,7 +1278,7 @@ export default function EmailBuilder() {
                     await batchPlay(headerOrganize, {});
                 }
 
-                if (selectedSkinny !== "") {
+                if (selectedSkinny !== null && selectedSkinny !== "") {
                     const skinnyOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Skinny Banner" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
                         { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
@@ -1428,7 +1347,7 @@ export default function EmailBuilder() {
                     await batchPlay(heroOrganize, {});
                 }
 
-                if (selectedPlugin !== "") {
+                if (selectedPlugin === "plugin") {
                     const pluginOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
                         { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
@@ -1441,9 +1360,22 @@ export default function EmailBuilder() {
                         },
                     ]
                     await batchPlay(pluginOrganize, {});
+                } else if (selectedPlugin === "supercharger") {
+                    const superchargerOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Supercharger" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "Supercharger", color: { _enum: "color", _value: "violet" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(superchargerOrganize, {});
                 }
 
-                if (selectedFpoValue !== null) {
+                if (selectedFpoValue !== 0 && selectedFpoValue !== null) {
                     const fpoOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "FPOs" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
                         { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
@@ -1458,7 +1390,7 @@ export default function EmailBuilder() {
                     await batchPlay(fpoOrganize, {});
                 }
 
-                if (selectedBanner !== "") {
+                if (selectedBanner !== "" && selectedBanner !== null) {
                     const bannerOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Banner" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
                         { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
@@ -1472,7 +1404,8 @@ export default function EmailBuilder() {
                     ]
                     await batchPlay(bannerOrganize, {});
                 }
-                if (selectedFooter !== "") {
+
+                if (selectedFooter !== "" && selectedFooter !== null) {
                     const footerOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Footer" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
                         { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
@@ -1487,19 +1420,20 @@ export default function EmailBuilder() {
                     await batchPlay(footerOrganize, {});
                 }
 
-                const birdseedOrganize = [
-                    { _obj: "select", _target: [{ _ref: "layer", _name: "Birdseed" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
-                    {
-                        _obj: "set",
-                        _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
-                        to: { _obj: "layer", name: "Birdseed", color: { _enum: "color", _value: "green" } },
-                        _options: { dialogOptions: "dontDisplay" }
-                    },
-                ]
-                await batchPlay(birdseedOrganize, {});
-
+                if (selectedBirdseed !== "" && selectedBirdseed !== null) {
+                    const birdseedOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Birdseed" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "Birdseed", color: { _enum: "color", _value: "green" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(birdseedOrganize, {});
+                }
 
                 console.log('%cFit final executado com sucesso!', 'color: #00EAADFF;');
             } catch (error) {
@@ -1541,7 +1475,7 @@ export default function EmailBuilder() {
 
     return (
         <>
-            <sp-button variant="warning" onClick={handleBuild} >Build Email</sp-button>
+            <sp-button variant="primary" width="130" onClick={handleBuild}>Build Email</sp-button>
         </>
     )
 }

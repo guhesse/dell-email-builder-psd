@@ -12,6 +12,9 @@ export default function limitCharsPerLine(text, limit, capitalization = "none") 
         }
     };
 
+    // Converter o texto para minúsculas
+    text = text.toLowerCase();
+
     const words = text.split(' ');
     let currentLine = '';
     let result = '';

@@ -32,12 +32,10 @@ function App() {
     <Theme theme="spectrum" scale="medium" color="light">
       <AppProvider className="wrapper">
         <CsvReader />
-        <SubjectLineSelector />
         <ColorSelector />
-        <div style={{ display: "flex", flexWrap: "wrap" }} className="group"><sp-label>Header & Funding</sp-label>
-          <HeaderSelector />
-          <FundingSelector />
-        </div>
+        <SubjectLineSelector />
+        <HeaderSelector />
+        <FundingSelector />
         <SkinnySelector />
         <HeroSelector />
         <PluginSelector />

@@ -3,6 +3,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from './AppContext.js';
 import { storage } from '../App.js';
+import limitCharsPerLine from '../hook/charLimiter.jsx';
 
 export default function AppProvider({ children }) {
     const [csvValues, setCsvValues] = useState({
@@ -250,18 +251,17 @@ export default function AppProvider({ children }) {
         setTertiaryColor(colorString);
     };
 
-
     // Values e estados dos inputs
 
-    const [selectedHeader, setSelectedHeader] = useState("");
+    const [selectedHeader, setSelectedHeader] = useState(null);
     const [selectedFunding, setSelectedFunding] = useState(null);
-    const [selectedSkinny, setSelectedSkinny] = useState("");
-    const [selectedHero, setSelectedHero] = useState("");
-    const [selectedPlugin, setSelectedPlugin] = useState("");
+    const [selectedSkinny, setSelectedSkinny] = useState(null);
+    const [selectedHero, setSelectedHero] = useState(null);
+    const [selectedPlugin, setSelectedPlugin] = useState(null);
     const [selectedFpoSegment, setSelectedFpoSegment] = useState("");
     const [selectedBanner, setSelectedBanner] = useState(null);
-    const [selectedFooter, setSelectedFooter] = useState("");
-    const [selectedBirdseed, setSelectedBirdseed] = useState(null);
+    const [selectedFooter, setSelectedFooter] = useState(null);
+    const [selectedBirdseed, setSelectedBirdseed] = useState("");
     const [selectedBirdseedCopy, setSelectedBirdseedCopy] = useState(false);
 
     const [slValue, setSlValue] = useState("");
@@ -269,6 +269,7 @@ export default function AppProvider({ children }) {
     const [fundingCopyValue, setFundingCopyValue] = useState("");
     const [skinnyTitleValue, setSkinnyTitleValue] = useState("");
     const [skinnyCopyValue, setSkinnyCopyValue] = useState("");
+
     const [heroCopyValues, setHeroCopyValues] = useState({
         badgeValue: "",
         headlineValue: "",
@@ -344,16 +345,14 @@ export default function AppProvider({ children }) {
                 ...csvValues,
                 'Campaign Type': "sb-gdo-dexn"
             });
+        } else {
+            setSelectedHeader(null)
         }
 
 
         setSelectedFunding(csvValues['Vendor Funding Name'] || "");
         if (csvValues['Vendor Funding Name'] === "") {
-            setSelectedFunding("no-vf");
-            setCsvValues({
-                ...csvValues,
-                'Vendor Funding Name': "no-vf"
-            })
+            setSelectedFunding(null);
         } else if (csvValues['Vendor Funding Name'] === "NVF") {
             setSelectedFunding("no-vf");
             setCsvValues({
@@ -367,7 +366,7 @@ export default function AppProvider({ children }) {
                 'Vendor Funding Name': "win11"
             });
         } else if (csvValues['Vendor Funding Name'] === "Jumpstart Pro") {
-            setSelectedFunding("win11");
+            setSelectedFunding("win11"); 
             setCsvValues({
                 ...csvValues,
                 'Vendor Funding Name': "win11"
@@ -409,6 +408,8 @@ export default function AppProvider({ children }) {
                 ...csvValues,
                 'HERO Template': "hero2-promotion"
             });
+        } else {
+            setSelectedHero(null);
         }
 
         setHeroCopyValues({
@@ -451,8 +452,10 @@ export default function AppProvider({ children }) {
             setSelectedFpoValue(null)
         }
 
-
-        if (csvValues['Campaign Type'] === "CSB") {
+        if (csvValues['Campaign Type'] === "") {
+            setSelectedFpoSegment("sb");
+            setSelectedFooter(null);
+        } else if (csvValues['Campaign Type'] === "CSB") {
             setSelectedFpoSegment("sb");
             setSelectedFooter("csb-four-btn");
         } else if (csvValues['Campaign Type'] === "sb") {
@@ -465,7 +468,7 @@ export default function AppProvider({ children }) {
 
         // setSelectedFpoValue(selectedFpoValue)
 
-        setSelectedBanner(csvValues['Banner1 Layout'] || "");
+        setSelectedBanner(csvValues['Banner1 Layout'] || null);
         if (csvValues['Banner1 Layout'] === "") {
             setCsvValues({
                 ...csvValues,
@@ -506,7 +509,9 @@ export default function AppProvider({ children }) {
         // }
 
         setSelectedBirdseed(csvValues['Campaign Type'] || "");
-        if (csvValues['Campaign Type'] !== "Outlet") {
+        if (csvValues['Campaign Type'] === "") {
+            setSelectedBirdseed(null)
+        } else if (csvValues['Campaign Type'] !== "Outlet") {
             setSelectedBirdseed("standard")
         } else {
             setSelectedBirdseed("outlet")
@@ -560,6 +565,29 @@ export default function AppProvider({ children }) {
         csvValues['Birdseed 1A'],
         csvValues['Birdseed 2'],
     ]);
+
+    // console.log("Valores que serão passados para os componentes:", {
+    //     csvValues,
+    //     accentColor,
+    //     secondaryColor,
+    //     tertiaryColor,
+    //     slValue,
+    //     sslValue,
+    //     selectedHeader,
+    //     selectedFunding,
+    //     fundingCopyValue,
+    //     selectedSkinny,
+    //     selectedHero,
+    //     selectedPlugin,
+    //     selectedFpoSegment,
+    //     selectedFpoValue,
+    //     selectedBanner,
+    //     selectedFooter,
+    //     selectedBirdseed,
+    //     selectedBirdseedCopy,
+    //     birdseedCopyValues,
+    //     birdseedDate
+    // });
 
     return (
         <AppContext.Provider value={{
