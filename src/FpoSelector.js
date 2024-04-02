@@ -112,7 +112,7 @@ export default function FpoSelector() {
                     </sp-label>
                 )}
 
-                {selectedFpoValue !== null && selectedFpoValue !== "" && isOptionsOpen && (
+                {selectedFpoValue !== null && selectedFpoValue !== "" && selectedFpoValue !== 0 && isOptionsOpen && (
                     <div style={{ display: "flex", flexDirection: "column" }}>
                         <sp-detail for="fpo-segment-field">SEGUIMENTO</sp-detail>
                         <sp-field-group>

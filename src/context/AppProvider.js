@@ -309,9 +309,9 @@ export default function AppProvider({ children }) {
     const [birdseedCopyValues, setBirdseedCopyValues] = useState('');
 
     const [birdseedDate, setBirdseedDate] = useState({
-        selectedDay: 1,
-        selectedMonth: 1,
-        selectedYear: 2024,
+        selectedDay: null,
+        selectedMonth: null,
+        selectedYear: null,
     });
 
 
@@ -560,29 +560,29 @@ export default function AppProvider({ children }) {
         csvValues['Birdseed 2'],
     ]);
 
-    // console.log("Valores que serão passados para os componentes:", {
-    //     csvValues,
-    //     accentColor,
-    //     secondaryColor,
-    //     tertiaryColor,
-    //     slValue,
-    //     sslValue,
-    //     selectedHeader,
-    //     selectedBrand,
-    //     selectedFunding,
-    //     fundingCopyValue,
-    //     selectedSkinny,
-    //     selectedHero,
-    //     selectedPlugin,
-    //     selectedFpoSegment,
-    //     selectedFpoValue,
-    //     selectedBanner,
-    //     selectedFooter,
-    //     selectedBirdseed,
-    //     selectedBirdseedCopy,
-    //     birdseedCopyValues,
-    //     birdseedDate
-    // });
+    console.log("Valores que serão passados para os componentes:", {
+        // csvValues,
+        // accentColor,
+        // secondaryColor,
+        // tertiaryColor,
+        // slValue,
+        // sslValue,
+        // selectedHeader,
+        // selectedBrand,
+        // selectedFunding,
+        // fundingCopyValue,
+        // selectedSkinny,
+        // selectedHero,
+        // selectedPlugin,
+        // selectedFpoSegment,
+        // selectedFpoValue,
+        // selectedBanner,
+        // selectedFooter,
+        // selectedBirdseed,
+        // selectedBirdseedCopy,
+        // birdseedCopyValues,
+        birdseedDate
+    });
 
     return (
         <AppContext.Provider value={{

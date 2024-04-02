@@ -23,7 +23,7 @@ export default function EmailBuilder() {
     const { badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, specsValue, priceValue, productSuperchargerValue, heroCtaValue, } = heroCopyValues || {};
     const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
-    const { selectedDay, selectedMonth, selectedYear, } = birdseedDate || {};
+    let { selectedDay, selectedMonth, selectedYear, } = birdseedDate || {};
 
     // Fazer depois a função para deletar artboard caso exista uma 
 
@@ -1170,6 +1170,15 @@ export default function EmailBuilder() {
             const pluginDir = await fs.getPluginFolder();
             const fileEntry = await pluginDir.getEntry(birdseedFilePath);
 
+            selectedDay = selectedDay === null ? 1 : selectedDay;
+            selectedMonth = selectedMonth === null ? 1 : selectedMonth;
+            selectedYear = selectedYear === null ? 2024 : selectedYear;
+            
+            console.log("Selected Day Builder:", selectedDay);
+            console.log("Selected Month Builder:", selectedMonth);
+            console.log("Selected Year Builder:", selectedYear);
+            
+
             const formattedDay = selectedDay < 10 ? `0${selectedDay}` : selectedDay;
             const formattedMonth = selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth;
 
@@ -1316,7 +1325,7 @@ export default function EmailBuilder() {
 
             await core.executeAsModal(targetFunction, options);
         } catch (error) {
-            showAlert("executeAsModal was rejected (some other plugin is currently inside a modal scope)");
+            // showAlert("executeAsModal was rejected (some other plugin is currently inside a modal scope)");
         }
 
     }
