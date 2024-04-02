@@ -3,7 +3,7 @@ import useAppContext from './hook/useAppContext.jsx';
 
 export default function HeaderSelector() {
 
-    const { csvValues, selectedHeader, setSelectedHeader } = useAppContext();
+    const { csvValues, selectedHeader, setSelectedHeader} = useAppContext();
 
     const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
@@ -20,7 +20,7 @@ export default function HeaderSelector() {
     };
 
 
-    const handleHeaderClick = (selectedHeader) => {
+    const handleHeaderClick = (selectedHeader, selectedBrand) => {
         setSelectedHeader(selectedHeader);
     };
 
@@ -74,23 +74,22 @@ export default function HeaderSelector() {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 14 16" >
                                         <title>S ChevronDown 18 N</title>
                                         <rect id="Canvas" fill="#8a8a8a" opacity="0" width="11" height="11" />
-                                        <path class="fill" d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z" />
+                                        <path d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z" />
                                     </svg>
                                 </span>
                             </div>
                         </sp-label>
-                        <sp-detail for="header-field">HEADER</sp-detail>
                         <sp-overlay>
-                            <sp-picker slot="trigger" id="picker-m" size="m" label="Selection type" placeholder="Selecione o header">
+                            <sp-picker class="largePicker" slot="trigger" id="picker-m" size="m" label="Selection type" placeholder="Selecione o header">
                                 <sp-menu>
-                                    <sp-menu-item selected={selectedHeader === "" ? selected.selectedHeader : undefined} onClick={() => handleHeaderClick('')}>None</sp-menu-item>
-                                    <sp-menu-item selected={selectedHeader === "csb" ? selected.selectedHeader : undefined} onClick={() => handleHeaderClick('csb')}>CSB & SB</sp-menu-item>
-                                    <sp-menu-item selected={selectedHeader === "outlet" ? selected.selectedHeader : undefined} onClick={() => handleHeaderClick('outlet')}>CSB Outlet</sp-menu-item>
+                                    <sp-menu-item selected={selectedHeader === "" ? selected.selectedHeader : undefined} onClick={() => handleHeaderClick('', '')}>None</sp-menu-item>
+                                    <sp-menu-item selected={selectedHeader === "csb" ? selected.selectedHeader : undefined} onClick={() => handleHeaderClick('csb', 'dell')}>CSB & SB</sp-menu-item>
+                                    <sp-menu-item selected={selectedHeader === "outlet" ? selected.selectedHeader : undefined} onClick={() => handleHeaderClick('outlet', 'dell')}>CSB Outlet</sp-menu-item>
                                     <sp-menu-divider></sp-menu-divider>
-                                    <sp-menu-item selected={selectedHeader === "sb-rd" ? selected.selectedHeader : undefined} onClick={() => handleHeaderClick('sb-rd')}>SB RD</sp-menu-item>
-                                    <sp-menu-item selected={selectedHeader === "sb-gdo-dexn" ? selected.selectedHeader : undefined} onClick={() => handleHeaderClick('sb-gdo-dexn')}>SB GDO | DEXN</sp-menu-item>
+                                    <sp-menu-item selected={selectedHeader === "sb-rd" ? selected.selectedHeader : undefined} onClick={() => handleHeaderClick('sb-rd', 'dell')}>SB RD</sp-menu-item>
+                                    <sp-menu-item selected={selectedHeader === "sb-gdo-dexn" ? selected.selectedHeader : undefined} onClick={() => handleHeaderClick('sb-gdo-dexn', 'dell')}>SB GDO | DEXN</sp-menu-item>
                                     <sp-menu-divider></sp-menu-divider>
-                                    <sp-menu-item selected={selectedHeader === "alienware" ? selected.selectedHeader : undefined} onClick={() => handleHeaderClick('alienware')}>Alienware</sp-menu-item>
+                                    <sp-menu-item selected={selectedHeader === "alienware" ? selected.selectedHeader : undefined} onClick={() => handleHeaderClick('alienware', 'alienware')}>Alienware</sp-menu-item>
                                 </sp-menu>
                             </sp-picker>
                             <sp-popover

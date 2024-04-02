@@ -86,15 +86,15 @@ export default function CsvReader() {
                         <div style={{ display: "flex", alignItems: "center" }}>
                             <p>CSV Reader </p>
                             <span style={{ marginLeft: "8px", display: "flex", alignItems: "center", fill: "#8a8a8a" }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 14 16" >
-                                <title>S ChevronDown 18 N</title>
-                                <rect id="Canvas" fill="#8a8a8a" opacity="0" width="11" height="11" />
-                                <path className="fill" d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z" />
-                            </svg>
-                        </span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 14 16" >
+                                    <title>S ChevronDown 18 N</title>
+                                    <rect id="Canvas" fill="#8a8a8a" opacity="0" width="11" height="11" />
+                                    <path className="fill" d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z" />
+                                </svg>
+                            </span>
                         </div>
                     </sp-label>
-                    <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: '5px' }}>
                         <sp-button type="submit" variant="primary" onClick={handleFileInputChange}>Select a File</sp-button>
                     </div>
                 </>

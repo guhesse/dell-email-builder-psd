@@ -6,16 +6,16 @@ import Hero1LifestyleProduct from '../HeroLayout/hero1LifestyleProduct.jsx';
 import Hero1Lifestyle from '../HeroLayout/hero1lifestyle.jsx';
 import Hero1Product from '../HeroLayout/hero1Product.jsx';
 import Hero2Promotion from '../HeroLayout/hero2promotion.jsx';
+import AwHero1LifestyleProduct from '../HeroLayout/awHero1LifestyleProduct.jsx';
 import { getBoundsAndPosition } from '../hook/getBoundsAndPosition.jsx';
 
 import { selectLayer, selectGroup, makeSmartObj, setFontStyle, getBounds, setOffset, setSolidFill, setOverlayColor, selectAllAndCopy, alignGroupX, alignGroupY } from "../hook/hooksJSON.jsx";
-
 
 export default function EmailBuilder() {
 
     var slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight, skinnyBannerHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores, slValue, sslValue, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedDate, selectedBirdseedCopy, birdseedCopyValues } = useAppContext();
+    const { accentColor, secondaryColor, tertiaryColor, cores, slValue, sslValue, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedDate, selectedBirdseedCopy, birdseedCopyValues, selectedBrand } = useAppContext();
 
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
@@ -536,6 +536,14 @@ export default function EmailBuilder() {
                         }
                     } else { }
 
+                    if (selectedHero === 'aw-hero1-lifestyle-product') {
+                        try {
+                            await AwHero1LifestyleProduct(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, productNameValue, heroCtaValue);
+                        } catch (error) {
+                            console.error('Erro ao executar Aw Hero 1 - Lifestyle + Product:', error);
+                        }
+                    } else { }
+
                     if (selectedHero === 'hero2-promotion') {
                         try {
                             await Hero2Promotion(accentRed, accentGreen, accentBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, priceValue, specsValue, heroCtaValue);
@@ -595,8 +603,8 @@ export default function EmailBuilder() {
             pluginFilePath = 'assets/plugins/plugin.psd';
         } else {
             console.warn('Plugin n\u00e3o selecionado');
-            pluginHeight = 0; // Define a altura do plugin como 0 quando nenhum plugin for selecionado
-            return; // Retorna imediatamente se o plugin n\u00e3o estiver selecionado
+            pluginHeight = 0;
+            return;
         }
 
         const fs = storage.localFileSystem;
@@ -618,9 +626,51 @@ export default function EmailBuilder() {
                     const pluginWidth = secondDocument.width;
                     pluginHeight = secondDocument.height;
 
-                    if (selectedPlugin === 'supercharger') {
+                    if (selectedPlugin === 'plugin' && selectedBrand === 'dell') {
 
-                        const superchargerBuild = [
+                        const setPlugin = [
+
+                            setSolidFill({
+                                Name: "Background",
+                                RedColor: secondaryRed,
+                                GreenColor: secondaryGreen,
+                                BlueColor: secondaryBlue
+                            }),
+
+                            setFontStyle({
+                                Name: "Plugin Copy",
+                                Value: formattedPluginCopyValue,
+                                FontName: "Arial",
+                                FontWeight: "Regular",
+                                Size: 12,
+                                RedColor: accentRed,
+                                GreenColor: accentGreen,
+                                BlueColor: accentBlue,
+                                Tracking: 20,
+                                FontCaps: true,
+                                AutoLeading: true,
+                            }),
+                        ]
+                        await batchPlay(setPlugin, {});
+
+                        const alignPluginCopy = [
+                            selectGroup({
+                                FirstName: "Plugin Copy",
+                                LastName: "Background"
+                            }),
+                            alignGroupX(),
+                            alignGroupY(),
+                        ];
+                        await batchPlay(alignPluginCopy, {});
+
+
+                        const selectAndCopy = await selectAllAndCopy()
+                        await batchPlay(selectAndCopy, {});
+
+                    } else if (selectedPlugin === 'supercharger' && selectedBrand === 'dell') {
+
+                        const setPlugin = [
+
                             setSolidFill({
                                 Name: "Background",
                                 RedColor: secondaryRed,
@@ -669,9 +719,8 @@ export default function EmailBuilder() {
                                 AutoLeading: false,
                                 Leading: 24
                             }),
-
-                        ];
-                        await batchPlay(superchargerBuild, {});
+                        ]
+                        await batchPlay(setPlugin, {});
 
                         const alignSuperchargerCopy = [
                             selectGroup({
@@ -694,38 +743,36 @@ export default function EmailBuilder() {
                         ]
                         await batchPlay(alignSuperchargerCopy, {});
 
-                        const selectAndCopy = selectAllAndCopy()
+                        const selectAndCopy = await selectAllAndCopy()
                         await batchPlay(selectAndCopy, {});
 
-                    } else if (selectedPlugin === 'plugin') {
+                    } else if (selectedPlugin === 'plugin' && selectedBrand === 'alienware') {
 
-                        const pluginBuild = [
-                            setFontStyle({
-                                Name: "Plugin Copy",
-                                Value: formattedPluginCopyValue,
-                                FontName: "Arial",
-                                FontWeight: "Regular",
-                                Size: 12,
-                                RedColor: accentRed,
-                                GreenColor: accentGreen,
-                                BlueColor: accentBlue,
-                                Tracking: 20,
-                                FontCaps: true,
-                                AutoLeading: true,
-                            }),
-
-                            selectLayer({
-                                Name: "Background",
-                            }),
+                        const setPlugin = [
 
                             setSolidFill({
                                 Name: "Background",
-                                RedColor: secondaryRed,
-                                GreenColor: secondaryGreen,
-                                BlueColor: secondaryBlue
-                            })
-                        ];
-                        await batchPlay(pluginBuild, {});
+                                RedColor: accentRed,
+                                GreenColor: accentGreen,
+                                BlueColor: accentBlue
+                            }),
+
+                            setFontStyle({
+                                Name: "Plugin Copy",
+                                Value: formattedPluginCopyValue,
+                                FontName: "Open Sans",
+                                FontScript: "OpenSans-Bold",
+                                FontWeight: "Bold",
+                                Size: 12,
+                                RedColor: tertiaryRed,
+                                GreenColor: tertiaryGreen,
+                                BlueColor: tertiaryBlue,
+                                Tracking: 40,
+                                FontCaps: true,
+                                AutoLeading: true,
+                            }),
+                        ]
+                        await batchPlay(setPlugin, {});
 
                         const alignPluginCopy = [
                             selectGroup({
@@ -737,15 +784,91 @@ export default function EmailBuilder() {
                         ];
                         await batchPlay(alignPluginCopy, {});
 
-                        const selectAndCopy = selectAllAndCopy()
+                        const selectAndCopy = await selectAllAndCopy()
                         await batchPlay(selectAndCopy, {});
 
+                    } else if (selectedPlugin === 'supercharger' && selectedBrand === 'alienware') {
+
+                        const setPlugin = [
+                            setSolidFill({
+                                Name: "Background",
+                                RedColor: accentRed,
+                                GreenColor: accentGreen,
+                                BlueColor: accentBlue
+                            }),
+
+                            setFontStyle({
+                                Name: "1",
+                                Value: formattedLeftCopyValue,
+                                FontName: "Roboto",
+                                FontWeight: "Light",
+                                Size: 24,
+                                RedColor: tertiaryRed,
+                                GreenColor: tertiaryGreen,
+                                BlueColor: tertiaryBlue,
+                                FontCaps: false,
+                                AutoLeading: false,
+                                Leading: 24
+                            }),
+
+                            setFontStyle({
+                                Name: "2",
+                                Value: formattedCenterCopyValue,
+                                FontName: "Roboto",
+                                FontWeight: "Light",
+                                Size: 24,
+                                RedColor: tertiaryRed,
+                                GreenColor: tertiaryGreen,
+                                BlueColor: tertiaryBlue,
+                                FontCaps: false,
+                                AutoLeading: false,
+                                Leading: 24
+                            }),
+
+                            setFontStyle({
+                                Name: "3",
+                                Value: formattedRightCopyValue,
+                                FontName: "Roboto",
+                                FontWeight: "Light",
+                                Size: 24,
+                                RedColor: tertiaryRed,
+                                GreenColor: tertiaryGreen,
+                                BlueColor: tertiaryBlue,
+                                FontCaps: false,
+                                AutoLeading: false,
+                                Leading: 24
+                            }),
+
+                        ]
+                        await batchPlay(setPlugin, {});
+
+                        const alignSuperchargerCopy = [
+                            selectGroup({
+                                FirstName: "3",
+                                LastName: "Background"
+                            }),
+                            alignGroupY(),
+
+                            selectGroup({
+                                FirstName: "2",
+                                LastName: "Background"
+                            }),
+                            alignGroupY(),
+
+                            selectGroup({
+                                FirstName: "1",
+                                LastName: "Background"
+                            }),
+                            alignGroupY(),
+                        ]
+                        await batchPlay(alignSuperchargerCopy, {});
+
+                        const selectAndCopy = await selectAllAndCopy()
+                        await batchPlay(selectAndCopy, {});
                     } else {
-                        console.error('Plugin n\u00e3o selecionado')
+                        console.error('Plugin ou marca não selecionado(a)')
                         return;
                     }
-
-                    // await batchPlay(batchPluginChange, {});
 
                     const activeDocument = app.activeDocument;
                     await activeDocument.paste();
@@ -782,7 +905,7 @@ export default function EmailBuilder() {
         if (selectedFpoValue === null || selectedFpoValue === 0 || selectedFpoSegment === undefined) {
             console.warn('Fpo n\u00e3o selecionado');
             fpoHeight = 0;
-            return; 
+            return;
         } else {
         }
 
@@ -1332,6 +1455,19 @@ export default function EmailBuilder() {
                         },
                     ]
                     await batchPlay(heroOrganize, {});
+                } else if (selectedHero === "aw-hero1-lifestyle-product") {
+                    const heroOrganize = [
+                        { _obj: "select", _target: [{ _ref: "layer", _name: "Hero / AW Layout 1 / Lifestyle & Product" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+                        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+                        {
+                            _obj: "set",
+                            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+                            to: { _obj: "layer", name: "Hero", color: { _enum: "color", _value: "fuchsia" } },
+                            _options: { dialogOptions: "dontDisplay" }
+                        },
+                    ]
+                    await batchPlay(heroOrganize, {});
                 } else if (selectedHero === "hero2-promotion") {
                     const heroOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Hero / Layout 2 / Promotion" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
@@ -1475,7 +1611,11 @@ export default function EmailBuilder() {
 
     return (
         <>
-            <sp-button variant="primary" width="130" onClick={handleBuild}>Build Email</sp-button>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <sp-button variant="accent" width="130" onClick={handleBuild}>
+                    Build Email
+                </sp-button>
+            </div >
         </>
     )
 }

@@ -10,7 +10,19 @@ export default function colorSelector() {
         setIsOptionsOpen(!isOptionsOpen);
     };
 
+    const [selected, setSelected] = useState({
+        selectedColor: false
+    });
+
+
     const cores = {
+        "AW WarmRed": { r: 255, g: 76, b: 52 },
+        "AW CoolRed": { r: 255, g: 0, b: 54 },
+        "AW DarkViolet": { r: 65, g: 2, b: 144 },
+        "AW VividViolet": { r: 102, g: 51, b: 204 },
+        "AW LGray": { r: 192, g: 194, b: 196 },
+        "AW MGray": { r: 128, g: 130, b: 133 },
+        "AW DGray": { r: 40, g: 40, b: 41 },
         white: { r: 254, g: 254, b: 254 },
         quartz: { r: 238, g: 238, b: 238 },
         granite: { r: 200, g: 201, b: 199 },
@@ -61,6 +73,14 @@ export default function colorSelector() {
     };
 
     const coresRGB = {
+        "AW WarmRed": "rgb(255, 76, 52)",
+        "AW CoolRed": "rgb(255, 0, 54)",
+        "AW DarkViolet": "rgb(65, 2, 144)",
+        "AW VividViolet": "rgb(102, 51, 204)",
+        "AW LGray": "rgb(192, 194, 196)",
+        "AW MGray": "rgb(128, 130, 133)",
+        "AW DGray": "rgb(40, 40, 41)",
+        "AW White": "rgb(40, 40, 41)",
         white: "rgb(254, 254, 254)",
         quartz: "rgb(238, 238, 238)",
         granite: "rgb(200, 201, 199)",
@@ -112,6 +132,14 @@ export default function colorSelector() {
 
 
     const coresHEX = {
+        "AW WarmRed": '#FF4C34',
+        "AW CoolRed": '#FF0136',
+        "AW DarkViolet": '#410290',
+        "AW VividViolet": '#6633CC',
+        "AW LGray": '#C0C2C4',
+        "AW MGray": '#808284',
+        "AW DGray": '#282829',
+        "AW White": '#FFFFFF',
         white: '#FEFEFE',
         quartz: '#EEEEEE',
         granite: '#C8C9C7',
@@ -253,7 +281,7 @@ export default function colorSelector() {
                                     <span style={{ backgroundColor: coresRGB[accentSelectedColor], width: "22px", height: "22px", borderRadius: "5px" }}></span>
                                     <sp-detail style={{ marginLeft: "8px" }} for="accent-color">ACCENT COLOR</sp-detail>
                                 </div>
-                                <sp-picker placeholder="Select accent color" id="picker-m" size="m" label="Selection type">
+                                <sp-picker class='largePicker' placeholder="Select accent color" id="picker-m" size="m" label="Selection type" >
                                     <sp-menu>
                                         {Object.keys(cores).map((cor) => (
                                             <div
@@ -261,7 +289,7 @@ export default function colorSelector() {
                                                 key={cor}
                                                 onClick={() => handleAccentColorClick(cor)}>
                                                 <sp-menu-item
-                                                    selected={accentSelectedColor === cor}
+                                                    selected={accentSelectedColor === accentSelectedColor ? selected.accentSelectedColor : undefined}
                                                     style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                                                     <div
                                                         style={{ display: "flex", alignItems: "center" }}>
@@ -269,7 +297,7 @@ export default function colorSelector() {
                                                             style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
                                                         {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}
                                                         <span
-                                                            style={{ color: "gray", marginLeft: "10px" }}>{coresHEX[cor]}</span>
+                                                            style={{ color: "gray", marginLeft: "8px" }}>{coresHEX[cor]}</span>
                                                     </div>
                                                 </sp-menu-item>
                                             </div>
@@ -284,11 +312,13 @@ export default function colorSelector() {
                                     <span style={{ backgroundColor: coresRGB[secondarySelectedColor], width: "22px", height: "22px", borderRadius: "5px" }}></span>
                                     <sp-detail style={{ marginLeft: "8px" }} for="accent-color">SECONDARY COLOR</sp-detail>
                                 </div>
-                                <sp-picker placeholder="Select secondary color" id="picker-m" size="m" label="Selection type">
+                                <sp-picker class='largePicker' placeholder="Select secondary color" id="picker-m" size="m" label="Selection type">
                                     <sp-menu>
                                         {Object.keys(cores).map((cor) => (
                                             <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleSecondaryColorClick(cor)}>
-                                                <sp-menu-item selected={secondarySelectedColor === cor} style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                                                <sp-menu-item
+                                                    selected={secondarySelectedColor === secondarySelectedColor ? selected.secondarySelectedColor : undefined}
+                                                    style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                                                     <div style={{ display: "flex", alignItems: "center" }}>
                                                         <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
                                                         {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}
@@ -307,11 +337,13 @@ export default function colorSelector() {
                                     <span style={{ backgroundColor: coresRGB[tertiarySelectedColor], width: "22px", height: "22px", borderRadius: "5px" }}></span>
                                     <sp-detail style={{ marginLeft: "8px" }} for="accent-color">TERTIARY COLOR</sp-detail>
                                 </div>
-                                <sp-picker placeholder="Select tertiary color" id="picker-m" size="m" label="Selection type">
+                                <sp-picker class='largePicker' placeholder="Select tertiary color" id="picker-m" size="m" label="Selection type">
                                     <sp-menu>
                                         {Object.keys(cores).map((cor) => (
                                             <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleTertiaryColorClick(cor)}>
-                                                <sp-menu-item selected={tertiarySelectedColor === cor} style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                                                <sp-menu-item
+                                                    selected={tertiarySelectedColor === tertiarySelectedColor ? selected.tertiarySelectedColor : undefined}
+                                                    style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                                                     <div style={{ display: "flex", alignItems: "center" }}>
                                                         <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
                                                         {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}

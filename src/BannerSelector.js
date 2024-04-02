@@ -165,7 +165,7 @@ export default function BannerSelector() {
                             </div>
                         </sp-label>
                         <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
-                            <sp-picker value={selectedBanner} style={{ margin: "0 4px 0 0" }} placeholder="Lado da imagem do Banner" id="picker-m" size="m" label="Selection type">
+                            <sp-picker class='shortPicker' value={selectedBanner} style={{ margin: "0 4px 0 0" }} placeholder="Lado da imagem do Banner" id="picker-m" size="m" label="Selection type">
                                 <sp-menu>
                                     <sp-menu-item selected={selectedBanner === "" ? selected.selectedBanner : undefined} onClick={() => handleBannerClick("")}>None</sp-menu-item>
                                     <sp-menu-item selected={selectedBanner === "left" ? selected.selectedBanner : undefined} onClick={() => handleBannerClick("left")}>Left</sp-menu-item>
@@ -173,7 +173,7 @@ export default function BannerSelector() {
                                 </sp-menu>
                             </sp-picker>
                             <div className="sp-tab-page" id="sp-spectrum-widgets-tab-page">
-                                <sp-action-button label="Edit" onClick={handleEditClick}>
+                                <sp-action-button label="Edit" class='editBtn'  onClick={handleEditClick}>
                                     <div slot="icon" className="icon">
                                         <svg id="spectrum-icon-18-Edit" viewBox="0 0 36 36">
                                             <path d="M33.567 8.2L27.8 2.432a1.215 1.215 0 0 0-.866-.353H26.9a1.371 1.371 0 0 0-.927.406L5.084 23.372a.99.99 0 0 0-.251.422L2.055 33.1c-.114.377.459.851.783.851a.251.251 0 0 0 .062-.007c.276-.063 7.866-2.344 9.311-2.778a.972.972 0 0 0 .414-.249l20.888-20.889a1.372 1.372 0 0 0 .4-.883 1.221 1.221 0 0 0-.346-.945zM11.4 29.316c-2.161.649-4.862 1.465-6.729 2.022l2.009-6.73z"></path>
@@ -204,7 +204,7 @@ export default function BannerSelector() {
                         {isEditClicked && isOptionsOpen && (
                             <>
                                 <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }}>
-                                    <div style={{ display: "flex", flexDirection: "column", margin: "0 4px" }}>
+                                    <div style={{ display: "flex", flexDirection: "column", margin: "4px 0px" }}>
                                         <sp-detail>HEADLINE</sp-detail>
                                         <sp-textfield
                                             id="banner-hl-field"
@@ -216,7 +216,7 @@ export default function BannerSelector() {
                                         >
                                         </sp-textfield>
                                     </div>
-                                    <div style={{ display: "flex", flexDirection: "column", margin: "0 4px" }}>
+                                    <div style={{ display: "flex", flexDirection: "column", margin: "4px 0px" }}>
                                         <sp-detail>COPY</sp-detail>
                                         <sp-textfield
                                             id="banner-copy-field"
@@ -228,7 +228,7 @@ export default function BannerSelector() {
                                         >
                                         </sp-textfield>
                                     </div>
-                                    <div style={{ display: "flex", flexDirection: "column", margin: "0 4px" }}>
+                                    <div style={{ display: "flex", flexDirection: "column", margin: "4px 0px" }}>
                                         <sp-detail>CTA</sp-detail>
                                         <sp-textfield
                                             id="banner-cta-field"

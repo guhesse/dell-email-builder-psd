@@ -5,20 +5,30 @@ const heroPaths = {
     'hero1-lifestyle-product': {
         path: 'assets/heros/images/hero1-lifestyle-product.png',
         name: 'Hero Layout 1 - Lifestyle & Product',
+        brand: 'dell'
     },
     'hero1-lifestyle': {
         path: 'assets/heros/images/hero1-lifestyle.png',
         name: 'Hero Layout 1 - Only Lifestyle',
+        brand: 'dell'
     },
     'hero1-product': {
         path: 'assets/heros/images/hero1-product.png',
         name: 'Hero Layout 1 - Only Product',
+        brand: 'dell'
+    },
+    'aw-hero1-lifestyle-product': {
+        path: 'assets/heros/images/aw-hero1-lifestyle-product.png',
+        name: 'AW Hero Layout 1 - Lifestyle & Product',
+        brand: 'alienware'
     },
     'hero2-promotion': {
         path: 'assets/heros/images/hero2-promotion.png',
         name: 'Hero Layout 2 - Promotion',
+        brand: 'dell'
     },
 };
+
 
 export default function HeroSelector() {
     const { csvValues, setCsvValues, selectedHero, setSelectedHero, heroCopyValues, setHeroCopyValues } = useAppContext();
@@ -71,6 +81,7 @@ export default function HeroSelector() {
     const [formState, setFormState] = useState({
         badgeValue: csvValues['Badge Text'] || "",
         headlineValue: csvValues['Headline Text'] || "",
+        OTValue: "",
         subHeadlineValue: csvValues['SHL'] || "",
         inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || "",
         inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || "",
@@ -125,6 +136,7 @@ export default function HeroSelector() {
             productSuperchargerValue: productSuperchargerValue || "",
             heroCtaValue: heroCtaValue || "",
         });
+
 
         // Limpe o estado ao montar o componente
         setFormState({
@@ -186,39 +198,52 @@ export default function HeroSelector() {
             <div className="group">
                 <sp-icons>
                     <div style={{ display: "flex", alignItems: "center" }}>
-                        {(
-                            (selectedHero === "hero1-lifestyle-product"
-                                && badgeValue
-                                && headlineValue
-                                && subHeadlineValue
-                                && productNameValue
-                                && productSuperchargerValue
-                                && heroCtaValue)
-                            || (selectedHero === "hero1-lifestyle"
-                                && badgeValue
-                                && headlineValue
-                                && subHeadlineValue
-                                && heroCtaValue)
-                            || (selectedHero === "hero1-product"
-                                && badgeValue
-                                && headlineValue
-                                && OTValue
-                                && productNameValue
-                                && subHeadlineValue
-                                && heroCtaValue)
-                            || (selectedHero === "hero2-promotion"
-                                && badgeValue
-                                && headlineValue
-                                && subHeadlineValue
-                                && inlinePromoValue
-                                && productNameValue
-                                && specsValue
-                                && priceValue
-                                && heroCtaValue)) ? (
+                        {selectedHero !== null ? (
+                            (selectedHero === "hero1-lifestyle-product" &&
+                                badgeValue &&
+                                headlineValue &&
+                                subHeadlineValue &&
+                                productNameValue &&
+                                productSuperchargerValue &&
+                                heroCtaValue) ||
+                            (selectedHero === "hero1-lifestyle" &&
+                                badgeValue &&
+                                headlineValue &&
+                                subHeadlineValue &&
+                                heroCtaValue) ||
+                            (selectedHero === "hero1-product" &&
+                                badgeValue &&
+                                headlineValue &&
+                                OTValue &&
+                                productNameValue &&
+                                subHeadlineValue &&
+                                heroCtaValue) ||
+                            (selectedHero === "aw-hero1-lifestyle-product" &&
+                                badgeValue &&
+                                headlineValue &&
+                                subHeadlineValue &&
+                                productNameValue &&
+                                heroCtaValue) ||
+                            (selectedHero === "hero2-promotion" &&
+                                badgeValue &&
+                                headlineValue &&
+                                subHeadlineValue &&
+                                inlinePromoValue &&
+                                productNameValue &&
+                                specsValue &&
+                                priceValue &&
+                                heroCtaValue)) ? (
                             <div className="sp-icon" id="status-check">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 18 18" width="14">
                                     <title>Check</title>
                                     <rect id="Canvas" fill="#ff13dc" opacity="0" width="18" height="18" /><path d="M9,1a8,8,0,1,0,8,8A8,8,0,0,0,9,1Zm5.333,4.54L8.009,13.6705a.603.603,0,0,1-.4375.2305H7.535a.6.6,0,0,1-.4245-.1755L3.218,9.829a.6.6,0,0,1-.00147-.84853L3.218,8.979l.663-.6625A.6.6,0,0,1,4.72953,8.315L4.731,8.3165,7.4,10.991l5.257-6.7545a.6.6,0,0,1,.8419-.10586L13.5,4.1315l.7275.5685A.6.6,0,0,1,14.333,5.54Z" />
+                                </svg>
+                            </div>
+                        ) : (
+                            <div className="sp-icon" id="status-half">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 18 18" width="14">
+                                    <title>Half</title>
+                                    <rect id="Canvas" fill="#ff13dc" opacity="0" width="18" height="18" /><path d="M9.05,1.1A7.95,7.95,0,1,0,17,9.05,7.95,7.95,0,0,0,9.05,1.1Zm0,14.906A6.956,6.956,0,1,1,16.006,9.05,6.956,6.956,0,0,1,9.05,16.006Zm4.49072-9.68845-5.436,6.98773a.5.5,0,0,1-.74839.04628L4.2779,10.28586a.50035.50035,0,0,1,.00021-.70736l.66226-.66226a.5.5,0,0,1,.70709,0l1.939,1.92155,4.43735-5.701a.50006.50006,0,0,1,.70176-.08744h0l.72764.56642A.50016.50016,0,0,1,13.54072,6.31755Z" />
                                 </svg>
                             </div>
                         ) : (
@@ -238,6 +263,7 @@ export default function HeroSelector() {
                                 </svg>
                             </div>
                         )}
+
                         <div onClick={handleResetClick} className="sp-icon" id="bin">
                             <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 18 18" width="14">
                                 <title>Bin</title>
@@ -261,11 +287,12 @@ export default function HeroSelector() {
                             </div>
                         </sp-label>
                         <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
-                            <sp-picker placeholder="Selecione o hero" style={{ width: '45vw', padding: '0', margin: "0 4px 0 0" }} id="picker-m" size="m" label="Selection type">
+                            <sp-picker placeholder="Selecione o hero" style={{  padding: '0', margin: "0 4px 0 0" }} id="picker-m" size="m" label="Selection type">
                                 <sp-menu>
                                     {Object.entries(heroPaths).map(([hero, { path, name }]) => (
-                                        <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={hero} onClick={() => handleHeroClick(hero)}>
-                                            <sp-menu-item selected={selectedHero === `${hero}` ? selected.selectedHero : undefined} style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                                        <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} id="" key={hero} onClick={() => handleHeroClick(hero)}>
+                                            <sp-menu-item selected={selectedHero === `${hero}` ? selected.selectedHero : undefined}
+                                                style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                                                 <div style={{ display: "flex", alignItems: "center" }}>
                                                     <img style={{ width: '30px', height: 'auto', marginRight: '10px' }} src={path} alt={`Hero Layout - ${hero}`} />
                                                     {name}
@@ -309,7 +336,7 @@ export default function HeroSelector() {
                 {selectedHero === 'hero1-lifestyle-product' && isOptionsOpen && isEditClicked && (
                     <>
                         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="badge-field">BADGE</sp-detail>
                                 <sp-textfield
                                     id="badge-field"
@@ -320,7 +347,7 @@ export default function HeroSelector() {
                                     valid={badgeValue !== "" ? valid.badgeValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="headline-field">HEADLINE</sp-detail>
                                 <sp-textfield
                                     id="headline-field"
@@ -331,7 +358,7 @@ export default function HeroSelector() {
                                     valid={headlineValue !== "" ? valid.headlineValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="subheadline-field">SUBHEADLINE</sp-detail>
                                 <sp-textfield
                                     id="subheadline-field"
@@ -342,7 +369,7 @@ export default function HeroSelector() {
                                     valid={subHeadlineValue !== "" ? valid.subHeadlineValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="pname-field">PRODUCT NAME</sp-detail>
                                 <sp-textfield
                                     id="pname-field"
@@ -353,7 +380,7 @@ export default function HeroSelector() {
                                     valid={productNameValue !== "" ? valid.productNameValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="pname-field">PRODUCT SUPERCHARGER</sp-detail>
                                 <sp-textfield
                                     id="pname-field"
@@ -364,7 +391,7 @@ export default function HeroSelector() {
                                     valid={productSuperchargerValue !== "" ? valid.productSuperchargerValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
                                 <sp-textfield
                                     id="hero-cta-field"
@@ -382,7 +409,7 @@ export default function HeroSelector() {
                 {selectedHero === 'hero1-lifestyle' && isOptionsOpen && isEditClicked && (
                     <>
                         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="badge-field">BADGE</sp-detail>
                                 <sp-textfield
                                     id="badge-field"
@@ -393,7 +420,7 @@ export default function HeroSelector() {
                                     valid={badgeValue !== "" ? valid.badgeValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="headline-field">HEADLINE</sp-detail>
                                 <sp-textfield
                                     id="headline-field"
@@ -404,7 +431,7 @@ export default function HeroSelector() {
                                     valid={headlineValue !== "" ? valid.headlineValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="subheadline-field">SUBHEADLINE</sp-detail>
                                 <sp-textfield
                                     id="subheadline-field"
@@ -415,7 +442,7 @@ export default function HeroSelector() {
                                     valid={subHeadlineValue !== "" ? valid.subHeadlineValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
                                 <sp-textfield
                                     id="hero-cta-field"
@@ -434,7 +461,7 @@ export default function HeroSelector() {
                 {selectedHero === 'hero1-product' && isOptionsOpen && isEditClicked && (
                     <>
                         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="badge-field">BADGE</sp-detail>
                                 <sp-textfield
                                     id="badge-field"
@@ -445,7 +472,7 @@ export default function HeroSelector() {
                                     valid={badgeValue !== "" ? valid.badgeValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="headline-field">HEADLINE</sp-detail>
                                 <sp-textfield
                                     id="headline-field"
@@ -456,7 +483,7 @@ export default function HeroSelector() {
                                     valid={headlineValue !== "" ? valid.headlineValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="ot-field">OT</sp-detail>
                                 <sp-textfield
                                     id="ot-field"
@@ -467,7 +494,7 @@ export default function HeroSelector() {
                                     valid={OTValue !== "" ? valid.OTValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="pname-field">PRODUCT NAME</sp-detail>
                                 <sp-textfield
                                     id="pname-field"
@@ -478,7 +505,7 @@ export default function HeroSelector() {
                                     valid={productNameValue !== "" ? valid.productNameValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="subheadline-field">SUBHEADLINE</sp-detail>
                                 <sp-textfield
                                     id="subheadline-field"
@@ -489,7 +516,70 @@ export default function HeroSelector() {
                                     valid={subHeadlineValue !== "" ? valid.subHeadlineValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
+                                <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
+                                <sp-textfield
+                                    id="hero-cta-field"
+                                    placeholder="Insira o CTA"
+                                    value={tempFormState.heroCtaValue}
+                                    onInput={(e) => handleInputChange('heroCtaValue', e.target.value)}
+                                    onBlur={() => handleBlur('heroCtaValue')}
+                                    valid={heroCtaValue !== "" ? valid.heroCtaValue : undefined}
+                                ></sp-textfield>
+                            </div>
+                        </div>
+                    </>
+                )}
+
+
+                {selectedHero === 'aw-hero1-lifestyle-product' && isOptionsOpen && isEditClicked && (
+                    <>
+                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
+                            <div style={{ margin: "4px 0px" }}>
+                                <sp-detail for="badge-field">BADGE</sp-detail>
+                                <sp-textfield
+                                    id="badge-field"
+                                    placeholder="Insira o Badge"
+                                    value={tempFormState.badgeValue}
+                                    onInput={(e) => handleInputChange('badgeValue', e.target.value)}
+                                    onBlur={() => handleBlur('badgeValue')}
+                                    valid={badgeValue !== "" ? valid.badgeValue : undefined}
+                                ></sp-textfield>
+                            </div>
+                            <div style={{ margin: "4px 0px" }}>
+                                <sp-detail for="headline-field">HEADLINE</sp-detail>
+                                <sp-textfield
+                                    id="headline-field"
+                                    placeholder="Insira o Headline"
+                                    value={tempFormState.headlineValue}
+                                    onInput={(e) => handleInputChange('headlineValue', e.target.value)}
+                                    onBlur={() => handleBlur('headlineValue')}
+                                    valid={headlineValue !== "" ? valid.headlineValue : undefined}
+                                ></sp-textfield>
+                            </div>
+                            <div style={{ margin: "4px 0px" }}>
+                                <sp-detail for="subheadline-field">SUBHEADLINE</sp-detail>
+                                <sp-textfield
+                                    id="subheadline-field"
+                                    placeholder="Insira o SubHeadline"
+                                    value={tempFormState.subHeadlineValue}
+                                    onInput={(e) => handleInputChange('subHeadlineValue', e.target.value)}
+                                    onBlur={() => handleBlur('subHeadlineValue')}
+                                    valid={subHeadlineValue !== "" ? valid.subHeadlineValue : undefined}
+                                ></sp-textfield>
+                            </div>
+                            <div style={{ margin: "4px 0px" }}>
+                                <sp-detail for="pname-field">PRODUCT NAME</sp-detail>
+                                <sp-textfield
+                                    id="pname-field"
+                                    placeholder="Insira o Product Name"
+                                    value={tempFormState.productNameValue}
+                                    onInput={(e) => handleInputChange('productNameValue', e.target.value)}
+                                    onBlur={() => handleBlur('productNameValue')}
+                                    valid={productNameValue !== "" ? valid.productNameValue : undefined}
+                                ></sp-textfield>
+                            </div>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
                                 <sp-textfield
                                     id="hero-cta-field"
@@ -507,7 +597,7 @@ export default function HeroSelector() {
                 {selectedHero === 'hero2-promotion' && isOptionsOpen && isEditClicked && (
                     <>
                         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="badge-field">BADGE</sp-detail>
                                 <sp-textfield
                                     id="badge-field"
@@ -518,7 +608,7 @@ export default function HeroSelector() {
                                     valid={badgeValue !== "" ? valid.badgeValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="headline-field">HEADLINE</sp-detail>
                                 <sp-textfield
                                     id="headline-field"
@@ -529,7 +619,7 @@ export default function HeroSelector() {
                                     valid={headlineValue !== "" ? valid.headlineValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="subheadline-field">SUBHEADLINE</sp-detail>
                                 <sp-textfield
                                     id="subheadline-field"
@@ -540,7 +630,7 @@ export default function HeroSelector() {
                                     valid={subHeadlineValue !== "" ? valid.subHeadlineValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="pname-field">INLINE PROMO</sp-detail>
                                 <sp-textfield
                                     id="inline-promo-field"
@@ -551,7 +641,7 @@ export default function HeroSelector() {
                                     valid={inlinePromoValue !== "" ? valid.inlinePromoValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="pname-field">PRODUCT NAME</sp-detail>
                                 <sp-textfield
                                     id="pname-field"
@@ -562,7 +652,7 @@ export default function HeroSelector() {
                                     valid={productNameValue !== "" ? valid.productNameValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="specs-field">SPECS</sp-detail>
                                 <sp-textfield
                                     id="specs-field"
@@ -573,7 +663,7 @@ export default function HeroSelector() {
                                     valid={specsValue !== "" ? valid.specsValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="price-field">PRICE</sp-detail>
                                 <sp-textfield
                                     id="price-field"
@@ -584,7 +674,7 @@ export default function HeroSelector() {
                                     valid={priceValue !== "" ? valid.priceValue : undefined}
                                 ></sp-textfield>
                             </div>
-                            <div style={{ margin: "4px" }}>
+                            <div style={{ margin: "4px 0px" }}>
                                 <sp-detail for="hero-cta-field">HERO CTA</sp-detail>
                                 <sp-textfield
                                     id="hero-cta-field"

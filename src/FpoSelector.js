@@ -83,7 +83,7 @@ export default function FpoSelector() {
                         <div style={{ display: "flex", flexDirection: "column", flexWrap: "wrap", alignItems: "flex-start" }}>
                             <sp-detail for="fpo-value-field">QUANTIDADE</sp-detail>
                             <sp-field-group style={{ display: "flex", flexDirection: "row" }}>
-                                <sp-picker placeholder="Selecione quantos FPO's" style={{ padding: "0" }} id="picker-m" size="m" label="Selection type">
+                                <sp-picker class='largePicker' placeholder="Selecione quantos FPO's" style={{ padding: "0" }} id="picker-m" size="m" label="Selection type">
                                     <sp-menu>
                                         <sp-menu-item selected={selectedFpoValue === 0 ? selected.selectedFpoValue : undefined}  onClick={() => handleFpoValueClick(0)}>None</sp-menu-item>
                                         <sp-menu-item selected={selectedFpoValue === 1 ? selected.selectedFpoValue : undefined}  onClick={() => handleFpoValueClick(1)}>1</sp-menu-item>
@@ -116,7 +116,7 @@ export default function FpoSelector() {
                     <div style={{ display: "flex", flexDirection: "column" }}>
                         <sp-detail for="fpo-segment-field">SEGUIMENTO</sp-detail>
                         <sp-field-group>
-                            <sp-picker placeholder="Seguimento do FPO" style={{ padding: "0" }} id="picker-m" size="m" label="Selection type">
+                            <sp-picker class='largePicker' placeholder="Seguimento do FPO" style={{ padding: "0" }} id="picker-m" size="m" label="Selection type">
                                 <sp-menu>
                                     <sp-menu-item selected={selectedFpoSegment === "sb" ? selected.selectedFpoSegment : undefined} onClick={() => handleFpoSegmentClick('sb')}>SB</sp-menu-item>
                                     <sp-menu-item selected={selectedFpoSegment === "isg" ? selected.selectedFpoSegment : undefined} disabled onClick={() => handleFpoSegmentClick('isg')}>ISG</sp-menu-item>

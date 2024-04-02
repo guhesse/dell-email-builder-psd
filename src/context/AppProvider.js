@@ -183,6 +183,13 @@ export default function AppProvider({ children }) {
     }
 
     const cores = {
+        "AW WarmRed": { r: 255, g: 76, b: 52 },
+        "AW CoolRed": { r: 255, g: 0, b: 54 },
+        "AW DarkViolet": { r: 65, g: 2, b: 144 },
+        "AW VividViolet": { r: 102, g: 51, b: 204 },
+        "AW LGray": { r: 192, g: 194, b: 196 },
+        "AW MGray": { r: 128, g: 130, b: 133 },
+        "AW DGray": { r: 40, g: 40, b: 41 },
         white: { r: 254, g: 254, b: 254 },
         quartz: { r: 238, g: 238, b: 238 },
         granite: { r: 200, g: 201, b: 199 },
@@ -254,6 +261,7 @@ export default function AppProvider({ children }) {
     // Values e estados dos inputs
 
     const [selectedHeader, setSelectedHeader] = useState(null);
+    const [selectedBrand, setSelectedBrand] = useState('dell');
     const [selectedFunding, setSelectedFunding] = useState(null);
     const [selectedSkinny, setSelectedSkinny] = useState(null);
     const [selectedHero, setSelectedHero] = useState(null);
@@ -416,6 +424,7 @@ export default function AppProvider({ children }) {
             badgeValue: csvValues['Badge Text'] || "",
             headlineValue: csvValues['Headline Text'] || "",
             subHeadlineValue: csvValues['SHL'] || "",
+            OTValue: '',
             inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || "",
             inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || "",
             specsValue: csvValues['HERO1 Product Description'] || "",
@@ -493,21 +502,6 @@ export default function AppProvider({ children }) {
         })
 
 
-        // setSelectedFooter(csvValues['Segment'] || "");
-        // if (csvValues['Segment'] === "CSB") {
-        //     setCsvValues({
-        //         ...csvValues,
-        //         'Segment': "csb-four-btn"
-        //     });
-        // } else if (csvValues['Segment'] === "SB") {
-        //     setCsvValues({
-        //         ...csvValues,
-        //         'Segment': "sb-four-btn"
-        //     });
-        // } else if ((csvValues['Segment'] === "SB") && (csvValues['Campaign Type'] === "DEXN")) {
-        //     setSelectedFooter("experts")
-        // }
-
         setSelectedBirdseed(csvValues['Campaign Type'] || "");
         if (csvValues['Campaign Type'] === "") {
             setSelectedBirdseed(null)
@@ -574,6 +568,7 @@ export default function AppProvider({ children }) {
     //     slValue,
     //     sslValue,
     //     selectedHeader,
+    //     selectedBrand,
     //     selectedFunding,
     //     fundingCopyValue,
     //     selectedSkinny,
@@ -610,6 +605,9 @@ export default function AppProvider({ children }) {
 
             selectedHeader,
             setSelectedHeader,
+
+            selectedBrand,
+            setSelectedBrand,
 
             selectedFunding,
             setSelectedFunding,

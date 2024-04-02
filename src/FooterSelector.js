@@ -44,26 +44,22 @@ export default function FooterSelector() {
                                 </span>
                             </div>
                         </sp-label>
-                        <sp-field-group width={{ base: 'size-3000', L: "single-line-width" }}>
-                            <div>
-                                <sp-picker id="picker-m" size="m" label="Selection type" placeholder="Selecione o footer">
-                                    <sp-menu >
-                                        <sp-menu-item selected={selectedFooter === "" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('')}>None</sp-menu-item>
-                                        <sp-menu-divider></sp-menu-divider>
-                                        <sp-menu-item selected={selectedFooter === "sb-four-btn" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('sb-four-btn')}>SB 4 Button</sp-menu-item>
-                                        <sp-menu-item selected={selectedFooter === "csb-four-btn" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('csb-four-btn')}>CSB 4 Button</sp-menu-item>
-                                        {/* <sp-menu-item disabled selected={selectedFooter === 'con'} onClick={() => handleFooterClick('con')}>CON</sp-menu-item> */}
-                                        <sp-menu-divider></sp-menu-divider>
-                                        <sp-menu-item selected={selectedFooter === "aw-three-btn" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('aw-three-btn')}>Alienware 3 Button</sp-menu-item>
-                                        <sp-menu-item selected={selectedFooter === "aw-four-btn" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('aw-four-btn')}>Alienware 4 Button</sp-menu-item>
-                                        <sp-menu-item selected={selectedFooter === "gaming" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('gaming')}>Gaming</sp-menu-item>
-                                        <sp-menu-divider></sp-menu-divider>
-                                        <sp-menu-item disabled selected={selectedFooter === "outlet" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('outlet')}>Outlet</sp-menu-item>
-                                        <sp-menu-item selected={selectedFooter === "experts" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('experts')}>Experts</sp-menu-item>
-                                    </sp-menu>
-                                </sp-picker>
-                            </div>
-                        </sp-field-group>
+                        <sp-picker style={{marginLeft: '0px'}} class="largePicker" slot="trigger" id="picker-m" size="m" label="Selection type" placeholder="Selecione o footer">
+                            <sp-menu>
+                                <sp-menu-item selected={selectedFooter === "" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('')}>None</sp-menu-item>
+                                <sp-menu-divider></sp-menu-divider>
+                                <sp-menu-item selected={selectedFooter === "sb-four-btn" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('sb-four-btn')}>SB 4 Button</sp-menu-item>
+                                <sp-menu-item selected={selectedFooter === "csb-four-btn" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('csb-four-btn')}>CSB 4 Button</sp-menu-item>
+                                {/* <sp-menu-item disabled selected={selectedFooter === 'con'} onClick={() => handleFooterClick('con')}>CON</sp-menu-item> */}
+                                <sp-menu-divider></sp-menu-divider>
+                                <sp-menu-item selected={selectedFooter === "aw-three-btn" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('aw-three-btn')}>Alienware 3 Button</sp-menu-item>
+                                <sp-menu-item selected={selectedFooter === "aw-four-btn" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('aw-four-btn')}>Alienware 4 Button</sp-menu-item>
+                                <sp-menu-item selected={selectedFooter === "gaming" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('gaming')}>Gaming</sp-menu-item>
+                                <sp-menu-divider></sp-menu-divider>
+                                <sp-menu-item disabled selected={selectedFooter === "outlet" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('outlet')}>Outlet</sp-menu-item>
+                                <sp-menu-item selected={selectedFooter === "experts" ? selected.selectedFooter : undefined} onClick={() => handleFooterClick('experts')}>Experts</sp-menu-item>
+                            </sp-menu>
+                        </sp-picker>
                     </>
                 ) : (
                     <>

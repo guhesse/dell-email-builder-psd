@@ -5,6 +5,55 @@ body {
     font-size: var(--uxp-host-font-size-smaller);
 }
 
+sp-textfield {
+    min-width: 240px;
+    max-width: 100%;
+}
+
+sp-picker {
+    padding-top: 5px;
+    width: 200px;
+}
+
+sp-picker.largePicker {
+    width: 240px;
+}
+
+sp-picker.shortPicker {
+    width: 204px;
+}
+
+sp-action-button.editBtn{
+    margin-top: 5px;
+}
+
+sp-button.dellBtn {
+    background: var(--spectrum-blue-800);
+    color: white;
+}
+
+sp-button.dellBtn:hover {
+    background: var(--spectrum-blue-900);
+}
+
+sp-button.dellBtn:active {
+    background: var(--spectrum-blue-1000);
+}
+
+
+sp-button.alienwareBtn {
+    background: var(--spectrum-red-900);
+    color: white;
+}
+
+sp-button.alienwareBtn:hover {
+    background: var(--spectrum-red-1000);
+}
+
+sp-button.alienwareBtn:active {
+    background: var(--spectrum-red-1100);
+}
+
 .modal-border {
     background-color: rgb(50, 50, 50);
     border-radius: 10px;
@@ -35,10 +84,16 @@ body {
     padding-left: 15px;
 }
 
+.brandLabel{
+    font-size: 0.8em;
+    margin-left: -4px;
+    font-weight: 500;
+}
 
 sp-field-label {
-    font-size: 0.8em;
-    padding: 4px 0px;
+    font-size: 0.85em;
+    padding: 8px 0px;
+    margin: 0;
 }
 
 sp-detail {
@@ -77,12 +132,14 @@ sp-menu-group span {
     right: 0;
     bottom: 0;
     width: 100vw;
+    min-width: 300px;
     height: 100vh;
     flex-direction: column;
     display: flex;
-    padding: 12px;
+    padding: 0px 0px 0px 16px;
     overflow-y: scroll;
 }
+
 
 /* group open */
 .group {
@@ -111,9 +168,9 @@ sp-menu-group span {
 }
 
 .group>sp-icons:not(.safe),
-.group-open>sp-icons:not(.safe){
+.group-open>sp-icons:not(.safe) {
     position: absolute;
-    top: -1.2em;
+    top: -1.35em;
     right: -0.5em;
     background-color: rgb(45, 45, 45);
     display: block;
@@ -131,16 +188,24 @@ sp-menu-group span {
     fill: #8a8a8a;
 }
 
+.sp-icon#status-half {
+    fill: #8a8a8a;
+}
+
 .sp-icon#status-check {
     fill: #73e06b;
 }
 
-.sp-icon#bin {
+.sp-icon#brand {
     display: flex;
     align-items: center;
     margin-left: 5px;
     cursor: pointer;
     fill: #8a8a8a;
+}
+
+.sp-icon#bin{
+    padding-left: 5px;
 }
 
 .sp-icon#bin:hover {

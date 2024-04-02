@@ -156,8 +156,6 @@ export default async function Hero1LifestyleProduct(accentRed, accentGreen, acce
 
     await batchPlay(productCopyChange, {});
 
-    console.log(productCopyChange)
-
     const offsetProductCopy = [
         selectGroup({
             FirstName: "Product Copy",
@@ -188,7 +186,6 @@ export default async function Hero1LifestyleProduct(accentRed, accentGreen, acce
 
     const { position: baseCtaPosition } = await getBoundsAndPosition(offsetProduct, "bounds", 4, "height", 40);
     const newCtaPosition = baseCtaPosition + newProductPosition
-
 
     const changeCtaCopy = [
 
@@ -236,7 +233,6 @@ export default async function Hero1LifestyleProduct(accentRed, accentGreen, acce
         makeSmartObj()
     ]
     await batchPlay(changeCtaBorder, {});
-
 
     const offsetCta = [
         selectLayer({

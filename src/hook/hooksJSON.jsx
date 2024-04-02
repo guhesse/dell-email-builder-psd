@@ -270,7 +270,7 @@ export function selectAllAndCopy() {
         { _obj: "selectAllLayers", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], _options: { dialogOptions: "dontDisplay" } },
         { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
         { _obj: "copyEvent", _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, documentID: 507, _options: { dialogOptions: "dontDisplay" } }
+        { _obj: "close", saving: { _enum: "yesNo", _value: "no" }, _options: { dialogOptions: "dontDisplay" } }
     ];
 }
 

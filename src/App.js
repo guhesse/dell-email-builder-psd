@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import CsvReader from './CsvReader.js';
+import BrandSelector from './BrandSelector.js';
 import HeaderSelector from "./HeaderSelector.js";
 import SubjectLineSelector from './SubjectLineSelector.js';
 import ColorSelector from './ColorSelector.js';
@@ -24,14 +25,15 @@ import AppProvider from './context/AppProvider.js';
 
 // Variáveis das alturas dos módulos
 
-
 function App() {
 
+  
   // UI do Plugin
   return (
     <Theme theme="spectrum" scale="medium" color="light">
       <AppProvider className="wrapper">
         <CsvReader />
+        <BrandSelector />
         <ColorSelector />
         <SubjectLineSelector />
         <HeaderSelector />
