@@ -42,16 +42,16 @@ sp-button.dellBtn:active {
 
 
 sp-button.alienwareBtn {
-    background: var(--spectrum-red-900);
+    background: var(--spectrum-purple-800);
     color: white;
 }
 
 sp-button.alienwareBtn:hover {
-    background: var(--spectrum-red-1000);
+    background: var(--spectrum-purple-900);
 }
 
 sp-button.alienwareBtn:active {
-    background: var(--spectrum-red-1100);
+    background: var(--spectrum-purple-1000);
 }
 
 .modal-border {

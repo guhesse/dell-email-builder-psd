@@ -15,6 +15,7 @@ import BannerSelector from './BannerSelector.js';
 import FooterSelector from './FooterSelector.js';
 import BirdseedSelector from './BirdseedSelector.js';
 import EmailBuilder from './components/EmailBuilder.jsx';
+import TesteWriteFile from './TesteWriteFile.jsx';
 
 import { Theme } from "@swc-react/theme";
 export const { core, app } = require('photoshop');
@@ -27,11 +28,12 @@ import AppProvider from './context/AppProvider.js';
 
 function App() {
 
-  
+
   // UI do Plugin
   return (
     <Theme theme="spectrum" scale="medium" color="light">
       <AppProvider className="wrapper">
+        <TesteWriteFile />
         <CsvReader />
         <BrandSelector />
         <ColorSelector />

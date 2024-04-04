@@ -581,7 +581,7 @@ export default function AppProvider({ children }) {
         // selectedBirdseed,
         // selectedBirdseedCopy,
         // birdseedCopyValues,
-        birdseedDate
+        // birdseedDate
     });
 
     return (

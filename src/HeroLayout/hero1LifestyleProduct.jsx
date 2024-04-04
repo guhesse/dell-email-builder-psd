@@ -266,3 +266,4 @@ export default async function Hero1LifestyleProduct(accentRed, accentGreen, acce
     })
     await batchPlay(finalCrop, {});
 }
+
