@@ -2,10 +2,27 @@ import React, { useState, useEffect } from "react";
 import useAppContext from "./hook/useAppContext.jsx";
 
 export default function colorSelector() {
-
     const { accentColor, secondaryColor, tertiaryColor, handleAccentColorChange, handleSecondaryColorChange, handleTertiaryColorChange } = useAppContext();
 
+    const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+
+    const toggleOptions = () => {
+        setIsOptionsOpen(!isOptionsOpen);
+    };
+
+    const [selected, setSelected] = useState({
+        selectedColor: false
+    });
+
+
     const cores = {
+        "AW WarmRed": { r: 255, g: 76, b: 52 },
+        "AW CoolRed": { r: 255, g: 0, b: 54 },
+        "AW DarkViolet": { r: 65, g: 2, b: 144 },
+        "AW VividViolet": { r: 102, g: 51, b: 204 },
+        "AW LGray": { r: 192, g: 194, b: 196 },
+        "AW MGray": { r: 128, g: 130, b: 133 },
+        "AW DGray": { r: 40, g: 40, b: 41 },
         white: { r: 254, g: 254, b: 254 },
         quartz: { r: 238, g: 238, b: 238 },
         granite: { r: 200, g: 201, b: 199 },
@@ -56,6 +73,14 @@ export default function colorSelector() {
     };
 
     const coresRGB = {
+        "AW WarmRed": "rgb(255, 76, 52)",
+        "AW CoolRed": "rgb(255, 0, 54)",
+        "AW DarkViolet": "rgb(65, 2, 144)",
+        "AW VividViolet": "rgb(102, 51, 204)",
+        "AW LGray": "rgb(192, 194, 196)",
+        "AW MGray": "rgb(128, 130, 133)",
+        "AW DGray": "rgb(40, 40, 41)",
+        "AW White": "rgb(40, 40, 41)",
         white: "rgb(254, 254, 254)",
         quartz: "rgb(238, 238, 238)",
         granite: "rgb(200, 201, 199)",
@@ -107,6 +132,14 @@ export default function colorSelector() {
 
 
     const coresHEX = {
+        "AW WarmRed": '#FF4C34',
+        "AW CoolRed": '#FF0136',
+        "AW DarkViolet": '#410290',
+        "AW VividViolet": '#6633CC',
+        "AW LGray": '#C0C2C4',
+        "AW MGray": '#808284',
+        "AW DGray": '#282829',
+        "AW White": '#FFFFFF',
         white: '#FEFEFE',
         quartz: '#EEEEEE',
         granite: '#C8C9C7',
@@ -190,115 +223,158 @@ export default function colorSelector() {
 
     return (
         <>
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group"><sp-label>Colors</sp-label>
-                <sp-overlay style={{ position: "absolute", top: "5%", right: "5%" }}>
-                    <div className="sp-tab-page" slot="trigger" id="sp-spectrum-widgets-tab-page">
-                        <sp-action-button quiet label="Edit">
-                            <div slot="icon" className="icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 18 18" width="18">
-                                    <rect id="Canvas" fill="#ff13dc" opacity="0" width="18" height="18" /><path className="fill" d="M10.075,6A1.075,1.075,0,1,1,9,4.925H9A1.075,1.075,0,0,1,10.075,6Zm.09173,6H10V8.2A.20005.20005,0,0,0,9.8,8H7.83324S7.25,8.01612,7.25,8.5c0,.48365.58325.5.58325.5H8v3H7.83325s-.58325.01612-.58325.5c0,.48365.58325.5.58325.5h2.3335s.58325-.01635.58325-.5C10.75,12.01612,10.16673,12,10.16673,12ZM9,.5A8.5,8.5,0,1,0,17.5,9,8.5,8.5,0,0,0,9,.5ZM9,15.6748A6.67481,6.67481,0,1,1,15.67484,9,6.67481,6.67481,0,0,1,9,15.6748Z" />
-                                </svg>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }} className="group">
+                {isOptionsOpen ? (
+                    <>
+                        <sp-label onClick={toggleOptions} style={{ cursor: "pointer" }}>
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                <p>Colors </p>
+                                <span style={{ marginLeft: "8px", display: "flex", alignItems: "center", fill: "#8a8a8a" }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 14 16" >
+                                        <title>S ChevronDown 18 N</title>
+                                        <rect id="Canvas" fill="#8a8a8a" opacity="0" width="11" height="11" />
+                                        <path d="M4,7.01a1,1,0,0,1,1.7055-.7055l3.289,3.286,3.289-3.286a1,1,0,0,1,1.437,1.3865l-.0245.0245L9.7,11.7075a1,1,0,0,1-1.4125,0L4.293,7.716A.9945.9945,0,0,1,4,7.01Z" />
+                                    </svg>
+                                </span>
                             </div>
-                        </sp-action-button>
-                    </div>
-                    <sp-popover
-                        offset="5"
-                        placement="right"
-                        alignment="center"
-                        appearance="none"
-                        slot="hover"
-                        style={{ borderRadius: "5px" }}
-                    >
-                        <sp-body style={{ padding: "5px 8px", width: "150px", fontSize: "12px", margin: 0 }}>
-                            <h4>Accent Color</h4>
-                            <p style={{ fontSize: 11, lineHeight: 1, margin: 0, padding: 0 }}>
-                                They are used in: <br />
-                                <span style={{ fontStyle: "italic" }}> Background </span>
-                            </p>
-                            <h4 style={{ marginTop: 2 }}>Secondary Color</h4>
-                            <p style={{ fontSize: 11, lineHeight: 1, margin: 0, padding: 0 }}>
-                                They are used in: <br />
-                                <span style={{ fontStyle: "italic" }}>  Skinny Banner, Badge, Plugin, Product Pattern</span>
-                            </p>
-                            <h4 style={{ marginTop: 2 }}>Tertiary Color</h4>
-                            <p style={{ fontSize: 11, lineHeight: 1, margin: 0, padding: 0 }}>
-                                They are used in: <br />
-                                <span style={{ fontStyle: "italic" }}> Hero CTA </span>
-                            </p>
-                        </sp-body>
-                    </sp-popover>
-                </sp-overlay>
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin: "0.025em 0" }}>
-                    <span style={{ backgroundColor: coresRGB[accentSelectedColor], width: "55px", height: "55px", borderRadius: "30px", border: "white 1px solid" }}></span>
-                    <sp-field-group style={{ padding: "10" }}>
-                        <sp-detail for="accent-color">ACCENT COLOR</sp-detail>
-                        <sp-picker placeholder="Select accent color" id="picker-m" size="m" label="Selection type">
-                            <sp-menu>
-                                {Object.keys(cores).map((cor) => (
-                                    <div
-                                        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-                                        key={cor} 
-                                        onClick={() => handleAccentColorClick(cor)}>
-                                        <sp-menu-item
-                                            selected={accentSelectedColor === cor}
-                                            style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                        </sp-label>
+                        <sp-overlay style={{ position: "absolute", top: "5%", right: "2%" }}>
+                            <div className="sp-tab-page" slot="trigger" id="sp-spectrum-widgets-tab-page">
+                                <sp-action-button quiet label="Edit">
+                                    <div slot="icon" className="icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 18 18" width="18">
+                                            <rect id="Canvas" opacity="0" width="18" height="18" /><path className="fill" d="M10.075,6A1.075,1.075,0,1,1,9,4.925H9A1.075,1.075,0,0,1,10.075,6Zm.09173,6H10V8.2A.20005.20005,0,0,0,9.8,8H7.83324S7.25,8.01612,7.25,8.5c0,.48365.58325.5.58325.5H8v3H7.83325s-.58325.01612-.58325.5c0,.48365.58325.5.58325.5h2.3335s.58325-.01635.58325-.5C10.75,12.01612,10.16673,12,10.16673,12ZM9,.5A8.5,8.5,0,1,0,17.5,9,8.5,8.5,0,0,0,9,.5ZM9,15.6748A6.67481,6.67481,0,1,1,15.67484,9,6.67481,6.67481,0,0,1,9,15.6748Z" />
+                                        </svg>
+                                    </div>
+                                </sp-action-button>
+                            </div>
+                            <sp-popover
+                                offset="5"
+                                placement="right"
+                                alignment="center"
+                                appearance="none"
+                                slot="hover"
+                                style={{ borderRadius: "5px" }}
+                            >
+                                <sp-body style={{ padding: "5px 8px", width: "150px", fontSize: "12px", margin: 0 }}>
+                                    <h4>Accent Color</h4>
+                                    <p style={{ fontSize: 11, lineHeight: 1, margin: 0, padding: 0 }}>
+                                        They are used in: <br />
+                                        <span style={{ fontStyle: "italic" }}> Background </span>
+                                    </p>
+                                    <h4 style={{ marginTop: 2 }}>Secondary Color</h4>
+                                    <p style={{ fontSize: 11, lineHeight: 1, margin: 0, padding: 0 }}>
+                                        They are used in: <br />
+                                        <span style={{ fontStyle: "italic" }}>  Skinny Banner, Badge, Plugin, Product Pattern</span>
+                                    </p>
+                                    <h4 style={{ marginTop: 2 }}>Tertiary Color</h4>
+                                    <p style={{ fontSize: 11, lineHeight: 1, margin: 0, padding: 0 }}>
+                                        They are used in: <br />
+                                        <span style={{ fontStyle: "italic" }}> Hero CTA </span>
+                                    </p>
+                                </sp-body>
+                            </sp-popover>
+                        </sp-overlay>
+                        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin: "0.025em 0" }}>
+                            <sp-field-group style={{ padding: "5 2 8 5", }}>
+                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginBottom: "5px" }}>
+                                    <span style={{ backgroundColor: coresRGB[accentSelectedColor], width: "22px", height: "22px", borderRadius: "5px" }}></span>
+                                    <sp-detail style={{ marginLeft: "8px" }} for="accent-color">ACCENT COLOR</sp-detail>
+                                </div>
+                                <sp-picker class='largePicker' placeholder="Select accent color" id="picker-m" size="m" label="Selection type" >
+                                    <sp-menu>
+                                        {Object.keys(cores).map((cor) => (
                                             <div
-                                                style={{ display: "flex", alignItems: "center" }}>
-                                                <span
-                                                    style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
-                                                {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}
-                                                <span
-                                                    style={{ color: "gray", marginLeft: "10px" }}>{coresHEX[cor]}</span>
+                                                style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+                                                key={cor}
+                                                onClick={() => handleAccentColorClick(cor)}>
+                                                <sp-menu-item
+                                                    selected={accentSelectedColor === accentSelectedColor ? selected.accentSelectedColor : undefined}
+                                                    style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                                                    <div
+                                                        style={{ display: "flex", alignItems: "center" }}>
+                                                        <span
+                                                            style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
+                                                        {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}
+                                                        <span
+                                                            style={{ color: "gray", marginLeft: "8px" }}>{coresHEX[cor]}</span>
+                                                    </div>
+                                                </sp-menu-item>
                                             </div>
-                                        </sp-menu-item>
-                                    </div>
-                                ))}
-                            </sp-menu>
-                        </sp-picker>
-                    </sp-field-group>
-                </div>
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin: "0.025em 0" }}>
-                    <span style={{ backgroundColor: coresRGB[secondarySelectedColor], width: "55px", height: "55px", borderRadius: "30px", border: "white 1px solid" }}></span>
-                    <sp-field-group style={{ padding: "10" }}>
-                        <sp-detail for="secondary-color">SECONDARY COLOR</sp-detail>
-                        <sp-picker placeholder="Select secondary color" id="picker-m" size="m" label="Selection type">
-                            <sp-menu>
-                                {Object.keys(cores).map((cor) => (
-                                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleSecondaryColorClick(cor)}>
-                                        <sp-menu-item selected={secondarySelectedColor === cor} style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
-                                            <div style={{ display: "flex", alignItems: "center" }}>
-                                                <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
-                                                {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}
-                                                <span style={{ color: "gray", marginLeft: "10px" }}>{coresHEX[cor]}</span>
+                                        ))}
+                                    </sp-menu>
+                                </sp-picker>
+                            </sp-field-group>
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin: "0.025em 0" }}>
+                            <sp-field-group style={{ padding: "5 2 8 5", }}>
+                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginBottom: "5px" }}>
+                                    <span style={{ backgroundColor: coresRGB[secondarySelectedColor], width: "22px", height: "22px", borderRadius: "5px" }}></span>
+                                    <sp-detail style={{ marginLeft: "8px" }} for="accent-color">SECONDARY COLOR</sp-detail>
+                                </div>
+                                <sp-picker class='largePicker' placeholder="Select secondary color" id="picker-m" size="m" label="Selection type">
+                                    <sp-menu>
+                                        {Object.keys(cores).map((cor) => (
+                                            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleSecondaryColorClick(cor)}>
+                                                <sp-menu-item
+                                                    selected={secondarySelectedColor === secondarySelectedColor ? selected.secondarySelectedColor : undefined}
+                                                    style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                                                    <div style={{ display: "flex", alignItems: "center" }}>
+                                                        <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
+                                                        {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}
+                                                        <span style={{ color: "gray", marginLeft: "10px" }}>{coresHEX[cor]}</span>
+                                                    </div>
+                                                </sp-menu-item>
                                             </div>
-                                        </sp-menu-item>
-                                    </div>
-                                ))}
-                            </sp-menu>
-                        </sp-picker>
-                    </sp-field-group>
-                </div>
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin: "0.025em 0" }}>
-                    <span style={{ backgroundColor: coresRGB[tertiarySelectedColor], width: "55px", height: "55px", borderRadius: "30px", border: "white 1px solid" }}></span>
-                    <sp-field-group style={{ padding: "10" }}>
-                        <sp-detail for="tertiary-color">TERTIARY COLOR</sp-detail>
-                        <sp-picker placeholder="Select tertiary color" id="picker-m" size="m" label="Selection type">
-                            <sp-menu>
-                                {Object.keys(cores).map((cor) => (
-                                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleTertiaryColorClick(cor)}>
-                                        <sp-menu-item selected={tertiarySelectedColor === cor} style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
-                                            <div style={{ display: "flex", alignItems: "center" }}>
-                                                <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
-                                                {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}
-                                                <span style={{ color: "gray", marginLeft: "10px" }}>{coresHEX[cor]}</span>
+                                        ))}
+                                    </sp-menu>
+                                </sp-picker>
+                            </sp-field-group>
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin: "0.025em 0" }}>
+                            <sp-field-group style={{ padding: "5 2 8 5", }}>
+                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginBottom: "5px" }}>
+                                    <span style={{ backgroundColor: coresRGB[tertiarySelectedColor], width: "22px", height: "22px", borderRadius: "5px" }}></span>
+                                    <sp-detail style={{ marginLeft: "8px" }} for="accent-color">TERTIARY COLOR</sp-detail>
+                                </div>
+                                <sp-picker class='largePicker' placeholder="Select tertiary color" id="picker-m" size="m" label="Selection type">
+                                    <sp-menu>
+                                        {Object.keys(cores).map((cor) => (
+                                            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleTertiaryColorClick(cor)}>
+                                                <sp-menu-item
+                                                    selected={tertiarySelectedColor === tertiarySelectedColor ? selected.tertiarySelectedColor : undefined}
+                                                    style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                                                    <div style={{ display: "flex", alignItems: "center" }}>
+                                                        <span style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
+                                                        {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}
+                                                        <span style={{ color: "gray", marginLeft: "10px" }}>{coresHEX[cor]}</span>
+                                                    </div>
+                                                </sp-menu-item>
                                             </div>
-                                        </sp-menu-item>
-                                    </div>
-                                ))}
-                            </sp-menu>
-                        </sp-picker>
-                    </sp-field-group>
-                </div>
+                                        ))}
+                                    </sp-menu>
+                                </sp-picker>
+                            </sp-field-group>
+                        </div>
+                    </>
+                ) : (
+                    <sp-label onClick={toggleOptions} >
+                        <div style={{ display: "flex", flexDirection: "row", cursor: "pointer" }}>
+                            <p>Colors</p>
+                            <span style={{ backgroundColor: coresRGB[accentSelectedColor], width: "13px", height: "12px", borderRadius: "3px", marginLeft: "10px" }}></span>
+                            <span style={{ backgroundColor: coresRGB[secondarySelectedColor], width: "13px", height: "12px", borderRadius: "3px", marginLeft: "4px" }}></span>
+                            <span style={{ backgroundColor: coresRGB[tertiarySelectedColor], width: "13px", height: "12px", borderRadius: "3px", marginLeft: "4px" }}></span>
+                            <span style={{ marginLeft: "10px", display: "flex", alignItems: "center", fill: "#8a8a8a" }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 10 10" >
+                                    <g id="ChevronSize75">
+                                        <rect id="Frame" width="7" height="7" fill="black" opacity="0" />
+                                        <path d="M7.4834,4.40625,3.85986.7832a.83969.83969,0,0,0-1.1875,1.1875L5.70166,5,2.67236,8.0293a.83969.83969,0,1,0,1.1875,1.1875l3.62354-3.623A.83933.83933,0,0,0,7.4834,4.40625Z" />
+                                    </g>
+                                </svg>
+                            </span>
+                        </div>
+                    </sp-label>
+                )}
             </div >
         </>
     );
