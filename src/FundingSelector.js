@@ -24,10 +24,6 @@ export default function FundingSelector() {
         setFundingCopyValue("")
     };
 
-    useEffect(() => {
-        handleFundingClick(csvValues['Vendor Funding Name']);
-    }, [csvValues['Vendor Funding Name']]);
-
     const [formState, setFormState] = useState({
         fundingCopyValue: csvValues['Funding/WEP Content'] || "",
     });

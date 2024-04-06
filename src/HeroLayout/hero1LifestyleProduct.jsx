@@ -190,7 +190,7 @@ export default async function Hero1LifestyleProduct(accentRed, accentGreen, acce
     const changeCtaCopy = [
 
         setFontStyle({
-            Name: "CTA Copy",
+            Name: "Hero CTA Copy",
             Value: heroCtaValue,
             FontName: "Roboto",
             FontWeight: "Medium",
@@ -203,7 +203,7 @@ export default async function Hero1LifestyleProduct(accentRed, accentGreen, acce
         }),
 
         getBounds({
-            Name: "CTA Copy"
+            Name: "Hero CTA Copy"
         })
     ]
 
@@ -211,14 +211,14 @@ export default async function Hero1LifestyleProduct(accentRed, accentGreen, acce
 
     const changeCtaBorder = [
         setSolidFill({
-            Name: "CTA Border",
+            Name: "Hero CTA Border",
             RedColor: tertiaryRed,
             GreenColor: tertiaryGreen,
             BlueColor: tertiaryBlue,
         }),
 
         selectLayer({
-            Name: "CTA Border"
+            Name: "Hero CTA Border"
         }),
 
         setCTABorder({
@@ -226,8 +226,8 @@ export default async function Hero1LifestyleProduct(accentRed, accentGreen, acce
         }),
 
         selectGroup({
-            FirstName: "CTA",
-            LastName: "CTA Border"
+            FirstName: "Hero CTA",
+            LastName: "Hero CTA Border"
         }),
 
         makeSmartObj()
@@ -236,14 +236,14 @@ export default async function Hero1LifestyleProduct(accentRed, accentGreen, acce
 
     const offsetCta = [
         selectLayer({
-            Name: "CTA"
+            Name: "Hero CTA"
         }),
         setOffset({
-            Name: "CTA",
+            Name: "Hero CTA",
             Vertical: newCtaPosition,
         }),
         getBounds({
-            Name: "CTA",
+            Name: "Hero CTA",
             Property: "bounds"
         })
     ];
@@ -252,7 +252,7 @@ export default async function Hero1LifestyleProduct(accentRed, accentGreen, acce
     const finalCropValue = baseFinalCropValue + newCtaPosition
 
     const makeBackground = makeSolid({
-        Name: "Background",
+        Name: "Hero Background",
         RedColor: accentRed,
         GreenColor: accentGreen,
         BlueColor: accentBlue,

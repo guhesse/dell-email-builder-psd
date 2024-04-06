@@ -233,7 +233,7 @@ export default async function AwHero1LifestyleProduct(accentRed, accentGreen, ac
     const finalCropValue = baseFinalCropValue + newCtaPosition
 
     const makeBackground = makeSolid({
-        Name: "Background",
+        Name: "Hero Background",
         RedColor: secondaryRed,
         GreenColor: secondaryGreen,
         BlueColor: secondaryBlue,

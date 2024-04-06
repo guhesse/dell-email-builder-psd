@@ -47,7 +47,7 @@ export default function HeroSelector() {
         heroCtaValue,
     } = heroCopyValues || {};
 
-    const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+    const [isOptionsOpen, setIsOptionsOpen] = useState(true);
 
     const toggleOptions = () => {
         setIsOptionsOpen(!isOptionsOpen);
@@ -153,7 +153,7 @@ export default function HeroSelector() {
             heroCtaValue: heroCtaValue || "",
         });
 
-    }, [selectedHero]);
+    }, []);
 
     const handleInputChange = (key, value) => {
         setTempFormState((prevTempFormState) => ({
@@ -187,11 +187,13 @@ export default function HeroSelector() {
         });
     };
 
-    const [isEditClicked, setIsEditClicked] = useState(false);
+    const [isEditClicked, setIsEditClicked] = useState(true);
 
     const handleEditClick = () => {
         setIsEditClicked((prevIsEditClicked) => !prevIsEditClicked);
     };
+
+    // console.log("hello")
 
     return (
         <>
@@ -341,7 +343,7 @@ export default function HeroSelector() {
                                 <sp-textfield
                                     id="badge-field"
                                     placeholder="Insira o Badge"
-                                    value={tempFormState.badgeValue}
+                                    value={badgeValue}
                                     onInput={(e) => handleInputChange('badgeValue', e.target.value)}
                                     onBlur={() => handleBlur('badgeValue')}
                                     valid={badgeValue !== "" ? valid.badgeValue : undefined}
@@ -352,7 +354,7 @@ export default function HeroSelector() {
                                 <sp-textfield
                                     id="headline-field"
                                     placeholder="Insira o Headline"
-                                    value={tempFormState.headlineValue}
+                                    value={headlineValue}
                                     onInput={(e) => handleInputChange('headlineValue', e.target.value)}
                                     onBlur={() => handleBlur('headlineValue')}
                                     valid={headlineValue !== "" ? valid.headlineValue : undefined}
@@ -363,7 +365,7 @@ export default function HeroSelector() {
                                 <sp-textfield
                                     id="subheadline-field"
                                     placeholder="Insira o SubHeadline"
-                                    value={tempFormState.subHeadlineValue}
+                                    value={subHeadlineValue}
                                     onInput={(e) => handleInputChange('subHeadlineValue', e.target.value)}
                                     onBlur={() => handleBlur('subHeadlineValue')}
                                     valid={subHeadlineValue !== "" ? valid.subHeadlineValue : undefined}
@@ -374,7 +376,7 @@ export default function HeroSelector() {
                                 <sp-textfield
                                     id="pname-field"
                                     placeholder="Insira o Product Name"
-                                    value={tempFormState.productNameValue}
+                                    value={productNameValue}
                                     onInput={(e) => handleInputChange('productNameValue', e.target.value)}
                                     onBlur={() => handleBlur('productNameValue')}
                                     valid={productNameValue !== "" ? valid.productNameValue : undefined}
@@ -385,7 +387,7 @@ export default function HeroSelector() {
                                 <sp-textfield
                                     id="pname-field"
                                     placeholder="Insira o Supercharger do Produto"
-                                    value={tempFormState.productSuperchargerValue}
+                                    value={productSuperchargerValue}
                                     onInput={(e) => handleInputChange('productSuperchargerValue', e.target.value)}
                                     onBlur={() => handleBlur('productSuperchargerValue')}
                                     valid={productSuperchargerValue !== "" ? valid.productSuperchargerValue : undefined}
@@ -396,7 +398,7 @@ export default function HeroSelector() {
                                 <sp-textfield
                                     id="hero-cta-field"
                                     placeholder="Insira o CTA"
-                                    value={tempFormState.heroCtaValue}
+                                    value={heroCtaValue}
                                     onInput={(e) => handleInputChange('heroCtaValue', e.target.value)}
                                     onBlur={() => handleBlur('heroCtaValue')}
                                     valid={heroCtaValue !== "" ? valid.heroCtaValue : undefined}

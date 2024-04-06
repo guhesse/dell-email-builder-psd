@@ -5,7 +5,7 @@ import CsvBriefingForm from './CsvBriefingForm.js';
 import useAppContext from './hook/useAppContext.jsx';
 
 export default function CsvReader() {
-    const { csvValues, setCsvValues } = useAppContext();
+    const { setCsvValues, setCsvLoaded } = useAppContext();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
@@ -54,6 +54,7 @@ export default function CsvReader() {
                 const loadedValues = await readCSVFile(file);
                 setCsvValues(loadedValues);
                 setIsModalOpen(true);
+                setCsvLoaded(true);
             }
         } catch (error) {
             console.error('Erro ao ler o arquivo CSV:', error);

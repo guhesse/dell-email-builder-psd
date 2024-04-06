@@ -32,14 +32,130 @@ export function makeSmartObj() {
     };
 }
 
+
+//  ##  Converter objetos inteligentes para layers ## //
+
+export function convertToLayers() {
+    return {
+        _obj: "placedLayerConvertToLayers",
+        _options: {
+            dialogOptions: "dontDisplay"
+        }
+    };
+}
+
+//  ##  Função para esconder uma camada  ## //
+
+export function hideLayer({ Name }) {
+    return {
+        _obj: "hide",
+        null: [
+            {
+                _ref: "layer",
+                _name: Name,
+                _value: "targetEnum"
+            }
+        ],
+        _options: {
+            dialogOptions: "dontDisplay"
+        }
+    };
+}
+
+//  ##  Função para mostrar uma camada  ## //
+
+export function showLayer({ Name }) {
+    return {
+        _obj: "show",
+        null: [
+            {
+                _ref: "layer",
+                _name: Name,
+                _value: "targetEnum"
+            }
+        ],
+        _options: {
+            dialogOptions: "dontDisplay"
+        }
+    };
+}
+
+//  ##  Função para pegar texto da Camada  ## //
+
+export function getTextProperty({ Name }) {
+    return {
+        _obj: "get",
+        _target: [{ _property: "textKey" },
+        { _ref: "layer", _name: Name },],
+        _options: { dialogOptions: "dontDisplay" }
+    }
+};
+
+
 //  ##  Função para pegar boundingBox  ## //
 
 export function getBounds({ Property, Name }) {
     Property = Property !== undefined ? Property : "boundingBox";
     return {
         _obj: "get",
-        _target: [{ _property: Property }, { _ref: "layer", _name: Name },],
+        _target: [{ _property: Property },
+        { _ref: "layer", _name: Name },],
         _options: { dialogOptions: "dontDisplay" }
+    };
+}
+
+//  ##  Função para criar slices  ## //
+
+export function makeSlice({ Name, Top, Left, Bottom, Right }) {
+
+    Top = Top !== undefined ? Top : 0;
+    Left = Left !== undefined ? Left : 25;
+    Bottom = Bottom !== undefined ? Bottom : 0;
+    Right = Right !== undefined ? Right : 625;
+
+    return [
+        {
+            _obj: "make", _target: [{ _ref: "slice" }],
+            using: {
+                type: {
+                    _enum: "sliceType",
+                    _value: "user"
+                }, at: {
+                    _obj: "rectangle",
+                    top: { _unit: "pixelsUnit", _value: Top },
+                    left: { _unit: "pixelsUnit", _value: Left },
+                    bottom: { _unit: "pixelsUnit", _value: Bottom },
+                    right: { _unit: "pixelsUnit", _value: Right }
+                }
+            }, _isCommand: false, _options: { dialogOptions: "dontDisplay" }
+        },
+        {
+            _obj: "set", _target: [{ _ref: "slice", _enum: "ordinal", _value: "targetEnum" }],
+            to: {
+                _obj: "slice",
+                name: Name,
+                altTag: Name,
+                sliceImageType: { _enum: "sliceImageType", _value: "image" }
+            }, _isCommand: false, _options: { dialogOptions: "dontDisplay" }
+        },
+    ];
+}
+
+//  ##  Função para limpar todas as slices  ## //
+
+export function clearAllSlices() {
+    return {
+        _obj: "delete",
+        _target: [
+            {
+                _ref: "slice",
+                _enum: "ordinal",
+                _value: "allEnum"
+            }
+        ],
+        _options: {
+            dialogOptions: "dontDisplay"
+        }
     };
 }
 
@@ -259,7 +375,7 @@ export function setTwoFontStyle({ Name, Value, FontScript, FontName, FontWeight,
                 },
             ]
         },
-        _isCommand: true
+        _isCommand: false,
     };
 }
 

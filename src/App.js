@@ -1,6 +1,6 @@
 // Import de todas as fun\u00e7\u00f5es 
 
-import React, { useState } from 'react';
+import React from 'react';
 import CsvReader from './CsvReader.js';
 import BrandSelector from './BrandSelector.js';
 import HeaderSelector from "./HeaderSelector.js";
@@ -24,14 +24,9 @@ export const { batchPlay } = require('photoshop').action;
 
 import AppProvider from './context/AppProvider.js';
 
-// Variáveis das alturas dos módulos
-
 function App() {
 
-
-  // UI do Plugin
   return (
-    <Theme theme="spectrum" scale="medium" color="light">
       <AppProvider className="wrapper">
         <TesteWriteFile />
         <CsvReader />
@@ -49,7 +44,6 @@ function App() {
         <BirdseedSelector />
         <EmailBuilder />
       </AppProvider>
-    </Theme>
   );
 }
 

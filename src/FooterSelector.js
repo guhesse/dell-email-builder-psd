@@ -23,9 +23,6 @@ export default function FooterSelector() {
         setSelectedFooter(null)
     };
 
-    useEffect(() => {
-        handleFooterClick(csvValues['Segment']);
-    }, [csvValues['Segment']]);
 
     return (
         <>

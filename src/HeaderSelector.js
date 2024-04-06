@@ -19,14 +19,9 @@ export default function HeaderSelector() {
         setSelectedHeader(null)
     };
 
-
     const handleHeaderClick = (selectedHeader, selectedBrand) => {
         setSelectedHeader(selectedHeader);
     };
-
-    useEffect(() => {
-        handleHeaderClick(csvValues['Campaign Type']);
-    }, [csvValues['Campaign Type']]);
 
     return (
         <div>

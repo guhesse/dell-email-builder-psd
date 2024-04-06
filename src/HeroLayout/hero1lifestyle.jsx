@@ -163,7 +163,7 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
     const { position: finalCropValue } = await getBoundsAndPosition(offsetCta, "bounds", 2, "bottom", 40);
 
     const makeBackground = makeSolid({
-        Name: "Background",
+        Name: "Hero Background",
         RedColor: accentRed,
         GreenColor: accentGreen,
         BlueColor: accentBlue,
