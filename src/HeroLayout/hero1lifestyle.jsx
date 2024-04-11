@@ -106,7 +106,7 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
 
     const changeCtaCopy = [
         setFontStyle({
-            Name: "CTA Copy",
+            Name: "Hero CTA Copy",
             Value: heroCtaValue,
             FontName: "Roboto",
             FontWeight: "Medium",
@@ -118,7 +118,7 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
             AutoLeading: true,
         }),
         getBounds({
-            Name: "CTA Copy"
+            Name: "Hero CTA Copy"
         }),
     ]
 
@@ -126,20 +126,20 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
 
     const changeCtaBorder = [
         setSolidFill({
-            Name: "CTA Border",
+            Name: "Hero CTA Border",
             RedColor: tertiaryRed,
             GreenColor: tertiaryGreen,
             BlueColor: tertiaryBlue,
         }),
         selectLayer({
-            Name: "CTA Border"
+            Name: "Hero CTA Border"
         }),
         setCTABorder({
             Width: newCtaWidth
         }),
         selectGroup({
-            FirstName: "CTA",
-            LastName: "CTA Border"
+            FirstName: "Hero CTA",
+            LastName: "Hero CTA Border"
         }),
         makeSmartObj()
     ]
@@ -148,14 +148,14 @@ export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue,
 
     const offsetCta = [
         selectLayer({
-            Name: "CTA"
+            Name: "Hero CTA"
         }),
         setOffset({
-            Name: "CTA",
+            Name: "Hero CTA",
             Vertical: newCtaPosition,
         }),
         getBounds({
-            Name: "CTA",
+            Name: "Hero CTA",
             Property: "bounds"
         }),
     ];

@@ -80,6 +80,32 @@ export function showLayer({ Name }) {
     };
 }
 
+
+//  ##  Função para pegar texto da Camada  ## //
+
+export function getSolidColor({ Name }) {
+    return {
+        _obj: "get",
+        _target: [{ _property: "adjustment", color: { _obj: "RGBColor" }}, 
+        { _ref: "contentLayer", _name: Name }],
+        _options: { dialogOptions: "dontDisplay" }
+    }
+};
+
+
+//  ##  Função para pegar cor de Texto  ## //
+
+export function getTextColor({ Name }) {
+    return {
+        _obj: "get",
+        _target: [{ _property: "textKey" },
+        { _ref: "layer", _name: Name },],
+        _options: { dialogOptions: "dontDisplay" }
+    }
+};
+
+
+
 //  ##  Função para pegar texto da Camada  ## //
 
 export function getTextProperty({ Name }) {

@@ -13,3 +13,21 @@ export async function getTextContent(action, i = 1) {
     const htmlContent = content.replace(/\r/g, ' ');
     return { content: htmlContent };
 }
+
+export async function getColorFromSolidContent(action, i = 1) {
+    const result = await batchPlay(action, {})
+    const red =  result[i].adjustment[0].color.red;
+    const green =  result[i].adjustment[0].color.grain;
+    const blue =  result[i].adjustment[0].color.blue;
+    return { r: red, g: green, b: blue};
+}
+
+export async function getColorFromTextContent(action, i = 1) {
+    const result = await batchPlay(action, {})
+    const red =  result[i].textKey.textStyleRange[0].textStyle.color.red;
+    const green =  result[i].textKey.textStyleRange[0].textStyle.color.grain;
+    const blue =  result[i].textKey.textStyleRange[0].textStyle.color.blue;
+    return { r: red, g: green, b: blue };
+}
+
+

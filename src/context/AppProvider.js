@@ -261,12 +261,14 @@ export default function AppProvider({ children }) {
         setAccentColorHex(hexColor);
     };
 
+
     const handleSecondaryColorChange = (color) => {
         const colorString = typeof color === 'string' ? color : hexToRgb(color);
         const hexColor = rgbToHex(cores[color]);
         setSecondaryColor(colorString);
         setSecondaryColorHex(hexColor);
     };
+
 
     const handleTertiaryColorChange = (color) => {
         const colorString = typeof color === 'string' ? color : hexToRgb(color);
@@ -622,8 +624,11 @@ export default function AppProvider({ children }) {
 
 
             accentColor,
+            setAccentColor,
             secondaryColor,
+            setSecondaryColor,
             tertiaryColor,
+            setTertiaryColor,
             accentColorHex,
             secondaryColorHex,
             tertiaryColorHex,

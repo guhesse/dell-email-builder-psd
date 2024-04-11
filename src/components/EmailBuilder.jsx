@@ -631,7 +631,7 @@ export default function EmailBuilder() {
                         const setPlugin = [
 
                             setSolidFill({
-                                Name: "Background",
+                                Name: "Plugin Background",
                                 RedColor: secondaryRed,
                                 GreenColor: secondaryGreen,
                                 BlueColor: secondaryBlue
@@ -672,7 +672,7 @@ export default function EmailBuilder() {
                         const setPlugin = [
 
                             setSolidFill({
-                                Name: "Background",
+                                Name: "Plugin Background",
                                 RedColor: secondaryRed,
                                 GreenColor: secondaryGreen,
                                 BlueColor: secondaryBlue
@@ -725,19 +725,19 @@ export default function EmailBuilder() {
                         const alignSuperchargerCopy = [
                             selectGroup({
                                 FirstName: "3",
-                                LastName: "Background"
+                                LastName: "Plugin Background"
                             }),
                             alignGroupY(),
 
                             selectGroup({
                                 FirstName: "2",
-                                LastName: "Background"
+                                LastName: "Plugin Background"
                             }),
                             alignGroupY(),
 
                             selectGroup({
                                 FirstName: "1",
-                                LastName: "Background"
+                                LastName: "Plugin Background"
                             }),
                             alignGroupY(),
                         ]
@@ -751,7 +751,7 @@ export default function EmailBuilder() {
                         const setPlugin = [
 
                             setSolidFill({
-                                Name: "Background",
+                                Name: "Plugin Background",
                                 RedColor: accentRed,
                                 GreenColor: accentGreen,
                                 BlueColor: accentBlue
@@ -791,7 +791,7 @@ export default function EmailBuilder() {
 
                         const setPlugin = [
                             setSolidFill({
-                                Name: "Background",
+                                Name: "Plugin Background",
                                 RedColor: accentRed,
                                 GreenColor: accentGreen,
                                 BlueColor: accentBlue
@@ -845,19 +845,19 @@ export default function EmailBuilder() {
                         const alignSuperchargerCopy = [
                             selectGroup({
                                 FirstName: "3",
-                                LastName: "Background"
+                                LastName: "Plugin Background"
                             }),
                             alignGroupY(),
 
                             selectGroup({
                                 FirstName: "2",
-                                LastName: "Background"
+                                LastName: "Plugin Background"
                             }),
                             alignGroupY(),
 
                             selectGroup({
                                 FirstName: "1",
-                                LastName: "Background"
+                                LastName: "Plugin Background"
                             }),
                             alignGroupY(),
                         ]
