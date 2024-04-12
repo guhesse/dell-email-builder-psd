@@ -169,7 +169,7 @@ export default function SkinnySelector() {
                                 </span>
                             </div>
                         </sp-label>
-                        <sp-field-group style={{ width: "100vw", display: "flex", flexDirection: "row", gap: "5px" }}>
+                        <sp-field-group>
                             <sp-picker style={{ margin: "0 4px 0 0" }} id="picker-m" size="m" label="Selection type" placeholder="Selecione o skinny banner">
                                 <sp-menu>
                                     <sp-menu-item selected={selectedSkinny === "" ? selected.selectedSkinny : undefined} onClick={() => handleSkinnyClick("")}>None</sp-menu-item>

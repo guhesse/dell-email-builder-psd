@@ -1,16 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const useFormState = (initialState) => {
-    const [formState, setFormState] = useState(initialState);
-    const [tempFormState, setTempFormState] = useState(initialState);
+const useFormState = (setCopyValues, prevCopyValues) => {
+
+    const [initialState, setInitialState] = useState({});
+    const [formState, setFormState] = useState({});
+    const [tempFormState, setTempFormState] = useState({});
     const [valid, setValid] = useState({});
 
-
     const handleFieldChange = (key, value) => {
-        setTempFormState((prevTempFormState) => ({
-            ...prevTempFormState,
+        setTempFormState((prevFormState) => ({
+            ...prevFormState,
             [key]: value,
         }));
+
+        setCopyValues((prevCopyValues) => ({
+            ...prevCopyValues,
+            [key]: tempFormState[key],
+        }));
+        
+    };
+
+    const handleBlur = (key, value) => {
+        setFormState({
+            ...formState,
+            [key]: tempFormState[key],
+        });
 
         setValid((prevValid) => ({
             ...prevValid,
@@ -18,24 +32,17 @@ const useFormState = (initialState) => {
         }));
     };
 
-    const handleBlur = (key) => {
-        setFormState((prevFormState) => ({
-            ...prevFormState,
-            [key]: tempFormState[key],
-        }));
-    };
-
     return {
         formState,
         tempFormState,
-        valid,
-        handleFieldChange,
         handleBlur,
+        valid,
+        initialState,
+        setInitialState,
+        handleFieldChange,
         setTempFormState,
         setFormState,
     };
 };
 
-export default useFormState
-
-
+export default useFormState;
