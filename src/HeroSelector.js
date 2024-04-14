@@ -5,7 +5,7 @@ import { useToggleState, useToggleFunctionState } from "./hook/useToogle.jsx";
 import StatusIcon from "./components/Icons/StatusIcon.jsx";
 import BaseIcon from "./components/Icons/BaseIcon.jsx";
 import GroupLabel from "./components/GroupLabel.jsx";
-
+import ButtonIcon from "./components/Icons/ButtonIcon.jsx";
 
 const herosArr = {
     'hero1-lifestyle-product': {
@@ -58,30 +58,33 @@ export default function HeroSelector() {
 
     var hero = selectedHero
 
-    // Função para determinar o tipo de ícone
-    const determineIconType = () => {
-        const currentHero = herosArr[hero];
-        if (currentHero) {
-            const { fields } = currentHero;
-            // Verifique se todos os campos necessários estão presentes e são verdadeiros
-            return fields.every(field => field in currentHero && currentHero[field]) ? 'check' : 'half';
-        }
-        return 'not'; // Caso o herói selecionado não seja encontrado no herosArr
+    const [selected, setSelected] = useState({
+        hero: false
+    });
+
+    const areHeroPropertiesFilled = (hero) => {
+        const requiredFields = herosArr[hero]?.fields || [];
+        return requiredFields.every(field => heroCopyValues[field]);
     };
 
-    // Determine o tipo de ícone
-    const iconType = determineIconType();
+    const determineIconType = () => {
+        if (selectedHero && herosArr[selectedHero]) {
+            return areHeroPropertiesFilled(selectedHero) ? 'check' : 'half';
+        }
+        return 'not';
+    };
 
+    const iconType = determineIconType();
+    // Aqui é o final dele
+
+    // Aqui pode ser um hook 
     const handleEditClick = () => {
         setIsEditClicked((prevIsEditClicked) => !prevIsEditClicked);
     };
+    // Aqui o final do hook
 
-    const [selected, setSelected] = useState({
-        selectedHero: false
-    });
-
-    const handleHeroClick = (hero) => {
-        setSelectedHero(hero);
+    const handleHeroClick = (selectedHero) => {
+        setSelectedHero(selectedHero);
     };
 
     const handleResetClick = () => {
@@ -102,6 +105,7 @@ export default function HeroSelector() {
         heroCtaValue: csvValues['HERO CTA1 Text'] || "",
     });
 
+    // Aqui seria o começo de outro componente
     const fieldKeys = Object.keys(heroCopyValues || {});
 
     useEffect(() => {
@@ -118,68 +122,34 @@ export default function HeroSelector() {
         setFormState(newTempFormState);
     }, [hero]);
 
-    let type = '';
+    console.log(
+        "Hero Copy no HeroSelector:",
+        heroCopyValues
+    )
 
+    let type = ''
+    
     return (
         <>
             <div className="group">
                 <sp-icons>
                     <div style={{ display: "flex", alignItems: "center" }}>
-                        {hero !== null ? (
-                            (selectedHero === "hero1-lifestyle-product" &&
-                                badgeValue &&
-                                headlineValue &&
-                                subHeadlineValue &&
-                                productNameValue &&
-                                productSuperchargerValue &&
-                                heroCtaValue) ||
-                            (selectedHero === "hero1-lifestyle" &&
-                                badgeValue &&
-                                headlineValue &&
-                                subHeadlineValue &&
-                                heroCtaValue) ||
-                            (selectedHero === "hero1-product" &&
-                                badgeValue &&
-                                headlineValue &&
-                                OTValue &&
-                                productNameValue &&
-                                subHeadlineValue &&
-                                heroCtaValue) ||
-                            (selectedHero === "aw-hero1-lifestyle-product" &&
-                                badgeValue &&
-                                headlineValue &&
-                                subHeadlineValue &&
-                                productNameValue &&
-                                heroCtaValue) ||
-                            (selectedHero === "hero2-promotion" &&
-                                badgeValue &&
-                                headlineValue &&
-                                subHeadlineValue &&
-                                inlinePromoValue &&
-                                productNameValue &&
-                                specsValue &&
-                                priceValue &&
-                                heroCtaValue)) ? (
-                            <StatusIcon type={"check"} />
-                        ) : (
-                            <StatusIcon type={"half"} />
-                        ) : (
-                            <StatusIcon type={"not"} />
-                        )}
-                        <BaseIcon onClick={handleResetClick} type="bin" />
+                        <StatusIcon type={iconType} size="s" />
+                        <BaseIcon onClick={handleResetClick} size="s" type="bin" />
                     </div>
                 </sp-icons>
+
                 {isOptionsOpen ? (
                     <>
                         <GroupLabel onClick={toggleOptions} type="open" size="s" name="Hero" />
                         <sp-field-group>
-                            <sp-picker placeholder="Selecione o hero">
+                            <sp-picker placeholder="Selecione o hero" label="Selection type">
                                 <sp-menu>
                                     {Object.entries(herosArr).map(([hero, { path, name }], index) => (
                                         <div className="flexCenter" key={`${hero}-${index}`}>
                                             <sp-menu-item
                                                 onClick={() => handleHeroClick(hero)}
-                                                selected={hero ? selected.hero : undefined}>
+                                                selected={hero === selectedHero ? selected.hero : null}>
                                                 <div className="flexCenter">
                                                     <img className="heroThumbnail"
                                                         src={path}
@@ -189,24 +159,14 @@ export default function HeroSelector() {
                                             </sp-menu-item>
                                         </div>
                                     ))}
-
                                 </sp-menu>
                             </sp-picker>
-                            <div className="sp-tab-page">
-                                <sp-action-button label="edit" onClick={handleEditClick}>
-                                    <div slot="icon" className="icon">
-                                        <svg viewBox="0 0 36 36">
-                                            <path d="M33.567 8.2L27.8 2.432a1.215 1.215 0 0 0-.866-.353H26.9a1.371 1.371 0 0 0-.927.406L5.084 23.372a.99.99 0 0 0-.251.422L2.055 33.1c-.114.377.459.851.783.851a.251.251 0 0 0 .062-.007c.276-.063 7.866-2.344 9.311-2.778a.972.972 0 0 0 .414-.249l20.888-20.889a1.372 1.372 0 0 0 .4-.883 1.221 1.221 0 0 0-.346-.945zM11.4 29.316c-2.161.649-4.862 1.465-6.729 2.022l2.009-6.73z"></path>
-                                        </svg>
-                                    </div>
-                                </sp-action-button>
-                            </div>
+                            <ButtonIcon size="xl" type="editPen" onClick={handleEditClick}></ButtonIcon>
                         </sp-field-group>
                     </>
                 ) : (
                     <GroupLabel onClick={toggleOptions} type="closed" name="Hero" size="s" />
                 )}
-
 
                 {selectedHero && isOptionsOpen && isEditClicked && (
                     <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
@@ -226,7 +186,7 @@ export default function HeroSelector() {
                     </div>
                 )}
 
-            </div >
+            </div>
         </>
     );
 }

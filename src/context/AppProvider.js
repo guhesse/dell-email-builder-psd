@@ -590,30 +590,30 @@ export default function AppProvider({ children }) {
 
 
 
-    // console.log("Valores que serão passados para os componentes:", {
-    //     heroCopyValues
-    //     // csvValues,
-    //     // accentColor,
-    //     // secondaryColor,
-    //     // tertiaryColor,
-    //     // slValue,
-    //     // sslValue,
-    //     // selectedHeader,
-    //     // selectedBrand,
-    //     // selectedFunding,
-    //     // fundingCopyValue,
-    //     // selectedSkinny,
-    //     // selectedHero,
-    //     // selectedPlugin,
-    //     // selectedFpoSegment,
-    //     // selectedFpoValue,
-    //     // selectedBanner,
-    //     // selectedFooter,
-    //     // selectedBirdseed,
-    //     // selectedBirdseedCopy,
-    //     // birdseedCopyValues,
-    //     // birdseedDate
-    // });
+    console.log("Valores que serão passados para os componentes:", {
+        heroCopyValues
+        // csvValues,
+        // accentColor,
+        // secondaryColor,
+        // tertiaryColor,
+        // slValue,
+        // sslValue,
+        // selectedHeader,
+        // selectedBrand,
+        // selectedFunding,
+        // fundingCopyValue,
+        // selectedSkinny,
+        // selectedHero,
+        // selectedPlugin,
+        // selectedFpoSegment,
+        // selectedFpoValue,
+        // selectedBanner,
+        // selectedFooter,
+        // selectedBirdseed,
+        // selectedBirdseedCopy,
+        // birdseedCopyValues,
+        // birdseedDate
+    });
 
 
 

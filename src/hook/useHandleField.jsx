@@ -17,8 +17,6 @@ const useFormState = (initialFields) => {
         }));
     };
     
-    console.log(valid)
-    console.log(fields)
 
     return { fields, valid, handleFieldChange };
 };

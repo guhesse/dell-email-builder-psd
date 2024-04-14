@@ -5,10 +5,10 @@ const GroupLabel = ({ type, name, onClick }) => {
 
     const status = {
         'open': (
-            <BaseIcon type="arrowDown" />
+            <BaseIcon size="s" type="arrowDown" />
         ),
         'closed': (
-            <BaseIcon type="arrowRight" />
+            <BaseIcon size="s" type="arrowRight" />
         )
     };
 

@@ -12,13 +12,13 @@ const useFormState = (setCopyValues, prevCopyValues) => {
             ...prevFormState,
             [key]: value,
         }));
-
+    
         setCopyValues((prevCopyValues) => ({
             ...prevCopyValues,
-            [key]: tempFormState[key],
+            [key]: value, // Acesso direto ao valor atualizado
         }));
-        
     };
+    
 
     const handleBlur = (key, value) => {
         setFormState({
