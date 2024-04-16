@@ -5,7 +5,8 @@ import { useToggleState, useToggleFunctionState } from "./hook/useToogle.jsx";
 import StatusIcon from "./components/Icons/StatusIcon.jsx";
 import BaseIcon from "./components/Icons/BaseIcon.jsx";
 import GroupLabel from "./components/GroupLabel.jsx";
-import ButtonIcon from "./components/Icons/ButtonIcon.jsx";
+import ButtonIcon from "./components/Icons/IconButton.jsx";
+import useStatusIcon from "./functions/fieldStatusChecker.jsx";
 
 const herosArr = {
     'hero1-lifestyle-product': {
@@ -46,50 +47,33 @@ const herosArr = {
 };
 
 export default function HeroSelector() {
-
-    const { csvValues, setCsvValues, selectedHero, setSelectedHero, heroCopyValues, setHeroCopyValues } = useAppContext();
-    const { badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, inlinePromo2Value, specsValue, priceValue, productNameValue, productSuperchargerValue, heroCtaValue, } = heroCopyValues || {};
+    const { csvValues, selectedHero, setSelectedHero, heroCopyValues, setHeroCopyValues } = useAppContext();
 
     const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setHeroCopyValues, heroCopyValues);
 
-    const [isOptionsOpen, toggleOptions] = useToggleState(true);
+    const { determineStatusByFields } = useStatusIcon();
 
-    const [isEditClicked, toggleEditClicked, setIsEditClicked] = useToggleFunctionState(true);
+    const [isOptionsOpen, toggleOptions] = useToggleState(false);
+    const [isEditClicked, setIsEditClicked] = useToggleState(true);
 
     var hero = selectedHero
 
-    const [selected, setSelected] = useState({
-        hero: false
+    const [selected, setSelected] = useState({ hero: false });
+
+    const statusType = determineStatusByFields({
+        value: heroCopyValues,
+        obj: hero,
+        array: herosArr,
     });
 
-    const areHeroPropertiesFilled = (hero) => {
-        const requiredFields = herosArr[hero]?.fields || [];
-        return requiredFields.every(field => heroCopyValues[field]);
-    };
-
-    const determineIconType = () => {
-        if (selectedHero && herosArr[selectedHero]) {
-            return areHeroPropertiesFilled(selectedHero) ? 'check' : 'half';
-        }
-        return 'not';
-    };
-
-    const iconType = determineIconType();
-    // Aqui é o final dele
-
-    // Aqui pode ser um hook 
-    const handleEditClick = () => {
-        setIsEditClicked((prevIsEditClicked) => !prevIsEditClicked);
-    };
-    // Aqui o final do hook
-
-    const handleHeroClick = (selectedHero) => {
-        setSelectedHero(selectedHero);
+    const handleHeroClick = (hero) => {
+        setSelectedHero(hero);
     };
 
     const handleResetClick = () => {
         setSelectedHero(null);
         setHeroCopyValues(initialState);
+        toggleOptions(false)
     };
 
     const [formState, setFormState] = useState({
@@ -105,7 +89,8 @@ export default function HeroSelector() {
         heroCtaValue: csvValues['HERO CTA1 Text'] || "",
     });
 
-    // Aqui seria o começo de outro componente
+
+    // Vamos tentar depois transformar isso em mais um com ponente
     const fieldKeys = Object.keys(heroCopyValues || {});
 
     useEffect(() => {
@@ -122,23 +107,15 @@ export default function HeroSelector() {
         setFormState(newTempFormState);
     }, [hero]);
 
-    console.log(
-        "Hero Copy no HeroSelector:",
-        heroCopyValues
-    )
-
-    let type = ''
-    
     return (
         <>
             <div className="group">
                 <sp-icons>
                     <div style={{ display: "flex", alignItems: "center" }}>
-                        <StatusIcon type={iconType} size="s" />
+                        <StatusIcon type={statusType} size="s" />
                         <BaseIcon onClick={handleResetClick} size="s" type="bin" />
                     </div>
                 </sp-icons>
-
                 {isOptionsOpen ? (
                     <>
                         <GroupLabel onClick={toggleOptions} type="open" size="s" name="Hero" />
@@ -161,7 +138,7 @@ export default function HeroSelector() {
                                     ))}
                                 </sp-menu>
                             </sp-picker>
-                            <ButtonIcon size="xl" type="editPen" onClick={handleEditClick}></ButtonIcon>
+                            <ButtonIcon state={hero} size="xl" type="editPen" onClick={setIsEditClicked}></ButtonIcon>
                         </sp-field-group>
                     </>
                 ) : (
