@@ -7,6 +7,11 @@ const useStatusIcon = () => {
         return requiredFields.every(field => value[field]);
     };
 
+    const checkIsFilledNoChildren = ({ array, value }) => {
+        const requiredFields = array?.fields || [];
+        return requiredFields.every(field => value[field]);
+    };
+
     const checkIsSelected = ({ value }) => {
         if (value !== null && value !== undefined) {
             return 'check'
@@ -15,14 +20,24 @@ const useStatusIcon = () => {
         }
     };
 
-    const determineStatusByFields = ({ obj, array, value }) => {
-        if (obj && array[obj]) {
-            return checkIsFilled({ obj, array, value }) ? 'check' : 'half';
+    const setStatusByField = ({ obj, array, value, type }) => {
+
+
+        if (type === "filledOnObj") {
+            if (!obj) {
+                return 'not';
+            } else {
+                return checkIsFilled({ obj, array, value }) ? 'check' : 'half';
+            }
+        } else if (type === "filledOnArr") {
+            return checkIsFilledNoChildren({ array, value }) ? 'check' : 'half';
+        } else if (type === "selected") {
+            return 'not';
         }
-        return 'not';
     };
 
-    return { checkIsSelected, determineStatusByFields };
+
+    return { checkIsSelected, setStatusByField };
 };
 
 export default useStatusIcon;

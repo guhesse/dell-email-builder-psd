@@ -51,7 +51,7 @@ export default function HeroSelector() {
 
     const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setHeroCopyValues, heroCopyValues);
 
-    const { determineStatusByFields } = useStatusIcon();
+    const { setStatusByField } = useStatusIcon();
 
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
     const [isEditClicked, setIsEditClicked] = useToggleState(true);
@@ -60,7 +60,8 @@ export default function HeroSelector() {
 
     const [selected, setSelected] = useState({ hero: false });
 
-    const statusType = determineStatusByFields({
+    const statusType = setStatusByField({
+        type: "filledOnObj",
         value: heroCopyValues,
         obj: hero,
         array: herosArr,

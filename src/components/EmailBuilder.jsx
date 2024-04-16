@@ -10,16 +10,18 @@ import AwHero1LifestyleProduct from '../HeroLayout/awHero1LifestyleProduct.jsx';
 import { getBoundsAndPosition } from '../hook/getBoundsAndPosition.jsx';
 
 import { selectLayer, selectGroup, makeSmartObj, setFontStyle, getBounds, setOffset, setSolidFill, setOverlayColor, selectAllAndCopy, alignGroupX, alignGroupY } from "../hook/hooksJSON.jsx";
+import SubjectLineSelector from '../SubjectLineSelector.js';
 
 export default function EmailBuilder() {
 
     var slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight, skinnyBannerHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores, slValue, sslValue, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedDate, selectedBirdseedCopy, birdseedCopyValues, selectedBrand } = useAppContext();
+    const { accentColor, secondaryColor, tertiaryColor, cores, subjectValues, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedDate, selectedBirdseedCopy, birdseedCopyValues, selectedBrand } = useAppContext();
 
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
     const { r: tertiaryRed, g: tertiaryGreen, b: tertiaryBlue } = cores[tertiaryColor] || {};
+    const { slValue, sslValue } = subjectValues || {};
     const { badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, specsValue, priceValue, productSuperchargerValue, heroCtaValue, } = heroCopyValues || {};
     const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};

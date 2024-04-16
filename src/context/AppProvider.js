@@ -148,8 +148,6 @@ export default function AppProvider({ children }) {
     });
 
 
-
-
     const loadDefaultValuesFromCsv = async () => {
         try {
             const fs = storage.localFileSystem;
@@ -294,9 +292,11 @@ export default function AppProvider({ children }) {
     const [selectedBirdseed, setSelectedBirdseed] = useState(null);
     const [selectedBirdseedCopy, setSelectedBirdseedCopy] = useState(false);
 
+    const [subjectValues, setSubjectValues] = useState({
+        slValue: "",
+        sslValue: "",
+    })
 
-    const [slValue, setSlValue] = useState("");
-    const [sslValue, setSslValue] = useState("");
     const [fundingCopyValue, setFundingCopyValue] = useState("");
     const [skinnyTitleValue, setSkinnyTitleValue] = useState("");
     const [skinnyCopyValue, setSkinnyCopyValue] = useState("");
@@ -358,8 +358,10 @@ export default function AppProvider({ children }) {
                 setTertiaryColor(tertiaryColorMatch ? hexToRgb(`#${tertiaryColorMatch[1]}`) : "teaGreen");
             }
 
-            setSlValue((csvValues.SL) || "");
-            setSslValue((csvValues.SSL) || "");
+            setSubjectValues({
+                slValue: csvValues['SL'] || "",
+                sslValue: csvValues['SSL'] || "",
+            });
 
             if (csvValues['Campaign Type'] === "CSB") {
                 setSelectedHeader("csb");
@@ -590,30 +592,29 @@ export default function AppProvider({ children }) {
 
 
 
-    // console.log("Valores que serão passados para os componentes:", {
-    //     // heroCopyValues
-    //     // csvValues,
-    //     // accentColor,
-    //     // secondaryColor,
-    //     // tertiaryColor,
-    //     // slValue,
-    //     // sslValue,
-    //     // selectedHeader,
-    //     // selectedBrand,
-    //     // selectedFunding,
-    //     // fundingCopyValue,
-    //     // selectedSkinny,
-    //     // selectedHero,
-    //     // selectedPlugin,
-    //     // selectedFpoSegment,
-    //     // selectedFpoValue,
-    //     // selectedBanner,
-    //     // selectedFooter,
-    //     // selectedBirdseed,
-    //     // selectedBirdseedCopy,
-    //     // birdseedCopyValues,
-    //     // birdseedDate
-    // });
+    console.log("Valores que serão passados para os componentes:", {
+        // heroCopyValues
+        // csvValues,
+        // accentColor,
+        // secondaryColor,
+        // tertiaryColor,
+        subjectValues,
+        // selectedHeader,
+        // selectedBrand,
+        // selectedFunding,
+        // fundingCopyValue,
+        // selectedSkinny,
+        // selectedHero,
+        // selectedPlugin,
+        // selectedFpoSegment,
+        // selectedFpoValue,
+        // selectedBanner,
+        // selectedFooter,
+        // selectedBirdseed,
+        // selectedBirdseedCopy,
+        // birdseedCopyValues,
+        // birdseedDate
+    });
 
 
 
@@ -624,7 +625,6 @@ export default function AppProvider({ children }) {
             csvLoaded,
             setCsvLoaded,
             loadDefaultValuesFromCsv,
-
 
             accentColor,
             setAccentColor,
@@ -640,10 +640,8 @@ export default function AppProvider({ children }) {
             handleSecondaryColorChange,
             handleTertiaryColorChange,
 
-            setSlValue,
-            setSslValue,
-            slValue,
-            sslValue,
+            subjectValues,
+            setSubjectValues,
 
             selectedHeader,
             setSelectedHeader,
