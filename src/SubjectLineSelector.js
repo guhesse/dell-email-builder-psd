@@ -13,7 +13,7 @@ const slArr = {
 };
 
 export default function SubjectLineSelector() {
-    const { csvValues, subjectValues, setSubjectValues } = useAppContext();
+    const { subjectValues, setSubjectValues } = useAppContext();
 
     const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setSubjectValues, subjectValues);
 
@@ -22,13 +22,8 @@ export default function SubjectLineSelector() {
 
     const handleResetClick = () => {
         setSubjectValues(initialState);
-        toggleOptions(false)
+        toggleOptions(false);
     };
-
-    const [formState, setFormState] = useState({
-        slValue: csvValues['SL'] || "",
-        sslValue: csvValues['SSL'] || "",
-    });
 
     useEffect(() => {
         const newInitialState = {};
@@ -41,7 +36,6 @@ export default function SubjectLineSelector() {
 
         setInitialState(newInitialState);
         setTempFormState(newTempFormState);
-        setFormState(newTempFormState)
     }, [subjectValues]);
 
     const statusType = setStatusByField({

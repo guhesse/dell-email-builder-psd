@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import useAppContext from "./hook/useAppContext.jsx";
 import useFormState from "./hook/useFormState.jsx";
-import { useToggleState, useToggleFunctionState } from "./hook/useToogle.jsx";
+import { useToggleState } from "./hook/useToogle.jsx";
 import StatusIcon from "./components/Icons/StatusIcon.jsx";
 import BaseIcon from "./components/Icons/BaseIcon.jsx";
 import GroupLabel from "./components/GroupLabel.jsx";
-import ButtonIcon from "./components/Icons/IconButton.jsx";
+import IconButton from "./components/Icons/IconButton.jsx";
 import useStatusIcon from "./functions/fieldStatusChecker.jsx";
 
 const herosArr = {
@@ -47,16 +47,17 @@ const herosArr = {
 };
 
 export default function HeroSelector() {
-    const { csvValues, selectedHero, setSelectedHero, heroCopyValues, setHeroCopyValues } = useAppContext();
+    const { selectedHero, setSelectedHero, heroCopyValues, setHeroCopyValues } = useAppContext();
 
     const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setHeroCopyValues, heroCopyValues);
 
     const { setStatusByField } = useStatusIcon();
 
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
-    const [isEditClicked, setIsEditClicked] = useToggleState(true);
+    const [isEditClicked, setIsEditClicked] = useToggleState(false);
 
     var hero = selectedHero
+    var setHero = setSelectedHero
 
     const [selected, setSelected] = useState({ hero: false });
 
@@ -68,30 +69,15 @@ export default function HeroSelector() {
     });
 
     const handleHeroClick = (hero) => {
-        setSelectedHero(hero);
+        setHero(hero);
     };
 
     const handleResetClick = () => {
-        setSelectedHero(null);
+        setHero(null);
         setHeroCopyValues(initialState);
         toggleOptions(false)
     };
 
-    const [formState, setFormState] = useState({
-        badgeValue: csvValues['Badge Text'] || "",
-        headlineValue: csvValues['Headline Text'] || "",
-        subHeadlineValue: csvValues['SHL'] || "",
-        inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || "",
-        inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || "",
-        specsValue: csvValues['HERO1 Product Description'] || "",
-        priceValue: "",
-        productNameValue: csvValues['HERO1 Product Name'] || "",
-        productSuperchargerValue: csvValues['HERO1 Product Inline Promo'] || "",
-        heroCtaValue: csvValues['HERO CTA1 Text'] || "",
-    });
-
-
-    // Vamos tentar depois transformar isso em mais um com ponente
     const fieldKeys = Object.keys(heroCopyValues || {});
 
     useEffect(() => {
@@ -105,7 +91,6 @@ export default function HeroSelector() {
 
         setInitialState(newInitialState);
         setTempFormState(newTempFormState);
-        setFormState(newTempFormState);
     }, [hero]);
 
     return (
@@ -139,7 +124,7 @@ export default function HeroSelector() {
                                     ))}
                                 </sp-menu>
                             </sp-picker>
-                            <ButtonIcon state={hero} size="xl" type="editPen" onClick={setIsEditClicked}></ButtonIcon>
+                            <IconButton state={hero} size="xl" type="editPen" onClick={setIsEditClicked}></IconButton>
                         </sp-field-group>
                     </>
                 ) : (

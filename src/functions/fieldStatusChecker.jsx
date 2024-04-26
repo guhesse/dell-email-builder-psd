@@ -22,7 +22,6 @@ const useStatusIcon = () => {
 
     const setStatusByField = ({ obj, array, value, type }) => {
 
-
         if (type === "filledOnObj") {
             if (!obj) {
                 return 'not';

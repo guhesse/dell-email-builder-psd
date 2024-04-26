@@ -19,7 +19,7 @@ export default function BirdseedSelector() {
         selectedYear,
     } = birdseedDate || {};
 
-    const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+    const [isOptionsOpen, setIsOptionsOpen] = useState(true);
 
     const toggleOptions = () => {
         setIsOptionsOpen(!isOptionsOpen);

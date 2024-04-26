@@ -9,19 +9,20 @@ import Hero2Promotion from '../HeroLayout/hero2promotion.jsx';
 import AwHero1LifestyleProduct from '../HeroLayout/awHero1LifestyleProduct.jsx';
 import { getBoundsAndPosition } from '../hook/getBoundsAndPosition.jsx';
 
-import { selectLayer, selectGroup, makeSmartObj, setFontStyle, getBounds, setOffset, setSolidFill, setOverlayColor, selectAllAndCopy, alignGroupX, alignGroupY } from "../hook/hooksJSON.jsx";
+import { selectLayer, selectGroup, makeSmartObj, setFontStyle, getBounds, setOffset, setSolidFill, makeSolid, setOverlayColor, selectAllAndCopy, alignGroupX, alignGroupY, setTwoFontStyle, setFinalCrop, organizeAndSetColorLabel } from "../hook/hooksJSON.jsx";
 import SubjectLineSelector from '../SubjectLineSelector.js';
 
 export default function EmailBuilder() {
 
     var slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight, skinnyBannerHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores, subjectValues, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedDate, selectedBirdseedCopy, birdseedCopyValues, selectedBrand } = useAppContext();
+    const { accentColor, secondaryColor, tertiaryColor, cores, subjectValues, selectedHeader, selectedFunding, fundingCopyValues, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedDate, selectedBirdseedCopy, birdseedCopyValues, selectedBrand } = useAppContext();
 
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
     const { r: tertiaryRed, g: tertiaryGreen, b: tertiaryBlue } = cores[tertiaryColor] || {};
     const { slValue, sslValue } = subjectValues || {};
+    const { vfCopyValue } = fundingCopyValues || {};
     const { badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, specsValue, priceValue, productSuperchargerValue, heroCtaValue, } = heroCopyValues || {};
     const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
@@ -38,19 +39,12 @@ export default function EmailBuilder() {
     async function clearAllLayers() {
         const targetFunction = async (executionContext) => {
             try {
-                // Tenta obter informações da camada no índice 1
                 const getLayerIndex = [
-                    {
-                        _obj: 'get',
-                        _target: [{ _ref: 'layer', _index: 2 }],
-                    },
+                    { _obj: 'get', _target: [{ _ref: 'layer', _index: 2 }], },
                 ];
 
                 await batchPlay(getLayerIndex, {});
 
-                console.log('%cCamada encontrada no índice 2. Procedendo para deletar todas as camadas...', 'color: #00EAADFF;');
-
-                // Deleta todas as camadas
                 const deleteAllLayers = [
                     { _obj: 'selectAllLayers', _target: [{ _ref: 'layer', _enum: 'ordinal', _value: 'targetEnum' }], _options: { dialogOptions: 'silent' } },
                     { _obj: 'delete', _target: [{ _ref: 'layer', _enum: 'ordinal', _value: 'targetEnum' }], _options: { dialogOptions: 'silent' } },
@@ -60,14 +54,13 @@ export default function EmailBuilder() {
 
                 console.log('%cCamadas deletadas com sucesso!', 'color: #00EAADFF;');
             } catch (error) {
-                // Verifica se o erro está relacionado à ausência de camadas no índice 1
                 if (error.message.includes('The object “Layer 1” is not currently available.')) {
                     console.log('%cNenhuma camada encontrada no índice 1. A função não será executada.', 'color: #FF5733;');
                 } else {
                     console.error('Não foi possível deletar as Camadas', error);
                 }
             }
-        }; // Fechando corretamente a declaração da targetFunction
+        };
 
         const options = {
             commandName: 'Limpar camadas',
@@ -82,28 +75,22 @@ export default function EmailBuilder() {
         const targetFunction = async (executionContext) => {
             try {
 
-                // Define a cor do Background Padr\u00e3o
-                const batchDefineBaseBackground = [
+                const setBackgroundColor = [
                     { _obj: "set", _target: [{ _ref: "color", _property: "backgroundColor" }], to: { _obj: "HSBColorClass", hue: { _unit: "angleUnit", _value: 0 }, saturation: 0, brightness: 100 }, source: "photoshopPicker", _options: { dialogOptions: "dontDisplay" } }
                 ]
+                await batchPlay(setBackgroundColor, {});
 
-                await batchPlay(batchDefineBaseBackground, {});
-
-                // Aumenta o tamanho do documento
-                const batchCropDocument = [
+                const cropDocument = [
                     { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
                     { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
                     { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 5000.223315669948 }, right: { _unit: "pixelsUnit", _value: 650 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
                 ]
+                await batchPlay(cropDocument, {});
 
-                await batchPlay(batchCropDocument, {});
-
-                // Ajusta o zoom para Fit to Screen
-                const batchZoomFit = [
+                const zoomFit = [
                     { _obj: "select", _target: [{ _ref: "menuItemClass", _enum: "menuItemType", _value: "fitOnScreen", },], _options: { dialogOptions: "dontDisplay", }, },
                 ];
-
-                await batchPlay(batchZoomFit, {});
+                await batchPlay(zoomFit, {});
 
                 console.log('%cFit inicial executado com sucesso!', 'color: #00EAADFF;');
             } catch (error) {
@@ -128,7 +115,6 @@ export default function EmailBuilder() {
             const fs = storage.localFileSystem;
             const pluginDir = await fs.getPluginFolder();
             const fileEntry = await pluginDir.getEntry(sslFilePath);
-
 
             const targetFunction = async () => {
                 try {
@@ -200,7 +186,6 @@ export default function EmailBuilder() {
             console.error('Erro ao encontrar o arquivo de SSL:', error);
         }
     };
-
 
     // Importa o header
     async function headerBuild() {
@@ -278,69 +263,79 @@ export default function EmailBuilder() {
                     await app.open(fileEntry);
                     const secondDocument = app.documents[1];
 
-                    const formattedFundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 30, "capitalized");
-
-
+                    const formattedFundingCopyValue = limitCharsPerLine(vfCopyValue || '', 30, "capitalized");
 
                     let batchFundingCopy;
 
-                    if (fundingCopyValue === '') {
+                    if (vfCopyValue === '' || selectedFunding === "") {
                         batchFundingCopy = [
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                            {
-                                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
-                                to: {
-                                    _obj: "textLayer", textKey: "Visualize no navegador.",
-                                    textStyleRange: [{
-                                        _obj: "textStyleRange", from: 0, to: formattedFundingCopyValue.length + 1 + "Visualize no navegador.".length,
-                                        textStyle: {
-                                            _obj: "textStyle",
-                                            fontPostScriptName: "ArialMT",
-                                            fontName: "Arial",
-                                            fontStyleName: "Regular",
-                                            size: { _unit: "pointsUnit", _value: 2.4208344268798827 },
-                                            impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 },
-                                            baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 },
-                                            impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 },
-                                            color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 }
-                                        }
-                                    }]
-                                },
-                                _isCommand: true
-                            },
-                            { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Funding Copy" },], },
+                            setFontStyle({
+                                Name: "Funding Copy",
+                                Value: "Visualize no navegador.",
+                                FontName: "Arial",
+                                FontWeight: "Regular",
+                                Size: 10,
+                                RedColor: 6,
+                                GreenColor: 114,
+                                BlueColor: 203,
+                                FontCaps: false,
+                                AutoLeading: false,
+                                Leading: 0,
+                            }),
+                            getBounds({
+                                Name: "Funding Copy",
+                                Property: "bounds"
+                            })
                         ]
-                    } else {
+                    } else if (vfCopyValue !== '') {
                         batchFundingCopy = [
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedFundingCopyValue + "\r" + "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: formattedFundingCopyValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } }, { _obj: "textStyleRange", from: formattedFundingCopyValue.length + 1, to: formattedFundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
-                            { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Funding Copy" },], },
+                            setTwoFontStyle({
+                                Name: "Funding Copy",
+                                Value: formattedFundingCopyValue + "\r" + "Visualize no navegador.",
+                                Slice: formattedFundingCopyValue.length,
+                                FontName: ["Arial", "Arial"],
+                                FontWeight: ["Regular", "Regular"],
+                                Size: [10, 10],
+                                RedColor: [68, 6],
+                                GreenColor: [68, 114],
+                                BlueColor: [68, 203],
+                                BaselineShift: [0, -4],
+                                Tracking: [0, 0],
+                                FontCaps: [false, false],
+                                AutoLeading: [true, true],
+                                Leading: [0, 0],
+                            }),
+                            getBounds({
+                                Name: "Funding Copy",
+                                Property: "bounds"
+                            })
                         ]
                     };
 
-                    const resultFundingTextBoundingBox = await batchPlay(batchFundingCopy, {});
-                    const boundingBoxFundingText = resultFundingTextBoundingBox[2].bounds;
-                    const finalCropValue = boundingBoxFundingText.bottom._value;
+                    const { position: finalCropValue } = await getBoundsAndPosition(batchFundingCopy, "bounds", 1, "bottom", 0);
 
-                    const finalCrop = [
-                        { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 200 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 200 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
-                    ]
+                    const makeBackground = makeSolid({
+                        Name: "Funding Container",
+                        RedColor: 255,
+                        GreenColor: 255,
+                        BlueColor: 255,
+                        Bottom: finalCropValue,
+                        Right: 200,
+                    })
+                    await batchPlay(makeBackground, {})
+
+                    const finalCrop = setFinalCrop({
+                        Bottom: finalCropValue,
+                    })
                     await batchPlay(finalCrop, {});
 
                     fundingHeight = secondDocument.height;
 
-                    // Copia e cola o modulo
                     const selectAndCopy = selectAllAndCopy()
                     await batchPlay(selectAndCopy, {});
 
                     const activeDocument = app.activeDocument;
                     await activeDocument.paste();
-
 
                     const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
                     const docWidth = activeDocument.width;
@@ -368,7 +363,6 @@ export default function EmailBuilder() {
                         await batchPlay(alignToHeader, {});
                     }
 
-
                     console.log('%cFunding inserido com sucesso!', 'color: #00EAADFF;');
                 } catch (error) {
                     console.error('Erro ao inserir o Funding:', error);
@@ -384,7 +378,6 @@ export default function EmailBuilder() {
         } catch (error) {
             console.error('Erro ao encontrar o arquivo do Funding:', error);
         }
-
     };
 
     // Importa o skinny banner
@@ -419,41 +412,43 @@ export default function EmailBuilder() {
                     const skinnyBannerCopy = formattedSkinnyTitle + "\r" + formattedSkinnyCopy
 
                     const changeSkinnyBannerCopy = [
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Copy" }], makeVisible: false, layerID: [4], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-                        {
-                            _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
+                        setTwoFontStyle({
+                            Name: "Skinny Banner Copy",
+                            Value: skinnyBannerCopy,
+                            Slice: formattedSkinnyTitle.length + 1,
+                            FontName: ["Roboto", "Roboto"],
+                            FontWeight: ["Bold", "Regular"],
+                            Size: [18.5, 18.5],
+                            RedColor: [accentRed, accentRed],
+                            GreenColor: [accentGreen, accentGreen],
+                            BlueColor: [accentBlue, accentBlue],
+                            BaselineShift: [0, 0],
+                            Tracking: [0, 0],
+                            FontCaps: [false, false],
+                            AutoLeading: [true, true],
+                            Leading: [0, 0],
+                        }),
+                        getBounds({
+                            Name: "Skinny Banner Copy",
+                            Property: "bounds",
+                        }),
+                    ];
 
-                            to: {
-                                _obj: "textLayer", textKey: skinnyBannerCopy, textStyleRange: [
+                    const { position: finalCropValue } = await getBoundsAndPosition(changeSkinnyBannerCopy, "bounds", 1, "bottom", 20);
 
-                                    { _obj: "textStyleRange", from: 0, to: formattedSkinnyTitle.length, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Bold", fontName: "Roboto", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 18.5 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
+                    const makeBackground = makeSolid({
+                        Name: "Skinny Banner Background",
+                        RedColor: secondaryRed,
+                        GreenColor: secondaryGreen,
+                        BlueColor: secondaryBlue,
+                        Bottom: finalCropValue,
+                        Right: 600,
+                    })
+                    await batchPlay(makeBackground, {})
 
-                                    { _obj: "textStyleRange", from: formattedSkinnyTitle.length + 1, to: formattedSkinnyTitle.length + formattedSkinnyCopy.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Regular", fontName: "Roboto", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 18.5 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
-                                ]
-                            }, _isCommand: true
-                        },
-                        { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Banner Copy" }], }
-                    ]
-                        ;
-
-                    await batchPlay(changeSkinnyBannerCopy, {});
-
-                    const resultSkinnyBoundingBox = await batchPlay(changeSkinnyBannerCopy, {});
-                    const boundingBoxSkinnyBanner = resultSkinnyBoundingBox[2].bounds;
-                    const finalCropValue = boundingBoxSkinnyBanner.bottom._value + 20;
-
-                    const finalCrop = [
-                        { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
-
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
-
-                        { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
-                    ]
-
+                    const finalCrop = setFinalCrop({
+                        Bottom: finalCropValue,
+                    })
                     await batchPlay(finalCrop, {});
 
                     skinnyHeight = secondDocument.height;
@@ -528,7 +523,6 @@ export default function EmailBuilder() {
                             console.error('Erro ao executar Hero 1 - Only Lifestyle:', error);
                         }
                     } else { }
-
 
                     if (selectedHero === 'hero1-product') {
                         try {
@@ -631,7 +625,6 @@ export default function EmailBuilder() {
                     if (selectedPlugin === 'plugin' && selectedBrand === 'dell') {
 
                         const setPlugin = [
-
                             setSolidFill({
                                 Name: "Plugin Background",
                                 RedColor: secondaryRed,
@@ -658,7 +651,7 @@ export default function EmailBuilder() {
                         const alignPluginCopy = [
                             selectGroup({
                                 FirstName: "Plugin Copy",
-                                LastName: "Background"
+                                LastName: "Plugin Background"
                             }),
                             alignGroupX(),
                             alignGroupY(),
@@ -779,7 +772,7 @@ export default function EmailBuilder() {
                         const alignPluginCopy = [
                             selectGroup({
                                 FirstName: "Plugin Copy",
-                                LastName: "Background"
+                                LastName: "Plugin Background"
                             }),
                             alignGroupX(),
                             alignGroupY(),
@@ -1175,11 +1168,6 @@ export default function EmailBuilder() {
             selectedDay = selectedDay === null ? 1 : selectedDay;
             selectedMonth = selectedMonth === null ? 1 : selectedMonth;
             selectedYear = selectedYear === null ? 2024 : selectedYear;
-            
-            console.log("Selected Day Builder:", selectedDay);
-            console.log("Selected Month Builder:", selectedMonth);
-            console.log("Selected Year Builder:", selectedYear);
-            
 
             const formattedDay = selectedDay < 10 ? `0${selectedDay}` : selectedDay;
             const formattedMonth = selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth;
@@ -1371,32 +1359,20 @@ export default function EmailBuilder() {
 
         const targetFunction = async (executionContext) => {
             try {
-                const sslOrganize = [
-                    { _obj: "select", _target: [{ _ref: "layer", _name: "SL + SSL" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
-                    {
-                        _obj: "set",
-                        _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
-                        to: { _obj: "layer", name: "SL + SSL", color: { _enum: "color", _value: "gray" } },
-                        _options: { dialogOptions: "dontDisplay" }
-                    },
-                ]
+                const sslOrganize = organizeAndSetColorLabel({  
+                    Name: "SL + SSL",
+                    Index: 1,
+                    Color: "gray",
+                })
                 await batchPlay(sslOrganize, {});
 
-                const fundingOrganize = [
-                    { _obj: "select", _target: [{ _ref: "layer", _name: "Funding" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
-                    {
-                        _obj: "set",
-                        _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
-                        to: { _obj: "layer", name: "Funding", color: { _enum: "color", _value: "indigo" } },
-                        _options: { dialogOptions: "dontDisplay" }
-                    },
-                ]
-                await batchPlay(fundingOrganize, {});
-
+                const vfOrganize = organizeAndSetColorLabel({  
+                    Name: "Funding",
+                    Index: 1,
+                    Color: "indigo",
+                })
+                await batchPlay(vfOrganize, {});
+                
                 if (selectedHeader !== "" && selectedHeader !== null) {
                     const headerOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Header" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
@@ -1493,7 +1469,7 @@ export default function EmailBuilder() {
                     ]
                     await batchPlay(heroOrganize, {});
                 }
-
+                
                 if (selectedPlugin === "plugin") {
                     const pluginOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
@@ -1551,6 +1527,7 @@ export default function EmailBuilder() {
                     ]
                     await batchPlay(bannerOrganize, {});
                 }
+
 
                 if (selectedFooter !== "" && selectedFooter !== null) {
                     const footerOrganize = [

@@ -27,23 +27,23 @@ import AppProvider from './context/AppProvider.js';
 function App() {
 
   return (
-      <AppProvider className="wrapper">
-        <TesteWriteFile />
-        <CsvReader />
-        <BrandSelector />
-        <ColorSelector />
-        <SubjectLineSelector />
-        <HeaderSelector />
-        <FundingSelector />
-        <SkinnySelector />
-        <HeroSelector />
-        <PluginSelector />
-        <FpoSelector />
-        <BannerSelector />
-        <FooterSelector />
-        <BirdseedSelector />
-        <EmailBuilder />
-      </AppProvider>
+    <AppProvider className="wrapper">
+      <TesteWriteFile />
+      <CsvReader />
+      <BrandSelector />
+      <ColorSelector />
+      <SubjectLineSelector />
+      <HeaderSelector />
+      <FundingSelector />
+      <SkinnySelector />
+      <HeroSelector />
+      <PluginSelector />
+      <FpoSelector />
+      <BannerSelector />
+      <FooterSelector />
+      <BirdseedSelector />
+      <EmailBuilder />
+    </AppProvider>
   );
 }
 

@@ -286,7 +286,7 @@ export default function AppProvider({ children }) {
     const [selectedSkinny, setSelectedSkinny] = useState(null);
     const [selectedHero, setSelectedHero] = useState(null);
     const [selectedPlugin, setSelectedPlugin] = useState(null);
-    const [selectedFpoSegment, setSelectedFpoSegment] = useState("");
+    const [selectedFpoSegment, setSelectedFpoSegment] = useState(null);
     const [selectedBanner, setSelectedBanner] = useState(null);
     const [selectedFooter, setSelectedFooter] = useState(null);
     const [selectedBirdseed, setSelectedBirdseed] = useState(null);
@@ -297,9 +297,14 @@ export default function AppProvider({ children }) {
         sslValue: "",
     })
 
-    const [fundingCopyValue, setFundingCopyValue] = useState("");
-    const [skinnyTitleValue, setSkinnyTitleValue] = useState("");
-    const [skinnyCopyValue, setSkinnyCopyValue] = useState("");
+    const [fundingCopyValues, setFundingCopyValues] = useState({
+        vfCopyValue: "",
+    });
+
+    const [skinnyCopyValues, setSkinnyCopyValues] = useState({
+        skinnyHeadlineValue: "",
+        skinnyCopyValue: "",
+    })
 
     const [heroCopyValues, setHeroCopyValues] = useState({
         badgeValue: "",
@@ -592,29 +597,29 @@ export default function AppProvider({ children }) {
 
 
 
-    console.log("Valores que serão passados para os componentes:", {
-        // heroCopyValues
-        // csvValues,
-        // accentColor,
-        // secondaryColor,
-        // tertiaryColor,
-        subjectValues,
-        // selectedHeader,
-        // selectedBrand,
-        // selectedFunding,
-        // fundingCopyValue,
-        // selectedSkinny,
-        // selectedHero,
-        // selectedPlugin,
-        // selectedFpoSegment,
-        // selectedFpoValue,
-        // selectedBanner,
-        // selectedFooter,
-        // selectedBirdseed,
-        // selectedBirdseedCopy,
-        // birdseedCopyValues,
-        // birdseedDate
-    });
+    // console.log("Valores que serão passados para os componentes:", {
+    //     // heroCopyValues
+    //     // csvValues,
+    //     // accentColor,
+    //     // secondaryColor,
+    //     // tertiaryColor,
+    //     // subjectValues,
+    //     // selectedHeader,
+    //     // selectedBrand,
+    //     // selectedFunding,
+    //     // fundingCopyValues,
+    //     // selectedSkinny,
+    //     // selectedHero,
+    //     // selectedPlugin,
+    //     // selectedFpoSegment,
+    //     // selectedFpoValue,
+    //     // selectedBanner,
+    //     // selectedFooter,
+    //     // selectedBirdseed,
+    //     // selectedBirdseedCopy,
+    //     // birdseedCopyValues,
+    //     // birdseedDate
+    // });
 
 
 
@@ -651,15 +656,13 @@ export default function AppProvider({ children }) {
 
             selectedFunding,
             setSelectedFunding,
-            fundingCopyValue,
-            setFundingCopyValue,
+            fundingCopyValues,
+            setFundingCopyValues,
 
             selectedSkinny,
             setSelectedSkinny,
-            skinnyTitleValue,
-            setSkinnyTitleValue,
-            skinnyCopyValue,
-            setSkinnyCopyValue,
+            skinnyCopyValues,
+            setSkinnyCopyValues,
 
             selectedHero,
             setSelectedHero,

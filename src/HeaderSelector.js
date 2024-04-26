@@ -5,6 +5,7 @@ import BaseIcon from './components/Icons/BaseIcon.jsx';
 import GroupLabel from './components/GroupLabel.jsx';
 import StatusIcon from './components/Icons/StatusIcon.jsx';
 import useStatusIcon from './functions/fieldStatusChecker.jsx';
+import { useToggleState } from './hook/useToogle.jsx';
 
 const headersArr = {
     '': {
@@ -37,28 +38,23 @@ export default function HeaderSelector() {
 
     const { selectedHeader, setSelectedHeader } = useAppContext();
     const { checkIsSelected } = useStatusIcon();
-    const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+    const [isOptionsOpen, toggleOptions] = useToggleState(false);
 
     var header = selectedHeader
     var setHeader = setSelectedHeader
 
     const [selected, setSelected] = useState({ header: false });
 
-    const statusType = checkIsSelected({
-        value: header,
-    });
+    const statusType = checkIsSelected({ value: header, });
 
     const handleHeaderClick = (header) => {
         setHeader(header);
     };
 
-    const toggleOptions = () => {
-        setIsOptionsOpen(!isOptionsOpen);
-    };
 
     const handleResetClick = () => {
         setHeader(null)
-        setIsOptionsOpen(false)
+        toggleOptions(false)
     };
 
     return (
