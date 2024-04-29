@@ -434,6 +434,13 @@ export function alignGroupY() {
     }
 }
 
+export function alignGroupYTop() {
+    return {
+        _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSTops" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" },
+    }
+}
+
+
 // ## Função para ajustar a borda do CTA
 
 export function setCTABorder({ Width }) {

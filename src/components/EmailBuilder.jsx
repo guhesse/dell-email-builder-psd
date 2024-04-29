@@ -1,22 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { core, app, batchPlay, storage } from '../App.js';
 import useAppContext from '../hook/useAppContext.jsx';
 import limitCharsPerLine from '../hook/charLimiter.jsx';
-import Hero1LifestyleProduct from '../HeroLayout/hero1LifestyleProduct.jsx';
-import Hero1Lifestyle from '../HeroLayout/hero1lifestyle.jsx';
-import Hero1Product from '../HeroLayout/hero1Product.jsx';
-import Hero2Promotion from '../HeroLayout/hero2promotion.jsx';
-import AwHero1LifestyleProduct from '../HeroLayout/awHero1LifestyleProduct.jsx';
+import { AwHero1LifestyleProduct, Hero1Lifestyle, Hero1LifestyleProduct, Hero1Product, Hero2Promotion } from '../HeroLayout/heroBuilds.jsx';
 import { getBoundsAndPosition } from '../hook/getBoundsAndPosition.jsx';
+import { slBuild, headerBuild, fundingBuild } from './Builder/Builds.jsx';
 
 import { selectLayer, selectGroup, makeSmartObj, setFontStyle, getBounds, setOffset, setSolidFill, makeSolid, setOverlayColor, selectAllAndCopy, alignGroupX, alignGroupY, setTwoFontStyle, setFinalCrop, organizeAndSetColorLabel } from "../hook/hooksJSON.jsx";
 import SubjectLineSelector from '../SubjectLineSelector.js';
 
 export default function EmailBuilder() {
 
-    var slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight, skinnyBannerHeight = "";
+    var skinnyHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight, skinnyBannerHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores, subjectValues, selectedHeader, selectedFunding, fundingCopyValues, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedDate, selectedBirdseedCopy, birdseedCopyValues, selectedBrand } = useAppContext();
+    const { accentColor, secondaryColor, tertiaryColor, cores, subjectValues, selectedHeader, selectedFunding, fundingCopyValues, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedDate, selectedBirdseedCopy, birdseedValues, selectedBrand } = useAppContext();
 
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
@@ -26,7 +23,7 @@ export default function EmailBuilder() {
     const { badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, specsValue, priceValue, productSuperchargerValue, heroCtaValue, } = heroCopyValues || {};
     const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
-    let { selectedDay, selectedMonth, selectedYear, } = birdseedDate || {};
+
 
     // Fazer depois a função para deletar artboard caso exista uma 
 
@@ -104,280 +101,6 @@ export default function EmailBuilder() {
         };
 
         await core.executeAsModal(targetFunction, options);
-    };
-
-    // Importa o SL e SSL
-    async function slBuild() {
-
-        const sslFilePath = `assets/sl-ssl/SL & SSL.psd`;
-
-        try {
-            const fs = storage.localFileSystem;
-            const pluginDir = await fs.getPluginFolder();
-            const fileEntry = await pluginDir.getEntry(sslFilePath);
-
-            const targetFunction = async () => {
-                try {
-                    await app.open(fileEntry);
-
-                    const secondDocument = app.documents[1];
-                    const slWidth = secondDocument.width;
-                    slHeight = secondDocument.height;
-
-                    // Troca o texto do SL e SSL 
-                    const changeSLCopy = [
-                        setFontStyle({
-                            Name: "SL",
-                            Value: "Subject Line: " + slValue,
-                            FontScript: "ArialMT",
-                            FontName: "Arial",
-                            FontWeight: "Regular",
-                            Size: 12,
-                            RedColor: 255,
-                            GreenColor: 255,
-                            BlueColor: 255,
-                            FontCaps: false,
-                            AutoLeading: true,
-                        }),
-                        setFontStyle({
-                            Name: "SSL",
-                            Value: "Super Subject Line: " + sslValue,
-                            FontScript: "ArialMT",
-                            FontName: "Arial",
-                            FontWeight: "Regular",
-                            Size: 12,
-                            RedColor: 255,
-                            GreenColor: 255,
-                            BlueColor: 255,
-                            FontCaps: false,
-                            AutoLeading: true,
-                        }),
-                    ];
-
-                    await batchPlay(changeSLCopy, {});
-
-                    // Copia e cola o modulo
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (slWidth / 2));
-                    const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (slHeight / 2));
-                    pastedGroup.translate(offsetX, offsetY);
-
-                    console.log('%cSSL inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir SSL:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir SSL',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo de SSL:', error);
-        }
-    };
-
-    // Importa o header
-    async function headerBuild() {
-
-        if (selectedHeader === "" || selectedHeader === null) {
-            console.warn('Header n&#xe3;o selecionado');
-            headerHeight = 0;
-            return;
-        }
-        const headerFilePath = `assets/headers/${selectedHeader}.psd`;
-
-        try {
-            const fs = storage.localFileSystem;
-            const pluginDir = await fs.getPluginFolder();
-            const fileEntry = await pluginDir.getEntry(headerFilePath);
-
-            const targetFunction = async () => {
-                try {
-                    await app.open(fileEntry);
-                    const secondDocument = app.documents[1];
-                    const headerWidth = secondDocument.width;
-                    headerHeight = secondDocument.height;
-
-                    // Copia e cola o modulo
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (headerWidth / 2) + 40);
-                    const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (headerHeight / 2) + (slHeight + 30));
-
-                    pastedGroup.translate(offsetX, offsetY);
-
-                    console.log('%cHeader inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir o Header:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir Cabe\u00e7alho',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo do Header:', error);
-        }
-
-    };
-
-    // Importa o funding
-    async function fundingBuild() {
-
-        let fundingFilePath
-
-        if (selectedFunding !== "" && selectedFunding !== null) {
-            fundingFilePath = `assets/fundings/${selectedFunding}.psd`;
-        } else {
-            fundingFilePath = `assets/fundings/no-vf.psd`;
-        }
-
-        try {
-            const fs = storage.localFileSystem;
-            const pluginDir = await fs.getPluginFolder();
-            const fileEntry = await pluginDir.getEntry(fundingFilePath);
-
-            const targetFunction = async (executionContext) => {
-                try {
-                    await app.open(fileEntry);
-                    const secondDocument = app.documents[1];
-
-                    const formattedFundingCopyValue = limitCharsPerLine(vfCopyValue || '', 30, "capitalized");
-
-                    let batchFundingCopy;
-
-                    if (vfCopyValue === '' || selectedFunding === "") {
-                        batchFundingCopy = [
-                            setFontStyle({
-                                Name: "Funding Copy",
-                                Value: "Visualize no navegador.",
-                                FontName: "Arial",
-                                FontWeight: "Regular",
-                                Size: 10,
-                                RedColor: 6,
-                                GreenColor: 114,
-                                BlueColor: 203,
-                                FontCaps: false,
-                                AutoLeading: false,
-                                Leading: 0,
-                            }),
-                            getBounds({
-                                Name: "Funding Copy",
-                                Property: "bounds"
-                            })
-                        ]
-                    } else if (vfCopyValue !== '') {
-                        batchFundingCopy = [
-                            setTwoFontStyle({
-                                Name: "Funding Copy",
-                                Value: formattedFundingCopyValue + "\r" + "Visualize no navegador.",
-                                Slice: formattedFundingCopyValue.length,
-                                FontName: ["Arial", "Arial"],
-                                FontWeight: ["Regular", "Regular"],
-                                Size: [10, 10],
-                                RedColor: [68, 6],
-                                GreenColor: [68, 114],
-                                BlueColor: [68, 203],
-                                BaselineShift: [0, -4],
-                                Tracking: [0, 0],
-                                FontCaps: [false, false],
-                                AutoLeading: [true, true],
-                                Leading: [0, 0],
-                            }),
-                            getBounds({
-                                Name: "Funding Copy",
-                                Property: "bounds"
-                            })
-                        ]
-                    };
-
-                    const { position: finalCropValue } = await getBoundsAndPosition(batchFundingCopy, "bounds", 1, "bottom", 0);
-
-                    const makeBackground = makeSolid({
-                        Name: "Funding Container",
-                        RedColor: 255,
-                        GreenColor: 255,
-                        BlueColor: 255,
-                        Bottom: finalCropValue,
-                        Right: 200,
-                    })
-                    await batchPlay(makeBackground, {})
-
-                    const finalCrop = setFinalCrop({
-                        Bottom: finalCropValue,
-                    })
-                    await batchPlay(finalCrop, {});
-
-                    fundingHeight = secondDocument.height;
-
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 515);
-
-
-                    let offsetY;
-
-                    if ((selectedFunding === 'no-vf')) {
-                        offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 26));
-                    } else {
-                        offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
-                    }
-                    pastedGroup.translate(offsetX, offsetY);
-
-                    if (selectedHeader !== "" && selectedHeader !== null) {
-
-                        const alignToHeader = [
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Header" }, { _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [448, 449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSTops" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } }
-                        ]
-
-                        await batchPlay(alignToHeader, {});
-                    }
-
-                    console.log('%cFunding inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir o Funding:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir Cabe\u00e7alho',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo do Funding:', error);
-        }
     };
 
     // Importa o skinny banner
@@ -894,7 +617,6 @@ export default function EmailBuilder() {
         }
     }
 
-
     async function fpoBuild() {
 
         if (selectedFpoValue === null || selectedFpoValue === 0 || selectedFpoSegment === undefined) {
@@ -1165,12 +887,13 @@ export default function EmailBuilder() {
             const pluginDir = await fs.getPluginFolder();
             const fileEntry = await pluginDir.getEntry(birdseedFilePath);
 
-            selectedDay = selectedDay === null ? 1 : selectedDay;
-            selectedMonth = selectedMonth === null ? 1 : selectedMonth;
-            selectedYear = selectedYear === null ? 2024 : selectedYear;
+            let copy = birdseedValues.copy
+            let day = birdseedValues.day === null ? 1 : birdseedValues.day;
+            let month = birdseedValues.month === null ? 1 : birdseedValues.month;
+            let year = birdseedValues.year === null ? 2024 : birdseedValues.year;
 
-            const formattedDay = selectedDay < 10 ? `0${selectedDay}` : selectedDay;
-            const formattedMonth = selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth;
+            const formattedDay = day < 10 ? `0${day}` : day;
+            const formattedMonth = month < 10 ? `0${month}` : month;
 
             const targetFunction = async (executionContext) => {
                 try {
@@ -1178,9 +901,9 @@ export default function EmailBuilder() {
 
                     let batchBirdseedCopy = [];
 
-                    if (selectedBirdseedCopy === true) {
+                    if (copy !== "") {
 
-                        const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${formattedDay}/${formattedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
+                        const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${formattedDay}/${formattedMonth}/${year}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
 
                         const defaultTextURLOne = ` www.dell.com.br.\r\r`
 
@@ -1191,7 +914,7 @@ export default function EmailBuilder() {
                         const defaultTextSliceThree = `Empresa beneficiada pela Lei da Inform\u00e1tica. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport s\u00e3o marcas registradas da \u00a9 2023 Dell Inc. Todos os direitos reservados. Microsoft e Windows s\u00e3o marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro, Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane s\u00e3o marcas registradas da Intel Corporation e suas subsidi\u00e1rias. \u00a9 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combina\u00e7\u00f5es resultantes s\u00e3o marcas registradas da Advanced Micro Devices, Inc. \u00a9 2023 NVIDIA, o logotipo NVIDIA, GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal e Turing s\u00e3o marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros pa\u00edses. \r\rDell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil. `;
 
                         // Concatena o birdseedCopyValue antes do texto padr\u00e3o
-                        const BirdseedCopy = birdseedCopyValues + "\r\r" + defaultTextSliceOne + defaultTextURLOne + defaultTextSliceTwo + defaultTextURLTwo + defaultTextSliceThree;
+                        const BirdseedCopy = copy + "\r\r" + defaultTextSliceOne + defaultTextURLOne + defaultTextSliceTwo + defaultTextURLTwo + defaultTextSliceThree;
 
 
                         batchBirdseedCopy = [
@@ -1203,15 +926,15 @@ export default function EmailBuilder() {
                                 to: {
                                     _obj: "textLayer", textKey: BirdseedCopy, textStyleRange: [
 
-                                        { _obj: "textStyleRange", from: 0, to: birdseedCopyValues.length + defaultTextSliceOne.length + 2, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+                                        { _obj: "textStyleRange", from: 0, to: copy.length + defaultTextSliceOne.length + 2, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
 
-                                        { _obj: "textStyleRange", from: birdseedCopyValues.length + defaultTextSliceOne.length + 2, to: birdseedCopyValues.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, underline: { _enum: "underline", _value: "underlineOnLeftInVertical" }, underlineOffset: { _unit: "pointsUnit", _value: 0 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } },
+                                        { _obj: "textStyleRange", from: copy.length + defaultTextSliceOne.length + 2, to: copy.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, underline: { _enum: "underline", _value: "underlineOnLeftInVertical" }, underlineOffset: { _unit: "pointsUnit", _value: 0 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } },
 
-                                        { _obj: "textStyleRange", from: birdseedCopyValues.length + defaultTextSliceOne.length + defaultTextURLOne.length + 2, to: birdseedCopyValues.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+                                        { _obj: "textStyleRange", from: copy.length + defaultTextSliceOne.length + defaultTextURLOne.length + 2, to: copy.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
 
-                                        { _obj: "textStyleRange", from: birdseedCopyValues.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + 1, to: birdseedCopyValues.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, underline: { _enum: "underline", _value: "underlineOnLeftInVertical" }, underlineOffset: { _unit: "pointsUnit", _value: 0 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } },
+                                        { _obj: "textStyleRange", from: copy.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + 1, to: copy.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, underline: { _enum: "underline", _value: "underlineOnLeftInVertical" }, underlineOffset: { _unit: "pointsUnit", _value: 0 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } },
 
-                                        { _obj: "textStyleRange", from: birdseedCopyValues.length + defaultTextSliceOne.length + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length + 2, to: birdseedCopyValues.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length + defaultTextSliceThree.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+                                        { _obj: "textStyleRange", from: copy.length + defaultTextSliceOne.length + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length + 2, to: copy.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length + defaultTextSliceThree.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
                                     ]
                                 },
 
@@ -1221,9 +944,9 @@ export default function EmailBuilder() {
                             { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Birdseed Copy" }], }
                         ];
 
-                    } else if (selectedBirdseedCopy === false) {
+                    } else {
 
-                        const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${formattedDay}/${formattedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
+                        const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${formattedDay}/${formattedMonth}/${year}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
 
                         const defaultTextURLOne = ` www.dell.com.br.\r\r`
 
@@ -1322,7 +1045,7 @@ export default function EmailBuilder() {
 
     async function fitToScreenPos() {
 
-        const allModulesSizes = (slHeight + 30) + (fundingHeight + 20) + skinnyHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight + (birdseedHeight + 20) + 40;
+        const allModulesSizes = (slHeight.value + 30) + (fundingHeight.value + 20) + skinnyHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight + (birdseedHeight + 20) + 40;
 
         const targetFunction = async (executionContext) => {
             try {
@@ -1359,20 +1082,20 @@ export default function EmailBuilder() {
 
         const targetFunction = async (executionContext) => {
             try {
-                const sslOrganize = organizeAndSetColorLabel({  
+                const sslOrganize = organizeAndSetColorLabel({
                     Name: "SL + SSL",
                     Index: 1,
                     Color: "gray",
                 })
                 await batchPlay(sslOrganize, {});
 
-                const vfOrganize = organizeAndSetColorLabel({  
+                const vfOrganize = organizeAndSetColorLabel({
                     Name: "Funding",
                     Index: 1,
                     Color: "indigo",
                 })
                 await batchPlay(vfOrganize, {});
-                
+
                 if (selectedHeader !== "" && selectedHeader !== null) {
                     const headerOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Header" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
@@ -1469,7 +1192,7 @@ export default function EmailBuilder() {
                     ]
                     await batchPlay(heroOrganize, {});
                 }
-                
+
                 if (selectedPlugin === "plugin") {
                     const pluginOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Plugin" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
@@ -1573,23 +1296,30 @@ export default function EmailBuilder() {
         await core.executeAsModal(targetFunction, options);
     };
 
+    const [slHeight, setSlHeight] = useState({});
+    const [headerHeight, setHeaderHeight] = useState({});
+    const [fundingHeight, setFundingHeight] = useState({});
+
 
     const handleBuild = async () => {
         try {
             await clearAllLayers();
             await fitToScreenPre();
-            var slHeight = await slBuild();
-            var headerHeight = await headerBuild(slHeight);
-            var fundingHeight = await fundingBuild(slHeight, headerHeight);
-            var skinnyHeight = await skinnyBuild(slHeight, headerHeight, fundingHeight)
-            var heroHeight = await heroBuild(slHeight, headerHeight, fundingHeight, skinnyHeight)
-            var pluginHeight = await pluginBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight)
-            var fpoHeight = await fpoBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight)
-            var bannerHeight = await bannerBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight);
-            var footerHeight = await footerBuild(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight);
-            var birdseedHeight = await birdseedBuild(selectedBirdseed, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight);
-            await fitToScreenPos(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
-            await organizeDocument();
+            await slBuild(slHeight, slValue, sslValue);
+            await headerBuild(selectedHeader, slHeight, headerHeight)
+            await fundingBuild(selectedFunding, selectedHeader, vfCopyValue, slHeight, headerHeight, fundingHeight);
+
+            // var slHeight = await slBuild();
+            // var headerHeight = await headerBuild(slHeight);
+            // var skinnyHeight = await skinnyBuild(slHeight, headerHeight, fundingHeight)
+            // var heroHeight = await heroBuild(slHeight, headerHeight, fundingHeight, skinnyHeight)
+            // var pluginHeight = await pluginBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight)
+            // var fpoHeight = await fpoBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight)
+            // var bannerHeight = await bannerBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight);
+            // var footerHeight = await footerBuild(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight);
+            // var birdseedHeight = await birdseedBuild(selectedBirdseed, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight);
+            // await fitToScreenPos(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
+            // await organizeDocument();
 
             console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
         } catch (error) {

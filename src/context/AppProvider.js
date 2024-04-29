@@ -334,13 +334,20 @@ export default function AppProvider({ children }) {
         bannerCtaValue: "",
     })
 
-    const [birdseedCopyValues, setBirdseedCopyValues] = useState('');
+    const [birdseedValues, setBirdseedValues] = useState({
+        copy:  "",
+        day: null,
+        month: null,
+        year: null
+    })
 
-    const [birdseedDate, setBirdseedDate] = useState({
-        selectedDay: null,
-        selectedMonth: null,
-        selectedYear: null,
-    });
+    // const [birdseedCopyValues, setBirdseedCopyValues] = useState('');
+
+    // const [birdseedDate, setBirdseedDate] = useState({
+    //     selectedDay: null,
+    //     selectedMonth: null,
+    //     selectedYear: null,
+    // });
 
 
     useEffect(() => {
@@ -689,12 +696,14 @@ export default function AppProvider({ children }) {
 
             selectedBirdseed,
             setSelectedBirdseed,
-            selectedBirdseedCopy,
-            setSelectedBirdseedCopy,
-            birdseedCopyValues,
-            setBirdseedCopyValues,
-            birdseedDate,
-            setBirdseedDate,
+            birdseedValues,
+            setBirdseedValues,
+            // selectedBirdseedCopy,
+            // setSelectedBirdseedCopy,
+            // birdseedCopyValues,
+            // setBirdseedCopyValues,
+            // birdseedDate,
+            // setBirdseedDate,
         }}>
             {children}
         </AppContext.Provider>
