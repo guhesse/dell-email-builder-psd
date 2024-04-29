@@ -1,3 +1,5 @@
 ###Ignore psds
 
 *.psd
+node_modules
+node_modules/
