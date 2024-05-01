@@ -3,13 +3,15 @@ import limitCharsPerLine from '../hook/charLimiter.jsx';
 import { selectLayer, selectGroup, makeSmartObj, setFontStyle, getBounds, setOffset, setSolidFill, setOverlayColor, setCTABorder, makeSolid, setFinalCrop } from "../hook/hooksJSON.jsx";
 import { getBoundsAndPosition } from "../hook/getBoundsAndPosition.jsx";
 
-export default async function Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, heroCtaValue) {
+export default async function Hero1Lifestyle(cores, accentColor, secondaryColor, tertiaryColor, heroValues) {
 
-    headlineValue = await limitCharsPerLine(
+    var { badge, headline, subheadline, cta } = heroValues || {}
+
+    headlineValue = limitCharsPerLine(
         headlineValue || "", 20, "capitalized"
     );
 
-    subHeadlineValue = await limitCharsPerLine(
+    subHeadlineValue = limitCharsPerLine(
         subHeadlineValue || "", 55, "capitalized"
     );
 

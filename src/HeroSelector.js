@@ -14,42 +14,42 @@ const herosArr = {
         name: 'Hero Layout 1 - Lifestyle & Product',
         brand: 'dell',
         fieldsTitle: ['badge', 'headline', 'subheadline', 'product name', 'supercharger', 'hero cta'],
-        fields: ['badgeValue', 'headlineValue', 'subHeadlineValue', 'productNameValue', 'productSuperchargerValue', 'heroCtaValue']
+        fields: ['badge', 'headline', 'subheadline', 'productName', 'productSupercharger', 'cta']
     },
     'hero1-lifestyle': {
         path: 'assets/heros/images/hero1-lifestyle.png',
         name: 'Hero Layout 1 - Only Lifestyle',
         brand: 'dell',
         fieldsTitle: ['badge', 'headline', 'subheadline', 'hero cta'],
-        fields: ['badgeValue', 'headlineValue', 'subHeadlineValue', 'heroCtaValue']
+        fields: ['badge', 'headline', 'subheadline', 'cta']
     },
     'hero1-product': {
         path: 'assets/heros/images/hero1-product.png',
         name: 'Hero Layout 1 - Only Product',
         brand: 'dell',
         fieldsTitle: ['badge', 'headline', 'OT', 'product name', 'subheadline', 'hero cta'],
-        fields: ['badgeValue', 'headlineValue', 'OTValue', 'productNameValue', 'subHeadlineValue', 'heroCtaValue']
+        fields: ['badge', 'headline', 'ot', 'productName', 'subheadline', 'cta']
     },
     'aw-hero1-lifestyle-product': {
         path: 'assets/heros/images/aw-hero1-lifestyle-product.png',
         name: 'AW Hero Layout 1 - Lifestyle & Product',
         brand: 'alienware',
         fieldsTitle: ['badge', 'headline', 'subheadline', 'product name', 'hero cta'],
-        fields: ['badgeValue', 'headlineValue', 'subHeadlineValue', 'productNameValue', 'heroCtaValue']
+        fields: ['badge', 'headline', 'subheadline', 'productName', 'cta']
     },
     'hero2-promotion': {
         path: 'assets/heros/images/hero2-promotion.png',
         name: 'Hero Layout 2 - Promotion',
         brand: 'dell',
         fieldsTitle: ['badge', 'headline', 'subheadline', 'inline promo', 'product name', 'specs', 'price', 'hero cta'],
-        fields: ['badgeValue', 'headlineValue', 'subHeadlineValue', 'inlinePromoValue', 'productNameValue', 'specsValue', 'priceValue', 'heroCtaValue']
+        fields: ['badge', 'headline', 'subheadline', 'inlinePromo', 'productName', 'specs', 'price', 'cta']
     },
 };
 
 export default function HeroSelector() {
-    const { selectedHero, setSelectedHero, heroCopyValues, setHeroCopyValues } = useAppContext();
+    const { selectedHero, setSelectedHero, heroValues, setHeroValues } = useAppContext();
 
-    const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setHeroCopyValues, heroCopyValues);
+    const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setHeroValues, heroValues);
 
     const { setStatusByField } = useStatusIcon();
 
@@ -63,7 +63,7 @@ export default function HeroSelector() {
 
     const statusType = setStatusByField({
         type: "filledOnObj",
-        value: heroCopyValues,
+        value: heroValues,
         obj: hero,
         array: herosArr,
     });
@@ -74,11 +74,11 @@ export default function HeroSelector() {
 
     const handleResetClick = () => {
         setHero(null);
-        setHeroCopyValues(initialState);
+        setHeroValues(initialState);
         toggleOptions(false)
     };
 
-    const fieldKeys = Object.keys(heroCopyValues || {});
+    const fieldKeys = Object.keys(heroValues || {});
 
     useEffect(() => {
         const newInitialState = {}
@@ -86,7 +86,7 @@ export default function HeroSelector() {
 
         fieldKeys.forEach(field => {
             newInitialState[field] = "";
-            newTempFormState[field] = heroCopyValues[field] || "";
+            newTempFormState[field] = heroValues[field] || "";
         });
 
         setInitialState(newInitialState);

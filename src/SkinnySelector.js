@@ -18,25 +18,25 @@ const skinnyArr = {
     'left': {
         name: 'Left',
         fieldsTitle: ['headline', 'copy'],
-        fields: ['skinnyHeadlineValue', 'skinnyCopyValue']
+        fields: ['headline', 'copy']
     },
     'center': {
         name: 'Center',
         fieldsTitle: ['headline', 'copy'],
-        fields: ['skinnyHeadlineValue', 'skinnyCopyValue']
+        fields: ['headline', 'copy']
     },
     'right': {
         name: 'Right',
         fieldsTitle: ['headline', 'copy'],
-        fields: ['skinnyHeadlineValue', 'skinnyCopyValue']
+        fields: ['headline', 'copy']
     },
 }
 
 
 export default function SkinnySelector() {
-    const { selectedSkinny, setSelectedSkinny, skinnyCopyValues, setSkinnyCopyValues } = useAppContext();
+    const { selectedSkinny, setSelectedSkinny, skinnyValues, setSkinnyValues } = useAppContext();
 
-    const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setSkinnyCopyValues, skinnyCopyValues);
+    const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setSkinnyValues, skinnyValues);
 
     const { setStatusByField, checkIsSelected } = useStatusIcon();
 
@@ -54,10 +54,10 @@ export default function SkinnySelector() {
 
     const handleResetClick = () => {
         setSkinny(null)
-        setSkinnyCopyValues({initialState})
+        setSkinnyValues({initialState})
     };
 
-    const fieldKeys = Object.keys(skinnyCopyValues || {});
+    const fieldKeys = Object.keys(skinnyValues || {});
 
     useEffect(() => {
         const newInitialState = {}
@@ -65,7 +65,7 @@ export default function SkinnySelector() {
 
         fieldKeys.forEach(field => {
             newInitialState[field] = "";
-            newTempFormState[field] = skinnyCopyValues[field] || "";
+            newTempFormState[field] = skinnyValues[field] || "";
         });
 
         setInitialState(newInitialState);
@@ -81,7 +81,7 @@ export default function SkinnySelector() {
     } else {
         statusType = setStatusByField({
             type: "filledOnObj",
-            value: skinnyCopyValues,
+            value: skinnyValues,
             obj: skinny,
             array: skinnyArr,
         });
@@ -103,7 +103,7 @@ export default function SkinnySelector() {
                         <sp-field-group>
                             <sp-picker placeholder="Selecione o skinny" label="Selection type">
                                 <sp-menu>
-                                    {Object.entries(skinnyArr).map(([skinny, { path, name }], index) => (
+                                    {Object.entries(skinnyArr).map(([skinny, { name }], index) => (
                                         <div key={`${skinny}-${index}`}>
                                             <sp-menu-item
                                                 onClick={() => handleSkinnyClick(skinny)}

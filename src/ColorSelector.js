@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import useAppContext from "./hook/useAppContext.jsx";
 
 export default function colorSelector() {
-    const { accentColor, setAccentColor, secondaryColor, setSecondaryColor, tertiaryColor, setTertiaryColor, handleAccentColorChange, handleSecondaryColorChange, handleTertiaryColorChange } = useAppContext();
+    const { colors, colorsList, accentColor, secondaryColor, tertiaryColor, handleAccentColorChange, handleSecondaryColorChange, handleTertiaryColorChange } = useAppContext();
 
     const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
@@ -188,18 +188,15 @@ export default function colorSelector() {
     };
 
     useEffect(() => {
-        setAccentColor(accentColor);
-        handleAccentColorChange(accentColor)
+        handleAccentColorChange("deepGreen"); // Altera a cor de acento para "AW VividViolet"
     }, []);
 
     useEffect(() => {
-        setSecondaryColor(secondaryColor);
-        handleSecondaryColorChange(secondaryColor)
+        handleSecondaryColorChange("mint"); // Altera a cor secundária para "AW CoolRed"
     }, []);
 
     useEffect(() => {
-        setTertiaryColor(tertiaryColor);
-        handleTertiaryColorChange(tertiaryColor)
+        handleTertiaryColorChange("teaGreen"); // Altera a cor terciária para "AW DarkViolet"
     }, []);
 
     return (
@@ -246,7 +243,7 @@ export default function colorSelector() {
                                     <h4 style={{ marginTop: 2 }}>Secondary Color</h4>
                                     <p style={{ fontSize: 11, lineHeight: 1, margin: 0, padding: 0 }}>
                                         They are used in: <br />
-                                        <span style={{ fontStyle: "italic" }}>  Skinny Banner, Badge, Plugin, Product Pattern</span>
+                                        <span style={{ fontStyle: "italic" }}> Skinny Banner, Badge, Plugin, Product Pattern</span>
                                     </p>
                                     <h4 style={{ marginTop: 2 }}>Tertiary Color</h4>
                                     <p style={{ fontSize: 11, lineHeight: 1, margin: 0, padding: 0 }}>
@@ -259,7 +256,7 @@ export default function colorSelector() {
                         <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin: "0.025em 0" }}>
                             <sp-field-group style={{ padding: "5 2 8 5", }}>
                                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginBottom: "5px" }}>
-                                    <span style={{ backgroundColor: coresRGB[accentColor], width: "22px", height: "22px", borderRadius: "5px" }}></span>
+                                    <span style={{ backgroundColor: colors["accentColor"].hex, width: "22px", height: "22px", borderRadius: "5px" }}></span>
                                     <sp-detail style={{ marginLeft: "8px" }} for="accent-color">ACCENT COLOR</sp-detail>
                                 </div>
                                 <sp-picker class='largePicker' placeholder="Select accent color" id="picker-m" size="m" label="Selection type" >
@@ -268,14 +265,14 @@ export default function colorSelector() {
                                             <div
                                                 style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
                                                 key={cor}
-                                                onClick={() => setAccentColor(cor)}>
+                                                onClick={() => handleAccentColorChange(cor)}>
                                                 <sp-menu-item
                                                     selected={accentColor === accentColor ? selected.accentColor : undefined}
                                                     style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                                                     <div
                                                         style={{ display: "flex", alignItems: "center" }}>
                                                         <span
-                                                            style={{ backgroundColor: coresRGB[cor], width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
+                                                            style={{ backgroundColor: colorsList[cor].rgb, width: "15px", height: "15px", borderRadius: "2px", border: "white 1px solid", marginRight: "5px" }}></span>
                                                         {cor.charAt(0).toUpperCase() + cor.slice(1) + ' '}
                                                         <span
                                                             style={{ color: "gray", marginLeft: "8px" }}>{coresHEX[cor]}</span>
@@ -290,13 +287,13 @@ export default function colorSelector() {
                         <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin: "0.025em 0" }}>
                             <sp-field-group style={{ padding: "5 2 8 5", }}>
                                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginBottom: "5px" }}>
-                                    <span style={{ backgroundColor: coresRGB[secondaryColor], width: "22px", height: "22px", borderRadius: "5px" }}></span>
+                                    <span style={{ backgroundColor: colors["secondaryColor"].hex, width: "22px", height: "22px", borderRadius: "5px" }}></span>
                                     <sp-detail style={{ marginLeft: "8px" }} for="accent-color">SECONDARY COLOR</sp-detail>
                                 </div>
                                 <sp-picker class='largePicker' placeholder="Select secondary color" id="picker-m" size="m" label="Selection type">
                                     <sp-menu>
                                         {Object.keys(cores).map((cor) => (
-                                            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => setSecondaryColor(cor)}>
+                                            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleSecondaryColorChange(cor)}>
                                                 <sp-menu-item
                                                     selected={secondaryColor === secondaryColor ? selected.secondaryColor : undefined}
                                                     style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
@@ -315,13 +312,13 @@ export default function colorSelector() {
                         <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", margin: "0.025em 0" }}>
                             <sp-field-group style={{ padding: "5 2 8 5", }}>
                                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", marginBottom: "5px" }}>
-                                    <span style={{ backgroundColor: coresRGB[tertiaryColor], width: "22px", height: "22px", borderRadius: "5px" }}></span>
+                                    <span style={{ backgroundColor: colors["tertiaryColor"].hex, width: "22px", height: "22px", borderRadius: "5px" }}></span>
                                     <sp-detail style={{ marginLeft: "8px" }} for="accent-color">TERTIARY COLOR</sp-detail>
                                 </div>
                                 <sp-picker class='largePicker' placeholder="Select tertiary color" id="picker-m" size="m" label="Selection type">
                                     <sp-menu>
                                         {Object.keys(cores).map((cor) => (
-                                            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => setTertiaryColor(cor)}>
+                                            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }} key={cor} onClick={() => handleTertiaryColorChange(cor)}>
                                                 <sp-menu-item
                                                     selected={tertiaryColor === tertiaryColor ? selected.tertiaryColor : undefined}
                                                     style={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "space-between" }}>
@@ -342,9 +339,9 @@ export default function colorSelector() {
                     <sp-label onClick={toggleOptions} >
                         <div style={{ display: "flex", flexDirection: "row", cursor: "pointer" }}>
                             <p>Colors</p>
-                            <span style={{ backgroundColor: coresRGB[accentColor], width: "13px", height: "12px", borderRadius: "3px", marginLeft: "10px" }}></span>
-                            <span style={{ backgroundColor: coresRGB[secondaryColor], width: "13px", height: "12px", borderRadius: "3px", marginLeft: "4px" }}></span>
-                            <span style={{ backgroundColor: coresRGB[tertiaryColor], width: "13px", height: "12px", borderRadius: "3px", marginLeft: "4px" }}></span>
+                            <span style={{ backgroundColor: colors["accentColor"].hex, width: "13px", height: "12px", borderRadius: "3px", marginLeft: "10px" }}></span>
+                            <span style={{ backgroundColor: colors["secondaryColor"].hex, width: "13px", height: "12px", borderRadius: "3px", marginLeft: "4px" }}></span>
+                            <span style={{ backgroundColor: colors["tertiaryColor"].hex, width: "13px", height: "12px", borderRadius: "3px", marginLeft: "4px" }}></span>
                             <span style={{ marginLeft: "10px", display: "flex", alignItems: "center", fill: "#8a8a8a" }}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 10 10" >
                                     <g id="ChevronSize75">

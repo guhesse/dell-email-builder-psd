@@ -7,7 +7,6 @@ import limitCharsPerLine from '../hook/charLimiter.jsx';
 
 export default function AppProvider({ children }) {
 
-
     const [csvLoaded, setCsvLoaded] = useState(false);
     const [csvValues, setCsvValues] = useState({
         'Source File': '',
@@ -171,112 +170,410 @@ export default function AppProvider({ children }) {
     //     return updatedValues;
     // };
 
-    function hexToRgb(hex) {
-        // Remove o caractere '#' se estiver presente
-        hex = hex.replace(/^#/, '');
-
-        // Verifica se o valor hex corresponde a alguma cor no objeto cores
-        const matchingColor = Object.entries(cores).find(([name, rgb]) => {
-            return rgb.r === parseInt(hex.substring(0, 2), 16) &&
-                rgb.g === parseInt(hex.substring(2, 4), 16) &&
-                rgb.b === parseInt(hex.substring(4, 6), 16);
+    function hexToRgb(hex, colorsList) {
+        const matchingColor = Object.entries(colorsList).find(([name, color]) => {
+            return color.hex === hex;
         });
 
-        // Se encontrar uma correspondência, retorna o nome da cor, caso contrário, retorna o valor RGB formatado
-        return matchingColor ? matchingColor[0] : `rgb(${parseInt(hex.substring(0, 2), 16)}, ${parseInt(hex.substring(2, 4), 16)}, ${parseInt(hex.substring(4, 6), 16)})`;
+        return matchingColor ? matchingColor[0] : `rgb(${parseInt(hex.substring(1, 3), 16)}, ${parseInt(hex.substring(3, 5), 16)}, ${parseInt(hex.substring(5, 7), 16)})`;
     }
 
-    const cores = {
-        "AW WarmRed": { r: 255, g: 76, b: 52 },
-        "AW CoolRed": { r: 255, g: 0, b: 54 },
-        "AW DarkViolet": { r: 65, g: 2, b: 144 },
-        "AW VividViolet": { r: 102, g: 51, b: 204 },
-        "AW LGray": { r: 192, g: 194, b: 196 },
-        "AW MGray": { r: 128, g: 130, b: 133 },
-        "AW DGray": { r: 40, g: 40, b: 41 },
-        white: { r: 254, g: 254, b: 254 },
-        quartz: { r: 238, g: 238, b: 238 },
-        granite: { r: 200, g: 201, b: 199 },
-        gray: { r: 128, g: 128, b: 128 },
-        steel: { r: 110, g: 110, b: 110 },
-        carbon: { r: 68, g: 68, b: 68 },
-        black: { r: 0, g: 0, b: 0 },
-        glacier: { r: 229, g: 248, b: 255 },
-        mist: { r: 203, g: 238, b: 255 },
-        pool: { r: 159, g: 221, b: 255 },
-        sky: { r: 128, g: 199, b: 251 },
-        cornflower: { r: 88, g: 165, b: 230 },
-        dellBlue: { r: 6, g: 114, b: 203 },
-        coblat: { r: 29, g: 86, b: 192 },
-        royal: { r: 12, g: 50, b: 164 },
-        navy: { r: 0, g: 34, b: 127 },
-        midnight: { r: 13, g: 33, b: 85 },
-        teaGreen: { r: 228, g: 255, b: 214 },
-        honeydew: { r: 191, g: 255, b: 183 },
-        lime: { r: 159, g: 255, b: 153 },
-        mint: { r: 123, g: 252, b: 118 },
-        grass: { r: 78, g: 231, b: 96 },
-        basil: { r: 55, g: 204, b: 92 },
-        kelly: { r: 52, g: 158, b: 95 },
-        hunter: { r: 36, g: 117, b: 84 },
-        forest: { r: 27, g: 87, b: 68 },
-        deepGreen: { r: 36, g: 71, b: 57 },
-        periwinkle: { r: 222, g: 221, b: 255 },
-        lilac: { r: 200, g: 192, b: 255 },
-        lavender: { r: 190, g: 175, b: 255 },
-        wisteria: { r: 170, g: 150, b: 250 },
-        iris: { r: 159, g: 120, b: 252 },
-        amethyst: { r: 142, g: 92, b: 239 },
-        violet: { r: 116, g: 61, b: 212 },
-        plum: { r: 97, g: 44, b: 176 },
-        eggplant: { r: 80, g: 10, b: 150 },
-        raisin: { r: 42, g: 20, b: 90 },
-        sand: { r: 251, g: 238, b: 206 },
-        marigold: { r: 249, g: 214, b: 116 },
-        apricot: { r: 244, g: 187, b: 94 },
-        orange: { r: 225, g: 127, b: 63 },
-        coral: { r: 225, g: 99, b: 63 },
-        cherry: { r: 210, g: 51, b: 61 },
-        scarlet: { r: 179, g: 11, b: 55 },
-        ruby: { r: 133, g: 19, b: 63 },
-        burgundy: { r: 105, g: 29, b: 63 },
-        wine: { r: 74, g: 25, b: 58 }
+    const handleColorChange = (colorType, colorsList, setColors) => {
+        return (color) => {
+            const colorObj = typeof color === 'string' ? colorsList[color] : color;
+            const r= colorsList[color].r
+            const g = colorsList[color].g
+            const b = colorsList[color].b
+            const rgbColor = colorsList[color].rgb
+            const hexColor = colorsList[color].hex;
+            setColors(prevColors => ({
+                ...prevColors,
+                [colorType]: {
+                    r: r,
+                    g: g,
+                    b: b,
+                    rgb: rgbColor,
+                    name: colorObj.name,
+                    hex: hexColor
+                }
+            }));
+        };
     };
 
-    const [accentColor, setAccentColor] = useState("deepGreen");
-    const [secondaryColor, setSecondaryColor] = useState("mint");
-    const [tertiaryColor, setTertiaryColor] = useState("teaGreen");
-
-    const [accentColorHex, setAccentColorHex] = useState("#244739");
-    const [secondaryColorHex, setSecondaryColorHex] = useState("#7BFC76");
-    const [tertiaryColorHex, setTertiaryColorHex] = useState("#E4FFD6");
-
-    function rgbToHex(rgb) {
-        return '#' + ((1 << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b).toString(16).slice(1);
-    }
-
-    const handleAccentColorChange = (color) => {
-        const colorString = typeof color === 'string' ? color : hexToRgb(color);
-        const hexColor = rgbToHex(cores[color]);
-        setAccentColor(colorString);
-        setAccentColorHex(hexColor);
+    const colorsList = {
+        "AW WarmRed": {
+            name: "AW WarmRed",
+            r: 255, g: 76, b: 52,
+            hex: '#FF4C34',
+            rgb: "rgb(255, 76, 52)",
+        },
+        "AW CoolRed": {
+            name: "AW CoolRed",
+            r: 255, g: 0, b: 54,
+            hex: '#FF0136',
+            rgb: "rgb(255, 0, 54)",
+        },
+        "AW DarkViolet": {
+            name: "AW DarkViolet",
+            r: 65, g: 2, b: 144,
+            hex: '#410290',
+            rgb: "rgb(65, 2, 144)",
+        },
+        "AW VividViolet": {
+            name: "AW VividViolet",
+            r: 102, g: 51, b: 204,
+            hex: '#6633CC',
+            rgb: "rgb(102, 51, 204)",
+        },
+        "AW LGray": {
+            name: "AW LGray",
+            r: 192, g: 194, b: 196,
+            hex: '#C0C2C4',
+            rgb: "rgb(192, 194, 196)"
+        },
+        "AW MGray": {
+            name: "AW MGray",
+            r: 128, g: 130, b: 133,
+            hex: '#808284',
+            rgb: "rgb(128, 130, 133)",
+        },
+        "AW DGray": {
+            name: "AW DGray",
+            r: 40, g: 40, b: 41,
+            hex: '#282829',
+            rgb: "rgb(40, 40, 41)",
+        },
+        "AW White": {
+            name: "AW White",
+            r: 254, g: 254, b: 254,
+            hex: '#FFFFFF',
+            rgb: "rgb(254, 254, 254)",
+        },
+        white: {
+            name: "white",
+            r: 254, g: 254, b: 254,
+            hex: '#FEFEFE',
+            rgb: "rgb(254, 254, 254)",
+        },
+        quartz: {
+            name: "quartz",
+            r: 238, g: 238, b: 238,
+            hex: '#EEEEEE',
+            rgb: "rgb(238, 238, 238)",
+        },
+        granite: {
+            name: "granite",
+            r: 200, g: 201, b: 199,
+            hex: '#C8C9C7',
+            rgb: "rgb(200, 201, 199)",
+        },
+        gray: {
+            name: "gray",
+            r: 128, g: 128, b: 128,
+            hex: '#808080',
+            rgb: "rgb(128, 128, 128)",
+        },
+        steel: {
+            name: "steel",
+            r: 110, g: 110, b: 110,
+            hex: '#6e6e6e',
+            rgb: "rgb(110, 110, 110)",
+        },
+        carbon: {
+            name: "carbon",
+            r: 68, g: 68, b: 68,
+            hex: '#444444',
+            rgb: "rgb(68, 68, 68)",
+        },
+        black: {
+            name: "black",
+            r: 0, g: 0, b: 0,
+            hex: '#000000',
+            rgb: "rgb(0, 0, 0)",
+        },
+        glacier: {
+            name: "glacier",
+            r: 229, g: 248, b: 255,
+            hex: '#E5F8FF',
+            rgb: "rgb(229, 248, 255)",
+        },
+        mist: {
+            name: "mist",
+            r: 203, g: 238, b: 255,
+            hex: '#CBEEFF',
+            rgb: "rgb(203, 238, 255)",
+        },
+        pool: {
+            name: "pool",
+            r: 159, g: 221, b: 255,
+            hex: '#9FDDFF',
+            rgb: "rgb(159, 221, 255)",
+        },
+        sky: {
+            name: "sky",
+            r: 128, g: 199, b: 251,
+            hex: '#80C7FB',
+            rgb: "rgb(128, 199, 251)",
+        },
+        cornflower: {
+            name: "cornflower",
+            r: 88, g: 165, b: 230,
+            hex: '#58a5e6',
+            rgb: "rgb(88, 165, 230)",
+        },
+        dellBlue: {
+            name: "dellBlue",
+            r: 6, g: 114, b: 203,
+            hex: '#0672CB',
+            rgb: "rgb(6, 114, 203)",
+        },
+        coblat: {
+            name: "coblat",
+            r: 29, g: 86, b: 192,
+            hex: '#1d56c0',
+            rgb: "rgb(29, 86, 192)",
+        },
+        royal: {
+            name: "royal",
+            r: 12, g: 50, b: 164,
+            hex: '#0C32A4',
+            rgb: "rgb(12, 50, 164)",
+        },
+        navy: {
+            name: "navy",
+            r: 0, g: 34, b: 127,
+            hex: '#00227F',
+            rgb: "rgb(0, 34, 127)",
+        },
+        midnight: {
+            name: "midnight",
+            r: 13, g: 33, b: 85,
+            hex: '#0D2155',
+            rgb: "rgb(13, 33, 85)",
+        },
+        teaGreen: {
+            name: "teaGreen",
+            r: 228, g: 255, b: 214,
+            hex: '#E4FFD6',
+            rgb: "rgb(228, 255, 214)",
+        },
+        honeydew: {
+            name: "honeydew",
+            r: 191, g: 255, b: 183,
+            hex: '#BFFFb7',
+            rgb: "rgb(191, 255, 183)",
+        },
+        lime: {
+            name: "lime",
+            r: 159, g: 255, b: 153,
+            hex: '#9FFF99',
+            rgb: "rgb(159, 255, 153)",
+        },
+        mint: {
+            name: "mint",
+            r: 123, g: 252, b: 118,
+            hex: '#7BFC76',
+            rgb: "rgb(123, 252, 118)",
+        },
+        grass: {
+            name: "grass",
+            r: 78, g: 231, b: 96,
+            hex: '#4EE760',
+            rgb: "rgb(78, 231, 96)",
+        },
+        basil: {
+            name: "basil",
+            r: 55, g: 204, b: 92,
+            hex: '#37CC5C',
+            rgb: "rgb(55, 204, 92)",
+        },
+        kelly: {
+            name: "kelly",
+            r: 52, g: 158, b: 95,
+            hex: '#349E5F',
+            rgb: "rgb(52, 158, 95)",
+        },
+        hunter: {
+            name: "hunter",
+            r: 36, g: 117, b: 84,
+            hex: '#247554',
+            rgb: "rgb(36, 117, 84)",
+        },
+        forest: {
+            name: "forest",
+            r: 27, g: 87, b: 68,
+            hex: '#1B5744',
+            rgb: "rgb(27, 87, 68)",
+        },
+        deepGreen: {
+            name: "deepGreen",
+            r: 36, g: 71, b: 57,
+            hex: '#244739',
+            rgb: "rgb(36, 71, 57)",
+        },
+        periwinkle: {
+            name: "periwinkle",
+            r: 222, g: 221, b: 255,
+            hex: '#DEDDFF',
+            rgb: "rgb(222, 221, 255)",
+        },
+        lilac: {
+            name: "lilac",
+            r: 200, g: 192, b: 255,
+            hex: '#C8C0FF',
+            rgb: "rgb(200, 192, 255)",
+        },
+        lavender: {
+            name: "lavender",
+            r: 190, g: 175, b: 255,
+            hex: '#BEAFFf',
+            rgb: "rgb(190, 175, 255)",
+        },
+        wisteria: {
+            name: "wisteria",
+            r: 170, g: 150, b: 250,
+            hex: '#AA96FA',
+            rgb: "rgb(170, 150, 250)",
+        },
+        iris: {
+            name: "iris",
+            r: 159, g: 120, b: 252,
+            hex: '#9F78FC',
+            rgb: "rgb(159, 120, 252)",
+        },
+        amethyst: {
+            name: "amethyst",
+            r: 142, g: 92, b: 239,
+            hex: '#8E5CEF',
+            rgb: "rgb(142, 92, 239)",
+        },
+        violet: {
+            name: "violet",
+            r: 116, g: 61, b: 212,
+            hex: '#743DD4',
+            rgb: "rgb(116, 61, 212)",
+        },
+        plum: {
+            name: "plum",
+            r: 97, g: 44, b: 176,
+            hex: '#612CB0',
+            rgb: "rgb(97, 44, 176)",
+        },
+        eggplant: {
+            name: "eggplant",
+            r: 80, g: 10, b: 150,
+            hex: '#500A96',
+            rgb: "rgb(80, 10, 150)",
+        },
+        raisin: {
+            name: "raisin",
+            r: 42, g: 20, b: 90,
+            hex: '#2A145A',
+            rgb: "rgb(42, 20, 90)",
+        },
+        sand: {
+            name: "sand",
+            r: 251, g: 238, b: 206,
+            hex: '#FBEECE',
+            rgb: "rgb(251, 238, 206)",
+        },
+        marigold: {
+            name: "marigold",
+            r: 249, g: 214, b: 116,
+            hex: '#F9D674',
+            rgb: "rgb(249, 214, 116)",
+        },
+        apricot: {
+            name: "apricot",
+            r: 244, g: 187, b: 94,
+            hex: '#F4BB5E',
+            rgb: "rgb(244, 187, 94)",
+        },
+        orange: {
+            name: "orange",
+            r: 225, g: 127, b: 63,
+            hex: '#E17F3F',
+            rgb: "rgb(225, 127, 63)",
+        },
+        coral: {
+            name: "coral",
+            r: 225, g: 99, b: 63,
+            hex: '#E1633F',
+            rgb: "rgb(225, 99, 63)",
+        },
+        cherry: {
+            name: "cherry",
+            r: 210, g: 51, b: 61,
+            hex: '#D2333D',
+            rgb: "rgb(210, 51, 61)",
+        },
+        scarlet: {
+            name: "scarlet",
+            r: 179, g: 11, b: 55,
+            hex: '#B30B37',
+            rgb: "rgb(179, 11, 55)",
+        },
+        ruby: {
+            name: "ruby",
+            r: 133, g: 19, b: 63,
+            hex: '#85133F',
+            rgb: "rgb(133, 19, 63)",
+        },
+        burgundy: {
+            name: "burgundy",
+            r: 105, g: 29, b: 63,
+            hex: '#691D3F',
+            rgb: "rgb(105, 29, 63)",
+        },
+        wine: {
+            name: "wine",
+            r: 74, g: 25, b: 58,
+            hex: '#4A193A',
+            rgb: "rgb(74, 25, 58)",
+        },
     };
 
+    const [colors, setColors] = useState({
+        accentColor: colorsList["deepGreen"],
+        secondaryColor: colorsList["mint"],
+        tertiaryColor: colorsList["teaGreen"],
+    });
 
-    const handleSecondaryColorChange = (color) => {
-        const colorString = typeof color === 'string' ? color : hexToRgb(color);
-        const hexColor = rgbToHex(cores[color]);
-        setSecondaryColor(colorString);
-        setSecondaryColorHex(hexColor);
-    };
+    const handleAccentColorChange = handleColorChange("accentColor", colorsList, setColors);
+    const handleSecondaryColorChange = handleColorChange("secondaryColor", colorsList, setColors);
+    const handleTertiaryColorChange = handleColorChange("tertiaryColor", colorsList, setColors);
+
+    // console.log(colors)
+
+    // const [accentColor, setAccentColor] = useState("deepGreen");
+    // const [secondaryColor, setSecondaryColor] = useState("mint");
+    // const [tertiaryColor, setTertiaryColor] = useState("teaGreen");
+
+    // const [accentColorHex, setAccentColorHex] = useState("#244739");
+    // const [secondaryColorHex, setSecondaryColorHex] = useState("#7BFC76");
+    // const [tertiaryColorHex, setTertiaryColorHex] = useState("#E4FFD6");
 
 
-    const handleTertiaryColorChange = (color) => {
-        const colorString = typeof color === 'string' ? color : hexToRgb(color);
-        const hexColor = rgbToHex(cores[color]);
-        setTertiaryColor(colorString);
-        setTertiaryColorHex(hexColor);
-    };
+    // const handleAccentColorChange = (color) => {
+    //     const colorString = typeof color === 'string' ? color : hexToRgb(color);
+    //     const hexColor = rgbToHex(cores[color]);
+    //     setAccentColor(colorString);
+    //     setAccentColorHex(hexColor);
+    // };
+
+    // const handleSecondaryColorChange = (color) => {
+    //     const colorString = typeof color === 'string' ? color : hexToRgb(color);
+    //     const hexColor = rgbToHex(cores[color]);
+    //     setSecondaryColor(colorString);
+    //     setSecondaryColorHex(hexColor);
+    // };
+
+    // const handleTertiaryColorChange = (color) => {
+    //     const colorString = typeof color === 'string' ? color : hexToRgb(color);
+    //     const hexColor = rgbToHex(cores[color]);
+    //     setTertiaryColor(colorString);
+    //     setTertiaryColorHex(hexColor);
+    // };
 
     // Values e estados dos inputs
 
@@ -301,22 +598,22 @@ export default function AppProvider({ children }) {
         vfCopyValue: "",
     });
 
-    const [skinnyCopyValues, setSkinnyCopyValues] = useState({
-        skinnyHeadlineValue: "",
-        skinnyCopyValue: "",
+    const [skinnyValues, setSkinnyValues] = useState({
+        headline: "",
+        copy: "",
     })
 
-    const [heroCopyValues, setHeroCopyValues] = useState({
-        badgeValue: "",
-        headlineValue: "",
-        OTValue: "",
-        subHeadlineValue: "",
-        inlinePromoValue: "",
-        specsValue: "",
-        priceValue: "",
-        productNameValue: "",
-        productSuperchargerValue: "",
-        heroCtaValue: "",
+    const [heroValues, setHeroValues] = useState({
+        badge: "",
+        headline: "",
+        ot: "",
+        subheadline: "",
+        inlinePromo: "",
+        specs: "",
+        price: "",
+        productName: "",
+        productSupercharger: "",
+        cta: "",
     });
 
     const [pluginCopyValues, setPluginCopyValues] = useState({
@@ -335,7 +632,7 @@ export default function AppProvider({ children }) {
     })
 
     const [birdseedValues, setBirdseedValues] = useState({
-        copy:  "",
+        copy: "",
         day: null,
         month: null,
         year: null
@@ -628,7 +925,10 @@ export default function AppProvider({ children }) {
     //     // birdseedDate
     // });
 
+    // console.log(heroValues)
+    // console.log("Accent Color:", accentColor, "  Secondary Color:", secondaryColor, "  Tertiary Color:", tertiaryColor)
 
+    const cores = {}
 
     return (
         <AppContext.Provider value={{
@@ -638,19 +938,26 @@ export default function AppProvider({ children }) {
             setCsvLoaded,
             loadDefaultValuesFromCsv,
 
-            accentColor,
-            setAccentColor,
-            secondaryColor,
-            setSecondaryColor,
-            tertiaryColor,
-            setTertiaryColor,
-            accentColorHex,
-            secondaryColorHex,
-            tertiaryColorHex,
-            cores,
+            colors,
+            colorsList,
+            setColors,
             handleAccentColorChange,
             handleSecondaryColorChange,
             handleTertiaryColorChange,
+            // accentColor,
+            // setAccentColor,
+            // secondaryColor,
+            // setSecondaryColor,
+            // tertiaryColor,
+            // setTertiaryColor,
+            // accentColorHex,
+            // secondaryColorHex,
+            // tertiaryColorHex,
+            cores,
+            handleColorChange,
+            // handleAccentColorChange,
+            // handleSecondaryColorChange,
+            // handleTertiaryColorChange,
 
             subjectValues,
             setSubjectValues,
@@ -668,13 +975,13 @@ export default function AppProvider({ children }) {
 
             selectedSkinny,
             setSelectedSkinny,
-            skinnyCopyValues,
-            setSkinnyCopyValues,
+            skinnyValues,
+            setSkinnyValues,
 
             selectedHero,
             setSelectedHero,
-            heroCopyValues,
-            setHeroCopyValues,
+            heroValues,
+            setHeroValues,
 
             selectedPlugin,
             setSelectedPlugin,

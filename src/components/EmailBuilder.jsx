@@ -4,23 +4,21 @@ import useAppContext from '../hook/useAppContext.jsx';
 import limitCharsPerLine from '../hook/charLimiter.jsx';
 import { AwHero1LifestyleProduct, Hero1Lifestyle, Hero1LifestyleProduct, Hero1Product, Hero2Promotion } from '../HeroLayout/heroBuilds.jsx';
 import { getBoundsAndPosition } from '../hook/getBoundsAndPosition.jsx';
-import { slBuild, headerBuild, fundingBuild } from './Builder/Builds.jsx';
+import { slBuild, headerBuild, fundingBuild, skinnyBuild, heroBuild } from './Builder/Builds.jsx';
 
 import { selectLayer, selectGroup, makeSmartObj, setFontStyle, getBounds, setOffset, setSolidFill, makeSolid, setOverlayColor, selectAllAndCopy, alignGroupX, alignGroupY, setTwoFontStyle, setFinalCrop, organizeAndSetColorLabel } from "../hook/hooksJSON.jsx";
-import SubjectLineSelector from '../SubjectLineSelector.js';
 
 export default function EmailBuilder() {
 
-    var skinnyHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight, skinnyBannerHeight = "";
+    var pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores, subjectValues, selectedHeader, selectedFunding, fundingCopyValues, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedDate, selectedBirdseedCopy, birdseedValues, selectedBrand } = useAppContext();
+    const { accentColor, secondaryColor, tertiaryColor, cores, subjectValues, selectedHeader, selectedFunding, fundingCopyValues, selectedSkinny, skinnyValues, selectedHero, heroValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedValues, selectedBrand, colors} = useAppContext();
 
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
     const { r: tertiaryRed, g: tertiaryGreen, b: tertiaryBlue } = cores[tertiaryColor] || {};
     const { slValue, sslValue } = subjectValues || {};
     const { vfCopyValue } = fundingCopyValues || {};
-    const { badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, specsValue, priceValue, productSuperchargerValue, heroCtaValue, } = heroCopyValues || {};
     const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
 
@@ -101,216 +99,6 @@ export default function EmailBuilder() {
         };
 
         await core.executeAsModal(targetFunction, options);
-    };
-
-    // Importa o skinny banner
-    async function skinnyBuild() {
-
-        if (selectedSkinny === "" || selectedSkinny === null) {
-            console.warn('Skinny não selecionado');
-            skinnyHeight = 0;
-            return;
-        }
-
-        const skinnyFilePath = `assets/skinny-banner/skinny-banner.psd`;
-        const fs = storage.localFileSystem;
-
-        try {
-            const pluginDir = await fs.getPluginFolder();
-            const fileEntry = await pluginDir.getEntry(skinnyFilePath);
-
-
-            const targetFunction = async (executionContext) => {
-                try {
-                    await app.open(fileEntry);
-
-                    const secondDocument = app.documents[1];
-                    const skinnyWidth = secondDocument.width;
-
-                    let formattedSkinnyTitle = limitCharsPerLine(
-                        skinnyTitleValue || '', 60, "capitalized");
-                    let formattedSkinnyCopy = limitCharsPerLine(
-                        skinnyCopyValue || '', 65, "capitalized");
-
-                    const skinnyBannerCopy = formattedSkinnyTitle + "\r" + formattedSkinnyCopy
-
-                    const changeSkinnyBannerCopy = [
-                        setTwoFontStyle({
-                            Name: "Skinny Banner Copy",
-                            Value: skinnyBannerCopy,
-                            Slice: formattedSkinnyTitle.length + 1,
-                            FontName: ["Roboto", "Roboto"],
-                            FontWeight: ["Bold", "Regular"],
-                            Size: [18.5, 18.5],
-                            RedColor: [accentRed, accentRed],
-                            GreenColor: [accentGreen, accentGreen],
-                            BlueColor: [accentBlue, accentBlue],
-                            BaselineShift: [0, 0],
-                            Tracking: [0, 0],
-                            FontCaps: [false, false],
-                            AutoLeading: [true, true],
-                            Leading: [0, 0],
-                        }),
-                        getBounds({
-                            Name: "Skinny Banner Copy",
-                            Property: "bounds",
-                        }),
-                    ];
-
-                    const { position: finalCropValue } = await getBoundsAndPosition(changeSkinnyBannerCopy, "bounds", 1, "bottom", 20);
-
-                    const makeBackground = makeSolid({
-                        Name: "Skinny Banner Background",
-                        RedColor: secondaryRed,
-                        GreenColor: secondaryGreen,
-                        BlueColor: secondaryBlue,
-                        Bottom: finalCropValue,
-                        Right: 600,
-                    })
-                    await batchPlay(makeBackground, {})
-
-                    const finalCrop = setFinalCrop({
-                        Bottom: finalCropValue,
-                    })
-                    await batchPlay(finalCrop, {});
-
-                    skinnyHeight = secondDocument.height;
-
-                    // Copia e cola o modulo
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-                    if (selectedFunding === "no-vf") {
-                        fundingHeight = headerHeight
-                    } else { }
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-                    const offsetX = (0 - (docWidth / 2) + (skinnyWidth / 2) + 25);
-                    let offsetModules = ((slHeight + 30) + (fundingHeight + 20));
-                    const offsetY = (0 - (docHeight / 2) + (skinnyHeight / 2) + (offsetModules));
-                    pastedGroup.translate(offsetX, offsetY);
-
-                    console.log('%cSkinny Banner inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir Skinny Banner:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir Skinny Banner',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo de Skinny Banner:', error);
-        }
-    };
-
-    // Importa o Hero
-    async function heroBuild() {
-        if (selectedHero === "" || selectedHero === null) {
-            console.warn('Hero não selecionado');
-            heroHeight = 0;
-            return;
-        }
-
-        const heroFilePath = `assets/heros/${selectedHero}.psd`;
-        const fs = storage.localFileSystem;
-        try {
-            const pluginDir = await fs.getPluginFolder();
-            const fileEntry = await pluginDir.getEntry(heroFilePath);
-
-            const targetFunction = async (executionContext) => {
-                try {
-                    await app.open(fileEntry);
-                    const secondDocument = app.documents[1];
-
-                    if (selectedHero === 'hero1-lifestyle-product') {
-                        try {
-                            await Hero1LifestyleProduct(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, productSuperchargerValue, heroCtaValue);
-                        } catch (error) {
-                            console.error('Erro ao executar Hero 1 - Lifestyle + Product:', error);
-                        }
-                    } else { }
-
-                    if (selectedHero === 'hero1-lifestyle') {
-                        try {
-                            await Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, heroCtaValue);
-                        } catch (error) {
-                            console.error('Erro ao executar Hero 1 - Only Lifestyle:', error);
-                        }
-                    } else { }
-
-                    if (selectedHero === 'hero1-product') {
-                        try {
-                            await Hero1Product(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, productNameValue, heroCtaValue);
-                        } catch (error) {
-                            console.error('Erro ao executar Hero 1 - Only Product:', error);
-                        }
-                    } else { }
-
-                    if (selectedHero === 'aw-hero1-lifestyle-product') {
-                        try {
-                            await AwHero1LifestyleProduct(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, productNameValue, heroCtaValue);
-                        } catch (error) {
-                            console.error('Erro ao executar Aw Hero 1 - Lifestyle + Product:', error);
-                        }
-                    } else { }
-
-                    if (selectedHero === 'hero2-promotion') {
-                        try {
-                            await Hero2Promotion(accentRed, accentGreen, accentBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, priceValue, specsValue, heroCtaValue);
-                        } catch (error) {
-                            console.error('Erro ao executar Hero2 - Promotion:', error);
-                        }
-                    } else { }
-
-                    const heroWidth = secondDocument.width;
-                    heroHeight = secondDocument.height;
-
-                    // Copia e cola o modulo
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-
-                    if (selectedFunding === "no-vf") {
-                        fundingHeight = headerHeight
-                    } else {
-                    }
-
-                    const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
-                    let offsetModules = ((slHeight + 30) + (fundingHeight + 20) + (skinnyHeight));
-                    const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
-                    pastedGroup.translate(offsetX, offsetY);
-
-
-                    console.log('%cHero inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir o Hero:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir Hero',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo do Hero:', error);
-        }
     };
 
     async function pluginBuild() {
@@ -1299,6 +1087,8 @@ export default function EmailBuilder() {
     const [slHeight, setSlHeight] = useState({});
     const [headerHeight, setHeaderHeight] = useState({});
     const [fundingHeight, setFundingHeight] = useState({});
+    const [skinnyHeight, setSkinnyHeight] = useState({});
+    const [heroHeight, setHeroHeight] = useState({});
 
 
     const handleBuild = async () => {
@@ -1308,10 +1098,8 @@ export default function EmailBuilder() {
             await slBuild(slHeight, slValue, sslValue);
             await headerBuild(selectedHeader, slHeight, headerHeight)
             await fundingBuild(selectedFunding, selectedHeader, vfCopyValue, slHeight, headerHeight, fundingHeight);
-
-            // var slHeight = await slBuild();
-            // var headerHeight = await headerBuild(slHeight);
-            // var skinnyHeight = await skinnyBuild(slHeight, headerHeight, fundingHeight)
+            await skinnyBuild(selectedSkinny, skinnyValues, skinnyHeight, selectedFunding, slHeight, headerHeight, fundingHeight, cores, accentColor, secondaryColor);
+            await heroBuild(selectedHero, heroHeight, heroValues, slHeight, selectedFunding, fundingHeight, skinnyHeight, colors, cores, accentColor, secondaryColor, tertiaryColor)
             // var heroHeight = await heroBuild(slHeight, headerHeight, fundingHeight, skinnyHeight)
             // var pluginHeight = await pluginBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight)
             // var fpoHeight = await fpoBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight)
