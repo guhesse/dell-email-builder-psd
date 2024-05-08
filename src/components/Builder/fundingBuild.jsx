@@ -1,16 +1,18 @@
-import { setFontStyle, getBounds, setTwoFontStyle, makeSolid, setFinalCrop, selectAllAndCopy, alignGroupYTop, selectLayer, selectGroup } from "../../hook/hooksJSON.jsx";
+import { setFontStyle, getBounds, setTwoFontStyle, makeSolid, setFinalCrop, selectAllAndCopy, alignGroupYTop, selectGroup } from "../../hook/hooksJSON.jsx";
 import { core, app, batchPlay, storage } from '../../App.js';
 import limitCharsPerLine from "../../hook/charLimiter.jsx";
 import { getBoundsAndPosition } from "../../hook/getBoundsAndPosition.jsx";
 
 export async function fundingBuild(buildInfo) {
 
-    const { selectedFunding, selectedHeader, vfCopyValue, modulesHeight } = buildInfo
+    var { selectedModules, vfCopyValue, modulesHeight } = buildInfo
+    var vf = selectedModules.vf
+    var header = selectedModules.header
 
     let fundingFilePath
 
-    if (selectedFunding !== "" && selectedFunding !== null) {
-        fundingFilePath = `assets/fundings/${selectedFunding}.psd`;
+    if (vf !== "" && vf !== null) {
+        fundingFilePath = `assets/fundings/${vf}.psd`;
     } else {
         fundingFilePath = `assets/fundings/no-vf.psd`;
     }
@@ -25,11 +27,11 @@ export async function fundingBuild(buildInfo) {
                 await app.open(fileEntry);
                 const secondDocument = app.documents[1];
 
-                const formattedFundingCopyValue = limitCharsPerLine(vfCopyValue || '', 30, "capitalized");
+                vfCopyValue = limitCharsPerLine(vfCopyValue || '', 30, "capitalized");
 
                 let batchFundingCopy;
 
-                if (vfCopyValue === '' || selectedFunding === "") {
+                if (vfCopyValue === '' || vf === "") {
                     batchFundingCopy = [
                         setFontStyle({
                             Name: "Funding Copy",
@@ -53,8 +55,8 @@ export async function fundingBuild(buildInfo) {
                     batchFundingCopy = [
                         setTwoFontStyle({
                             Name: "Funding Copy",
-                            Value: formattedFundingCopyValue + "\r" + "Visualize no navegador.",
-                            Slice: formattedFundingCopyValue.length,
+                            Value: vfCopyValue + "\r" + "Visualize no navegador.",
+                            Slice: vfCopyValue.length,
                             FontName: ["Arial", "Arial"],
                             FontWeight: ["Regular", "Regular"],
                             Size: [10, 10],
@@ -91,7 +93,7 @@ export async function fundingBuild(buildInfo) {
                 })
                 await batchPlay(finalCrop, {});
 
-                modulesHeight.funding  = secondDocument.height;
+                modulesHeight.funding = secondDocument.height;
 
                 const selectAndCopy = selectAllAndCopy()
                 await batchPlay(selectAndCopy, {});
@@ -107,15 +109,15 @@ export async function fundingBuild(buildInfo) {
 
                 let offsetY;
 
-                if (selectedFunding === 'no-vf') {
-                    offsetY = (docHeight - docHeight) - (docHeight / 2) + (modulesHeight.funding / 2) + (modulesHeight.sl + 26);
+                if (vf === 'no-vf') {
+                    offsetY = (docHeight - docHeight) - (docHeight / 2) + (modulesHeight.vf / 2) + (modulesHeight.sl + 26);
                 } else {
-                    offsetY = (docHeight - docHeight) - (docHeight / 2) + (modulesHeight.funding / 2) + (modulesHeight.sl + 30);
+                    offsetY = (docHeight - docHeight) - (docHeight / 2) + (modulesHeight.vf / 2) + (modulesHeight.sl + 30);
                 }
 
                 pastedGroup.translate(offsetX, offsetY);
 
-                if (selectedHeader !== "" && selectedHeader !== null) {
+                if (header !== "" && header !== null) {
 
                     const alignToHeader = [
                         selectGroup({

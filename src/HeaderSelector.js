@@ -36,24 +36,28 @@ const headersArr = {
 
 export default function HeaderSelector() {
 
-    const { selectedHeader, setSelectedHeader } = useAppContext();
+    const { selectedModules, setSelectedModules } = useAppContext();
     const { checkIsSelected } = useStatusIcon();
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
 
-    var header = selectedHeader
-    var setHeader = setSelectedHeader
+    var header = selectedModules.header
 
     const [selected, setSelected] = useState({ header: false });
 
     const statusType = checkIsSelected({ value: header, });
 
     const handleHeaderClick = (header) => {
-        setHeader(header);
+        setSelectedModules(prevState => ({
+            ...prevState,
+            header: header
+        }));
     };
 
-
     const handleResetClick = () => {
-        setHeader(null)
+        setSelectedModules(prevState => ({
+            ...prevState,
+            header: null
+        }));
         toggleOptions(false)
     };
 
@@ -76,7 +80,7 @@ export default function HeaderSelector() {
                                         <sp-menu-item
                                             key={`${header}-${index}`}
                                             onClick={() => handleHeaderClick(header)}
-                                            selected={header === selectedHeader ? selected.header : null}>
+                                            selected={header === selectedModules.header ? selected.header : null}>
                                             {name}
                                         </sp-menu-item>
                                     ))}

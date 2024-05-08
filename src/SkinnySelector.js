@@ -34,7 +34,7 @@ const skinnyArr = {
 
 
 export default function SkinnySelector() {
-    const { selectedSkinny, setSelectedSkinny, skinnyValues, setSkinnyValues } = useAppContext();
+    const { selectedModules, setSelectedModules, skinnyValues, setSkinnyValues } = useAppContext();
 
     const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setSkinnyValues, skinnyValues);
 
@@ -43,17 +43,22 @@ export default function SkinnySelector() {
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
     const [isEditClicked, setIsEditClicked] = useToggleState(false);
     
-    var skinny = selectedSkinny
-    var setSkinny = setSelectedSkinny
+    var skinny = selectedModules.skinny
 
     const [selected, setSelected] = useToggleState({ skinny: false });
 
     const handleSkinnyClick = (skinny) => {
-        setSkinny(skinny);
+        setSelectedModules(prevState => ({
+            ...prevState,
+            skinny: skinny
+        }));
     };
 
     const handleResetClick = () => {
-        setSkinny(null)
+        setSelectedModules(prevState => ({
+            ...prevState,
+            skinny: null
+        }));
         setSkinnyValues({initialState})
     };
 
@@ -107,7 +112,7 @@ export default function SkinnySelector() {
                                         <div key={`${skinny}-${index}`}>
                                             <sp-menu-item
                                                 onClick={() => handleSkinnyClick(skinny)}
-                                                selected={skinny === selectedSkinny ? selected.skinny : null}>
+                                                selected={skinny === selectedModules.skinny ? selected.skinny : null}>
                                                 {name}
                                             </sp-menu-item>
                                         </div>
@@ -122,7 +127,7 @@ export default function SkinnySelector() {
                 )}
 
 
-                {selectedSkinny && isOptionsOpen && isEditClicked && (
+                {skinny && isOptionsOpen && isEditClicked && (
                     <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
                         {skinnyArr[skinny].fieldsTitle.map((field, i) => (
                             <div key={field} style={{ margin: "4px 0px" }}>

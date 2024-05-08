@@ -2,16 +2,16 @@
 import { core, app, batchPlay, storage } from '../../App.js';
 import { selectAllAndCopy } from '../../hook/hooksJSON.jsx';
 
-export async function headerBuild(buildInfo) {
+export async function headerBuild(buildInfo) {  
 
-    const { selectedHeader, modulesHeight } = buildInfo;
+    const { modulesHeight, selectedModules } = buildInfo;
 
-    if (selectedHeader === "" || selectedHeader === null) {
+    if (selectedModules.header === "" || selectedModules.header === null) {
         console.warn('Header n&#xe3;o selecionado');
         modulesHeight.header = 0;
         return;
     }
-    const headerFilePath = `assets/headers/${selectedHeader}.psd`;
+    const headerFilePath = `assets/headers/${selectedModules.header}.psd`;
 
     try {
         const fs = storage.localFileSystem;
@@ -35,7 +35,7 @@ export async function headerBuild(buildInfo) {
                 const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
                 const docWidth = activeDocument.width;
                 const docHeight = activeDocument.height;
-                const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (headerWidth / 2) + 40);
+                const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (headerWidth / 2) + 35);
                 const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (modulesHeight.header / 2) + (modulesHeight.sl + 30));
 
                 pastedGroup.translate(offsetX, offsetY);

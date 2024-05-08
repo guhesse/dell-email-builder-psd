@@ -578,7 +578,7 @@ export default function AppProvider({ children }) {
     const [selectedModules, setSelectedModules] = useState({
         header: null,
         brand: 'dell',
-        funding: null,
+        vf: null,
         skinny: null,
         hero: null,
         plugin: null,

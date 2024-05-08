@@ -47,7 +47,7 @@ const herosArr = {
 };
 
 export default function HeroSelector() {
-    const { selectedHero, setSelectedHero, heroValues, setHeroValues } = useAppContext();
+    const { selectedModules, setSelectedModules, heroValues, setHeroValues } = useAppContext();
 
     const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setHeroValues, heroValues);
 
@@ -56,8 +56,7 @@ export default function HeroSelector() {
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
     const [isEditClicked, setIsEditClicked] = useToggleState(false);
 
-    var hero = selectedHero
-    var setHero = setSelectedHero
+    var hero = selectedModules.hero
 
     const [selected, setSelected] = useState({ hero: false });
 
@@ -69,11 +68,17 @@ export default function HeroSelector() {
     });
 
     const handleHeroClick = (hero) => {
-        setHero(hero);
+        setSelectedModules(prevState => ({
+            ...prevState,
+            hero: hero
+        }));
     };
 
     const handleResetClick = () => {
-        setHero(null);
+        setSelectedModules(prevState => ({
+            ...prevState,
+            hero: null
+        }));
         setHeroValues(initialState);
         toggleOptions(false)
     };
@@ -112,7 +117,7 @@ export default function HeroSelector() {
                                         <div className="flexCenter" key={`${hero}-${index}`}>
                                             <sp-menu-item
                                                 onClick={() => handleHeroClick(hero)}
-                                                selected={hero === selectedHero ? selected.hero : null}>
+                                                selected={hero === selectedModules.hero ? selected.hero : null}>
                                                 <div className="flexCenter">
                                                     <img className="heroThumbnail"
                                                         src={path}
@@ -131,7 +136,7 @@ export default function HeroSelector() {
                     <GroupLabel onClick={toggleOptions} type="closed" name="Hero" size="s" />
                 )}
 
-                {selectedHero && isOptionsOpen && isEditClicked && (
+                {hero && isOptionsOpen && isEditClicked && (
                     <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
                         {herosArr[hero].fieldsTitle.map((field, i) => (
                             <div key={field} style={{ margin: "4px 0px" }}>

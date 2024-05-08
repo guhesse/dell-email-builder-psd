@@ -2,23 +2,21 @@ import React, { useState } from 'react';
 import { core, app, batchPlay, storage } from '../App.js';
 import useAppContext from '../hook/useAppContext.jsx';
 import limitCharsPerLine from '../hook/charLimiter.jsx';
-import { AwHero1LifestyleProduct, Hero1Lifestyle, Hero1LifestyleProduct, Hero1Product, Hero2Promotion } from '../HeroLayout/heroBuilds.jsx';
-import { getBoundsAndPosition } from '../hook/getBoundsAndPosition.jsx';
 import { slBuild, headerBuild, fundingBuild, skinnyBuild, heroBuild } from './Builder/Builds.jsx';
 
-import { selectLayer, selectGroup, makeSmartObj, setFontStyle, getBounds, setOffset, setSolidFill, makeSolid, setOverlayColor, selectAllAndCopy, alignGroupX, alignGroupY, setTwoFontStyle, setFinalCrop, organizeAndSetColorLabel } from "../hook/hooksJSON.jsx";
+import { selectGroup, setFontStyle, setSolidFill, selectAllAndCopy, alignGroupX, alignGroupY, organizeAndSetColorLabel } from "../hook/hooksJSON.jsx";
 
 export default function EmailBuilder() {
 
     var pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores, subjectValues, selectedHeader, selectedFunding, fundingCopyValues, selectedSkinny, skinnyValues, selectedHero, heroValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedValues, selectedBrand, colors } = useAppContext();
+    const { accentColor, secondaryColor, tertiaryColor, cores, subjectValues, selectedHeader, selectedFunding, fundingCopyValues, selectedSkinny, skinnyValues, selectedHero, heroValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedValues, selectedBrand, colors, selectedModules, setSelectedModules } = useAppContext();
 
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
     const { r: tertiaryRed, g: tertiaryGreen, b: tertiaryBlue } = cores[tertiaryColor] || {};
     const { slValue, sslValue } = subjectValues || {};
-    const { vfCopyValue } = fundingCopyValues || {};
+    var { vfCopyValue } = fundingCopyValues || {};
     const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
 
@@ -465,8 +463,8 @@ export default function EmailBuilder() {
 
     async function bannerBuild() {
 
-        const formattedBannerHeadlineValue = await limitCharsPerLine(bannerHeadlineValue || '', 27, "capitalized");
-        const formattedBannerCopyValue = await limitCharsPerLine(bannerCopyValue || '', 60, "capitalized");
+        const formattedBannerHeadlineValue = limitCharsPerLine(bannerHeadlineValue || '', 27, "capitalized");
+        const formattedBannerCopyValue = limitCharsPerLine(bannerCopyValue || '', 60, "capitalized");
 
         try {
             if (selectedBanner === "" || selectedBanner === null) {
@@ -1087,34 +1085,19 @@ export default function EmailBuilder() {
     const [modulesHeight, setModulesHeight] = useState({
         sl: "",
         header: "",
-        funding: "",
+        vf: "",
         skinny: "",
         hero: "",
     })
 
-    // var [slHeight, setSlHeight] = useState({});
-    // const [headerHeight, setHeaderHeight] = useState({});
-    const [fundingHeight, setFundingHeight] = useState({});
-    const [skinnyHeight, setSkinnyHeight] = useState({});
-    const [heroHeight, setHeroHeight] = useState({});
-
     const buildInfo = {
-
+        selectedModules,
         slValue: slValue,
         sslValue: sslValue,
-
         modulesHeight: modulesHeight,
-
-        selectedHeader: selectedHeader,
-
-        selectedFunding: selectedFunding,
         vfCopyValue: vfCopyValue,
-
         skinnyValues: skinnyValues,
-        selectedSkinny: selectedSkinny,
-
         heroValues: heroValues,
-
         colors: colors,
     };
 
@@ -1127,9 +1110,7 @@ export default function EmailBuilder() {
             await headerBuild(buildInfo)
             await fundingBuild(buildInfo);
             await skinnyBuild(buildInfo);
-            console.log(modulesHeight)
-            // await heroBuild(selectedHero, heroHeight, heroValues, slHeight, selectedFunding, fundingHeight, headerHeight, skinnyHeight, colors)
-            // var heroHeight = await heroBuild(slHeight, headerHeight, fundingHeight, skinnyHeight)
+            await heroBuild(buildInfo);
             // var pluginHeight = await pluginBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight)
             // var fpoHeight = await fpoBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight)
             // var bannerHeight = await bannerBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight);

@@ -6,12 +6,14 @@ import { setTwoFontStyle, getBounds, makeSolid, selectAllAndCopy, setFinalCrop }
 // Importa o skinny banner
 export async function skinnyBuild(buildInfo) {
 
-    const { selectedSkinny, skinnyValues, selectedFunding, colors, modulesHeight } = buildInfo
+    var { selectedModules, skinnyValues, colors, modulesHeight } = buildInfo
+
+    var vf = selectedModules.vf
 
     var accentColor = colors["accentColor"]
     var secondaryColor = colors["secondaryColor"]
 
-    if (selectedSkinny === "" || selectedSkinny === null) {
+    if (selectedModules.skinny === "" || selectedModules.skinny === null) {
         console.warn('Skinny não selecionado');
         modulesHeight.skinny = 0;
         return;
@@ -32,18 +34,18 @@ export async function skinnyBuild(buildInfo) {
                 const secondDocument = app.documents[1];
                 const skinnyWidth = secondDocument.width;
 
-                let formattedSkinnyTitle = limitCharsPerLine(
+                let skinnyTitle = limitCharsPerLine(
                     skinnyValues.headline || '', 60, "capitalized");
-                let formattedSkinnyCopy = limitCharsPerLine(
+                let skinnyCopy = limitCharsPerLine(
                     skinnyValues.copy || '', 65, "capitalized");
 
-                const skinnyBannerCopy = formattedSkinnyTitle + "\r" + formattedSkinnyCopy
+                const skinnyBannerCopy = skinnyTitle + "\r" + skinnyCopy
 
                 const changeSkinnyBannerCopy = [
                     setTwoFontStyle({
                         Name: "Skinny Banner Copy",
                         Value: skinnyBannerCopy,
-                        Slice: formattedSkinnyTitle.length + 1,
+                        Slice: skinnyTitle.length + 1,
                         FontName: ["Roboto", "Roboto"],
                         FontWeight: ["Bold", "Regular"],
                         Size: [18.5, 18.5],
@@ -83,21 +85,27 @@ export async function skinnyBuild(buildInfo) {
 
                 // Copia e cola o modulo
                 const selectAndCopy = selectAllAndCopy()
-                await batchPlay(selectAndCopy, {});
+                await batchPlay(selectAndCopy, {}); 
 
                 const activeDocument = app.activeDocument;
                 await activeDocument.paste();
-
-                if (selectedFunding === "no-vf") {
-                    modulesHeight.funding = modulesHeight.header
-                } else { }
 
                 const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
                 const docWidth = activeDocument.width;
                 const docHeight = activeDocument.height;
                 const offsetX = (0 - (docWidth / 2) + (skinnyWidth / 2) + 25);
-                let offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.funding + 20));
+
+                var offsetModules = ""
+
+                if (vf === "" || vf === null) {
+                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.header + 20));
+                } else {
+                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.vf + 20));
+                }
+
                 const offsetY = (0 - (docHeight / 2) + (modulesHeight.skinny / 2) + (offsetModules));
+
+                console.log("offsetY: ", offsetY)
                 pastedGroup.translate(offsetX, offsetY);
 
                 console.log('%cSkinny Banner inserido com sucesso!', 'color: #00EAADFF;');

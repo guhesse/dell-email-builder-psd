@@ -24,7 +24,7 @@ const vfArr = {
 
 export default function FundingSelector() {
 
-    const { fundingCopyValues, setFundingCopyValues, selectedFunding, setSelectedFunding } = useAppContext();
+    const { fundingCopyValues, setFundingCopyValues, selectedModules, setSelectedModules } = useAppContext();
 
     const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setFundingCopyValues, fundingCopyValues);
 
@@ -33,18 +33,24 @@ export default function FundingSelector() {
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
     const [isEditClicked, setIsEditClicked] = useToggleState(false);
 
-    var vf = selectedFunding
-    var setVf = setSelectedFunding
+    var vf = selectedModules.vf
 
     const [selected, setSelected] = useState({ vf: false });
 
     const handleFundingClick = (vf) => {
-        setVf(vf);
+        setSelectedModules(prevState => ({
+            ...prevState,
+            vf: vf
+        }));
     };
 
     const handleResetClick = () => {
-        setVf(null)
-        setFundingCopyValues(initialState)
+        setSelectedModules(prevState => ({
+            ...prevState,
+            vf: null
+        }));
+        setFundingCopyValues(initialState);
+        toggleOptions(false);
     };
 
     const fieldKeys = Object.keys(fundingCopyValues || {});
@@ -96,7 +102,7 @@ export default function FundingSelector() {
                                         <div key={`${vf}-${index}`}>
                                             <sp-menu-item
                                                 onClick={() => handleFundingClick(vf)}
-                                                selected={vf === selectedFunding ? selected.vf : null}>
+                                                selected={vf === selectedModules.vf ? selected.vf : null}>
                                                 {name}
                                             </sp-menu-item>
                                         </div>
@@ -110,7 +116,7 @@ export default function FundingSelector() {
                     <GroupLabel onClick={toggleOptions} type="closed" name="Funding" size="s" />
                 )}
 
-                {selectedFunding && isOptionsOpen && isEditClicked && (
+                {vf && isOptionsOpen && isEditClicked && (
                     <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
                         {vfArr[vf].fieldsTitle.map((field, i) => (
                             <div key={field} style={{ margin: "4px 0px" }}>

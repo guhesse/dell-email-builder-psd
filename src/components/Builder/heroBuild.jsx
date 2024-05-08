@@ -3,15 +3,21 @@ import { AwHero1LifestyleProduct, Hero1Lifestyle, Hero1LifestyleProduct, Hero1Pr
 import { core, app, batchPlay, storage } from '../../App.js';
 import { selectAllAndCopy } from '../../hook/hooksJSON.jsx';
 
-export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, selectedFunding, fundingHeight, headerHeight, skinnyHeight, colors) {
+export async function heroBuild(buildInfo) {
 
-    if (selectedHero === "" || selectedHero === null) {
+    var { selectedModules, modulesHeight, heroValues, colors } = buildInfo
+
+    var vf = selectedModules.vf
+    var hero = selectedModules.hero
+
+
+    if (hero === "" || hero === null) {
         console.warn('Hero não selecionado');
-        heroHeight = 0;
+        modulesHeight.hero = 0;
         return;
     }
 
-    const heroFilePath = `assets/heros/${selectedHero}.psd`;
+    const heroFilePath = `assets/heros/${hero}.psd`;
     const fs = storage.localFileSystem;
     try {
         const pluginDir = await fs.getPluginFolder();
@@ -22,7 +28,7 @@ export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, 
                 await app.open(fileEntry);
                 const secondDocument = app.documents[1];
 
-                if (selectedHero === 'hero1-lifestyle-product') {
+                if (hero === 'hero1-lifestyle-product') {
                     try {
                         await Hero1LifestyleProduct(colors, heroValues);
                     } catch (error) {
@@ -30,7 +36,7 @@ export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, 
                     }
                 } else { }
 
-                if (selectedHero === 'hero1-lifestyle') {
+                if (hero === 'hero1-lifestyle') {
                     try {
                         await Hero1Lifestyle(colors, heroValues);
                     } catch (error) {
@@ -38,7 +44,7 @@ export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, 
                     }
                 } else { }
 
-                if (selectedHero === 'hero1-product') {
+                if (hero === 'hero1-product') {
                     try {
                         await Hero1Product(colors, heroValues);
                     } catch (error) {
@@ -46,7 +52,7 @@ export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, 
                     }
                 } else { }
 
-                if (selectedHero === 'aw-hero1-lifestyle-product') {
+                if (hero === 'aw-hero1-lifestyle-product') {
                     try {
                         await AwHero1LifestyleProduct(colors, heroValues);
                     } catch (error) {
@@ -54,7 +60,7 @@ export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, 
                     }
                 } else { }
 
-                if (selectedHero === 'hero2-promotion') {
+                if (hero === 'hero2-promotion') {
                     try {
                         await Hero2Promotion(colors, heroValues);
                     } catch (error) {
@@ -63,7 +69,7 @@ export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, 
                 } else { }
 
                 const heroWidth = secondDocument.width;
-                heroHeight.value = secondDocument.height;
+                modulesHeight.hero = secondDocument.height;
 
                 // Copia e cola o modulo
                 const selectAndCopy = selectAllAndCopy()
@@ -76,15 +82,17 @@ export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, 
                 const docWidth = activeDocument.width;
                 const docHeight = activeDocument.height;
 
-                if (selectedFunding === "no-vf") {
-                    fundingHeight = headerHeight
+                var offsetModules = ""
+
+                if (vf === "" || vf === null) {
+                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.header + 20) + (modulesHeight.skinny));
                 } else {
+                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.vf + 20) + (modulesHeight.skinny));
                 }
 
-
                 const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
-                let offsetModules = ((slHeight.value + 30) + (fundingHeight.value + 20) + (skinnyHeight.value));
-                const offsetY = (0 - (docHeight / 2) + (heroHeight.value / 2) + (offsetModules));
+
+                const offsetY = (0 - (docHeight / 2) + (modulesHeight.hero / 2) + (offsetModules));
                 pastedGroup.translate(offsetX, offsetY);
 
 
