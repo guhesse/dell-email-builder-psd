@@ -3,22 +3,28 @@ import limitCharsPerLine from '../hook/charLimiter.jsx';
 import { selectLayer, setFontStyle, setSolidFill, setOverlayColor, getBounds, makeSolid, setFinalCrop, setOffset, makeSmartObj, selectGroup, setCTABorder } from "../hook/hooksJSON.jsx";
 import { getBoundsAndPosition } from "../hook/getBoundsAndPosition.jsx";
 
-export default async function Hero1Product(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, productNameValue, heroCtaValue) {
+export default async function Hero1Product(colors, heroValues) {
 
-    headlineValue = await limitCharsPerLine(
-        headlineValue || "", 20, "capitalized"
+    var accentColor = colors["accentColor"]
+    var secondaryColor = colors["secondaryColor"]
+    var tertiaryColor = colors["tertiaryColor"]
+
+    var { badge, headline, ot, subheadline, productName, cta } = heroValues || {}
+
+    headline = limitCharsPerLine(
+        headline || "", 20, "capitalized"
     );
 
-    subHeadlineValue = await limitCharsPerLine(
-        subHeadlineValue || "", 55, "capitalized"
+    subheadline = limitCharsPerLine(
+        subheadline || "", 55, "capitalized"
     );
 
-    productNameValue = await limitCharsPerLine(
-        productNameValue || "", 13, "capitalized"
+    productName = limitCharsPerLine(
+        productName || "", 13, "capitalized"
     );
 
-    OTValue = await limitCharsPerLine(
-        OTValue || "", 55, "capitalized"
+    ot = limitCharsPerLine(
+        ot || "", 55, "capitalized"
     );
 
     const changeColors = [
@@ -29,9 +35,9 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
 
         setOverlayColor({
             Name: "Pattern",
-            RedColor: tertiaryRed,
-            GreenColor: tertiaryGreen,
-            BlueColor: tertiaryBlue
+            RedColor: tertiaryColor.r,
+            GreenColor: tertiaryColor.g,
+            BlueColor: tertiaryColor.b
         }),
 
     ];
@@ -42,13 +48,13 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
 
         setFontStyle({
             Name: "Badge",
-            Value: badgeValue,
+            Value: badge,
             FontName: "Roboto",
             FontWeight: "Bold",
             Size: 20,
-            RedColor: secondaryRed,
-            GreenColor: secondaryGreen,
-            BlueColor: secondaryBlue,
+            RedColor: secondaryColor.r,
+            GreenColor: secondaryColor.g,
+            BlueColor: secondaryColor.b,
             FontCaps: true,
         }),
 
@@ -58,7 +64,7 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
 
         setFontStyle({
             Name: "Headline",
-            Value: headlineValue,
+            Value: headline,
             FontName: "Roboto",
             FontWeight: "Light",
             Size: 50,
@@ -73,7 +79,7 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
 
         setFontStyle({
             Name: "OT",
-            Value: OTValue,
+            Value: ot,
             FontName: "Roboto",
             FontWeight: "Light",
             Size: 27,
@@ -87,7 +93,7 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
 
         setFontStyle({
             Name: "Subheadline",
-            Value: subHeadlineValue,
+            Value: subheadline,
             FontName: "Roboto",
             FontWeight: "Regular",
             Size: 20,
@@ -101,7 +107,7 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
 
         setFontStyle({
             Name: "Product Copy",
-            Value: productNameValue,
+            Value: productName,
             FontName: "Roboto",
             FontWeight: "Light",
             Size: 23,
@@ -190,13 +196,13 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
     const changeCtaCopy = [
         setFontStyle({
             Name: "CTA Copy",
-            Value: heroCtaValue,
+            Value: cta,
             FontName: "Roboto",
             FontWeight: "Medium",
             Size: 18,
-            RedColor: accentRed,
-            GreenColor: accentGreen,
-            BlueColor: accentBlue,
+            RedColor: accentColor.r,
+            GreenColor: accentColor.g,
+            BlueColor: accentColor.b,
             FontCaps: false,
             AutoLeading: true,
         }),
@@ -211,9 +217,9 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
     const changeCtaBorder = [
         setSolidFill({
             Name: "CTA Border",
-            RedColor: tertiaryRed,
-            GreenColor: tertiaryGreen,
-            BlueColor: tertiaryBlue,
+            RedColor: tertiaryColor.r,
+            GreenColor: tertiaryColor.g,
+            BlueColor: tertiaryColor.b,
         }),
 
         selectLayer({
@@ -251,9 +257,9 @@ export default async function Hero1Product(accentRed, accentGreen, accentBlue, s
 
     const makeBackground = makeSolid({
         Name: "Hero Background",
-        RedColor: accentRed,
-        GreenColor: accentGreen,
-        BlueColor: accentBlue,
+        RedColor: accentColor.r,
+        GreenColor: accentColor.g,
+        BlueColor: accentColor.b,
         Bottom: finalCropValue,
         Right: 600,
     })

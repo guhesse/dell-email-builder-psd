@@ -3,18 +3,24 @@ import limitCharsPerLine from '../hook/charLimiter.jsx';
 import { selectLayer, setFontStyle, setSolidFill, getBounds, setOffset, selectGroup, makeSmartObj, makeSolid, setCTABorder, setFinalCrop, alignGroupX } from "../hook/hooksJSON.jsx";
 import { getBoundsAndPosition } from "../hook/getBoundsAndPosition.jsx";
 
-export default async function AwHero1LifestyleProduct(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, productNameValue, heroCtaValue) {
+export default async function AwHero1LifestyleProduct(colors, heroValues) {
 
-    headlineValue = await limitCharsPerLine(
-        headlineValue || "", 18, "upper"
+    var accentColor = colors["accentColor"]
+    var secondaryColor = colors["secondaryColor"]
+    var tertiaryColor = colors["tertiaryColor"]
+
+    var { badge, headline, subheadline, productName, cta } = heroValues || {}
+
+    headline = limitCharsPerLine(
+        headline || "", 18, "upper"
     );
 
-    subHeadlineValue = await limitCharsPerLine(
-        subHeadlineValue || "", 55, "capitalized"
+    subheadline = limitCharsPerLine(
+        subheadline || "", 55, "capitalized"
     );
 
-    productNameValue = await limitCharsPerLine(
-        productNameValue || "", 35, "capitalized"
+    productName = limitCharsPerLine(
+        productName || "", 35, "capitalized"
     );
 
 
@@ -22,13 +28,13 @@ export default async function AwHero1LifestyleProduct(accentRed, accentGreen, ac
 
         setFontStyle({
             Name: "Badge",
-            Value: badgeValue,
+            Value: badge,
             FontName: "Alienware",
             FontWeight: "Bold",
             Size: 20,
-            RedColor: tertiaryRed,
-            GreenColor: tertiaryGreen,
-            BlueColor: tertiaryBlue,
+            RedColor: tertiaryColor.r,
+            GreenColor: tertiaryColor.g,
+            BlueColor: tertiaryColor.b,
             Tracking: 40,
             FontCaps: true,
         }),
@@ -39,13 +45,13 @@ export default async function AwHero1LifestyleProduct(accentRed, accentGreen, ac
 
         setFontStyle({
             Name: "Headline",
-            Value: headlineValue,
+            Value: headline,
             FontName: "Alienware",
             FontWeight: "Bold",
             Size: 44,
-            RedColor: tertiaryRed,
-            GreenColor: tertiaryGreen,
-            BlueColor: tertiaryBlue,
+            RedColor: tertiaryColor.r,
+            GreenColor: tertiaryColor.g,
+            BlueColor: tertiaryColor.b,
             FontCaps: true,
             AutoLeading: false,
             Leading: 48,
@@ -53,13 +59,13 @@ export default async function AwHero1LifestyleProduct(accentRed, accentGreen, ac
 
         setFontStyle({
             Name: "Subheadline",
-            Value: subHeadlineValue,
+            Value: subheadline,
             FontName: "Roboto",
             FontWeight: "Regular",
             Size: 20,
-            RedColor: tertiaryRed,
-            GreenColor: tertiaryGreen,
-            BlueColor: tertiaryBlue,
+            RedColor: tertiaryColor.r,
+            GreenColor: tertiaryColor.g,
+            BlueColor: tertiaryColor.b,
             FontCaps: false,
             AutoLeading: true,
         }),
@@ -119,13 +125,13 @@ export default async function AwHero1LifestyleProduct(accentRed, accentGreen, ac
     const productCopyChange = [
         setFontStyle({
             Name: "Product Name",
-            Value: productNameValue,
+            Value: productName,
             FontName: "Alienware",
             FontWeight: "Light",
             Size: 16,
-            RedColor: tertiaryRed,
-            GreenColor: tertiaryGreen,
-            BlueColor: tertiaryBlue,
+            RedColor: tertiaryColor.r,
+            GreenColor: tertiaryColor.g,
+            BlueColor: tertiaryColor.b,
             Tracking: 50,
             AutoLeading: true,
             FontCaps: false,
@@ -170,14 +176,14 @@ export default async function AwHero1LifestyleProduct(accentRed, accentGreen, ac
 
         setFontStyle({
             Name: "CTA Copy",
-            Value: heroCtaValue,
+            Value: cta,
             FontScript: "OpenSans-Bold",
             FontName: "Open Sans",
             FontWeight: "Bold",
             Size: 16,
-            RedColor: tertiaryRed,
-            GreenColor: tertiaryGreen,
-            BlueColor: tertiaryBlue,
+            RedColor: tertiaryColor.r,
+            GreenColor: tertiaryColor.g,
+            BlueColor: tertiaryColor.b,
             FontCaps: true,
             AutoLeading: true,
         }),
@@ -192,9 +198,9 @@ export default async function AwHero1LifestyleProduct(accentRed, accentGreen, ac
     const changeCtaBorder = [
         setSolidFill({
             Name: "CTA Border",
-            RedColor: accentRed,
-            GreenColor: accentGreen,
-            BlueColor: accentBlue,
+            RedColor: accentColor.r,
+            GreenColor: accentColor.g,
+            BlueColor: accentColor.b,
         }),
 
         selectLayer({
@@ -234,9 +240,9 @@ export default async function AwHero1LifestyleProduct(accentRed, accentGreen, ac
 
     const makeBackground = makeSolid({
         Name: "Hero Background",
-        RedColor: secondaryRed,
-        GreenColor: secondaryGreen,
-        BlueColor: secondaryBlue,
+        RedColor: secondaryColor.r,
+        GreenColor: secondaryColor.g,
+        BlueColor: secondaryColor.b,
         Bottom: finalCropValue,
         Right: 600,
     })

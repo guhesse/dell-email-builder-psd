@@ -575,6 +575,20 @@ export default function AppProvider({ children }) {
     //     setTertiaryColorHex(hexColor);
     // };
 
+    const [selectedModules, setSelectedModules] = useState({
+        header: null,
+        brand: 'dell',
+        funding: null,
+        skinny: null,
+        hero: null,
+        plugin: null,
+        fpoSegment: null,
+        banner: null,
+        footer: null,
+        birdseed: null,
+        birdseedCopy: false
+    });
+
     // Values e estados dos inputs
 
     const [selectedHeader, setSelectedHeader] = useState(null);
@@ -944,20 +958,11 @@ export default function AppProvider({ children }) {
             handleAccentColorChange,
             handleSecondaryColorChange,
             handleTertiaryColorChange,
-            // accentColor,
-            // setAccentColor,
-            // secondaryColor,
-            // setSecondaryColor,
-            // tertiaryColor,
-            // setTertiaryColor,
-            // accentColorHex,
-            // secondaryColorHex,
-            // tertiaryColorHex,
             cores,
             handleColorChange,
-            // handleAccentColorChange,
-            // handleSecondaryColorChange,
-            // handleTertiaryColorChange,
+
+            selectedModules,
+            setSelectedModules,
 
             subjectValues,
             setSubjectValues,

@@ -12,7 +12,7 @@ export default function EmailBuilder() {
 
     var pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores, subjectValues, selectedHeader, selectedFunding, fundingCopyValues, selectedSkinny, skinnyValues, selectedHero, heroValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedValues, selectedBrand, colors} = useAppContext();
+    const { accentColor, secondaryColor, tertiaryColor, cores, subjectValues, selectedHeader, selectedFunding, fundingCopyValues, selectedSkinny, skinnyValues, selectedHero, heroValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedValues, selectedBrand, colors } = useAppContext();
 
     const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
     const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
@@ -1084,22 +1084,51 @@ export default function EmailBuilder() {
         await core.executeAsModal(targetFunction, options);
     };
 
-    const [slHeight, setSlHeight] = useState({});
-    const [headerHeight, setHeaderHeight] = useState({});
+    const [modulesHeight, setModulesHeight] = useState({
+        sl: "",
+        header: "",
+        funding: "",
+        skinny: "",
+        hero: "",
+    })
+
+    // var [slHeight, setSlHeight] = useState({});
+    // const [headerHeight, setHeaderHeight] = useState({});
     const [fundingHeight, setFundingHeight] = useState({});
     const [skinnyHeight, setSkinnyHeight] = useState({});
     const [heroHeight, setHeroHeight] = useState({});
+
+    const buildInfo = {
+
+        slValue: slValue,
+        sslValue: sslValue,
+
+        modulesHeight: modulesHeight,
+
+        selectedHeader: selectedHeader,
+
+        selectedFunding: selectedFunding,
+        vfCopyValue: vfCopyValue,
+
+        skinnyValues: skinnyValues,
+        selectedSkinny: selectedSkinny,
+
+        heroValues: heroValues,
+
+        colors: colors,
+    };
 
 
     const handleBuild = async () => {
         try {
             await clearAllLayers();
             await fitToScreenPre();
-            await slBuild(slHeight, slValue, sslValue);
-            await headerBuild(selectedHeader, slHeight, headerHeight)
-            await fundingBuild(selectedFunding, selectedHeader, vfCopyValue, slHeight, headerHeight, fundingHeight);
-            await skinnyBuild(selectedSkinny, skinnyValues, skinnyHeight, selectedFunding, slHeight, headerHeight, fundingHeight, cores, accentColor, secondaryColor);
-            await heroBuild(selectedHero, heroHeight, heroValues, slHeight, selectedFunding, fundingHeight, skinnyHeight, colors, cores, accentColor, secondaryColor, tertiaryColor)
+            await slBuild(buildInfo);
+            await headerBuild(buildInfo)
+            await fundingBuild(buildInfo);
+            await skinnyBuild(buildInfo);
+            console.log(modulesHeight)
+            // await heroBuild(selectedHero, heroHeight, heroValues, slHeight, selectedFunding, fundingHeight, headerHeight, skinnyHeight, colors)
             // var heroHeight = await heroBuild(slHeight, headerHeight, fundingHeight, skinnyHeight)
             // var pluginHeight = await pluginBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight)
             // var fpoHeight = await fpoBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight)

@@ -4,13 +4,16 @@ import limitCharsPerLine from "../../hook/charLimiter.jsx";
 import { setTwoFontStyle, getBounds, makeSolid, selectAllAndCopy, setFinalCrop } from "../../hook/hooksJSON.jsx"
 
 // Importa o skinny banner
-export async function skinnyBuild(selectedSkinny, skinnyValues, skinnyHeight, selectedFunding, slHeight, headerHeight, fundingHeight, cores, accentColor, secondaryColor) {
-    const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
-    const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
+export async function skinnyBuild(buildInfo) {
+
+    const { selectedSkinny, skinnyValues, selectedFunding, colors, modulesHeight } = buildInfo
+
+    var accentColor = colors["accentColor"]
+    var secondaryColor = colors["secondaryColor"]
 
     if (selectedSkinny === "" || selectedSkinny === null) {
         console.warn('Skinny não selecionado');
-        skinnyHeight.value = 0;
+        modulesHeight.skinny = 0;
         return;
     }
 
@@ -44,9 +47,9 @@ export async function skinnyBuild(selectedSkinny, skinnyValues, skinnyHeight, se
                         FontName: ["Roboto", "Roboto"],
                         FontWeight: ["Bold", "Regular"],
                         Size: [18.5, 18.5],
-                        RedColor: [accentRed, accentRed],
-                        GreenColor: [accentGreen, accentGreen],
-                        BlueColor: [accentBlue, accentBlue],
+                        RedColor: [accentColor.r, accentColor.r],
+                        GreenColor: [accentColor.g, accentColor.g],
+                        BlueColor: [accentColor.b, accentColor.b],
                         BaselineShift: [0, 0],
                         Tracking: [0, 0],
                         FontCaps: [false, false],
@@ -63,9 +66,9 @@ export async function skinnyBuild(selectedSkinny, skinnyValues, skinnyHeight, se
 
                 const makeBackground = makeSolid({
                     Name: "Skinny Banner Background",
-                    RedColor: secondaryRed,
-                    GreenColor: secondaryGreen,
-                    BlueColor: secondaryBlue,
+                    RedColor: secondaryColor.r,
+                    GreenColor: secondaryColor.g,
+                    BlueColor: secondaryColor.b,
                     Bottom: finalCropValue,
                     Right: 600,
                 })
@@ -76,7 +79,7 @@ export async function skinnyBuild(selectedSkinny, skinnyValues, skinnyHeight, se
                 })
                 await batchPlay(finalCrop, {});
 
-                skinnyHeight.value = secondDocument.height;
+                modulesHeight.skinny = secondDocument.height;
 
                 // Copia e cola o modulo
                 const selectAndCopy = selectAllAndCopy()
@@ -86,15 +89,15 @@ export async function skinnyBuild(selectedSkinny, skinnyValues, skinnyHeight, se
                 await activeDocument.paste();
 
                 if (selectedFunding === "no-vf") {
-                    fundingHeight = headerHeight
+                    modulesHeight.funding = modulesHeight.header
                 } else { }
 
                 const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
                 const docWidth = activeDocument.width;
                 const docHeight = activeDocument.height;
                 const offsetX = (0 - (docWidth / 2) + (skinnyWidth / 2) + 25);
-                let offsetModules = ((slHeight.value + 30) + (fundingHeight.value + 20));
-                const offsetY = (0 - (docHeight / 2) + (skinnyHeight.value / 2) + (offsetModules));
+                let offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.funding + 20));
+                const offsetY = (0 - (docHeight / 2) + (modulesHeight.skinny / 2) + (offsetModules));
                 pastedGroup.translate(offsetX, offsetY);
 
                 console.log('%cSkinny Banner inserido com sucesso!', 'color: #00EAADFF;');

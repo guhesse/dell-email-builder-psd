@@ -3,13 +3,7 @@ import { AwHero1LifestyleProduct, Hero1Lifestyle, Hero1LifestyleProduct, Hero1Pr
 import { core, app, batchPlay, storage } from '../../App.js';
 import { selectAllAndCopy } from '../../hook/hooksJSON.jsx';
 
-export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, selectedFunding, fundingHeight, skinnyHeight, colors, cores, accentColor, secondaryColor, tertiaryColor) {
-
-
-    const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
-    const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
-    const { r: tertiaryRed, g: tertiaryGreen, b: tertiaryBlue } = cores[tertiaryColor] || {};
-
+export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, selectedFunding, fundingHeight, headerHeight, skinnyHeight, colors) {
 
     if (selectedHero === "" || selectedHero === null) {
         console.warn('Hero não selecionado');
@@ -38,7 +32,7 @@ export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, 
 
                 if (selectedHero === 'hero1-lifestyle') {
                     try {
-                        await Hero1Lifestyle(cores, accentColor, secondaryColor, tertiaryColor, heroValues);
+                        await Hero1Lifestyle(colors, heroValues);
                     } catch (error) {
                         console.error('Erro ao executar Hero 1 - Only Lifestyle:', error);
                     }
@@ -46,7 +40,7 @@ export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, 
 
                 if (selectedHero === 'hero1-product') {
                     try {
-                        await Hero1Product(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, productNameValue, heroCtaValue);
+                        await Hero1Product(colors, heroValues);
                     } catch (error) {
                         console.error('Erro ao executar Hero 1 - Only Product:', error);
                     }
@@ -54,7 +48,7 @@ export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, 
 
                 if (selectedHero === 'aw-hero1-lifestyle-product') {
                     try {
-                        await AwHero1LifestyleProduct(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, productNameValue, heroCtaValue);
+                        await AwHero1LifestyleProduct(colors, heroValues);
                     } catch (error) {
                         console.error('Erro ao executar Aw Hero 1 - Lifestyle + Product:', error);
                     }
@@ -62,7 +56,7 @@ export async function heroBuild(selectedHero, heroHeight, heroValues, slHeight, 
 
                 if (selectedHero === 'hero2-promotion') {
                     try {
-                        await Hero2Promotion(accentRed, accentGreen, accentBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, priceValue, specsValue, heroCtaValue);
+                        await Hero2Promotion(colors, heroValues);
                     } catch (error) {
                         console.error('Erro ao executar Hero2 - Promotion:', error);
                     }

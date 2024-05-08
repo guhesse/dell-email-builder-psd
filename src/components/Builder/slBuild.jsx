@@ -2,8 +2,8 @@ import React from "react";
 import { core, app, batchPlay, storage } from '../../App.js';
 import { setFontStyle, selectAllAndCopy } from "../../hook/hooksJSON.jsx"
 
-export async function slBuild(slHeight, slValue, sslValue) {
-
+export async function slBuild(buildInfo) {
+    const { slValue, sslValue, modulesHeight } = buildInfo;
     const sslFilePath = `assets/sl-ssl/SL & SSL.psd`;
 
     try {
@@ -17,7 +17,7 @@ export async function slBuild(slHeight, slValue, sslValue) {
 
                 const secondDocument = app.documents[1];
                 const slWidth = secondDocument.width;
-                slHeight.value = secondDocument.height;
+                modulesHeight.sl = secondDocument.height;
 
                 // Troca o texto do SL e SSL 
                 const changeSLCopy = [
@@ -62,7 +62,7 @@ export async function slBuild(slHeight, slValue, sslValue) {
                 const docWidth = activeDocument.width;
                 const docHeight = activeDocument.height;
                 const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (slWidth / 2));
-                const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (slHeight.value / 2));
+                const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (modulesHeight.sl / 2));
                 pastedGroup.translate(offsetX, offsetY);
 
                 console.log('%cSSL inserido com sucesso!', 'color: #00EAADFF;');

@@ -37,13 +37,13 @@ const herosArr = {
         fieldsTitle: ['badge', 'headline', 'subheadline', 'product name', 'hero cta'],
         fields: ['badge', 'headline', 'subheadline', 'productName', 'cta']
     },
-    'hero2-promotion': {
-        path: 'assets/heros/images/hero2-promotion.png',
-        name: 'Hero Layout 2 - Promotion',
-        brand: 'dell',
-        fieldsTitle: ['badge', 'headline', 'subheadline', 'inline promo', 'product name', 'specs', 'price', 'hero cta'],
-        fields: ['badge', 'headline', 'subheadline', 'inlinePromo', 'productName', 'specs', 'price', 'cta']
-    },
+    // 'hero2-promotion': {
+    //     path: 'assets/heros/images/hero2-promotion.png',
+    //     name: 'Hero Layout 2 - Promotion',
+    //     brand: 'dell',
+    //     fieldsTitle: ['badge', 'headline', 'subheadline', 'inline promo', 'product name', 'specs', 'price', 'hero cta'],
+    //     fields: ['badge', 'headline', 'subheadline', 'inlinePromo', 'productName', 'specs', 'price', 'cta']
+    // },
 };
 
 export default function HeroSelector() {

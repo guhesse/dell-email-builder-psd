@@ -3,24 +3,28 @@ import limitCharsPerLine from '../hook/charLimiter.jsx';
 import { selectLayer, selectGroup, makeSmartObj, setFontStyle, getBounds, setOffset, setSolidFill, setOverlayColor, setCTABorder, makeSolid, setFinalCrop } from "../hook/hooksJSON.jsx";
 import { getBoundsAndPosition } from "../hook/getBoundsAndPosition.jsx";
 
-export default async function Hero1Lifestyle(cores, accentColor, secondaryColor, tertiaryColor, heroValues) {
+export default async function Hero1Lifestyle(colors, heroValues) {
 
     var { badge, headline, subheadline, cta } = heroValues || {}
 
-    headlineValue = limitCharsPerLine(
-        headlineValue || "", 20, "capitalized"
+    var accentColor = colors["accentColor"]
+    var secondaryColor = colors["secondaryColor"]
+    var tertiaryColor = colors["tertiaryColor"]
+
+    headline = limitCharsPerLine(
+        headline || "", 20, "capitalized"
     );
 
-    subHeadlineValue = limitCharsPerLine(
-        subHeadlineValue || "", 55, "capitalized"
+    subheadline = limitCharsPerLine(
+        subheadline || "", 55, "capitalized"
     );
 
     const setPatternColor = [
         setOverlayColor({
             Name: "Pattern",
-            RedColor: secondaryRed,
-            GreenColor: secondaryGreen,
-            BlueColor: secondaryBlue,
+            RedColor: secondaryColor.r,
+            GreenColor: secondaryColor.g,
+            BlueColor: secondaryColor.b,
         }),
     ]
 
@@ -29,13 +33,13 @@ export default async function Hero1Lifestyle(cores, accentColor, secondaryColor,
     const changeHeroCopy = [
         setFontStyle({
             Name: "Badge",
-            Value: badgeValue,
+            Value: badge,
             FontName: "Roboto",
             FontWeight: "Bold",
             Size: 20,
-            RedColor: secondaryRed,
-            GreenColor: secondaryGreen,
-            BlueColor: secondaryBlue,
+            RedColor: secondaryColor.r,
+            GreenColor: secondaryColor.g,
+            BlueColor: secondaryColor.b,
             FontCaps: true,
         }),
 
@@ -45,7 +49,7 @@ export default async function Hero1Lifestyle(cores, accentColor, secondaryColor,
 
         setFontStyle({
             Name: "Headline",
-            Value: headlineValue,
+            Value: headline,
             FontName: "Roboto",
             FontWeight: "Light",
             Size: 50,
@@ -59,7 +63,7 @@ export default async function Hero1Lifestyle(cores, accentColor, secondaryColor,
 
         setFontStyle({
             Name: "Subheadline",
-            Value: subHeadlineValue,
+            Value: subheadline,
             FontName: "Roboto",
             FontWeight: "Regular",
             Size: 20,
@@ -109,13 +113,13 @@ export default async function Hero1Lifestyle(cores, accentColor, secondaryColor,
     const changeCtaCopy = [
         setFontStyle({
             Name: "Hero CTA Copy",
-            Value: heroCtaValue,
+            Value: cta,
             FontName: "Roboto",
             FontWeight: "Medium",
             Size: 18,
-            RedColor: accentRed,
-            GreenColor: accentGreen,
-            BlueColor: accentBlue,
+            RedColor: accentColor.r,
+            GreenColor: accentColor.g,
+            BlueColor: accentColor.b,
             FontCaps: false,
             AutoLeading: true,
         }),
@@ -129,9 +133,9 @@ export default async function Hero1Lifestyle(cores, accentColor, secondaryColor,
     const changeCtaBorder = [
         setSolidFill({
             Name: "Hero CTA Border",
-            RedColor: tertiaryRed,
-            GreenColor: tertiaryGreen,
-            BlueColor: tertiaryBlue,
+            RedColor: tertiaryColor.r,
+            GreenColor: tertiaryColor.g,
+            BlueColor: tertiaryColor.b,
         }),
         selectLayer({
             Name: "Hero CTA Border"
@@ -166,9 +170,9 @@ export default async function Hero1Lifestyle(cores, accentColor, secondaryColor,
 
     const makeBackground = makeSolid({
         Name: "Hero Background",
-        RedColor: accentRed,
-        GreenColor: accentGreen,
-        BlueColor: accentBlue,
+        RedColor: accentColor.r,
+        GreenColor: accentColor.g,
+        BlueColor: accentColor.b,
         Bottom: finalCropValue,
         Right: 600,
     })

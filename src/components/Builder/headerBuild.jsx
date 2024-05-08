@@ -2,11 +2,13 @@
 import { core, app, batchPlay, storage } from '../../App.js';
 import { selectAllAndCopy } from '../../hook/hooksJSON.jsx';
 
-export async function headerBuild(selectedHeader, slHeight, headerHeight) {
+export async function headerBuild(buildInfo) {
+
+    const { selectedHeader, modulesHeight } = buildInfo;
 
     if (selectedHeader === "" || selectedHeader === null) {
         console.warn('Header n&#xe3;o selecionado');
-        headerHeight.value = 0;
+        modulesHeight.header = 0;
         return;
     }
     const headerFilePath = `assets/headers/${selectedHeader}.psd`;
@@ -21,8 +23,8 @@ export async function headerBuild(selectedHeader, slHeight, headerHeight) {
                 await app.open(fileEntry);
                 const secondDocument = app.documents[1];
                 const headerWidth = secondDocument.width;
-                headerHeight.value = secondDocument.height;
-
+                modulesHeight.header = secondDocument.height
+                
                 // Copia e cola o modulo
                 const selectAndCopy = selectAllAndCopy()
                 await batchPlay(selectAndCopy, {});
@@ -34,7 +36,7 @@ export async function headerBuild(selectedHeader, slHeight, headerHeight) {
                 const docWidth = activeDocument.width;
                 const docHeight = activeDocument.height;
                 const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (headerWidth / 2) + 40);
-                const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (headerHeight.value / 2) + (slHeight.value + 30));
+                const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (modulesHeight.header / 2) + (modulesHeight.sl + 30));
 
                 pastedGroup.translate(offsetX, offsetY);
 

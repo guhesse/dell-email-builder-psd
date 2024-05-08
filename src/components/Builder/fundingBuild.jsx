@@ -3,7 +3,9 @@ import { core, app, batchPlay, storage } from '../../App.js';
 import limitCharsPerLine from "../../hook/charLimiter.jsx";
 import { getBoundsAndPosition } from "../../hook/getBoundsAndPosition.jsx";
 
-export async function fundingBuild(selectedFunding, selectedHeader, vfCopyValue, slHeight, headerHeight, fundingHeight) {
+export async function fundingBuild(buildInfo) {
+
+    const { selectedFunding, selectedHeader, vfCopyValue, modulesHeight } = buildInfo
 
     let fundingFilePath
 
@@ -89,7 +91,7 @@ export async function fundingBuild(selectedFunding, selectedHeader, vfCopyValue,
                 })
                 await batchPlay(finalCrop, {});
 
-                fundingHeight.value = secondDocument.height;
+                modulesHeight.funding  = secondDocument.height;
 
                 const selectAndCopy = selectAllAndCopy()
                 await batchPlay(selectAndCopy, {});
@@ -106,9 +108,9 @@ export async function fundingBuild(selectedFunding, selectedHeader, vfCopyValue,
                 let offsetY;
 
                 if (selectedFunding === 'no-vf') {
-                    offsetY = (docHeight - docHeight) - (docHeight / 2) + (fundingHeight.value / 2) + (slHeight.value + 26);
+                    offsetY = (docHeight - docHeight) - (docHeight / 2) + (modulesHeight.funding / 2) + (modulesHeight.sl + 26);
                 } else {
-                    offsetY = (docHeight - docHeight) - (docHeight / 2) + (fundingHeight.value / 2) + (slHeight.value + 30);
+                    offsetY = (docHeight - docHeight) - (docHeight / 2) + (modulesHeight.funding / 2) + (modulesHeight.sl + 30);
                 }
 
                 pastedGroup.translate(offsetX, offsetY);
