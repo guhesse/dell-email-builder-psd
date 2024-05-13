@@ -9,40 +9,38 @@ import { useToggleState } from "./hook/useToogle.jsx";
 
 const slArr = {
     fieldsTitle: ['subject line', 'super subject line'],
-    fields: ['slValue', 'sslValue']
+    key: "subject",
+    fields: ['sl', 'ssl']
 };
 
 export default function SubjectLineSelector() {
-    const { subjectValues, setSubjectValues } = useAppContext();
+    const { copyValues, setCopyValues } = useAppContext();
 
-    const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setSubjectValues, subjectValues);
+    const subjectCopy = copyValues[slArr.key];
+    const setSubjectCopy = (values) => setCopyValues({ ...copyValues, [slArr.key]: values });
+
+    const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState, resetFormState } = useFormState(setSubjectCopy, subjectCopy, slArr);
 
     const { setStatusByField } = useStatusIcon();
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
 
     const handleResetClick = () => {
-        setSubjectValues(initialState);
-        toggleOptions(false);
+        setSubjectCopy({ sl: "", ssl: "" });
+        resetFormState();
+        toggleOptions(true);
     };
 
-    useEffect(() => {
-        const newInitialState = {};
-        const newTempFormState = {};
-
-        slArr.fields.forEach(field => {
-            newInitialState[field] = "";
-            newTempFormState[field] = subjectValues[field] || "";
-        });
-
-        setInitialState(newInitialState);
-        setTempFormState(newTempFormState);
-    }, [subjectValues]);
+    const handleInput = (field, value) => {
+        handleFieldChange(field, value);
+        setSubjectCopy({ ...subjectCopy, [field]: value });
+    };
 
     const statusType = setStatusByField({
         type: "filledOnArr",
         array: slArr,
-        value: subjectValues
+        value: subjectCopy
     });
+
 
     return (
         <div className="group">
@@ -62,8 +60,8 @@ export default function SubjectLineSelector() {
                                 id={`${field}-field`}
                                 placeholder={`Insira o ${field}`}
                                 value={tempFormState[slArr.fields[i]]}
-                                onInput={(e) => handleFieldChange(slArr.fields[i], e.target.value)}
-                                onBlur={() => handleBlur(slArr.fields[i])}
+                                onInput={(e) => handleInput(slArr.fields[i], e.target.value)}
+                                onBlur={() => handleBlur(slArr.fields[i], tempFormState[slArr.fields[i]])}
                                 valid={tempFormState[slArr.fields[i]] !== "" ? valid[slArr.fields[i]] : undefined}
                             ></sp-textfield>
                         </div>

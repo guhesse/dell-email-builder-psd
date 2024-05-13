@@ -5,9 +5,10 @@ import { getBoundsAndPosition } from "../../hook/getBoundsAndPosition.jsx";
 
 export async function fundingBuild(buildInfo) {
 
-    var { selectedModules, vfCopyValue, modulesHeight } = buildInfo
+    var { selectedModules, copyValues, modulesHeight } = buildInfo
     var vf = selectedModules.vf
     var header = selectedModules.header
+    var vfCopy = copyValues.vf.copy
 
     let fundingFilePath
 
@@ -27,11 +28,11 @@ export async function fundingBuild(buildInfo) {
                 await app.open(fileEntry);
                 const secondDocument = app.documents[1];
 
-                vfCopyValue = limitCharsPerLine(vfCopyValue || '', 30, "capitalized");
+                vfCopy = limitCharsPerLine(vfCopy || '', 30, "capitalized");
 
                 let batchFundingCopy;
 
-                if (vfCopyValue === '' || vf === "") {
+                if (vfCopy === '' || vf === "") {
                     batchFundingCopy = [
                         setFontStyle({
                             Name: "Funding Copy",
@@ -51,12 +52,12 @@ export async function fundingBuild(buildInfo) {
                             Property: "bounds"
                         })
                     ]
-                } else if (vfCopyValue !== '') {
+                } else if (vfCopy !== '') {
                     batchFundingCopy = [
                         setTwoFontStyle({
                             Name: "Funding Copy",
-                            Value: vfCopyValue + "\r" + "Visualize no navegador.",
-                            Slice: vfCopyValue.length,
+                            Value: vfCopy + "\r" + "Visualize no navegador.",
+                            Slice: vfCopy.length,
                             FontName: ["Arial", "Arial"],
                             FontWeight: ["Regular", "Regular"],
                             Size: [10, 10],
@@ -93,7 +94,7 @@ export async function fundingBuild(buildInfo) {
                 })
                 await batchPlay(finalCrop, {});
 
-                modulesHeight.funding = secondDocument.height;
+                modulesHeight.vf = secondDocument.height;
 
                 const selectAndCopy = selectAllAndCopy()
                 await batchPlay(selectAndCopy, {});
@@ -107,9 +108,9 @@ export async function fundingBuild(buildInfo) {
 
                 const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 515);
 
-                let offsetY;
+                var offsetY;
 
-                if (vf === 'no-vf') {
+                if (vf === '') {
                     offsetY = (docHeight - docHeight) - (docHeight / 2) + (modulesHeight.vf / 2) + (modulesHeight.sl + 26);
                 } else {
                     offsetY = (docHeight - docHeight) - (docHeight / 2) + (modulesHeight.vf / 2) + (modulesHeight.sl + 30);

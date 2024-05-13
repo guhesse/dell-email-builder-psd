@@ -12,6 +12,7 @@ const herosArr = {
     'hero1-lifestyle-product': {
         path: 'assets/heros/images/hero1-lifestyle-product.png',
         name: 'Hero Layout 1 - Lifestyle & Product',
+        key: 'hero',
         brand: 'dell',
         fieldsTitle: ['badge', 'headline', 'subheadline', 'product name', 'supercharger', 'hero cta'],
         fields: ['badge', 'headline', 'subheadline', 'productName', 'productSupercharger', 'cta']
@@ -19,6 +20,7 @@ const herosArr = {
     'hero1-lifestyle': {
         path: 'assets/heros/images/hero1-lifestyle.png',
         name: 'Hero Layout 1 - Only Lifestyle',
+        key: 'hero',
         brand: 'dell',
         fieldsTitle: ['badge', 'headline', 'subheadline', 'hero cta'],
         fields: ['badge', 'headline', 'subheadline', 'cta']
@@ -26,6 +28,7 @@ const herosArr = {
     'hero1-product': {
         path: 'assets/heros/images/hero1-product.png',
         name: 'Hero Layout 1 - Only Product',
+        key: 'hero',
         brand: 'dell',
         fieldsTitle: ['badge', 'headline', 'OT', 'product name', 'subheadline', 'hero cta'],
         fields: ['badge', 'headline', 'ot', 'productName', 'subheadline', 'cta']
@@ -33,6 +36,7 @@ const herosArr = {
     'aw-hero1-lifestyle-product': {
         path: 'assets/heros/images/aw-hero1-lifestyle-product.png',
         name: 'AW Hero Layout 1 - Lifestyle & Product',
+        key: 'hero',
         brand: 'alienware',
         fieldsTitle: ['badge', 'headline', 'subheadline', 'product name', 'hero cta'],
         fields: ['badge', 'headline', 'subheadline', 'productName', 'cta']
@@ -47,22 +51,28 @@ const herosArr = {
 };
 
 export default function HeroSelector() {
-    const { selectedModules, setSelectedModules, heroValues, setHeroValues } = useAppContext();
+    const { selectedModules, setSelectedModules, copyValues, setCopyValues } = useAppContext();
 
-    const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setHeroValues, heroValues);
+    const { hero } = selectedModules
+
+    const heroCopy = copyValues.hero;
+
+    console.log(heroCopy)
+
+    const setHeroCopy = (values) => setCopyValues({ ...copyValues, [herosArr[hero].key]: values });
+
+    const { valid, handleFieldChange, handleBlur, initialState, tempFormState, resetFormState } = useFormState(setHeroCopy, heroCopy, herosArr);
 
     const { setStatusByField } = useStatusIcon();
 
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
     const [isEditClicked, setIsEditClicked] = useToggleState(false);
 
-    var hero = selectedModules.hero
-
     const [selected, setSelected] = useState({ hero: false });
 
     const statusType = setStatusByField({
         type: "filledOnObj",
-        value: heroValues,
+        value: heroCopy,
         obj: hero,
         array: herosArr,
     });
@@ -79,24 +89,17 @@ export default function HeroSelector() {
             ...prevState,
             hero: null
         }));
-        setHeroValues(initialState);
+        setHeroCopy({
+
+        })
+        resetFormState();
         toggleOptions(false)
     };
 
-    const fieldKeys = Object.keys(heroValues || {});
-
-    useEffect(() => {
-        const newInitialState = {}
-        const newTempFormState = {};
-
-        fieldKeys.forEach(field => {
-            newInitialState[field] = "";
-            newTempFormState[field] = heroValues[field] || "";
-        });
-
-        setInitialState(newInitialState);
-        setTempFormState(newTempFormState);
-    }, [hero]);
+    const handleInput = (field, value) => {
+        handleFieldChange(field, value);
+        setHeroCopy({ ...heroCopy, [field]: value });
+    };
 
     return (
         <>
@@ -145,7 +148,7 @@ export default function HeroSelector() {
                                     id={`${field}-field`}
                                     placeholder={`Insira o ${field}`}
                                     value={tempFormState[herosArr[hero].fields[i]]}
-                                    onInput={(e) => handleFieldChange(herosArr[hero].fields[i], e.target.value)}
+                                    onInput={(e) => handleInput(herosArr[hero].fields[i], e.target.value)}
                                     onBlur={() => handleBlur(herosArr[hero].fields[i])}
                                     valid={tempFormState[herosArr[hero].fields[i]] !== "" ? valid[herosArr[hero].fields[i]] : undefined}
                                 ></sp-textfield>

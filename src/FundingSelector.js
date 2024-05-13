@@ -11,29 +11,31 @@ import useFormState from './hook/useFormState.jsx';
 const vfArr = {
     '': {
         name: 'No Vendor Funding',
+        key: [],
         fieldsTitle: [],
         fields: []
     },
     'win11': {
         name: 'Windows 11',
+        key: 'vf',
         fieldsTitle: ['funding copy'],
-        fields: ['vfCopyValue']
+        fields: ['copy']
     },
 }
 
-
 export default function FundingSelector() {
+    const { selectedModules, setSelectedModules, copyValues, setCopyValues } = useAppContext();
+    const { vf } = selectedModules;
 
-    const { fundingCopyValues, setFundingCopyValues, selectedModules, setSelectedModules } = useAppContext();
+    const vfCopy = copyValues[vfArr.key];
+    const setVfCopy = (values) => setCopyValues({ ...copyValues, [vfArr[vf].key]: values });
 
-    const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setFundingCopyValues, fundingCopyValues);
+    const { valid, handleFieldChange, handleBlur, resetFormState, tempFormState } = useFormState(setVfCopy, vfCopy, vfArr);
 
     const { setStatusByField, checkIsSelected } = useStatusIcon();
 
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
     const [isEditClicked, setIsEditClicked] = useToggleState(false);
-
-    var vf = selectedModules.vf
 
     const [selected, setSelected] = useState({ vf: false });
 
@@ -49,24 +51,15 @@ export default function FundingSelector() {
             ...prevState,
             vf: null
         }));
-        setFundingCopyValues(initialState);
+        setVfCopy({ copy: "" });
+        resetFormState();
         toggleOptions(false);
     };
 
-    const fieldKeys = Object.keys(fundingCopyValues || {});
-
-    useEffect(() => {
-        const newInitialState = {}
-        const newTempFormState = {};
-
-        fieldKeys.forEach(field => {
-            newInitialState[field] = "";
-            newTempFormState[field] = fundingCopyValues[field] || "";
-        });
-
-        setInitialState(newInitialState);
-        setTempFormState(newTempFormState);
-    }, [fundingCopyValues]);
+    const handleInput = (field, value) => {
+        handleFieldChange(field, value);
+        setVfCopy({ ...vfCopy, [field]: value });
+    };
 
     let statusType = {}
 
@@ -77,9 +70,8 @@ export default function FundingSelector() {
     } else {
         statusType = setStatusByField({
             type: "filledOnObj",
-            value: fundingCopyValues,
-            obj: vf,
             array: vfArr,
+            value: vfCopy,
         });
     }
 
@@ -116,7 +108,7 @@ export default function FundingSelector() {
                     <GroupLabel onClick={toggleOptions} type="closed" name="Funding" size="s" />
                 )}
 
-                {vf && isOptionsOpen && isEditClicked && (
+                {vf && isOptionsOpen && isEditClicked && vfArr[vf] && (
                     <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
                         {vfArr[vf].fieldsTitle.map((field, i) => (
                             <div key={field} style={{ margin: "4px 0px" }}>
@@ -125,8 +117,8 @@ export default function FundingSelector() {
                                     id={`${field}-field`}
                                     placeholder={`Insira o ${field}`}
                                     value={tempFormState[vfArr[vf].fields[i]]}
-                                    onInput={(e) => handleFieldChange(vfArr[vf].fields[i], e.target.value)}
-                                    onBlur={() => handleBlur(vfArr[vf].fields[i])}
+                                    onInput={(e) => handleInput(vfArr[vf].fields[i], e.target.value)}
+                                    onBlur={() => handleBlur(vfArr[vf].fields[i], tempFormState[vfArr[vf].fields[i]])}
                                     valid={tempFormState[vfArr[vf].fields[i]] !== "" ? valid[vfArr[vf].fields[i]] : undefined}
                                 ></sp-textfield>
                             </div>

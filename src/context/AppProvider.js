@@ -589,9 +589,52 @@ export default function AppProvider({ children }) {
         birdseedCopy: false
     });
 
+    const [copyValues, setCopyValues] = useState({
+        subject: {
+            sl: "",
+            ssl: "",
+        },
+        vf: {
+            copy: "",
+        },
+        skinny: {
+            headline: "",
+            copy: "",
+        },
+        hero: {
+            badge: "",
+            headline: "",
+            ot: "",
+            subheadline: "",
+            inlinePromo: "",
+            specs: "",
+            price: "",
+            productName: "",
+            productSupercharger: "",
+            cta: "",
+        },
+        plugin: {
+            pluginCopyValue: "",
+            leftPluginCopyValue: "",
+            centerPluginCopyValue: "",
+            rightPluginCopyValue: "",
+        },
+        banner: {
+            bannerHeadlineValue: "",
+            bannerCopyValue: "",
+            bannerCtaValue: "",
+        },
+        birdseed: {
+            copy: "",
+            day: null,
+            month: null,
+            year: null
+        }
+    });
+    
+
     // Values e estados dos inputs
 
-    const [selectedHeader, setSelectedHeader] = useState(null);
     const [selectedBrand, setSelectedBrand] = useState('dell');
     const [selectedFunding, setSelectedFunding] = useState(null);
     const [selectedSkinny, setSelectedSkinny] = useState(null);
@@ -603,10 +646,6 @@ export default function AppProvider({ children }) {
     const [selectedBirdseed, setSelectedBirdseed] = useState(null);
     const [selectedBirdseedCopy, setSelectedBirdseedCopy] = useState(false);
 
-    const [subjectValues, setSubjectValues] = useState({
-        slValue: "",
-        sslValue: "",
-    })
 
     const [fundingCopyValues, setFundingCopyValues] = useState({
         vfCopyValue: "",
@@ -681,32 +720,32 @@ export default function AppProvider({ children }) {
                 setTertiaryColor(tertiaryColorMatch ? hexToRgb(`#${tertiaryColorMatch[1]}`) : "teaGreen");
             }
 
-            setSubjectValues({
-                slValue: csvValues['SL'] || "",
-                sslValue: csvValues['SSL'] || "",
-            });
+            // setSubjectValues({
+            //     slValue: csvValues['SL'] || "",
+            //     sslValue: csvValues['SSL'] || "",
+            // });
 
-            if (csvValues['Campaign Type'] === "CSB") {
-                setSelectedHeader("csb");
-                setCsvValues({
-                    ...csvValues,
-                    'Campaign Type': "csb"
-                });
-            } else if (csvValues['Campaign Type'] === "outlet") {
-                setSelectedHeader("outlet");
-                setCsvValues({
-                    ...csvValues,
-                    'Campaign Type': "outlet"
-                });
-            } else if (csvValues['Campaign Type'] === "DEXN") {
-                setSelectedHeader("sb-gdo-dexn");
-                setCsvValues({
-                    ...csvValues,
-                    'Campaign Type': "sb-gdo-dexn"
-                });
-            } else {
-                setSelectedHeader(null)
-            }
+            // if (csvValues['Campaign Type'] === "CSB") {
+            //     setSelectedHeader("csb");
+            //     setCsvValues({
+            //         ...csvValues,
+            //         'Campaign Type': "csb"
+            //     });
+            // } else if (csvValues['Campaign Type'] === "outlet") {
+            //     setSelectedHeader("outlet");
+            //     setCsvValues({
+            //         ...csvValues,
+            //         'Campaign Type': "outlet"
+            //     });
+            // } else if (csvValues['Campaign Type'] === "DEXN") {
+            //     setSelectedHeader("sb-gdo-dexn");
+            //     setCsvValues({
+            //         ...csvValues,
+            //         'Campaign Type': "sb-gdo-dexn"
+            //     });
+            // } else {
+            //     setSelectedHeader(null)
+            // }
 
 
             setSelectedFunding(csvValues['Vendor Funding Name'] || "");
@@ -944,6 +983,8 @@ export default function AppProvider({ children }) {
 
     const cores = {}
 
+    console.log(copyValues)
+
     return (
         <AppContext.Provider value={{
             csvValues,
@@ -964,29 +1005,11 @@ export default function AppProvider({ children }) {
             selectedModules,
             setSelectedModules,
 
-            subjectValues,
-            setSubjectValues,
-
-            selectedHeader,
-            setSelectedHeader,
+            copyValues,
+            setCopyValues,
 
             selectedBrand,
             setSelectedBrand,
-
-            selectedFunding,
-            setSelectedFunding,
-            fundingCopyValues,
-            setFundingCopyValues,
-
-            selectedSkinny,
-            setSelectedSkinny,
-            skinnyValues,
-            setSkinnyValues,
-
-            selectedHero,
-            setSelectedHero,
-            heroValues,
-            setHeroValues,
 
             selectedPlugin,
             setSelectedPlugin,

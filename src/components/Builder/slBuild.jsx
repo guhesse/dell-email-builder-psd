@@ -3,7 +3,10 @@ import { core, app, batchPlay, storage } from '../../App.js';
 import { setFontStyle, selectAllAndCopy } from "../../hook/hooksJSON.jsx"
 
 export async function slBuild(buildInfo) {
-    const { slValue, sslValue, modulesHeight } = buildInfo;
+    const { modulesHeight, copyValues } = buildInfo;
+    const slValue = copyValues.subject.sl
+    const sslValue = copyValues.subject.ssl
+    
     const sslFilePath = `assets/sl-ssl/SL & SSL.psd`;
 
     try {

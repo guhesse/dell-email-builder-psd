@@ -3,13 +3,13 @@ import limitCharsPerLine from '../hook/charLimiter.jsx';
 import { selectLayer, setFontStyle, setSolidFill, getBounds, setOffset, selectGroup, makeSmartObj, makeSolid, setCTABorder, setFinalCrop, alignGroupX } from "../hook/hooksJSON.jsx";
 import { getBoundsAndPosition } from "../hook/getBoundsAndPosition.jsx";
 
-export default async function AwHero1LifestyleProduct(colors, heroValues) {
+export default async function AwHero1LifestyleProduct(colors, heroCopy) {
 
     var accentColor = colors["accentColor"]
     var secondaryColor = colors["secondaryColor"]
     var tertiaryColor = colors["tertiaryColor"]
 
-    var { badge, headline, subheadline, productName, cta } = heroValues || {}
+    var { badge, headline, subheadline, productName, cta } = heroCopy || {}
 
     headline = limitCharsPerLine(
         headline || "", 18, "upper"

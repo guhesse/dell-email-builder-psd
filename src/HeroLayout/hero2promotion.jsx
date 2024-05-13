@@ -1,11 +1,11 @@
 import { batchPlay } from "../App.js";
 import limitCharsPerLine from '../hook/charLimiter.jsx';
 
-export default async function Hero2Promotion(colors, heroValues) {
+export default async function Hero2Promotion(colors, heroCopy) {
 
     var accentColor = colors["accentColor"]
     
-    var { badge, headline, ot, subheadline, inlinePromo, productName, price, specs, cta } = heroValues || {}
+    var { badge, headline, ot, subheadline, inlinePromo, productName, price, specs, cta } = heroCopy || {}
 
     headline = limitCharsPerLine(
         headline || "", 20, "capitalized"

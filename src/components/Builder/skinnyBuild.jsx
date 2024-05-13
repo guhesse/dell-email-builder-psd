@@ -6,18 +6,23 @@ import { setTwoFontStyle, getBounds, makeSolid, selectAllAndCopy, setFinalCrop }
 // Importa o skinny banner
 export async function skinnyBuild(buildInfo) {
 
-    var { selectedModules, skinnyValues, colors, modulesHeight } = buildInfo
+    var { selectedModules, copyValues, colors, modulesHeight } = buildInfo
 
     var vf = selectedModules.vf
+    var skinny = selectedModules.skinny
+
+    var skinnyCopy = copyValues["skinny"]
 
     var accentColor = colors["accentColor"]
     var secondaryColor = colors["secondaryColor"]
 
-    if (selectedModules.skinny === "" || selectedModules.skinny === null) {
+    if (skinny === "" || skinny === null) {
         console.warn('Skinny não selecionado');
         modulesHeight.skinny = 0;
         return;
     }
+
+    console.log(buildInfo)
 
     const skinnyFilePath = `assets/skinny-banner/skinny-banner.psd`;
     const fs = storage.localFileSystem;
@@ -34,12 +39,10 @@ export async function skinnyBuild(buildInfo) {
                 const secondDocument = app.documents[1];
                 const skinnyWidth = secondDocument.width;
 
-                let skinnyTitle = limitCharsPerLine(
-                    skinnyValues.headline || '', 60, "capitalized");
-                let skinnyCopy = limitCharsPerLine(
-                    skinnyValues.copy || '', 65, "capitalized");
-
-                const skinnyBannerCopy = skinnyTitle + "\r" + skinnyCopy
+                let skinnyTitle = skinnyCopy && skinnyCopy.headline ? limitCharsPerLine(skinnyCopy.headline, 60, "capitalized") : '';
+                let skinnyCopyText = skinnyCopy && skinnyCopy.copy ? limitCharsPerLine(skinnyCopy.copy, 65, "capitalized") : '';
+                
+                const skinnyBannerCopy = skinnyTitle + "\r" + skinnyCopyText;
 
                 const changeSkinnyBannerCopy = [
                     setTwoFontStyle({
@@ -105,7 +108,6 @@ export async function skinnyBuild(buildInfo) {
 
                 const offsetY = (0 - (docHeight / 2) + (modulesHeight.skinny / 2) + (offsetModules));
 
-                console.log("offsetY: ", offsetY)
                 pastedGroup.translate(offsetX, offsetY);
 
                 console.log('%cSkinny Banner inserido com sucesso!', 'color: #00EAADFF;');

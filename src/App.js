@@ -37,14 +37,17 @@ function App() {
       <FundingSelector />
       <SkinnySelector />
       <HeroSelector />
-      <PluginSelector />
-      <FpoSelector />
-      <BannerSelector />
-      <FooterSelector />
-      <BirdseedSelector />
       <EmailBuilder />
     </AppProvider>
   );
 }
 
 export default App;
+
+// 
+// <PluginSelector />
+// <FpoSelector />
+// <BannerSelector />
+// <FooterSelector />
+// <BirdseedSelector />
+// <EmailBuilder />

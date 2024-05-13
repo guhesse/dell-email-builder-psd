@@ -12,21 +12,25 @@ useToggleState
 const skinnyArr = {
     '': {
         name: 'None',
+        key: [],
         fieldsTitle: [],
         fields: []
     },
     'left': {
         name: 'Left',
+        key: 'skinny',
         fieldsTitle: ['headline', 'copy'],
         fields: ['headline', 'copy']
     },
     'center': {
         name: 'Center',
+        key: 'skinny',
         fieldsTitle: ['headline', 'copy'],
         fields: ['headline', 'copy']
     },
     'right': {
         name: 'Right',
+        key: 'skinny',
         fieldsTitle: ['headline', 'copy'],
         fields: ['headline', 'copy']
     },
@@ -34,16 +38,20 @@ const skinnyArr = {
 
 
 export default function SkinnySelector() {
-    const { selectedModules, setSelectedModules, skinnyValues, setSkinnyValues } = useAppContext();
 
-    const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setSkinnyValues, skinnyValues);
+    const { selectedModules, setSelectedModules, copyValues, setCopyValues } = useAppContext();
+
+    const { skinny } = selectedModules;
+
+    const skinnyCopy = copyValues.skinny;
+    const setSkinnyCopy = (values) => setCopyValues({ ...copyValues, [skinnyArr[skinny].key]: values });
+
+    const { valid, handleFieldChange, handleBlur, initialState, tempFormState, resetFormState } = useFormState(setSkinnyCopy, skinnyCopy, skinnyArr);
 
     const { setStatusByField, checkIsSelected } = useStatusIcon();
 
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
     const [isEditClicked, setIsEditClicked] = useToggleState(false);
-    
-    var skinny = selectedModules.skinny
 
     const [selected, setSelected] = useToggleState({ skinny: false });
 
@@ -59,23 +67,18 @@ export default function SkinnySelector() {
             ...prevState,
             skinny: null
         }));
-        setSkinnyValues({initialState})
+        setSkinnyCopy({
+            headline: "",
+            copy: "",
+        })
+        resetFormState();
+        toggleOptions(false)
     };
 
-    const fieldKeys = Object.keys(skinnyValues || {});
-
-    useEffect(() => {
-        const newInitialState = {}
-        const newTempFormState = {};
-
-        fieldKeys.forEach(field => {
-            newInitialState[field] = "";
-            newTempFormState[field] = skinnyValues[field] || "";
-        });
-
-        setInitialState(newInitialState);
-        setTempFormState(newTempFormState);
-    }, [skinny]);
+    const handleInput = (field, value) => {
+        handleFieldChange(field, value);
+        setSkinnyCopy({ ...skinnyCopy, [field]: value });
+    };
 
     let statusType = {}
 
@@ -86,9 +89,8 @@ export default function SkinnySelector() {
     } else {
         statusType = setStatusByField({
             type: "filledOnObj",
-            value: skinnyValues,
-            obj: skinny,
             array: skinnyArr,
+            value: skinnyCopy,
         });
     }
 
@@ -136,7 +138,7 @@ export default function SkinnySelector() {
                                     id={`${field}-field`}
                                     placeholder={`Insira o ${field}`}
                                     value={tempFormState[skinnyArr[skinny].fields[i]]}
-                                    onInput={(e) => handleFieldChange(skinnyArr[skinny].fields[i], e.target.value)}
+                                    onInput={(e) => handleInput(skinnyArr[skinny].fields[i], e.target.value)}
                                     onBlur={() => handleBlur(skinnyArr[skinny].fields[i])}
                                     valid={tempFormState[skinnyArr[skinny].fields[i]] !== "" ? valid[skinnyArr[skinny].fields[i]] : undefined}
                                 ></sp-textfield>

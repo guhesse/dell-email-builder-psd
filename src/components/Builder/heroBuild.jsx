@@ -5,10 +5,11 @@ import { selectAllAndCopy } from '../../hook/hooksJSON.jsx';
 
 export async function heroBuild(buildInfo) {
 
-    var { selectedModules, modulesHeight, heroValues, colors } = buildInfo
+    var { selectedModules, modulesHeight, heroValues, copyValues, colors } = buildInfo
 
-    var vf = selectedModules.vf
-    var hero = selectedModules.hero
+    const { vf } = selectedModules
+    const { hero } = selectedModules
+    const heroCopy = copyValues.hero
 
 
     if (hero === "" || hero === null) {
@@ -30,7 +31,7 @@ export async function heroBuild(buildInfo) {
 
                 if (hero === 'hero1-lifestyle-product') {
                     try {
-                        await Hero1LifestyleProduct(colors, heroValues);
+                        await Hero1LifestyleProduct(colors, heroCopy);
                     } catch (error) {
                         console.error('Erro ao executar Hero 1 - Lifestyle + Product:', error);
                     }
@@ -38,7 +39,7 @@ export async function heroBuild(buildInfo) {
 
                 if (hero === 'hero1-lifestyle') {
                     try {
-                        await Hero1Lifestyle(colors, heroValues);
+                        await Hero1Lifestyle(colors, heroCopy);
                     } catch (error) {
                         console.error('Erro ao executar Hero 1 - Only Lifestyle:', error);
                     }
@@ -46,7 +47,7 @@ export async function heroBuild(buildInfo) {
 
                 if (hero === 'hero1-product') {
                     try {
-                        await Hero1Product(colors, heroValues);
+                        await Hero1Product(colors, heroCopy);
                     } catch (error) {
                         console.error('Erro ao executar Hero 1 - Only Product:', error);
                     }
@@ -54,7 +55,7 @@ export async function heroBuild(buildInfo) {
 
                 if (hero === 'aw-hero1-lifestyle-product') {
                     try {
-                        await AwHero1LifestyleProduct(colors, heroValues);
+                        await AwHero1LifestyleProduct(colors, heroCopy);
                     } catch (error) {
                         console.error('Erro ao executar Aw Hero 1 - Lifestyle + Product:', error);
                     }
@@ -62,7 +63,7 @@ export async function heroBuild(buildInfo) {
 
                 if (hero === 'hero2-promotion') {
                     try {
-                        await Hero2Promotion(colors, heroValues);
+                        await Hero2Promotion(colors, heroCopy);
                     } catch (error) {
                         console.error('Erro ao executar Hero2 - Promotion:', error);
                     }

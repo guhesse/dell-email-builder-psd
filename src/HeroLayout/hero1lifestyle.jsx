@@ -3,9 +3,9 @@ import limitCharsPerLine from '../hook/charLimiter.jsx';
 import { selectLayer, selectGroup, makeSmartObj, setFontStyle, getBounds, setOffset, setSolidFill, setOverlayColor, setCTABorder, makeSolid, setFinalCrop } from "../hook/hooksJSON.jsx";
 import { getBoundsAndPosition } from "../hook/getBoundsAndPosition.jsx";
 
-export default async function Hero1Lifestyle(colors, heroValues) {
+export default async function Hero1Lifestyle(colors, heroCopy) {
 
-    var { badge, headline, subheadline, cta } = heroValues || {}
+    var { badge, headline, subheadline, cta } = heroCopy || {}
 
     var accentColor = colors["accentColor"]
     var secondaryColor = colors["secondaryColor"]
