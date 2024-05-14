@@ -5,10 +5,9 @@ import { selectAllAndCopy } from '../../hook/hooksJSON.jsx';
 
 export async function heroBuild(buildInfo) {
 
-    var { selectedModules, modulesHeight, heroValues, copyValues, colors } = buildInfo
+    var { selectedModules, modulesHeight, copyValues, colors } = buildInfo
 
-    const { vf } = selectedModules
-    const { hero } = selectedModules
+    const { vf, hero } = selectedModules
     const heroCopy = copyValues.hero
 
 

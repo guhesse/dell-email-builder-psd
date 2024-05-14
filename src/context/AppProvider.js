@@ -146,7 +146,6 @@ export default function AppProvider({ children }) {
         'Birdseed 1 Link': '',
     });
 
-
     const loadDefaultValuesFromCsv = async () => {
         try {
             const fs = storage.localFileSystem;
@@ -161,14 +160,6 @@ export default function AppProvider({ children }) {
             console.error('Erro ao ler o arquivo CSV:', error);
         }
     };
-
-    // const updateValues = (valueMapping) => {
-    //     const updatedValues = {};
-    //     Object.keys(valueMapping).forEach((key) => {
-    //         updatedValues[key] = csvValues[valueMapping[key]];
-    //     });
-    //     return updatedValues;
-    // };
 
     function hexToRgb(hex, colorsList) {
         const matchingColor = Object.entries(colorsList).find(([name, color]) => {
@@ -543,38 +534,6 @@ export default function AppProvider({ children }) {
     const handleSecondaryColorChange = handleColorChange("secondaryColor", colorsList, setColors);
     const handleTertiaryColorChange = handleColorChange("tertiaryColor", colorsList, setColors);
 
-    // console.log(colors)
-
-    // const [accentColor, setAccentColor] = useState("deepGreen");
-    // const [secondaryColor, setSecondaryColor] = useState("mint");
-    // const [tertiaryColor, setTertiaryColor] = useState("teaGreen");
-
-    // const [accentColorHex, setAccentColorHex] = useState("#244739");
-    // const [secondaryColorHex, setSecondaryColorHex] = useState("#7BFC76");
-    // const [tertiaryColorHex, setTertiaryColorHex] = useState("#E4FFD6");
-
-
-    // const handleAccentColorChange = (color) => {
-    //     const colorString = typeof color === 'string' ? color : hexToRgb(color);
-    //     const hexColor = rgbToHex(cores[color]);
-    //     setAccentColor(colorString);
-    //     setAccentColorHex(hexColor);
-    // };
-
-    // const handleSecondaryColorChange = (color) => {
-    //     const colorString = typeof color === 'string' ? color : hexToRgb(color);
-    //     const hexColor = rgbToHex(cores[color]);
-    //     setSecondaryColor(colorString);
-    //     setSecondaryColorHex(hexColor);
-    // };
-
-    // const handleTertiaryColorChange = (color) => {
-    //     const colorString = typeof color === 'string' ? color : hexToRgb(color);
-    //     const hexColor = rgbToHex(cores[color]);
-    //     setTertiaryColor(colorString);
-    //     setTertiaryColorHex(hexColor);
-    // };
-
     const [selectedModules, setSelectedModules] = useState({
         header: null,
         brand: 'dell',
@@ -582,7 +541,7 @@ export default function AppProvider({ children }) {
         skinny: null,
         hero: null,
         plugin: null,
-        fpoSegment: null,
+        fpo: null,
         banner: null,
         footer: null,
         birdseed: null,
@@ -614,15 +573,18 @@ export default function AppProvider({ children }) {
             cta: "",
         },
         plugin: {
-            pluginCopyValue: "",
-            leftPluginCopyValue: "",
-            centerPluginCopyValue: "",
-            rightPluginCopyValue: "",
+            single: "",
+            left: "",
+            center: "",
+            right: "",
         },
         banner: {
             bannerHeadlineValue: "",
             bannerCopyValue: "",
             bannerCtaValue: "",
+        },
+        fpo: {
+            number: null,
         },
         birdseed: {
             copy: "",
@@ -631,50 +593,16 @@ export default function AppProvider({ children }) {
             year: null
         }
     });
-    
 
     // Values e estados dos inputs
 
     const [selectedBrand, setSelectedBrand] = useState('dell');
-    const [selectedFunding, setSelectedFunding] = useState(null);
-    const [selectedSkinny, setSelectedSkinny] = useState(null);
-    const [selectedHero, setSelectedHero] = useState(null);
     const [selectedPlugin, setSelectedPlugin] = useState(null);
     const [selectedFpoSegment, setSelectedFpoSegment] = useState(null);
     const [selectedBanner, setSelectedBanner] = useState(null);
     const [selectedFooter, setSelectedFooter] = useState(null);
     const [selectedBirdseed, setSelectedBirdseed] = useState(null);
     const [selectedBirdseedCopy, setSelectedBirdseedCopy] = useState(false);
-
-
-    const [fundingCopyValues, setFundingCopyValues] = useState({
-        vfCopyValue: "",
-    });
-
-    const [skinnyValues, setSkinnyValues] = useState({
-        headline: "",
-        copy: "",
-    })
-
-    const [heroValues, setHeroValues] = useState({
-        badge: "",
-        headline: "",
-        ot: "",
-        subheadline: "",
-        inlinePromo: "",
-        specs: "",
-        price: "",
-        productName: "",
-        productSupercharger: "",
-        cta: "",
-    });
-
-    const [pluginCopyValues, setPluginCopyValues] = useState({
-        pluginCopyValue: "",
-        leftPluginCopyValue: "",
-        centerPluginCopyValue: "",
-        rightPluginCopyValue: "",
-    });
 
     const [selectedFpoValue, setSelectedFpoValue] = useState(null);
 
@@ -952,22 +880,11 @@ export default function AppProvider({ children }) {
         csvValues['Birdseed 2'],
     ]);
 
-
-
     // console.log("Valores que serão passados para os componentes:", {
-    //     // heroCopyValues
     //     // csvValues,
-    //     // accentColor,
-    //     // secondaryColor,
-    //     // tertiaryColor,
     //     // subjectValues,
     //     // selectedHeader,
     //     // selectedBrand,
-    //     // selectedFunding,
-    //     // fundingCopyValues,
-    //     // selectedSkinny,
-    //     // selectedHero,
-    //     // selectedPlugin,
     //     // selectedFpoSegment,
     //     // selectedFpoValue,
     //     // selectedBanner,
@@ -978,12 +895,9 @@ export default function AppProvider({ children }) {
     //     // birdseedDate
     // });
 
-    // console.log(heroValues)
-    // console.log("Accent Color:", accentColor, "  Secondary Color:", secondaryColor, "  Tertiary Color:", tertiaryColor)
-
     const cores = {}
 
-    console.log(copyValues)
+    // console.log(copyValues)
 
     return (
         <AppContext.Provider value={{
@@ -1010,11 +924,6 @@ export default function AppProvider({ children }) {
 
             selectedBrand,
             setSelectedBrand,
-
-            selectedPlugin,
-            setSelectedPlugin,
-            pluginCopyValues,
-            setPluginCopyValues,
 
             selectedFpoSegment,
             setSelectedFpoSegment,

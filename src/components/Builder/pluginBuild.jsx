@@ -1,23 +1,27 @@
 import { core, app, batchPlay, storage } from '../../App.js';
-import { getBoundsAndPosition } from "../../hook/getBoundsAndPosition.jsx";
 import limitCharsPerLine from "../../hook/charLimiter.jsx";
-import { setTwoFontStyle, getBounds, makeSolid, selectAllAndCopy, setFinalCrop } from "../../hook/hooksJSON.jsx"
+import { selectAllAndCopy, setSolidFill, setFontStyle, selectGroup, alignGroupX, alignGroupY } from "../../hook/hooksJSON.jsx"
 
-export async function pluginBuild() {
+export async function pluginBuild(buildInfo) {
 
-    var { selectedModules, skinnyValues, colors, modulesHeight } = buildInfo
+    var { selectedModules, modulesHeight, copyValues, colors } = buildInfo
 
-    var plugin = selectedModules.plugin
+    var accentColor = colors["accentColor"]
+    var secondaryColor = colors["secondaryColor"]
+    var tertiaryColor = colors["tertiaryColor"]
+
+    var { brand, vf, plugin } = selectedModules
+    var pluginCopy = copyValues.plugin
+
+    var { single, left, center, right } = pluginCopy || {}
 
     let pluginFilePath = "";
 
-    if (selectedPlugin === 'supercharger') {
-        pluginFilePath = 'assets/plugins/supercharger.psd';
-    } else if (selectedPlugin === 'plugin') {
-        pluginFilePath = 'assets/plugins/plugin.psd';
+    if (plugin) {
+        pluginFilePath = `assets/plugins/${plugin}.psd`;
     } else {
         console.warn('Plugin n\u00e3o selecionado');
-        pluginHeight = 0;
+        modulesHeight.plugin = 0;
         return;
     }
 
@@ -27,10 +31,18 @@ export async function pluginBuild() {
         const pluginDir = await fs.getPluginFolder();
         const fileEntry = await pluginDir.getEntry(pluginFilePath);
 
-        const formattedPluginCopyValue = limitCharsPerLine(pluginCopyValue || '', 65, "upper");
-        const formattedLeftCopyValue = limitCharsPerLine(leftPluginCopyValue || '', 13, "captitalized");
-        const formattedCenterCopyValue = limitCharsPerLine(centerPluginCopyValue || '', 13, "captitalized");
-        const formattedRightCopyValue = limitCharsPerLine(rightPluginCopyValue || '', 13, "captitalized");
+        const singleCopy = limitCharsPerLine(
+            single || '', 65, "upper"
+        );
+        const leftCopy = limitCharsPerLine(
+            left || '', 13, "captitalized"
+        );
+        const centerCopy = limitCharsPerLine(
+            center || '', 13, "captitalized"
+        );
+        const rightCopy = limitCharsPerLine(
+            right || '', 13, "captitalized"
+        );
 
         const targetFunction = async (executionContext) => {
             try {
@@ -38,27 +50,27 @@ export async function pluginBuild() {
 
                 const secondDocument = app.documents[1];
                 const pluginWidth = secondDocument.width;
-                pluginHeight = secondDocument.height;
+                modulesHeight.plugin = secondDocument.height;
 
-                if (selectedPlugin === 'plugin' && selectedBrand === 'dell') {
+                if (plugin === 'plugin' && brand === 'dell') {
 
                     const setPlugin = [
                         setSolidFill({
                             Name: "Plugin Background",
-                            RedColor: secondaryRed,
-                            GreenColor: secondaryGreen,
-                            BlueColor: secondaryBlue
+                            RedColor: secondaryColor.r,
+                            GreenColor: secondaryColor.g,
+                            BlueColor: secondaryColor.b
                         }),
 
                         setFontStyle({
                             Name: "Plugin Copy",
-                            Value: formattedPluginCopyValue,
+                            Value: singleCopy,
                             FontName: "Arial",
                             FontWeight: "Regular",
                             Size: 12,
-                            RedColor: accentRed,
-                            GreenColor: accentGreen,
-                            BlueColor: accentBlue,
+                            RedColor: accentColor.r,
+                            GreenColor: accentColor.g,
+                            BlueColor: accentColor.b,
                             Tracking: 20,
                             FontCaps: true,
                             AutoLeading: true,
@@ -80,26 +92,26 @@ export async function pluginBuild() {
                     const selectAndCopy = await selectAllAndCopy()
                     await batchPlay(selectAndCopy, {});
 
-                } else if (selectedPlugin === 'supercharger' && selectedBrand === 'dell') {
+                } else if (plugin === 'supercharger' && brand === 'dell') {
 
                     const setPlugin = [
 
                         setSolidFill({
                             Name: "Plugin Background",
-                            RedColor: secondaryRed,
-                            GreenColor: secondaryGreen,
-                            BlueColor: secondaryBlue
+                            RedColor: secondaryColor.r,
+                            GreenColor: secondaryColor.g,
+                            BlueColor: secondaryColor.b
                         }),
 
                         setFontStyle({
                             Name: "1",
-                            Value: formattedLeftCopyValue,
+                            Value: leftCopy,
                             FontName: "Roboto",
                             FontWeight: "Light",
                             Size: 24,
-                            RedColor: accentRed,
-                            GreenColor: accentGreen,
-                            BlueColor: accentBlue,
+                            RedColor: accentColor.r,
+                            GreenColor: accentColor.g,
+                            BlueColor: accentColor.b,
                             FontCaps: false,
                             AutoLeading: false,
                             Leading: 24
@@ -107,13 +119,13 @@ export async function pluginBuild() {
 
                         setFontStyle({
                             Name: "2",
-                            Value: formattedCenterCopyValue,
+                            Value: centerCopy,
                             FontName: "Roboto",
                             FontWeight: "Light",
                             Size: 24,
-                            RedColor: accentRed,
-                            GreenColor: accentGreen,
-                            BlueColor: accentBlue,
+                            RedColor: accentColor.r,
+                            GreenColor: accentColor.g,
+                            BlueColor: accentColor.b,
                             FontCaps: false,
                             AutoLeading: false,
                             Leading: 24
@@ -121,13 +133,13 @@ export async function pluginBuild() {
 
                         setFontStyle({
                             Name: "3",
-                            Value: formattedRightCopyValue,
+                            Value: rightCopy,
                             FontName: "Roboto",
                             FontWeight: "Light",
                             Size: 24,
-                            RedColor: accentRed,
-                            GreenColor: accentGreen,
-                            BlueColor: accentBlue,
+                            RedColor: accentColor.r,
+                            GreenColor: accentColor.g,
+                            BlueColor: accentColor.b,
                             FontCaps: false,
                             AutoLeading: false,
                             Leading: 24
@@ -159,27 +171,27 @@ export async function pluginBuild() {
                     const selectAndCopy = await selectAllAndCopy()
                     await batchPlay(selectAndCopy, {});
 
-                } else if (selectedPlugin === 'plugin' && selectedBrand === 'alienware') {
+                } else if (plugin === 'plugin' && brand === 'alienware') {
 
                     const setPlugin = [
 
                         setSolidFill({
                             Name: "Plugin Background",
-                            RedColor: accentRed,
-                            GreenColor: accentGreen,
-                            BlueColor: accentBlue
+                            RedColor: accentColor.r,
+                            GreenColor: accentColor.g,
+                            BlueColor: accentColor.b
                         }),
 
                         setFontStyle({
                             Name: "Plugin Copy",
-                            Value: formattedPluginCopyValue,
+                            Value: singleCopy,
                             FontName: "Open Sans",
                             FontScript: "OpenSans-Bold",
                             FontWeight: "Bold",
                             Size: 12,
-                            RedColor: tertiaryRed,
-                            GreenColor: tertiaryGreen,
-                            BlueColor: tertiaryBlue,
+                            RedColor: tertiaryColor.r,
+                            GreenColor: tertiaryColor.g,
+                            BlueColor: tertiaryColor.b,
                             Tracking: 40,
                             FontCaps: true,
                             AutoLeading: true,
@@ -205,20 +217,20 @@ export async function pluginBuild() {
                     const setPlugin = [
                         setSolidFill({
                             Name: "Plugin Background",
-                            RedColor: accentRed,
-                            GreenColor: accentGreen,
-                            BlueColor: accentBlue
+                            RedColor: accentColor.r,
+                            GreenColor: accentColor.g,
+                            BlueColor: accentColor.b
                         }),
 
                         setFontStyle({
                             Name: "1",
-                            Value: formattedLeftCopyValue,
+                            Value: leftCopy,
                             FontName: "Roboto",
                             FontWeight: "Light",
                             Size: 24,
-                            RedColor: tertiaryRed,
-                            GreenColor: tertiaryGreen,
-                            BlueColor: tertiaryBlue,
+                            RedColor: tertiaryColor.r,
+                            GreenColor: tertiaryColor.g,
+                            BlueColor: tertiaryColor.b,
                             FontCaps: false,
                             AutoLeading: false,
                             Leading: 24
@@ -226,13 +238,13 @@ export async function pluginBuild() {
 
                         setFontStyle({
                             Name: "2",
-                            Value: formattedCenterCopyValue,
+                            Value: centerCopy,
                             FontName: "Roboto",
                             FontWeight: "Light",
                             Size: 24,
-                            RedColor: tertiaryRed,
-                            GreenColor: tertiaryGreen,
-                            BlueColor: tertiaryBlue,
+                            RedColor: tertiaryColor.r,
+                            GreenColor: tertiaryColor.g,
+                            BlueColor: tertiaryColor.b,
                             FontCaps: false,
                             AutoLeading: false,
                             Leading: 24
@@ -240,13 +252,13 @@ export async function pluginBuild() {
 
                         setFontStyle({
                             Name: "3",
-                            Value: formattedRightCopyValue,
+                            Value: rightCopy,
                             FontName: "Roboto",
                             FontWeight: "Light",
                             Size: 24,
-                            RedColor: tertiaryRed,
-                            GreenColor: tertiaryGreen,
-                            BlueColor: tertiaryBlue,
+                            RedColor: tertiaryColor.r,
+                            GreenColor: tertiaryColor.g,
+                            BlueColor: tertiaryColor.b,
                             FontCaps: false,
                             AutoLeading: false,
                             Leading: 24
@@ -290,9 +302,17 @@ export async function pluginBuild() {
                 const docHeight = activeDocument.height;
 
 
+                var offsetModules = ""
+
+                if (vf === "" || vf === null) {
+                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.header + 20) +
+                        (modulesHeight.skinny) + (modulesHeight.hero));
+                } else {
+                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.vf + 20) + (modulesHeight.skinny) + (modulesHeight.hero));
+                }
+
                 const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
-                let offsetModules = (slHeight + 30) + (fundingHeight + 20) + heroHeight + skinnyHeight;
-                const offsetY = (0 - (docHeight / 2) + (pluginHeight / 2) + (offsetModules));
+                const offsetY = (0 - (docHeight / 2) + (modulesHeight.plugin / 2) + (offsetModules));
                 pastedGroup.translate(offsetX, offsetY);
 
                 console.log('%cPlugin inserido com sucesso!', 'color: #00EAADFF;');

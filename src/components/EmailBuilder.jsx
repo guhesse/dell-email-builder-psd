@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { core, app, batchPlay, storage } from '../App.js';
 import useAppContext from '../hook/useAppContext.jsx';
 import limitCharsPerLine from '../hook/charLimiter.jsx';
-import { slBuild, headerBuild, fundingBuild, skinnyBuild, heroBuild, pluginBuild } from './Builder/Builds.jsx';
+import { slBuild, headerBuild, fundingBuild, skinnyBuild, heroBuild, pluginBuild, fpoBuild } from './Builder/Builds.jsx';
 
 import { selectGroup, setFontStyle, setSolidFill, selectAllAndCopy, alignGroupX, alignGroupY, organizeAndSetColorLabel } from "../hook/hooksJSON.jsx";
 
@@ -10,14 +10,8 @@ export default function EmailBuilder() {
 
     var pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores, subjectValues, selectedHeader, selectedFunding, fundingCopyValues, selectedSkinny, skinnyValues, selectedHero, heroValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedValues, selectedBrand, colors, selectedModules, setSelectedModules, copyValues, setCopyValues } = useAppContext();
+    const { heroValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedValues, selectedBrand, colors, selectedModules, setSelectedModules, copyValues, setCopyValues } = useAppContext();
 
-    const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
-    const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
-    const { r: tertiaryRed, g: tertiaryGreen, b: tertiaryBlue } = cores[tertiaryColor] || {};
-    const { slValue, sslValue } = subjectValues || {};
-    var { vfCopyValue } = fundingCopyValues || {};
-    const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
     const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
 
 
@@ -99,64 +93,6 @@ export default function EmailBuilder() {
         await core.executeAsModal(targetFunction, options);
     };
 
-    
-    async function fpoBuild() {
-
-        if (selectedFpoValue === null || selectedFpoValue === 0 || selectedFpoSegment === undefined) {
-            console.warn('Fpo n\u00e3o selecionado');
-            fpoHeight = 0;
-            return;
-        } else {
-        }
-
-        try {
-            const fs = storage.localFileSystem;
-            const pluginDir = await fs.getPluginFolder();
-            let fpoFilePath;
-            for (let i = 1; i <= selectedFpoValue; i++) {
-                fpoFilePath = `assets/fpo/${selectedFpoSegment}/${i}.psd`;
-            }
-            const fileEntry = await pluginDir.getEntry(fpoFilePath)
-            const targetFunction = async (executionContext) => {
-                try {
-                    await app.open(fileEntry);
-                    const secondDocument = app.documents[1];
-                    const fpoWidth = secondDocument.width;
-                    fpoHeight = secondDocument.height;
-
-                    // Copia e cola o modulo
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-
-                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fpoWidth / 2) + 25);
-                    let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyHeight + heroHeight + pluginHeight;
-                    const offsetY = (0 - (docHeight / 2) + (fpoHeight / 2) + (offsetModules));
-
-                    pastedGroup.translate(offsetX, offsetY);
-
-                    console.log('%cFPO inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir o FPO:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir FPO',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo do FPO:', error);
-        }
-    }
 
     async function bannerBuild() {
 
@@ -780,11 +716,13 @@ export default function EmailBuilder() {
     };
 
     const [modulesHeight, setModulesHeight] = useState({
-        sl: "",
-        header: "",
-        vf: "",
-        skinny: "",
-        hero: "",
+        sl: '',
+        header: '',
+        vf: '',
+        skinny: '',
+        hero: '',
+        plugin: '',
+        fpo: ''
     })
 
     const buildInfo = {
@@ -792,7 +730,6 @@ export default function EmailBuilder() {
         copyValues,
         modulesHeight,
         colors,
-        heroValues: heroValues,
     };
 
     const handleBuild = async () => {
@@ -804,8 +741,8 @@ export default function EmailBuilder() {
             await fundingBuild(buildInfo);
             await skinnyBuild(buildInfo);
             await heroBuild(buildInfo);
-            // await pluginBuild(buildInfo)
-            // var pluginHeight = await pluginBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight)
+            await pluginBuild(buildInfo)
+            await fpoBuild(buildInfo)
             // var fpoHeight = await fpoBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight)
             // var bannerHeight = await bannerBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight);
             // var footerHeight = await footerBuild(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight);

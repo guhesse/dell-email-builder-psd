@@ -5,6 +5,7 @@ import { slBuild } from "./slBuild.jsx";
 import { skinnyBuild } from "./skinnyBuild.jsx";
 import { heroBuild } from "./heroBuild.jsx";
 import { pluginBuild } from "./pluginBuild.jsx";
+import { fpoBuild } from "./fpoBuild.jsx";
 
 // Exporte todas as funções como um único objeto
-export { fundingBuild, headerBuild, slBuild, skinnyBuild, heroBuild, pluginBuild };
+export { fundingBuild, headerBuild, slBuild, skinnyBuild, heroBuild, pluginBuild, fpoBuild };

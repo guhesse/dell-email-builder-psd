@@ -1,20 +1,9 @@
 // Import de todas as fun\u00e7\u00f5es 
 
 import React from 'react';
-import CsvReader from './CsvReader.js';
-import BrandSelector from './BrandSelector.js';
-import HeaderSelector from "./HeaderSelector.js";
-import SubjectLineSelector from './SubjectLineSelector.js';
-import ColorSelector from './ColorSelector.js';
-import SkinnySelector from './SkinnySelector.js';
-import HeroSelector from './HeroSelector.js';
-import PluginSelector from './PluginSelector.js';
-import FundingSelector from './FundingSelector.js';
-import FpoSelector from './FpoSelector.js';
-import BannerSelector from './BannerSelector.js';
-import FooterSelector from './FooterSelector.js';
-import BirdseedSelector from './BirdseedSelector.js';
+import { BannerSelector, BirdseedSelector, BrandSelector, ColorSelector, FooterSelector, FpoSelector, FundingSelector, HeaderSelector, HeroSelector, PluginSelector, SkinnySelector, SubjectLineSelector } from './components/Selectors/Selectors.jsx';
 import EmailBuilder from './components/EmailBuilder.jsx';
+import CsvReader from './CsvReader.js';
 import TesteWriteFile from './TesteWriteFile.jsx';
 
 import { Theme } from "@swc-react/theme";
@@ -28,7 +17,6 @@ function App() {
 
   return (
     <AppProvider className="wrapper">
-      <TesteWriteFile />
       <CsvReader />
       <BrandSelector />
       <ColorSelector />
@@ -37,16 +25,15 @@ function App() {
       <FundingSelector />
       <SkinnySelector />
       <HeroSelector />
+      <PluginSelector />
+      <FpoSelector />
       <EmailBuilder />
     </AppProvider>
   );
 }
 
 export default App;
-
-// 
-// <PluginSelector />
-// <FpoSelector />
+// <TesteWriteFile />
 // <BannerSelector />
 // <FooterSelector />
 // <BirdseedSelector />
