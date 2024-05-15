@@ -11,8 +11,8 @@ export async function pluginBuild(buildInfo) {
     var tertiaryColor = colors["tertiaryColor"]
 
     var { brand, vf, plugin } = selectedModules
-    var pluginCopy = copyValues.plugin
 
+    var pluginCopy = copyValues.plugin
     var { single, left, center, right } = pluginCopy || {}
 
     let pluginFilePath = "";
@@ -87,7 +87,6 @@ export async function pluginBuild(buildInfo) {
                         alignGroupY(),
                     ];
                     await batchPlay(alignPluginCopy, {});
-
 
                     const selectAndCopy = await selectAllAndCopy()
                     await batchPlay(selectAndCopy, {});

@@ -172,7 +172,7 @@ export default function AppProvider({ children }) {
     const handleColorChange = (colorType, colorsList, setColors) => {
         return (color) => {
             const colorObj = typeof color === 'string' ? colorsList[color] : color;
-            const r= colorsList[color].r
+            const r = colorsList[color].r
             const g = colorsList[color].g
             const b = colorsList[color].b
             const rgbColor = colorsList[color].rgb
@@ -550,70 +550,66 @@ export default function AppProvider({ children }) {
 
     const [copyValues, setCopyValues] = useState({
         subject: {
-            sl: "",
-            ssl: "",
+            sl: '',
+            ssl: '',
         },
         vf: {
-            copy: "",
+            copy: '',
         },
         skinny: {
-            headline: "",
-            copy: "",
+            headline: '',
+            copy: '',
         },
         hero: {
-            badge: "",
-            headline: "",
-            ot: "",
-            subheadline: "",
-            inlinePromo: "",
-            specs: "",
-            price: "",
-            productName: "",
-            productSupercharger: "",
-            cta: "",
+            badge: '',
+            headline: '',
+            ot: '',
+            subheadline: '',
+            inlinePromo: '',
+            specs: '',
+            price: '',
+            productName: '',
+            productSupercharger: '',
+            cta: '',
         },
         plugin: {
-            single: "",
-            left: "",
-            center: "",
-            right: "",
-        },
-        banner: {
-            bannerHeadlineValue: "",
-            bannerCopyValue: "",
-            bannerCtaValue: "",
+            single: '',
+            left: '',
+            center: '',
+            right: '',
         },
         fpo: {
             number: null,
         },
         birdseed: {
-            copy: "",
+            copy: '',
             day: null,
             month: null,
             year: null
-        }
+        },
+        banner: {
+            headline: '',
+            copy: '',
+            cta: '',
+        },
     });
 
     // Values e estados dos inputs
 
     const [selectedBrand, setSelectedBrand] = useState('dell');
-    const [selectedPlugin, setSelectedPlugin] = useState(null);
-    const [selectedFpoSegment, setSelectedFpoSegment] = useState(null);
     const [selectedBanner, setSelectedBanner] = useState(null);
     const [selectedFooter, setSelectedFooter] = useState(null);
     const [selectedBirdseed, setSelectedBirdseed] = useState(null);
     const [selectedBirdseedCopy, setSelectedBirdseedCopy] = useState(false);
 
-    const [selectedFpoValue, setSelectedFpoValue] = useState(null);
-
     const [bannerCopyValues, setBannerCopyValues] = useState({
-        bannerHeadlineValue: "",
-        bannerCopyValue: "",
-        bannerCtaValue: "",
+        bannerHeadlineValue: '',
+        bannerCopyValue: '',
+        bannerCtaValue: '',
     })
 
     const [birdseedValues, setBirdseedValues] = useState({
-        copy: "",
+        copy: '',
         day: null,
         month: null,
         year: null
@@ -649,8 +645,8 @@ export default function AppProvider({ children }) {
             }
 
             // setSubjectValues({
-            //     slValue: csvValues['SL'] || "",
-            //     sslValue: csvValues['SSL'] || "",
+            //     slValue: csvValues['SL'] || '',
+            //     sslValue: csvValues['SSL'] || '',
             // });
 
             // if (csvValues['Campaign Type'] === "CSB") {
@@ -676,8 +672,8 @@ export default function AppProvider({ children }) {
             // }
 
 
-            setSelectedFunding(csvValues['Vendor Funding Name'] || "");
-            if (csvValues['Vendor Funding Name'] === "") {
+            setSelectedFunding(csvValues['Vendor Funding Name'] || '');
+            if (csvValues['Vendor Funding Name'] === '') {
                 setSelectedFunding(null);
             } else if (csvValues['Vendor Funding Name'] === "NVF") {
                 setSelectedFunding("no-vf");
@@ -699,17 +695,17 @@ export default function AppProvider({ children }) {
                 });
             }
 
-            setFundingCopyValue(csvValues['Funding/WEP Content'] || "");
+            setFundingCopyValue(csvValues['Funding/WEP Content'] || '');
 
-            setSkinnyTitleValue(csvValues['Skinny Banner Headline'] || "")
+            setSkinnyTitleValue(csvValues['Skinny Banner Headline'] || '')
 
-            setSkinnyCopyValue(csvValues['Skinny Banner Text'] || "")
+            setSkinnyCopyValue(csvValues['Skinny Banner Text'] || '')
 
-            if (csvValues['Skinny Banner Headline'] !== undefined && csvValues['Skinny Banner Headline'] !== "") {
+            if (csvValues['Skinny Banner Headline'] !== undefined && csvValues['Skinny Banner Headline'] !== '') {
                 setSelectedSkinny("left")
             }
 
-            setSelectedHero(csvValues['HERO Template'] || "");
+            setSelectedHero(csvValues['HERO Template'] || '');
             if (
                 csvValues['HERO Template'] === "HERO LAYOUT 1" &&
                 csvValues['HERO1 Image'].includes("Lifestyle")
@@ -739,47 +735,47 @@ export default function AppProvider({ children }) {
             }
 
             setHeroCopyValues({
-                badgeValue: csvValues['Badge Text'] || "",
-                headlineValue: csvValues['Headline Text'] || "",
-                subHeadlineValue: csvValues['SHL'] || "",
+                badgeValue: csvValues['Badge Text'] || '',
+                headlineValue: csvValues['Headline Text'] || '',
+                subHeadlineValue: csvValues['SHL'] || '',
                 OTValue: '',
-                inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || "",
-                inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || "",
-                specsValue: csvValues['HERO1 Product Description'] || "",
+                inlinePromoValue: csvValues['HERO1 Product Inline Promo'] || '',
+                inlinePromo2Value: csvValues['HERO2 Product Inline Promo'] || '',
+                specsValue: csvValues['HERO1 Product Description'] || '',
                 priceValue: "XXX",
-                productNameValue: csvValues['HERO1 Product Name'] || "",
-                productSuperchargerValue: csvValues['HERO1 Product Inline Promo'] || "",
-                heroCtaValue: csvValues['HERO CTA1 Text'] || "",
+                productNameValue: csvValues['HERO1 Product Name'] || '',
+                productSuperchargerValue: csvValues['HERO1 Product Inline Promo'] || '',
+                heroCtaValue: csvValues['HERO CTA1 Text'] || '',
             });
 
             setPluginCopyValues({
-                pluginCopyValue: csvValues['Plugin1 Text'] || "",
-                leftPluginCopyValue: "",
-                centerPluginCopyValue: "",
-                rightPluginCopyValue: "",
+                pluginCopyValue: csvValues['Plugin1 Text'] || '',
+                leftPluginCopyValue: '',
+                centerPluginCopyValue: '',
+                rightPluginCopyValue: '',
             });
 
 
-            if (csvValues['Plugin1 Text'] !== "") {
+            if (csvValues['Plugin1 Text'] !== '') {
                 setSelectedPlugin("plugin");
             } else {
             }
 
-            if (csvValues['Order_Code 10(Bundle 5)'] !== undefined && csvValues['Order_Code 10(Bundle 5)'] !== "") {
+            if (csvValues['Order_Code 10(Bundle 5)'] !== undefined && csvValues['Order_Code 10(Bundle 5)'] !== '') {
                 setSelectedFpoValue(5);
-            } else if (csvValues['Order_Code 9(Bundle 4)'] !== undefined && csvValues['Order_Code 9(Bundle 4)'] !== "") {
+            } else if (csvValues['Order_Code 9(Bundle 4)'] !== undefined && csvValues['Order_Code 9(Bundle 4)'] !== '') {
                 setSelectedFpoValue(4);
-            } else if (csvValues['Order_Code 8(Bundle 3)'] !== undefined && csvValues['Order_Code 8(Bundle 3)'] !== "") {
+            } else if (csvValues['Order_Code 8(Bundle 3)'] !== undefined && csvValues['Order_Code 8(Bundle 3)'] !== '') {
                 setSelectedFpoValue(3);
-            } else if (csvValues['Order_Code 7(Bundle 2)'] !== undefined && csvValues['Order_Code 7(Bundle 2)'] !== "") {
+            } else if (csvValues['Order_Code 7(Bundle 2)'] !== undefined && csvValues['Order_Code 7(Bundle 2)'] !== '') {
                 setSelectedFpoValue(2);
-            } else if (csvValues['Order_Code 6(Bundle 1)'] !== undefined && csvValues['Order_Code 6(Bundle 1)'] !== "") {
+            } else if (csvValues['Order_Code 6(Bundle 1)'] !== undefined && csvValues['Order_Code 6(Bundle 1)'] !== '') {
                 setSelectedFpoValue(1);
             } else {
                 setSelectedFpoValue(null)
             }
 
-            if (csvValues['Campaign Type'] === "") {
+            if (csvValues['Campaign Type'] === '') {
                 setSelectedFpoSegment("sb");
                 setSelectedFooter(null);
             } else if (csvValues['Campaign Type'] === "CSB") {
@@ -796,7 +792,7 @@ export default function AppProvider({ children }) {
             // setSelectedFpoValue(selectedFpoValue)
 
             setSelectedBanner(csvValues['Banner1 Layout'] || null);
-            if (csvValues['Banner1 Layout'] === "") {
+            if (csvValues['Banner1 Layout'] === '') {
                 setCsvValues({
                     ...csvValues,
                     'Banner1 Layout': null
@@ -814,14 +810,14 @@ export default function AppProvider({ children }) {
             }
 
             setBannerCopyValues({
-                bannerHeadlineValue: csvValues['Banner1 Headline'] || "",
-                bannerCopyValue: csvValues['Banner1 Text'] || "",
-                bannerCtaValue: csvValues['Banner1 CTA Text'] || "",
+                bannerHeadlineValue: csvValues['Banner1 Headline'] || '',
+                bannerCopyValue: csvValues['Banner1 Text'] || '',
+                bannerCtaValue: csvValues['Banner1 CTA Text'] || '',
             })
 
 
-            setSelectedBirdseed(csvValues['Campaign Type'] || "");
-            if (csvValues['Campaign Type'] === "") {
+            setSelectedBirdseed(csvValues['Campaign Type'] || '');
+            if (csvValues['Campaign Type'] === '') {
                 setSelectedBirdseed(null)
             } else if (csvValues['Campaign Type'] !== "Outlet") {
                 setSelectedBirdseed("standard")
@@ -829,22 +825,22 @@ export default function AppProvider({ children }) {
                 setSelectedBirdseed("outlet")
             }
 
-            const dateParts = (csvValues['Birdseed 2'] || "").split('/');
+            const dateParts = (csvValues['Birdseed 2'] || '').split('/');
 
             if (dateParts.length === 3) {
                 const [day, month, year] = dateParts.map(Number);;
 
                 // Atualize o estado com os valores extraídos da data
                 setBirdseedDate({
-                    selectedDay: day || "",
-                    selectedMonth: month || "",
-                    selectedYear: year || "",
+                    selectedDay: day || '',
+                    selectedMonth: month || '',
+                    selectedYear: year || '',
                 });
             }
 
             setSelectedBirdseedCopy(!!csvValues['Birdseed 1A']);
 
-            setBirdseedCopyValues(csvValues['Birdseed 1A'] || "");
+            setBirdseedCopyValues(csvValues['Birdseed 1A'] || '');
 
 
         }
@@ -897,7 +893,8 @@ export default function AppProvider({ children }) {
 
     const cores = {}
 
-    // console.log(copyValues)
+    console.log("Selected Modules:", selectedModules)
+    console.log("Selected Modules:", copyValues)
 
     return (
         <AppContext.Provider value={{
@@ -924,11 +921,6 @@ export default function AppProvider({ children }) {
 
             selectedBrand,
             setSelectedBrand,
-
-            selectedFpoSegment,
-            setSelectedFpoSegment,
-            selectedFpoValue,
-            setSelectedFpoValue,
 
             selectedBanner,
             setSelectedBanner,

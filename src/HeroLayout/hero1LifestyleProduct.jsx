@@ -194,7 +194,6 @@ export default async function Hero1LifestyleProduct(colors, heroCopy) {
     const newCtaPosition = baseCtaPosition + newProductPosition
 
     const changeCtaCopy = [
-
         setFontStyle({
             Name: "Hero CTA Copy",
             Value: cta,

@@ -11,31 +11,37 @@ import IconButton from '../Icons/IconButton.jsx';
 const bannersArr = {
     '': {
         name: 'None',
+        key: [],
         fieldsTitle: [],
         fields: []
     },
     'left': {
         name: 'Left',
+        key: 'banner',
         fieldsTitle: ['headline', 'copy', 'cta'],
-        fields: ['bannerHeadlineValue', 'bannerCopyValue', 'bannerCtaValue'],
+        fields: ['headline', 'copy', 'cta'],
     },
     'right': {
         name: 'Right',
+        key: 'banner',
         fieldsTitle: ['headline', 'copy', 'cta'],
-        fields: ['bannerHeadlineValue', 'bannerCopyValue', 'bannerCtaValue'],
+        fields: ['headline', 'copy', 'cta'],
     },
 }
 
 export default function BannerSelector() {
 
-    const { selectedBanner, setSelectedBanner, bannerCopyValues, setBannerCopyValues } = useAppContext();
+    const { selectedModules, setSelectedModules, copyValues, setCopyValues } = useAppContext();
 
-    const { valid, handleFieldChange, handleBlur, initialState, setInitialState, tempFormState, setTempFormState } = useFormState(setBannerCopyValues, bannerCopyValues);
+    const { banner } = selectedModules
+
+    const bannerCopy = copyValues.banner;
+
+    const setBannerCopy = (values) => setCopyValues({ ...copyValues, [bannersArr[banner].key]: values });
+
+    const { valid, handleFieldChange, handleBlur, initialState, tempFormState, resetFormState } = useFormState(setBannerCopy, bannerCopy, bannersArr);
 
     const { setStatusByField } = useStatusIcon();
-
-    var banner = selectedBanner
-    var setBanner = setSelectedBanner
 
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
     const [isEditClicked, setIsEditClicked] = useToggleState(false);
@@ -44,34 +50,36 @@ export default function BannerSelector() {
 
     const statusType = setStatusByField({
         type: "filledOnObj",
-        value: bannerCopyValues,
+        value: bannerCopy,
         obj: banner,
         array: bannersArr,
     });
 
     const handleBannerClick = (banner) => {
-        setBanner(banner);
+        setSelectedModules(prevState => ({
+            ...prevState,
+            banner: banner
+        }));
     };
 
     const handleResetClick = () => {
-        setSelectedBanner(null);
-        setBannerCopyValues(initialState);
+        setSelectedModules(prevState => ({
+            ...prevState,
+            banner: null
+        }));
+        setBannerCopy({
+            headline: '',
+            copy: '',
+            cta: ''
+        })
+        resetFormState();
+        toggleOptions(false)
     };
 
-    const fieldKeys = Object.keys(bannerCopyValues || {});
-
-    useEffect(() => {
-        const newInitialState = {}
-        const newTempFormState = {};
-
-        fieldKeys.forEach(field => {
-            newInitialState[field] = "";
-            newTempFormState[field] = bannerCopyValues[field] || "";
-        });
-
-        setInitialState(newInitialState);
-        setTempFormState(newTempFormState);
-    }, [banner]);
+    const handleInput = (field, value) => {
+        handleFieldChange(field, value);
+        setBannerCopy({ ...bannerCopy, [field]: value });
+    };
 
     return (
         <>
@@ -92,7 +100,7 @@ export default function BannerSelector() {
                                         <div key={`${banner}-${index}`}>
                                             <sp-menu-item
                                                 onClick={() => handleBannerClick(banner)}
-                                                selected={banner === selectedBanner ? selected.banner : null}>
+                                                selected={banner === selectedModules.banner ? selected.banner : null}>
                                                 {name}
                                             </sp-menu-item>
                                         </div>
@@ -106,7 +114,7 @@ export default function BannerSelector() {
                     <GroupLabel onClick={toggleOptions} type="closed" name="Banner" size="s" />
                 )}
 
-                {selectedBanner && isOptionsOpen && isEditClicked && (
+                {banner && isOptionsOpen && isEditClicked && (
                     <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
                         {bannersArr[banner].fieldsTitle.map((field, i) => (
                             <div key={field} style={{ margin: "4px 0px" }}>
@@ -115,7 +123,7 @@ export default function BannerSelector() {
                                     id={`${field}-field`}
                                     placeholder={`Insira o ${field}`}
                                     value={tempFormState[bannersArr[banner].fields[i]]}
-                                    onInput={(e) => handleFieldChange(bannersArr[banner].fields[i], e.target.value)}
+                                    onInput={(e) => handleInput(bannersArr[banner].fields[i], e.target.value)}
                                     onBlur={() => handleBlur(bannersArr[banner].fields[i])}
                                     valid={tempFormState[bannersArr[banner].fields[i]] !== "" ? valid[bannersArr[banner].fields[i]] : undefined}
                                 ></sp-textfield>

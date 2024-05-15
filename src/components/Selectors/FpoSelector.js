@@ -48,14 +48,6 @@ export default function FpoSelector() {
 
     const fpoCount = copyValues.fpo.number
 
-    const setFpoCount = (values) => {
-        if (fposArr[fpo]) {
-            setCopyValues({ ...copyValues, [fposArr[fpo].key]: values });
-        } else {
-            console.error(`Invalid key: ${fpo}`);
-        }
-    };
-
     const { checkIsSelected } = useStatusIcon();
 
     const [isOptionsOpen, toggleOptions] = useToggleState(false);

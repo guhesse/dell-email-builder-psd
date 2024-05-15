@@ -27,6 +27,7 @@ function App() {
       <HeroSelector />
       <PluginSelector />
       <FpoSelector />
+      <BannerSelector />
       <EmailBuilder />
     </AppProvider>
   );

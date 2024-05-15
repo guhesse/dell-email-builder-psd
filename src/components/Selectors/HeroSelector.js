@@ -88,7 +88,16 @@ export default function HeroSelector() {
             hero: null
         }));
         setHeroCopy({
-
+            badge: '',
+            headline: '',
+            ot: '',
+            subheadline: '',
+            inlinePromo: '',
+            specs: '',
+            price: '',
+            productName: '',
+            productSupercharger: '',
+            cta: '',
         })
         resetFormState();
         toggleOptions(false)
