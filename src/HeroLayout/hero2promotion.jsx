@@ -1,34 +1,35 @@
 import { batchPlay } from "../App.js";
 import limitCharsPerLine from '../hook/charLimiter.jsx';
 
-export default async function Hero2Promotion(accentRed, accentGreen, accentBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, priceValue, specsValue, heroCtaValue) {
+export default async function Hero2Promotion(colors, heroCopy) {
 
-    function formatHeadlineCopy(text) {
-        return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-    }
+    var accentColor = colors["accentColor"]
+    
+    var { badge, headline, ot, subheadline, inlinePromo, productName, price, specs, cta } = heroCopy || {}
 
-    // Certifique-se de ter acesso a headlineValue e subHeadlineValue
-    const formattedHeadlineValue = limitCharsPerLine(
-        headlineValue ? formatHeadlineCopy(headlineValue) : '',
-        20
+    headline = limitCharsPerLine(
+        headline || "", 20, "capitalized"
     );
-    const formattedSubHeadlineValue = limitCharsPerLine(subHeadlineValue || '', 55);
+
+    subheadline = limitCharsPerLine(
+        subheadline || "", 55, "capitalized"
+    );
 
     const batchChangeColor = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" }, },
-        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: accentRed, grain: accentGreen, blue: accentBlue }, }, _options: { dialogOptions: "dontDisplay" }, },
+        { _obj: "set", _target: [{ _ref: "property", _property: "textStyle" }, { _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" },], to: { _obj: "textStyle", color: { _obj: "RGBColor", red: accentColor.r, grain: accentColor.g, blue: accentColor.b }, }, _options: { dialogOptions: "dontDisplay" }, },
     ];
 
     await batchPlay(batchChangeColor, {});
 
     const ChangeHeroCopy = [
         { _obj: "select", _target: [{ _ref: "layer", _name: "Badge" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: badgeValue, } },
+        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: badge, } },
         { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Badge" },], },
         { _obj: "select", _target: [{ _ref: "layer", _name: "Headline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedHeadlineValue, } },
+        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: headline, } },
         { _obj: "select", _target: [{ _ref: "layer", _name: "Subheadline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedSubHeadlineValue, } },
+        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: subheadline, } },
     ];
 
     const resultBoundingBoxBadge = await batchPlay(ChangeHeroCopy, {});

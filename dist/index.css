@@ -23,7 +23,7 @@ sp-picker.shortPicker {
     width: 204px;
 }
 
-sp-action-button.editBtn{
+sp-action-button.editBtn {
     margin-top: 5px;
 }
 
@@ -52,6 +52,13 @@ sp-button.alienwareBtn:hover {
 
 sp-button.alienwareBtn:active {
     background: var(--spectrum-purple-1000);
+}
+
+.labelArrow {
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    fill: #8a8a8a;
 }
 
 .modal-border {
@@ -84,7 +91,7 @@ sp-button.alienwareBtn:active {
     padding-left: 15px;
 }
 
-.brandLabel{
+.brandLabel {
     font-size: 0.8em;
     margin-left: -4px;
     font-weight: 500;
@@ -112,6 +119,25 @@ sp-menu-group span {
     font-size: 0.8em;
     padding: 4px 0px;
 }
+
+.heroThumbnail {
+    width: 30px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.flexCenter{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* sp-menu-item #heroMenuItem {
+    width: 100%; 
+    align-items: center;
+    display: flex; 
+    justify-content: space-between;
+} */
 
 /* icons */
 .icon {
@@ -204,7 +230,7 @@ sp-menu-group span {
     fill: #8a8a8a;
 }
 
-.sp-icon#bin{
+.sp-icon#bin {
     padding-left: 5px;
 }
 

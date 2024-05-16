@@ -1,11 +1,13 @@
 
-//? Name = Nome da camada
-
-//! Vamos lá, ainda precisamos fazer essas funções:
-//. 3. Tranformar formas Horizontalmente
-//? E decobrir no caso porque a altura não corresponde aos valores no Hero CTA
-
 //  ##  Função para selecionar camadas  ## //
+
+
+/**
+ * Função para organizar as camadas ao final e definir a cor da etiqueta.
+ * @param {Object} options - Opção para selecionar a camada.
+ * @param {string} options.Name - Nome da camada.
+ * @returns {Array} Array de objetos representando as operações a serem realizadas.
+ */
 
 export function selectLayer({ Name }) {
     return {
@@ -79,6 +81,32 @@ export function showLayer({ Name }) {
         }
     };
 }
+
+
+//  ##  Função para pegar texto da Camada  ## //
+
+export function getSolidColor({ Name }) {
+    return {
+        _obj: "get",
+        _target: [{ _property: "adjustment", color: { _obj: "RGBColor" } },
+        { _ref: "contentLayer", _name: Name }],
+        _options: { dialogOptions: "dontDisplay" }
+    }
+};
+
+
+//  ##  Função para pegar cor de Texto  ## //
+
+export function getTextColor({ Name }) {
+    return {
+        _obj: "get",
+        _target: [{ _property: "textKey" },
+        { _ref: "layer", _name: Name },],
+        _options: { dialogOptions: "dontDisplay" }
+    }
+};
+
+
 
 //  ##  Função para pegar texto da Camada  ## //
 
@@ -406,6 +434,13 @@ export function alignGroupY() {
     }
 }
 
+export function alignGroupYTop() {
+    return {
+        _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSTops" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" },
+    }
+}
+
+
 // ## Função para ajustar a borda do CTA
 
 export function setCTABorder({ Width }) {
@@ -421,5 +456,37 @@ export function setFinalCrop({ Bottom }) {
         { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
         { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
         { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: Bottom }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } },
+    ];
+}
+
+
+const availableColors = ['indigo', 'blue', 'gray', 'magenta', 'fuchsia', 'violet', 'red', 'orange', 'yellowColor', 'green'];
+
+/**
+ * Função para organizar as camadas ao final e definir a cor da etiqueta.
+ * @param {Object} options - Opções para organizar e definir a cor da etiqueta.
+ * @param {string} options.Name - Nome da camada.
+ * @param {number} options.Index - Índice da camada.
+ * @param {string} options.Color - Cor da etiqueta. Deve ser uma das cores disponíveis: 'indigo', 'blue', 'gray', 'magenta', 'fuchsia', 'violet', 'red', 'orange', 'yellowColor', 'green'.
+ * @returns {Array} Array de objetos representando as operações a serem realizadas.
+ */
+
+
+export function organizeAndSetColorLabel({ Name, Index, Color }) {
+    // Verifique se a cor fornecida está entre as cores disponíveis
+    if (!availableColors.includes(Color)) {
+        throw new Error(`Cor inválida. As cores disponíveis são: ${availableColors.join(', ')}`);
+    }
+
+    return [
+        { _obj: "select", _target: [{ _ref: "layer", _name: Name }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: Index }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
+        {
+            _obj: "set",
+            _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
+            to: { _obj: "layer", name: Name, color: { _enum: "color", _value: Color } },
+            _options: { dialogOptions: "dontDisplay" }
+        },
     ];
 }

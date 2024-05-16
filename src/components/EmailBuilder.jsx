@@ -1,29 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { core, app, batchPlay, storage } from '../App.js';
 import useAppContext from '../hook/useAppContext.jsx';
+import useCalculateTotalHeight from '../hook/calculateTotalHeight.jsx';
 import limitCharsPerLine from '../hook/charLimiter.jsx';
-import Hero1LifestyleProduct from '../HeroLayout/hero1LifestyleProduct.jsx';
-import Hero1Lifestyle from '../HeroLayout/hero1lifestyle.jsx';
-import Hero1Product from '../HeroLayout/hero1Product.jsx';
-import Hero2Promotion from '../HeroLayout/hero2promotion.jsx';
-import AwHero1LifestyleProduct from '../HeroLayout/awHero1LifestyleProduct.jsx';
-import { getBoundsAndPosition } from '../hook/getBoundsAndPosition.jsx';
+import { slBuild, headerBuild, fundingBuild, skinnyBuild, heroBuild, pluginBuild, fpoBuild, bannerBuild } from './Builder/Builds.jsx';
 
-import { selectLayer, selectGroup, makeSmartObj, setFontStyle, getBounds, setOffset, setSolidFill, setOverlayColor, selectAllAndCopy, alignGroupX, alignGroupY } from "../hook/hooksJSON.jsx";
+import { selectGroup, setFontStyle, setSolidFill, selectAllAndCopy, alignGroupX, alignGroupY, organizeAndSetColorLabel } from "../hook/hooksJSON.jsx";
 
 export default function EmailBuilder() {
 
-    var slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight, skinnyBannerHeight = "";
+    var pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight = "";
 
-    const { accentColor, secondaryColor, tertiaryColor, cores, slValue, sslValue, selectedHeader, selectedFunding, fundingCopyValue, selectedSkinny, skinnyTitleValue, skinnyCopyValue, selectedHero, heroCopyValues, selectedPlugin, pluginCopyValues, selectedFpoSegment, selectedFpoValue, selectedBanner, bannerCopyValues, selectedFooter, selectedBirdseed, birdseedDate, selectedBirdseedCopy, birdseedCopyValues, selectedBrand } = useAppContext();
-
-    const { r: accentRed, g: accentGreen, b: accentBlue } = cores[accentColor] || {};
-    const { r: secondaryRed, g: secondaryGreen, b: secondaryBlue } = cores[secondaryColor] || {};
-    const { r: tertiaryRed, g: tertiaryGreen, b: tertiaryBlue } = cores[tertiaryColor] || {};
-    const { badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, specsValue, priceValue, productSuperchargerValue, heroCtaValue, } = heroCopyValues || {};
-    const { pluginCopyValue, leftPluginCopyValue, centerPluginCopyValue, rightPluginCopyValue } = pluginCopyValues || {};
-    const { bannerHeadlineValue, bannerCopyValue, bannerCtaValue } = bannerCopyValues || {};
-    let { selectedDay, selectedMonth, selectedYear, } = birdseedDate || {};
+    const { selectedPlugin, selectedFpoValue, selectedBanner, selectedFooter, selectedBirdseed, birdseedValues, selectedBrand, colors, selectedModules, copyValues, setCopyValues } = useAppContext();
 
     // Fazer depois a função para deletar artboard caso exista uma 
 
@@ -32,23 +20,15 @@ export default function EmailBuilder() {
     // { _obj: "select", _target: [{ _ref: "layer", _name: "Artboard 1" }], makeVisible: false, layerID: [3], _options: { dialogOptions: "dontDisplay" } },
     // { _obj: "delete", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], layerID: [4, 3], _options: { dialogOptions: "dontDisplay" } }
 
-    // Limpar as camadas do documento
     async function clearAllLayers() {
         const targetFunction = async (executionContext) => {
             try {
-                // Tenta obter informações da camada no índice 1
                 const getLayerIndex = [
-                    {
-                        _obj: 'get',
-                        _target: [{ _ref: 'layer', _index: 2 }],
-                    },
+                    { _obj: 'get', _target: [{ _ref: 'layer', _index: 2 }], },
                 ];
 
                 await batchPlay(getLayerIndex, {});
 
-                console.log('%cCamada encontrada no índice 2. Procedendo para deletar todas as camadas...', 'color: #00EAADFF;');
-
-                // Deleta todas as camadas
                 const deleteAllLayers = [
                     { _obj: 'selectAllLayers', _target: [{ _ref: 'layer', _enum: 'ordinal', _value: 'targetEnum' }], _options: { dialogOptions: 'silent' } },
                     { _obj: 'delete', _target: [{ _ref: 'layer', _enum: 'ordinal', _value: 'targetEnum' }], _options: { dialogOptions: 'silent' } },
@@ -58,14 +38,13 @@ export default function EmailBuilder() {
 
                 console.log('%cCamadas deletadas com sucesso!', 'color: #00EAADFF;');
             } catch (error) {
-                // Verifica se o erro está relacionado à ausência de camadas no índice 1
                 if (error.message.includes('The object “Layer 1” is not currently available.')) {
                     console.log('%cNenhuma camada encontrada no índice 1. A função não será executada.', 'color: #FF5733;');
                 } else {
                     console.error('Não foi possível deletar as Camadas', error);
                 }
             }
-        }; // Fechando corretamente a declaração da targetFunction
+        };
 
         const options = {
             commandName: 'Limpar camadas',
@@ -75,33 +54,26 @@ export default function EmailBuilder() {
         await core.executeAsModal(targetFunction, options);
     }
 
-    // Ajusta o documento para entrada dos modulos
     async function fitToScreenPre() {
         const targetFunction = async (executionContext) => {
             try {
 
-                // Define a cor do Background Padr\u00e3o
-                const batchDefineBaseBackground = [
+                const setBackgroundColor = [
                     { _obj: "set", _target: [{ _ref: "color", _property: "backgroundColor" }], to: { _obj: "HSBColorClass", hue: { _unit: "angleUnit", _value: 0 }, saturation: 0, brightness: 100 }, source: "photoshopPicker", _options: { dialogOptions: "dontDisplay" } }
                 ]
+                await batchPlay(setBackgroundColor, {});
 
-                await batchPlay(batchDefineBaseBackground, {});
-
-                // Aumenta o tamanho do documento
-                const batchCropDocument = [
+                const cropDocument = [
                     { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
                     { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
                     { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 5000.223315669948 }, right: { _unit: "pixelsUnit", _value: 650 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
                 ]
+                await batchPlay(cropDocument, {});
 
-                await batchPlay(batchCropDocument, {});
-
-                // Ajusta o zoom para Fit to Screen
-                const batchZoomFit = [
+                const zoomFit = [
                     { _obj: "select", _target: [{ _ref: "menuItemClass", _enum: "menuItemType", _value: "fitOnScreen", },], _options: { dialogOptions: "dontDisplay", }, },
                 ];
-
-                await batchPlay(batchZoomFit, {});
+                await batchPlay(zoomFit, {});
 
                 console.log('%cFit inicial executado com sucesso!', 'color: #00EAADFF;');
             } catch (error) {
@@ -115,986 +87,6 @@ export default function EmailBuilder() {
         };
 
         await core.executeAsModal(targetFunction, options);
-    };
-
-    // Importa o SL e SSL
-    async function slBuild() {
-
-        const sslFilePath = `assets/sl-ssl/SL & SSL.psd`;
-
-        try {
-            const fs = storage.localFileSystem;
-            const pluginDir = await fs.getPluginFolder();
-            const fileEntry = await pluginDir.getEntry(sslFilePath);
-
-
-            const targetFunction = async () => {
-                try {
-                    await app.open(fileEntry);
-
-                    const secondDocument = app.documents[1];
-                    const slWidth = secondDocument.width;
-                    slHeight = secondDocument.height;
-
-                    // Troca o texto do SL e SSL 
-                    const changeSLCopy = [
-                        setFontStyle({
-                            Name: "SL",
-                            Value: "Subject Line: " + slValue,
-                            FontScript: "ArialMT",
-                            FontName: "Arial",
-                            FontWeight: "Regular",
-                            Size: 12,
-                            RedColor: 255,
-                            GreenColor: 255,
-                            BlueColor: 255,
-                            FontCaps: false,
-                            AutoLeading: true,
-                        }),
-                        setFontStyle({
-                            Name: "SSL",
-                            Value: "Super Subject Line: " + sslValue,
-                            FontScript: "ArialMT",
-                            FontName: "Arial",
-                            FontWeight: "Regular",
-                            Size: 12,
-                            RedColor: 255,
-                            GreenColor: 255,
-                            BlueColor: 255,
-                            FontCaps: false,
-                            AutoLeading: true,
-                        }),
-                    ];
-
-                    await batchPlay(changeSLCopy, {});
-
-                    // Copia e cola o modulo
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (slWidth / 2));
-                    const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (slHeight / 2));
-                    pastedGroup.translate(offsetX, offsetY);
-
-                    console.log('%cSSL inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir SSL:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir SSL',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo de SSL:', error);
-        }
-    };
-
-
-    // Importa o header
-    async function headerBuild() {
-
-        if (selectedHeader === "" || selectedHeader === null) {
-            console.warn('Header n&#xe3;o selecionado');
-            headerHeight = 0;
-            return;
-        }
-        const headerFilePath = `assets/headers/${selectedHeader}.psd`;
-
-        try {
-            const fs = storage.localFileSystem;
-            const pluginDir = await fs.getPluginFolder();
-            const fileEntry = await pluginDir.getEntry(headerFilePath);
-
-            const targetFunction = async () => {
-                try {
-                    await app.open(fileEntry);
-                    const secondDocument = app.documents[1];
-                    const headerWidth = secondDocument.width;
-                    headerHeight = secondDocument.height;
-
-                    // Copia e cola o modulo
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (headerWidth / 2) + 40);
-                    const offsetY = ((docHeight - docHeight) - (docHeight / 2) + (headerHeight / 2) + (slHeight + 30));
-
-                    pastedGroup.translate(offsetX, offsetY);
-
-                    console.log('%cHeader inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir o Header:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir Cabe\u00e7alho',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo do Header:', error);
-        }
-
-    };
-
-    // Importa o funding
-    async function fundingBuild() {
-
-        let fundingFilePath
-
-        if (selectedFunding !== "" && selectedFunding !== null) {
-            fundingFilePath = `assets/fundings/${selectedFunding}.psd`;
-        } else {
-            fundingFilePath = `assets/fundings/no-vf.psd`;
-        }
-
-        try {
-            const fs = storage.localFileSystem;
-            const pluginDir = await fs.getPluginFolder();
-            const fileEntry = await pluginDir.getEntry(fundingFilePath);
-
-            const targetFunction = async (executionContext) => {
-                try {
-                    await app.open(fileEntry);
-                    const secondDocument = app.documents[1];
-
-                    const formattedFundingCopyValue = limitCharsPerLine(fundingCopyValue || '', 30, "capitalized");
-
-
-
-                    let batchFundingCopy;
-
-                    if (fundingCopyValue === '') {
-                        batchFundingCopy = [
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                            {
-                                _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
-                                to: {
-                                    _obj: "textLayer", textKey: "Visualize no navegador.",
-                                    textStyleRange: [{
-                                        _obj: "textStyleRange", from: 0, to: formattedFundingCopyValue.length + 1 + "Visualize no navegador.".length,
-                                        textStyle: {
-                                            _obj: "textStyle",
-                                            fontPostScriptName: "ArialMT",
-                                            fontName: "Arial",
-                                            fontStyleName: "Regular",
-                                            size: { _unit: "pointsUnit", _value: 2.4208344268798827 },
-                                            impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 },
-                                            baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 },
-                                            impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 },
-                                            color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 }
-                                        }
-                                    }]
-                                },
-                                _isCommand: true
-                            },
-                            { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Funding Copy" },], },
-                        ]
-                    } else {
-                        batchFundingCopy = [
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Funding Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedFundingCopyValue + "\r" + "Visualize no navegador.", textStyleRange: [{ _obj: "textStyleRange", from: 0, to: formattedFundingCopyValue.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } }, { _obj: "textStyleRange", from: formattedFundingCopyValue.length + 1, to: formattedFundingCopyValue.length + 1 + "Visualize no navegador.".length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 2.4208344268798827 }, impliedFontSize: { _unit: "pointsUnit", _value: 2.4208344268798827 }, baselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, impliedBaselineShift: { _unit: "pointsUnit", _value: -1.9999999237060546 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } }] }, _isCommand: true },
-                            { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Funding Copy" },], },
-                        ]
-                    };
-
-                    const resultFundingTextBoundingBox = await batchPlay(batchFundingCopy, {});
-                    const boundingBoxFundingText = resultFundingTextBoundingBox[2].bounds;
-                    const finalCropValue = boundingBoxFundingText.bottom._value;
-
-                    const finalCrop = [
-                        { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 200 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 200 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
-                    ]
-                    await batchPlay(finalCrop, {});
-
-                    fundingHeight = secondDocument.height;
-
-                    // Copia e cola o modulo
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + 515);
-
-
-                    let offsetY;
-
-                    if ((selectedFunding === 'no-vf')) {
-                        offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 26));
-                    } else {
-                        offsetY = ((docHeight - docHeight) - (docHeight / 2) + (fundingHeight / 2) + (slHeight + 30));
-                    }
-                    pastedGroup.translate(offsetX, offsetY);
-
-                    if (selectedHeader !== "" && selectedHeader !== null) {
-
-                        const alignToHeader = [
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "select", _target: [{ _ref: "layer", _name: "Header" }, { _ref: "layer", _name: "Funding" }], makeVisible: false, layerID: [448, 449], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-                            { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSTops" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } }
-                        ]
-
-                        await batchPlay(alignToHeader, {});
-                    }
-
-
-                    console.log('%cFunding inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir o Funding:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir Cabe\u00e7alho',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo do Funding:', error);
-        }
-
-    };
-
-    // Importa o skinny banner
-    async function skinnyBuild() {
-
-        if (selectedSkinny === "" || selectedSkinny === null) {
-            console.warn('Skinny não selecionado');
-            skinnyHeight = 0;
-            return;
-        }
-
-        const skinnyFilePath = `assets/skinny-banner/skinny-banner.psd`;
-        const fs = storage.localFileSystem;
-
-        try {
-            const pluginDir = await fs.getPluginFolder();
-            const fileEntry = await pluginDir.getEntry(skinnyFilePath);
-
-
-            const targetFunction = async (executionContext) => {
-                try {
-                    await app.open(fileEntry);
-
-                    const secondDocument = app.documents[1];
-                    const skinnyWidth = secondDocument.width;
-
-                    let formattedSkinnyTitle = limitCharsPerLine(
-                        skinnyTitleValue || '', 60, "capitalized");
-                    let formattedSkinnyCopy = limitCharsPerLine(
-                        skinnyCopyValue || '', 65, "capitalized");
-
-                    const skinnyBannerCopy = formattedSkinnyTitle + "\r" + formattedSkinnyCopy
-
-                    const changeSkinnyBannerCopy = [
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Copy" }], makeVisible: false, layerID: [4], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-                        {
-                            _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }],
-
-                            to: {
-                                _obj: "textLayer", textKey: skinnyBannerCopy, textStyleRange: [
-
-                                    { _obj: "textStyleRange", from: 0, to: formattedSkinnyTitle.length, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Bold", fontName: "Roboto", fontStyleName: "Bold", size: { _unit: "pointsUnit", _value: 18.5 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
-
-                                    { _obj: "textStyleRange", from: formattedSkinnyTitle.length + 1, to: formattedSkinnyTitle.length + formattedSkinnyCopy.length + 1, textStyle: { _obj: "textStyle", fontPostScriptName: "Roboto-Regular", fontName: "Roboto", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 18.5 }, color: { _obj: "RGBColor", red: accentRed, green: accentGreen, blue: accentBlue } } },
-                                ]
-                            }, _isCommand: true
-                        },
-                        { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Banner Copy" }], }
-                    ]
-                        ;
-
-                    await batchPlay(changeSkinnyBannerCopy, {});
-
-                    const resultSkinnyBoundingBox = await batchPlay(changeSkinnyBannerCopy, {});
-                    const boundingBoxSkinnyBanner = resultSkinnyBoundingBox[2].bounds;
-                    const finalCropValue = boundingBoxSkinnyBanner.bottom._value + 20;
-
-                    const finalCrop = [
-                        { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: secondaryRed, grain: secondaryGreen, blue: secondaryBlue } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
-
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
-
-                        { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: finalCropValue }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
-                    ]
-
-                    await batchPlay(finalCrop, {});
-
-                    skinnyHeight = secondDocument.height;
-
-                    // Copia e cola o modulo
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-                    if (selectedFunding === "no-vf") {
-                        fundingHeight = headerHeight
-                    } else { }
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-                    const offsetX = (0 - (docWidth / 2) + (skinnyWidth / 2) + 25);
-                    let offsetModules = ((slHeight + 30) + (fundingHeight + 20));
-                    const offsetY = (0 - (docHeight / 2) + (skinnyHeight / 2) + (offsetModules));
-                    pastedGroup.translate(offsetX, offsetY);
-
-                    console.log('%cSkinny Banner inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir Skinny Banner:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir Skinny Banner',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo de Skinny Banner:', error);
-        }
-    };
-
-    // Importa o Hero
-    async function heroBuild() {
-        if (selectedHero === "" || selectedHero === null) {
-            console.warn('Hero não selecionado');
-            heroHeight = 0;
-            return;
-        }
-
-        const heroFilePath = `assets/heros/${selectedHero}.psd`;
-        const fs = storage.localFileSystem;
-        try {
-            const pluginDir = await fs.getPluginFolder();
-            const fileEntry = await pluginDir.getEntry(heroFilePath);
-
-            const targetFunction = async (executionContext) => {
-                try {
-                    await app.open(fileEntry);
-                    const secondDocument = app.documents[1];
-
-                    if (selectedHero === 'hero1-lifestyle-product') {
-                        try {
-                            await Hero1LifestyleProduct(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, inlinePromoValue, productNameValue, productSuperchargerValue, heroCtaValue);
-                        } catch (error) {
-                            console.error('Erro ao executar Hero 1 - Lifestyle + Product:', error);
-                        }
-                    } else { }
-
-                    if (selectedHero === 'hero1-lifestyle') {
-                        try {
-                            await Hero1Lifestyle(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, heroCtaValue);
-                        } catch (error) {
-                            console.error('Erro ao executar Hero 1 - Only Lifestyle:', error);
-                        }
-                    } else { }
-
-
-                    if (selectedHero === 'hero1-product') {
-                        try {
-                            await Hero1Product(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, productNameValue, heroCtaValue);
-                        } catch (error) {
-                            console.error('Erro ao executar Hero 1 - Only Product:', error);
-                        }
-                    } else { }
-
-                    if (selectedHero === 'aw-hero1-lifestyle-product') {
-                        try {
-                            await AwHero1LifestyleProduct(accentRed, accentGreen, accentBlue, secondaryRed, secondaryGreen, secondaryBlue, tertiaryRed, tertiaryGreen, tertiaryBlue, badgeValue, headlineValue, subHeadlineValue, productNameValue, heroCtaValue);
-                        } catch (error) {
-                            console.error('Erro ao executar Aw Hero 1 - Lifestyle + Product:', error);
-                        }
-                    } else { }
-
-                    if (selectedHero === 'hero2-promotion') {
-                        try {
-                            await Hero2Promotion(accentRed, accentGreen, accentBlue, badgeValue, headlineValue, OTValue, subHeadlineValue, inlinePromoValue, productNameValue, priceValue, specsValue, heroCtaValue);
-                        } catch (error) {
-                            console.error('Erro ao executar Hero2 - Promotion:', error);
-                        }
-                    } else { }
-
-                    const heroWidth = secondDocument.width;
-                    heroHeight = secondDocument.height;
-
-                    // Copia e cola o modulo
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-
-                    if (selectedFunding === "no-vf") {
-                        fundingHeight = headerHeight
-                    } else {
-                    }
-
-                    const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
-                    let offsetModules = ((slHeight + 30) + (fundingHeight + 20) + (skinnyHeight));
-                    const offsetY = (0 - (docHeight / 2) + (heroHeight / 2) + (offsetModules));
-                    pastedGroup.translate(offsetX, offsetY);
-
-
-                    console.log('%cHero inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir o Hero:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir Hero',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo do Hero:', error);
-        }
-    };
-
-    async function pluginBuild() {
-        let pluginFilePath = "";
-
-        if (selectedPlugin === 'supercharger') {
-            pluginFilePath = 'assets/plugins/supercharger.psd';
-        } else if (selectedPlugin === 'plugin') {
-            pluginFilePath = 'assets/plugins/plugin.psd';
-        } else {
-            console.warn('Plugin n\u00e3o selecionado');
-            pluginHeight = 0;
-            return;
-        }
-
-        const fs = storage.localFileSystem;
-
-        try {
-            const pluginDir = await fs.getPluginFolder();
-            const fileEntry = await pluginDir.getEntry(pluginFilePath);
-
-            const formattedPluginCopyValue = limitCharsPerLine(pluginCopyValue || '', 65, "upper");
-            const formattedLeftCopyValue = limitCharsPerLine(leftPluginCopyValue || '', 13, "captitalized");
-            const formattedCenterCopyValue = limitCharsPerLine(centerPluginCopyValue || '', 13, "captitalized");
-            const formattedRightCopyValue = limitCharsPerLine(rightPluginCopyValue || '', 13, "captitalized");
-
-            const targetFunction = async (executionContext) => {
-                try {
-                    await app.open(fileEntry);
-
-                    const secondDocument = app.documents[1];
-                    const pluginWidth = secondDocument.width;
-                    pluginHeight = secondDocument.height;
-
-                    if (selectedPlugin === 'plugin' && selectedBrand === 'dell') {
-
-                        const setPlugin = [
-
-                            setSolidFill({
-                                Name: "Background",
-                                RedColor: secondaryRed,
-                                GreenColor: secondaryGreen,
-                                BlueColor: secondaryBlue
-                            }),
-
-                            setFontStyle({
-                                Name: "Plugin Copy",
-                                Value: formattedPluginCopyValue,
-                                FontName: "Arial",
-                                FontWeight: "Regular",
-                                Size: 12,
-                                RedColor: accentRed,
-                                GreenColor: accentGreen,
-                                BlueColor: accentBlue,
-                                Tracking: 20,
-                                FontCaps: true,
-                                AutoLeading: true,
-                            }),
-                        ]
-                        await batchPlay(setPlugin, {});
-
-                        const alignPluginCopy = [
-                            selectGroup({
-                                FirstName: "Plugin Copy",
-                                LastName: "Background"
-                            }),
-                            alignGroupX(),
-                            alignGroupY(),
-                        ];
-                        await batchPlay(alignPluginCopy, {});
-
-
-                        const selectAndCopy = await selectAllAndCopy()
-                        await batchPlay(selectAndCopy, {});
-
-                    } else if (selectedPlugin === 'supercharger' && selectedBrand === 'dell') {
-
-                        const setPlugin = [
-
-                            setSolidFill({
-                                Name: "Background",
-                                RedColor: secondaryRed,
-                                GreenColor: secondaryGreen,
-                                BlueColor: secondaryBlue
-                            }),
-
-                            setFontStyle({
-                                Name: "1",
-                                Value: formattedLeftCopyValue,
-                                FontName: "Roboto",
-                                FontWeight: "Light",
-                                Size: 24,
-                                RedColor: accentRed,
-                                GreenColor: accentGreen,
-                                BlueColor: accentBlue,
-                                FontCaps: false,
-                                AutoLeading: false,
-                                Leading: 24
-                            }),
-
-                            setFontStyle({
-                                Name: "2",
-                                Value: formattedCenterCopyValue,
-                                FontName: "Roboto",
-                                FontWeight: "Light",
-                                Size: 24,
-                                RedColor: accentRed,
-                                GreenColor: accentGreen,
-                                BlueColor: accentBlue,
-                                FontCaps: false,
-                                AutoLeading: false,
-                                Leading: 24
-                            }),
-
-                            setFontStyle({
-                                Name: "3",
-                                Value: formattedRightCopyValue,
-                                FontName: "Roboto",
-                                FontWeight: "Light",
-                                Size: 24,
-                                RedColor: accentRed,
-                                GreenColor: accentGreen,
-                                BlueColor: accentBlue,
-                                FontCaps: false,
-                                AutoLeading: false,
-                                Leading: 24
-                            }),
-                        ]
-                        await batchPlay(setPlugin, {});
-
-                        const alignSuperchargerCopy = [
-                            selectGroup({
-                                FirstName: "3",
-                                LastName: "Background"
-                            }),
-                            alignGroupY(),
-
-                            selectGroup({
-                                FirstName: "2",
-                                LastName: "Background"
-                            }),
-                            alignGroupY(),
-
-                            selectGroup({
-                                FirstName: "1",
-                                LastName: "Background"
-                            }),
-                            alignGroupY(),
-                        ]
-                        await batchPlay(alignSuperchargerCopy, {});
-
-                        const selectAndCopy = await selectAllAndCopy()
-                        await batchPlay(selectAndCopy, {});
-
-                    } else if (selectedPlugin === 'plugin' && selectedBrand === 'alienware') {
-
-                        const setPlugin = [
-
-                            setSolidFill({
-                                Name: "Background",
-                                RedColor: accentRed,
-                                GreenColor: accentGreen,
-                                BlueColor: accentBlue
-                            }),
-
-                            setFontStyle({
-                                Name: "Plugin Copy",
-                                Value: formattedPluginCopyValue,
-                                FontName: "Open Sans",
-                                FontScript: "OpenSans-Bold",
-                                FontWeight: "Bold",
-                                Size: 12,
-                                RedColor: tertiaryRed,
-                                GreenColor: tertiaryGreen,
-                                BlueColor: tertiaryBlue,
-                                Tracking: 40,
-                                FontCaps: true,
-                                AutoLeading: true,
-                            }),
-                        ]
-                        await batchPlay(setPlugin, {});
-
-                        const alignPluginCopy = [
-                            selectGroup({
-                                FirstName: "Plugin Copy",
-                                LastName: "Background"
-                            }),
-                            alignGroupX(),
-                            alignGroupY(),
-                        ];
-                        await batchPlay(alignPluginCopy, {});
-
-                        const selectAndCopy = await selectAllAndCopy()
-                        await batchPlay(selectAndCopy, {});
-
-                    } else if (selectedPlugin === 'supercharger' && selectedBrand === 'alienware') {
-
-                        const setPlugin = [
-                            setSolidFill({
-                                Name: "Background",
-                                RedColor: accentRed,
-                                GreenColor: accentGreen,
-                                BlueColor: accentBlue
-                            }),
-
-                            setFontStyle({
-                                Name: "1",
-                                Value: formattedLeftCopyValue,
-                                FontName: "Roboto",
-                                FontWeight: "Light",
-                                Size: 24,
-                                RedColor: tertiaryRed,
-                                GreenColor: tertiaryGreen,
-                                BlueColor: tertiaryBlue,
-                                FontCaps: false,
-                                AutoLeading: false,
-                                Leading: 24
-                            }),
-
-                            setFontStyle({
-                                Name: "2",
-                                Value: formattedCenterCopyValue,
-                                FontName: "Roboto",
-                                FontWeight: "Light",
-                                Size: 24,
-                                RedColor: tertiaryRed,
-                                GreenColor: tertiaryGreen,
-                                BlueColor: tertiaryBlue,
-                                FontCaps: false,
-                                AutoLeading: false,
-                                Leading: 24
-                            }),
-
-                            setFontStyle({
-                                Name: "3",
-                                Value: formattedRightCopyValue,
-                                FontName: "Roboto",
-                                FontWeight: "Light",
-                                Size: 24,
-                                RedColor: tertiaryRed,
-                                GreenColor: tertiaryGreen,
-                                BlueColor: tertiaryBlue,
-                                FontCaps: false,
-                                AutoLeading: false,
-                                Leading: 24
-                            }),
-
-                        ]
-                        await batchPlay(setPlugin, {});
-
-                        const alignSuperchargerCopy = [
-                            selectGroup({
-                                FirstName: "3",
-                                LastName: "Background"
-                            }),
-                            alignGroupY(),
-
-                            selectGroup({
-                                FirstName: "2",
-                                LastName: "Background"
-                            }),
-                            alignGroupY(),
-
-                            selectGroup({
-                                FirstName: "1",
-                                LastName: "Background"
-                            }),
-                            alignGroupY(),
-                        ]
-                        await batchPlay(alignSuperchargerCopy, {});
-
-                        const selectAndCopy = await selectAllAndCopy()
-                        await batchPlay(selectAndCopy, {});
-                    } else {
-                        console.error('Plugin ou marca não selecionado(a)')
-                        return;
-                    }
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-
-
-                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
-                    let offsetModules = (slHeight + 30) + (fundingHeight + 20) + heroHeight + skinnyHeight;
-                    const offsetY = (0 - (docHeight / 2) + (pluginHeight / 2) + (offsetModules));
-                    pastedGroup.translate(offsetX, offsetY);
-
-                    console.log('%cPlugin inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir plugin:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir Plugin',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo de Plugin:', error);
-        }
-    }
-
-
-    async function fpoBuild() {
-
-        if (selectedFpoValue === null || selectedFpoValue === 0 || selectedFpoSegment === undefined) {
-            console.warn('Fpo n\u00e3o selecionado');
-            fpoHeight = 0;
-            return;
-        } else {
-        }
-
-        try {
-            const fs = storage.localFileSystem;
-            const pluginDir = await fs.getPluginFolder();
-            let fpoFilePath;
-            for (let i = 1; i <= selectedFpoValue; i++) {
-                fpoFilePath = `assets/fpo/${selectedFpoSegment}/${i}.psd`;
-            }
-            const fileEntry = await pluginDir.getEntry(fpoFilePath)
-            const targetFunction = async (executionContext) => {
-                try {
-                    await app.open(fileEntry);
-                    const secondDocument = app.documents[1];
-                    const fpoWidth = secondDocument.width;
-                    fpoHeight = secondDocument.height;
-
-                    // Copia e cola o modulo
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-
-                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fpoWidth / 2) + 25);
-                    let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyHeight + heroHeight + pluginHeight;
-                    const offsetY = (0 - (docHeight / 2) + (fpoHeight / 2) + (offsetModules));
-
-                    pastedGroup.translate(offsetX, offsetY);
-
-                    console.log('%cFPO inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir o FPO:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir FPO',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo do FPO:', error);
-        }
-    }
-
-    async function bannerBuild() {
-
-        const formattedBannerHeadlineValue = await limitCharsPerLine(bannerHeadlineValue || '', 27, "capitalized");
-        const formattedBannerCopyValue = await limitCharsPerLine(bannerCopyValue || '', 60, "capitalized");
-
-        try {
-            if (selectedBanner === "" || selectedBanner === null) {
-                console.warn('Banner n\u00e3o selecionado');
-                bannerHeight = 0;
-                return;
-            } else {
-            }
-
-            const fs = storage.localFileSystem;
-            const pluginDir = await fs.getPluginFolder();
-
-            let bannerFilePath;
-
-            if (selectedBanner === 'left') {
-                bannerFilePath = 'assets/banners/left.psd';
-            } else if (selectedBanner === 'right') {
-                bannerFilePath = 'assets/banners/right.psd';
-            } else {
-                bannerFilePath = null;
-            }
-
-            const fileEntry = await pluginDir.getEntry(bannerFilePath)
-
-            const targetFunction = async (executionContext) => {
-                try {
-                    await app.open(fileEntry);
-                    const secondDocument = app.documents[1];
-                    const bannerWidth = secondDocument.width;
-                    bannerHeight = secondDocument.height;
-
-                    const batchChangeBannerCopy = [
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Headline" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedBannerHeadlineValue } },
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: formattedBannerCopyValue } },
-                        { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Banner Headline" },], },
-                    ];
-
-                    const resultBoundingBoxBannerHeadline = await batchPlay(batchChangeBannerCopy, {});
-                    const boundingBoxBannerHeadline = resultBoundingBoxBannerHeadline[4].boundingBox;
-                    const bannerCopyPadding = 16;
-                    const newBannerCopyPosition = boundingBoxBannerHeadline.height._value + bannerCopyPadding;
-
-                    const offsetBannerCopy = [
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "move", _target: [{ _ref: "layer", _name: "Banner Copy", }], makeVisible: false, layerID: [2125], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newBannerCopyPosition, } }, _options: { dialogOptions: "dontDisplay" }, },
-                        { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "Banner Copy" },], },
-                    ];
-
-                    const resultBannerCopyBoundingBox = await batchPlay(offsetBannerCopy, {});
-                    const boundingBoxBannerCopy = resultBannerCopyBoundingBox[2].boundingBox;
-                    const ctaPadding = bannerCopyPadding + 18;
-                    const newCtaPosition = boundingBoxBannerCopy.height._value + boundingBoxBannerHeadline.height._value + ctaPadding;
-
-                    const changeCtaCopy = [
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Copy" }], makeVisible: false, layerID: [2125], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "set", _target: [{ _ref: "textLayer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "textLayer", textKey: bannerCtaValue } },
-                        { _obj: "get", _target: [{ _property: "boundingBox" }, { _ref: "layer", _name: "CTA Copy" },], },
-                    ]
-
-                    const resultCtaCopyBoundingBox = await batchPlay(changeCtaCopy, {});
-                    const boundingBoxCtaCopy = resultCtaCopyBoundingBox[2].boundingBox;
-                    const newBorderCta = boundingBoxCtaCopy.width._value + 20
-
-                    const resizeCtaBorder = [
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], makeVisible: false, layerID: [7772], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "transform", _target: [{ _ref: "path", _enum: "ordinal", _value: "targetEnum" }], freeTransformCenterState: { _enum: "quadCenterState", _value: "QCSAverage" }, offset: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0 }, vertical: { _unit: "pixelsUnit", _value: 0 } }, width: { _unit: "pixelsUnit", _value: newBorderCta }, },
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [7771], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "layer", _name: "CTA Border" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelectionContinuous" }, makeVisible: false, layerID: [7772, 7770, 7771], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "newPlacedLayer", _options: { dialogOptions: "dontDisplay" } },
-                    ]
-
-                    await batchPlay(resizeCtaBorder, {});
-
-                    const offsetCta = [
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "CTA" }], makeVisible: false, layerID: [9845], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "move", _target: [{ _ref: "layer", _name: "CTA", }], makeVisible: false, layerID: [9845], to: { _obj: "offset", horizontal: { _unit: "pixelsUnit", _value: 0, }, vertical: { _unit: "pixelsUnit", _value: newCtaPosition, } }, _options: { dialogOptions: "dontDisplay" }, }
-                    ];
-
-                    await batchPlay(offsetCta, {});
-
-                    const alignCopyVertical = [
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "Copy" }], makeVisible: false, layerID: [7739], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "Banner Image" }], selectionModifier: { _enum: "selectionModifierType", _value: "addToSelection" }, makeVisible: false, layerID: [7739, 7743], _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSCentersV" }, alignToCanvas: false, _options: { dialogOptions: "dontDisplay" } }
-                    ]
-
-                    await batchPlay(alignCopyVertical, {});
-
-                    const finalCrop = [
-                        { _obj: "make", _target: [{ _ref: "contentLayer" }], using: { _obj: "contentLayer", type: { _obj: "solidColorLayer", color: { _obj: "RGBColor", red: 255, grain: 255, blue: 255 } }, shape: { _obj: "rectangle", unitValueQuadVersion: 1, top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 210 }, right: { _unit: "pixelsUnit", _value: 600 }, topRight: { _unit: "pixelsUnit", _value: 0 }, topLeft: { _unit: "pixelsUnit", _value: 0 }, bottomLeft: { _unit: "pixelsUnit", _value: 0 }, bottomRight: { _unit: "pixelsUnit", _value: 0 } }, }, layerID: 9901, _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "select", _target: [{ _ref: "layer", _name: "Rectangle 1" }], makeVisible: false, layerID: [9891], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "set", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _obj: "layer", name: "Background" }, _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 0 }, adjustment: false, version: 5, layerID: [9891], _options: { dialogOptions: "dontDisplay" } }, { _obj: "select", _target: [{ _ref: "cropTool" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "select", _target: [{ _ref: "moveTool" }], _options: { dialogOptions: "dontDisplay" } },
-                        { _obj: "crop", to: { _obj: "rectangle", top: { _unit: "pixelsUnit", _value: 0 }, left: { _unit: "pixelsUnit", _value: 0 }, bottom: { _unit: "pixelsUnit", _value: 210 }, right: { _unit: "pixelsUnit", _value: 600 } }, angle: { _unit: "angleUnit", _value: 0 }, delete: true, AutoFillMethod: 1, cropFillMode: { _enum: "cropFillMode", _value: "defaultFill" }, cropAspectRatioModeKey: { _enum: "cropAspectRatioModeClass", _value: "pureAspectRatio" }, constrainProportions: false, _options: { dialogOptions: "dontDisplay" } }
-                    ]
-
-                    await batchPlay(finalCrop, {});
-
-                    // Copia e cola o modulo
-                    const selectAndCopy = selectAllAndCopy()
-                    await batchPlay(selectAndCopy, {});
-
-                    const activeDocument = app.activeDocument;
-                    await activeDocument.paste();
-
-                    const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
-                    const docWidth = activeDocument.width;
-                    const docHeight = activeDocument.height;
-
-
-                    const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (bannerWidth / 2) + 25);
-                    let offsetModules = (slHeight + 30) + (fundingHeight + 20) + skinnyHeight + heroHeight + pluginHeight + fpoHeight;
-                    const offsetY = (0 - (docHeight / 2) + (bannerHeight / 2) + offsetModules);
-
-                    pastedGroup.translate(offsetX, offsetY);
-
-                    console.log('%cBanner inserido com sucesso!', 'color: #00EAADFF;');
-                } catch (error) {
-                    console.error('Erro ao inserir o Banner:', error);
-                }
-            };
-
-            const options = {
-                commandName: 'Inserir Banner',
-                interactive: true,
-            };
-
-            await core.executeAsModal(targetFunction, options);
-        } catch (error) {
-            console.error('Erro ao encontrar o arquivo do Banner:', error);
-        }
     };
 
     async function footerBuild() {
@@ -1170,17 +162,13 @@ export default function EmailBuilder() {
             const pluginDir = await fs.getPluginFolder();
             const fileEntry = await pluginDir.getEntry(birdseedFilePath);
 
-            selectedDay = selectedDay === null ? 1 : selectedDay;
-            selectedMonth = selectedMonth === null ? 1 : selectedMonth;
-            selectedYear = selectedYear === null ? 2024 : selectedYear;
-            
-            console.log("Selected Day Builder:", selectedDay);
-            console.log("Selected Month Builder:", selectedMonth);
-            console.log("Selected Year Builder:", selectedYear);
-            
+            let copy = birdseedValues.copy
+            let day = birdseedValues.day === null ? 1 : birdseedValues.day;
+            let month = birdseedValues.month === null ? 1 : birdseedValues.month;
+            let year = birdseedValues.year === null ? 2024 : birdseedValues.year;
 
-            const formattedDay = selectedDay < 10 ? `0${selectedDay}` : selectedDay;
-            const formattedMonth = selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth;
+            const formattedDay = day < 10 ? `0${day}` : day;
+            const formattedMonth = month < 10 ? `0${month}` : month;
 
             const targetFunction = async (executionContext) => {
                 try {
@@ -1188,9 +176,9 @@ export default function EmailBuilder() {
 
                     let batchBirdseedCopy = [];
 
-                    if (selectedBirdseedCopy === true) {
+                    if (copy !== "") {
 
-                        const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${formattedDay}/${formattedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
+                        const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${formattedDay}/${formattedMonth}/${year}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
 
                         const defaultTextURLOne = ` www.dell.com.br.\r\r`
 
@@ -1201,7 +189,7 @@ export default function EmailBuilder() {
                         const defaultTextSliceThree = `Empresa beneficiada pela Lei da Inform\u00e1tica. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport s\u00e3o marcas registradas da \u00a9 2023 Dell Inc. Todos os direitos reservados. Microsoft e Windows s\u00e3o marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro, Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane s\u00e3o marcas registradas da Intel Corporation e suas subsidi\u00e1rias. \u00a9 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combina\u00e7\u00f5es resultantes s\u00e3o marcas registradas da Advanced Micro Devices, Inc. \u00a9 2023 NVIDIA, o logotipo NVIDIA, GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal e Turing s\u00e3o marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros pa\u00edses. \r\rDell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil. `;
 
                         // Concatena o birdseedCopyValue antes do texto padr\u00e3o
-                        const BirdseedCopy = birdseedCopyValues + "\r\r" + defaultTextSliceOne + defaultTextURLOne + defaultTextSliceTwo + defaultTextURLTwo + defaultTextSliceThree;
+                        const BirdseedCopy = copy + "\r\r" + defaultTextSliceOne + defaultTextURLOne + defaultTextSliceTwo + defaultTextURLTwo + defaultTextSliceThree;
 
 
                         batchBirdseedCopy = [
@@ -1213,15 +201,15 @@ export default function EmailBuilder() {
                                 to: {
                                     _obj: "textLayer", textKey: BirdseedCopy, textStyleRange: [
 
-                                        { _obj: "textStyleRange", from: 0, to: birdseedCopyValues.length + defaultTextSliceOne.length + 2, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+                                        { _obj: "textStyleRange", from: 0, to: copy.length + defaultTextSliceOne.length + 2, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
 
-                                        { _obj: "textStyleRange", from: birdseedCopyValues.length + defaultTextSliceOne.length + 2, to: birdseedCopyValues.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, underline: { _enum: "underline", _value: "underlineOnLeftInVertical" }, underlineOffset: { _unit: "pointsUnit", _value: 0 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } },
+                                        { _obj: "textStyleRange", from: copy.length + defaultTextSliceOne.length + 2, to: copy.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, underline: { _enum: "underline", _value: "underlineOnLeftInVertical" }, underlineOffset: { _unit: "pointsUnit", _value: 0 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } },
 
-                                        { _obj: "textStyleRange", from: birdseedCopyValues.length + defaultTextSliceOne.length + defaultTextURLOne.length + 2, to: birdseedCopyValues.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+                                        { _obj: "textStyleRange", from: copy.length + defaultTextSliceOne.length + defaultTextURLOne.length + 2, to: copy.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
 
-                                        { _obj: "textStyleRange", from: birdseedCopyValues.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + 1, to: birdseedCopyValues.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, underline: { _enum: "underline", _value: "underlineOnLeftInVertical" }, underlineOffset: { _unit: "pointsUnit", _value: 0 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } },
+                                        { _obj: "textStyleRange", from: copy.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + 1, to: copy.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, underline: { _enum: "underline", _value: "underlineOnLeftInVertical" }, underlineOffset: { _unit: "pointsUnit", _value: 0 }, color: { _obj: "RGBColor", red: 6, green: 114, blue: 203 } } },
 
-                                        { _obj: "textStyleRange", from: birdseedCopyValues.length + defaultTextSliceOne.length + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length + 2, to: birdseedCopyValues.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length + defaultTextSliceThree.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
+                                        { _obj: "textStyleRange", from: copy.length + defaultTextSliceOne.length + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length + 2, to: copy.length + defaultTextSliceOne.length + 2 + defaultTextURLOne.length + defaultTextSliceTwo.length + defaultTextURLTwo.length + defaultTextSliceThree.length, textStyle: { _obj: "textStyle", fontPostScriptName: "ArialMT", fontName: "Arial", fontStyleName: "Regular", size: { _unit: "pointsUnit", _value: 10 }, color: { _obj: "RGBColor", red: 68, green: 68, blue: 68 } } },
                                     ]
                                 },
 
@@ -1231,9 +219,9 @@ export default function EmailBuilder() {
                             { _obj: "get", _target: [{ _property: "bounds" }, { _ref: "layer", _name: "Birdseed Copy" }], }
                         ];
 
-                    } else if (selectedBirdseedCopy === false) {
+                    } else {
 
-                        const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${formattedDay}/${formattedMonth}/${selectedYear}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
+                        const defaultTextSliceOne = `Ofertas v\u00e1lidas at\u00e9 ${formattedDay}/${formattedMonth}/${year}, limitadas, por linha de produto, a 3 unidades para pessoa f\u00edsica, seja por aquisi\u00e7\u00e3o direta e/ou entrega a ordem, que n\u00e3o tenha adquirido equipamentos Dell nos \u00faltimos 4 meses, e a 5 unidades para pessoa jur\u00eddica ou grupo de empresas com at\u00e9 500 funcion\u00e1rios registrados. Frete gr\u00e1tis para todo o Brasil. C\u00e1lculo do valor do produto sem frete. Nossos notebooks e desktops s\u00e3o constru\u00eddos especialmente para voc\u00ea. Nada de m\u00e1quinas paradas em estoque. O prazo de entrega pode ser estimado junto ao site da Dell.\r\rPre\u00e7os referenciados com impostos para consumidores pessoas f\u00edsicas, comprando com CPF. O pre\u00e7o final aplic\u00e1vel nas vendas para pessoas jur\u00eddicas comprando com CNPJ pode variar de acordo com o Estado em que estiver localizado o adquirente do produto, em raz\u00e3o dos diferenciais de impostos para cada estado. As ofertas podem ser adquiridas atrav\u00e9s de cart\u00e3o de cr\u00e9dito das operadoras Visa, MasterCard, American Express, Elo e Hypercard, atrav\u00e9s de Boleto ou PayPal. Para mais detalhes, consulte o seu representante de vendas ou visite o site`
 
                         const defaultTextURLOne = ` www.dell.com.br.\r\r`
 
@@ -1332,7 +320,7 @@ export default function EmailBuilder() {
 
     async function fitToScreenPos() {
 
-        const allModulesSizes = (slHeight + 30) + (fundingHeight + 20) + skinnyHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight + (birdseedHeight + 20) + 40;
+        const allModulesSizes = (slHeight.value + 30) + (fundingHeight.value + 20) + skinnyHeight + heroHeight + pluginHeight + fpoHeight + (bannerHeight + 10) + footerHeight + (birdseedHeight + 20) + 40;
 
         const targetFunction = async (executionContext) => {
             try {
@@ -1369,31 +357,19 @@ export default function EmailBuilder() {
 
         const targetFunction = async (executionContext) => {
             try {
-                const sslOrganize = [
-                    { _obj: "select", _target: [{ _ref: "layer", _name: "SL + SSL" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
-                    {
-                        _obj: "set",
-                        _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
-                        to: { _obj: "layer", name: "SL + SSL", color: { _enum: "color", _value: "gray" } },
-                        _options: { dialogOptions: "dontDisplay" }
-                    },
-                ]
+                const sslOrganize = organizeAndSetColorLabel({
+                    Name: "SL + SSL",
+                    Index: 1,
+                    Color: "gray",
+                })
                 await batchPlay(sslOrganize, {});
 
-                const fundingOrganize = [
-                    { _obj: "select", _target: [{ _ref: "layer", _name: "Funding" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "move", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], to: { _ref: "layer", _index: 1 }, adjustment: false, version: 5, _options: { dialogOptions: "dontDisplay" } },
-                    { _obj: "placedLayerConvertToLayers", _options: { dialogOptions: "dontDisplay" } },
-                    {
-                        _obj: "set",
-                        _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }],
-                        to: { _obj: "layer", name: "Funding", color: { _enum: "color", _value: "indigo" } },
-                        _options: { dialogOptions: "dontDisplay" }
-                    },
-                ]
-                await batchPlay(fundingOrganize, {});
+                const vfOrganize = organizeAndSetColorLabel({
+                    Name: "Funding",
+                    Index: 1,
+                    Color: "indigo",
+                })
+                await batchPlay(vfOrganize, {});
 
                 if (selectedHeader !== "" && selectedHeader !== null) {
                     const headerOrganize = [
@@ -1550,6 +526,7 @@ export default function EmailBuilder() {
                     await batchPlay(bannerOrganize, {});
                 }
 
+
                 if (selectedFooter !== "" && selectedFooter !== null) {
                     const footerOrganize = [
                         { _obj: "select", _target: [{ _ref: "layer", _name: "Footer" }], makeVisible: false, _options: { dialogOptions: "dontDisplay" } },
@@ -1594,23 +571,41 @@ export default function EmailBuilder() {
         await core.executeAsModal(targetFunction, options);
     };
 
+    const [modulesHeight, setModulesHeight, calculateTotalHeight] = useCalculateTotalHeight({
+        sl: '',
+        header: '',
+        vf: '',
+        skinny: '',
+        hero: '',
+        plugin: '',
+        fpo: '',
+        banner: '',
+    });
+
+    const buildInfo = {
+        selectedModules,
+        copyValues,
+        modulesHeight,
+        colors,
+        calculateTotalHeight,
+    };
 
     const handleBuild = async () => {
         try {
             await clearAllLayers();
             await fitToScreenPre();
-            var slHeight = await slBuild();
-            var headerHeight = await headerBuild(slHeight);
-            var fundingHeight = await fundingBuild(slHeight, headerHeight);
-            var skinnyHeight = await skinnyBuild(slHeight, headerHeight, fundingHeight)
-            var heroHeight = await heroBuild(slHeight, headerHeight, fundingHeight, skinnyHeight)
-            var pluginHeight = await pluginBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight)
-            var fpoHeight = await fpoBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight)
-            var bannerHeight = await bannerBuild(slHeight, headerHeight, fundingHeight, skinnyHeight, heroHeight, pluginHeight, fpoHeight);
-            var footerHeight = await footerBuild(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight);
-            var birdseedHeight = await birdseedBuild(selectedBirdseed, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight);
-            await fitToScreenPos(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
-            await organizeDocument();
+            await slBuild(buildInfo);
+            await headerBuild(buildInfo)
+            await fundingBuild(buildInfo);
+            await skinnyBuild(buildInfo);
+            await heroBuild(buildInfo);
+            await pluginBuild(buildInfo);
+            await fpoBuild(buildInfo);
+            await bannerBuild(buildInfo);
+            // var footerHeight = await footerBuild(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight);
+            // var birdseedHeight = await birdseedBuild(selectedBirdseed, slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight);
+            // await fitToScreenPos(slHeight, headerHeight, fundingHeight, skinnyBannerHeight, heroHeight, pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight);
+            // await organizeDocument();
 
             console.log('%cTodas as fun\u00e7\u00f5es foram executadas com sucesso.', 'color: #00EAADFF;');
         } catch (error) {
