@@ -3,13 +3,14 @@ import { selectAllAndCopy } from "../../hook/hooksJSON.jsx"
 
 export async function fpoBuild(buildInfo) {
 
-    var { selectedModules, modulesHeight, copyValues, colors } = buildInfo
+    var { selectedModules, modulesHeight, copyValues } = buildInfo
 
-    var { vf, fpo } = selectedModules
+    var { fpo } = selectedModules
 
     var fpoValue = copyValues.fpo
     var fpoCount = fpoValue.number
 
+    
     if (fpoCount === null || fpoCount === 0 || fpo === undefined) {
         console.warn('Fpo n\u00e3o selecionado');
         modulesHeight.fpo = 0;
@@ -48,17 +49,10 @@ export async function fpoBuild(buildInfo) {
                 const docWidth = activeDocument.width;
                 const docHeight = activeDocument.height;
 
-
-                var offsetModules = ""
-
-                if (vf === "" || vf === null) {
-                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.header + 20) + modulesHeight.skinny + modulesHeight.hero + modulesHeight.plugin);
-                } else {
-                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.vf + 20) + modulesHeight.skinny + modulesHeight.hero + modulesHeight.plugin);
-                }
+                const offsetModules = buildInfo.calculateTotalHeight('fpo', buildInfo.selectedModules);
 
                 const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (fpoWidth / 2) + 25);
-                const offsetY = (0 - (docHeight / 2) + (modulesHeight.fpo / 2) + (offsetModules));
+                const offsetY = (0 - (docHeight / 2) + offsetModules);
 
                 pastedGroup.translate(offsetX, offsetY);
 

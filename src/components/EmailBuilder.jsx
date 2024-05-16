@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { core, app, batchPlay, storage } from '../App.js';
 import useAppContext from '../hook/useAppContext.jsx';
+import useCalculateTotalHeight from '../hook/calculateTotalHeight.jsx';
 import limitCharsPerLine from '../hook/charLimiter.jsx';
 import { slBuild, headerBuild, fundingBuild, skinnyBuild, heroBuild, pluginBuild, fpoBuild, bannerBuild } from './Builder/Builds.jsx';
 
@@ -10,7 +11,7 @@ export default function EmailBuilder() {
 
     var pluginHeight, fpoHeight, bannerHeight, footerHeight, birdseedHeight = "";
 
-    const { selectedPlugin, selectedFpoValue, selectedBanner, selectedFooter, selectedBirdseed, birdseedValues, selectedBrand, colors, selectedModules, setSelectedModules, copyValues, setCopyValues } = useAppContext();
+    const { selectedPlugin, selectedFpoValue, selectedBanner, selectedFooter, selectedBirdseed, birdseedValues, selectedBrand, colors, selectedModules, copyValues, setCopyValues } = useAppContext();
 
     // Fazer depois a função para deletar artboard caso exista uma 
 
@@ -570,7 +571,7 @@ export default function EmailBuilder() {
         await core.executeAsModal(targetFunction, options);
     };
 
-    const [modulesHeight, setModulesHeight] = useState({
+    const [modulesHeight, setModulesHeight, calculateTotalHeight] = useCalculateTotalHeight({
         sl: '',
         header: '',
         vf: '',
@@ -579,13 +580,14 @@ export default function EmailBuilder() {
         plugin: '',
         fpo: '',
         banner: '',
-    })
+    });
 
     const buildInfo = {
         selectedModules,
         copyValues,
         modulesHeight,
         colors,
+        calculateTotalHeight,
     };
 
     const handleBuild = async () => {

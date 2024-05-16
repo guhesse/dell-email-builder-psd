@@ -45,7 +45,7 @@ export async function bannerBuild(buildInfo) {
                 await app.open(fileEntry);
                 const secondDocument = app.documents[1];
                 const bannerWidth = secondDocument.width;
-                modulesHeight.banner = secondDocument.height;
+                modulesHeight['banner'] = secondDocument.height;
 
                 const changeCopies = [
                     setFontStyle({
@@ -188,17 +188,10 @@ export async function bannerBuild(buildInfo) {
                 const docWidth = activeDocument.width;
                 const docHeight = activeDocument.height;
 
-
-                var offsetModules = ""
-
-                if (vf === "" || vf === null) {
-                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.header + 20) + modulesHeight.skinny + modulesHeight.hero + modulesHeight.plugin + modulesHeight.fpo);
-                } else {
-                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.vf + 20) + modulesHeight.skinny + modulesHeight.hero + modulesHeight.plugin + modulesHeight.fpo);
-                }
+                const offsetModules = buildInfo.calculateTotalHeight('banner', buildInfo.selectedModules);
 
                 const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (bannerWidth / 2) + 25);
-                const offsetY = (0 - (docHeight / 2) + (modulesHeight.banner / 2) + offsetModules);
+                const offsetY = (0 - (docHeight / 2) + offsetModules);
 
                 pastedGroup.translate(offsetX, offsetY);
 

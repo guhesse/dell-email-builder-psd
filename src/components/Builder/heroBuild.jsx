@@ -82,17 +82,10 @@ export async function heroBuild(buildInfo) {
                 const docWidth = activeDocument.width;
                 const docHeight = activeDocument.height;
 
-                var offsetModules = ""
-
-                if (vf === "" || vf === null) {
-                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.header + 20) + (modulesHeight.skinny));
-                } else {
-                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.vf + 20) + (modulesHeight.skinny));
-                }
+                const offsetModules = buildInfo.calculateTotalHeight('hero', buildInfo.selectedModules);
 
                 const offsetX = (0 - (docWidth / 2) + (heroWidth / 2) + 25);
-
-                const offsetY = (0 - (docHeight / 2) + (modulesHeight.hero / 2) + (offsetModules));
+                const offsetY = (0 - (docHeight / 2) + offsetModules);
                 pastedGroup.translate(offsetX, offsetY);
 
 

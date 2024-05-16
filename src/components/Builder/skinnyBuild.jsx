@@ -41,7 +41,7 @@ export async function skinnyBuild(buildInfo) {
 
                 let skinnyTitle = skinnyCopy && skinnyCopy.headline ? limitCharsPerLine(skinnyCopy.headline, 60, "capitalized") : '';
                 let skinnyCopyText = skinnyCopy && skinnyCopy.copy ? limitCharsPerLine(skinnyCopy.copy, 65, "capitalized") : '';
-                
+
                 const skinnyBannerCopy = skinnyTitle + "\r" + skinnyCopyText;
 
                 const changeSkinnyBannerCopy = [
@@ -88,7 +88,7 @@ export async function skinnyBuild(buildInfo) {
 
                 // Copia e cola o modulo
                 const selectAndCopy = selectAllAndCopy()
-                await batchPlay(selectAndCopy, {}); 
+                await batchPlay(selectAndCopy, {});
 
                 const activeDocument = app.activeDocument;
                 await activeDocument.paste();
@@ -96,17 +96,10 @@ export async function skinnyBuild(buildInfo) {
                 const pastedGroup = activeDocument.layers[activeDocument.layers.length - 1];
                 const docWidth = activeDocument.width;
                 const docHeight = activeDocument.height;
+
+                const offsetModules = buildInfo.calculateTotalHeight('hero', buildInfo.selectedModules);
                 const offsetX = (0 - (docWidth / 2) + (skinnyWidth / 2) + 25);
-
-                var offsetModules = ""
-
-                if (vf === "" || vf === null) {
-                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.header + 20));
-                } else {
-                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.vf + 20));
-                }
-
-                const offsetY = (0 - (docHeight / 2) + (modulesHeight.skinny / 2) + (offsetModules));
+                const offsetY = (0 - (docHeight / 2) + offsetModules);
 
                 pastedGroup.translate(offsetX, offsetY);
 

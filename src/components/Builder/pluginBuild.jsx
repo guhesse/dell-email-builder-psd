@@ -301,17 +301,10 @@ export async function pluginBuild(buildInfo) {
                 const docHeight = activeDocument.height;
 
 
-                var offsetModules = ""
-
-                if (vf === "" || vf === null) {
-                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.header + 20) +
-                        (modulesHeight.skinny) + (modulesHeight.hero));
-                } else {
-                    offsetModules = ((modulesHeight.sl + 30) + (modulesHeight.vf + 20) + (modulesHeight.skinny) + (modulesHeight.hero));
-                }
+                const offsetModules = buildInfo.calculateTotalHeight('plugin', buildInfo.selectedModules);
 
                 const offsetX = ((docWidth - docWidth) - (docWidth / 2) + (pluginWidth / 2) + 25);
-                const offsetY = (0 - (docHeight / 2) + (modulesHeight.plugin / 2) + (offsetModules));
+                const offsetY = (0 - (docHeight / 2) + offsetModules);
                 pastedGroup.translate(offsetX, offsetY);
 
                 console.log('%cPlugin inserido com sucesso!', 'color: #00EAADFF;');

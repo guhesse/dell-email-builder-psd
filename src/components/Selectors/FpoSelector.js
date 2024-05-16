@@ -66,6 +66,7 @@ export default function FpoSelector() {
             ...prevState,
             fpo: null
         }));
+        toggleOptions(false)
     };
 
     const handleFpoCount = (fpoCount) => {

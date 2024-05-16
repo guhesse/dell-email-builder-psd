@@ -46,11 +46,12 @@ export default function PluginSelector() {
 
     const [selected, setSelected] = useState({ plugin: false });
 
-    const handleResetClick = () => {
-        setSelectedPlugin(null);
-        setPluginCopy(initialState);
-        toggleOptions(false);
-    };
+    const statusType = setStatusByField({
+        type: "filledOnObj",
+        value: pluginCopy,
+        obj: plugin,
+        array: pluginsArr,
+    });
 
     const handlePluginClick = (plugin) => {
         setSelectedModules(prevState => ({
@@ -59,12 +60,20 @@ export default function PluginSelector() {
         }));
     };
 
-    const statusType = setStatusByField({
-        type: "filledOnObj",
-        value: pluginCopy,
-        obj: plugin,
-        array: pluginsArr,
-    });
+    const handleResetClick = () => {
+        setSelectedModules(prevState => ({
+            ...prevState,
+            plugin: null
+        }));
+        setPluginCopy({
+            single: '',
+            left: '',
+            center: '',
+            right: '',
+        })
+        resetFormState();
+        toggleOptions(false);
+    };
 
     const handleInput = (field, value) => {
         handleFieldChange(field, value);
