@@ -42,23 +42,28 @@ const footersArr = {
 
 export default function FooterSelector() {
 
-    const { selectedFooter, setSelectedFooter } = useAppContext();
+    const { selectedModules, setSelectedModules } = useAppContext();
     const { checkIsSelected } = useStatusIcon();
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
 
-    var footer = selectedFooter
-    var setFooter = setSelectedFooter
+    var { footer } = selectedModules
 
     const [selected, setSelected] = useState({ footer: false });
 
     const statusType = checkIsSelected({ value: footer, });
 
     const handleFooterClick = (footer) => {
-        setFooter(footer);
+        setSelectedModules(prevState => ({
+            ...prevState,
+            footer: footer
+        }));
     };
 
     const handleResetClick = () => {
-        setFooter(null)
+        setSelectedModules(prevState => ({
+            ...prevState,
+            footer: null
+        }));
         toggleOptions(false)
     };
 
@@ -81,7 +86,7 @@ export default function FooterSelector() {
                                         <sp-menu-item
                                             key={`${footer}-${index}`}
                                             onClick={() => handleFooterClick(footer)}
-                                            selected={footer === selectedFooter ? selected.footer : null}>
+                                            selected={footer === selectedModules.footer ? selected.footer : null}>
                                             {name}
                                         </sp-menu-item>
                                     ))}

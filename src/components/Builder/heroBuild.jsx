@@ -7,9 +7,8 @@ export async function heroBuild(buildInfo) {
 
     var { selectedModules, modulesHeight, copyValues, colors } = buildInfo
 
-    const { vf, hero } = selectedModules
+    const { hero } = selectedModules
     const heroCopy = copyValues.hero
-
 
     if (hero === "" || hero === null) {
         console.warn('Hero não selecionado');

@@ -12,7 +12,8 @@ const fposArr = {
         brand: 'dell',
         key: 'fpo',
         fieldsTitle: [],
-        fields: []
+        fields: [],
+        selected: true
     },
     'isg': {
         name: 'ISG',
@@ -20,7 +21,8 @@ const fposArr = {
         key: 'fpo',
         disabled: 'true',
         fieldsTitle: [],
-        fields: []
+        fields: [],
+        selected: false
     },
     'gaming': {
         name: 'Gaming',
@@ -28,7 +30,8 @@ const fposArr = {
         key: 'fpo',
         disabled: 'true',
         fieldsTitle: [],
-        fields: []
+        fields: [],
+        selected: false
     },
     'alienware': {
         name: 'Alienware',
@@ -36,7 +39,8 @@ const fposArr = {
         key: 'fpo',
         disabled: 'true',
         fieldsTitle: [],
-        fields: []
+        fields: [],
+        selected: false
     },
 }
 
@@ -44,7 +48,7 @@ export default function FpoSelector() {
 
     const { selectedModules, setSelectedModules, copyValues, setCopyValues } = useAppContext();
 
-    const { fpo } = selectedModules
+    const { fpo } = selectedModules;
 
     const fpoCount = copyValues.fpo.number
 
@@ -53,6 +57,7 @@ export default function FpoSelector() {
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
 
     const [selected, setSelected] = useState({ fpoCount: false, fpoSegment: false });
+
 
     const handleResetClick = () => {
         setCopyValues(prevState => ({
@@ -77,6 +82,12 @@ export default function FpoSelector() {
                 number: fpoCount
             }
         }));
+
+        setSelectedModules(prevState => ({
+            ...prevState,
+            fpo: 'sb'
+        }));
+
     };
 
     const handleFpoSegment = (fpo) => {
@@ -87,7 +98,7 @@ export default function FpoSelector() {
     };
 
     const statusType = checkIsSelected({
-        value: fpo
+        value: fpo && fpoCount,
     });
 
 

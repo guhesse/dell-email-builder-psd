@@ -83,7 +83,7 @@ export default function BannerSelector() {
 
     return (
         <>
-            <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "column", alignItems: "flex-start" }} className="group">
+            <div className="group">
                 <sp-icons>
                     <div style={{ display: "flex", alignItems: "center" }}>
                         <StatusIcon type={statusType} size="s" />

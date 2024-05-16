@@ -40,7 +40,7 @@ export default function HeaderSelector() {
     const { checkIsSelected } = useStatusIcon();
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
 
-    var header = selectedModules.header
+    var { header } = selectedModules
 
     const [selected, setSelected] = useState({ header: false });
 

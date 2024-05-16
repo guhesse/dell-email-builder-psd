@@ -28,6 +28,8 @@ function App() {
       <PluginSelector />
       <FpoSelector />
       <BannerSelector />
+      <FooterSelector />
+      <BirdseedSelector />
       <EmailBuilder />
     </AppProvider>
   );
@@ -35,7 +37,4 @@ function App() {
 
 export default App;
 // <TesteWriteFile />
-// <BannerSelector />
-// <FooterSelector />
-// <BirdseedSelector />
 // <EmailBuilder />
