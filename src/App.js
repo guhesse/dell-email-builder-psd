@@ -5,6 +5,7 @@ import { BannerSelector, BirdseedSelector, BrandSelector, ColorSelector, FooterS
 import EmailBuilder from './components/EmailBuilder.jsx';
 import CsvReader from './CsvReader.js';
 import TesteWriteFile from './TesteWriteFile.jsx';
+// import MyModal from './ShowModal.jsx';
 
 import { Theme } from "@swc-react/theme";
 export const { core, app } = require('photoshop');
@@ -14,7 +15,7 @@ export const { batchPlay } = require('photoshop').action;
 import AppProvider from './context/AppProvider.js';
 
 function App() {
-
+  // <ShowModal />
   return (
     <AppProvider className="wrapper">
       <CsvReader />

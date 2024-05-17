@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import useAppContext from '../../hook/useAppContext.jsx';
 
 export default function BrandSelector() {
-    const { selectedBrand, setSelectedBrand } = useAppContext();
+    const { selectedModules, setSelectedModules } = useAppContext();
+
+    const { brand } = selectedModules;
     const [switchState, setSwitchState] = useState(false);
 
     const [isOptionsOpen, setIsOptionsOpen] = useState(false);
@@ -13,14 +15,14 @@ export default function BrandSelector() {
 
     const handleBrandClick = () => {
         setSwitchState(!switchState);
-        setSelectedBrand(switchState ? 'dell' : 'alienware');
+        setSelectedModules({ ...selectedModules, brand: switchState ? 'dell' : 'alienware' });
     };
 
     return (
         <div className="group">
             <sp-icons>
                 <div className="sp-icon" id="brand" onClick={handleBrandClick}>
-                    <p className='brandLabel'>{selectedBrand === "dell" ? "Dell" : "Alienware"}</p>
+                    <p className='brandLabel'>{brand === "dell" ? "Dell" : "Alienware"}</p>
                 </div>
             </sp-icons>
             <sp-label onClick={toggleOptions} style={{ cursor: "pointer" }}>Brand</sp-label>
@@ -41,8 +43,8 @@ export default function BrandSelector() {
                     <div style={{ display: "flex", alignItems: "center" }}>
                         <div className='brandContainer' style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', width: "100%", height: '40px' }}>
                             <sp-detail for="header-field">SELECTED BRAND</sp-detail>
-                            <sp-button variant="secondary" quiet class={`dellBtn ${selectedBrand === "dell" ? "dellBtn" : "alienwareBtn"}`} style={{ left: '13px', width: '100px', height: '30px' }} onClick={handleBrandClick}>
-                                {selectedBrand === "dell" ? "Dell" : "Alienware"}
+                            <sp-button variant="secondary" quiet class={`dellBtn ${brand === "dell" ? "dellBtn" : "alienwareBtn"}`} style={{ left: '13px', width: '100px', height: '30px' }} onClick={handleBrandClick}>
+                                {brand === "dell" ? "Dell" : "Alienware"}
                             </sp-button>
 
                         </div>
