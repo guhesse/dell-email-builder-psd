@@ -1,26 +1,39 @@
-// const { createElement } = require("uxp").dom;
-// const { Modal, Heading, Divider, Button } = require("@adobe/react-spectrum");
+import React from "react";
+import { createRoot } from 'react-dom/client';
+import { ActionButton, Button, ButtonGroup, Content, Dialog, Divider, Header, Heading, Text, Provider, defaultTheme } from '@adobe/react-spectrum';
+import { showAlert } from "./App";
 
-// function showModal() {
-//     let dialog;
-//     const handleClose = () => {
-//         dialog.remove();
-//     };
+export default function ShowModal() {
+    let dialogElement = null;
 
-//     dialog = createElement(
-//         "dialog",
-//         {},
-//         <Modal>
-//             <Heading>Minha Janela Modal</Heading>
-//             <Divider />
-//             <Button variant="cta" onPress={handleClose}>
-//                 Fechar
-//             </Button>
-//         </Modal>
-//     );
+    const handleConfirm = async () => {
+        await showAlert({ title: "Speed Test", message: "Speed test started!" });
+    };
 
-//     document.body.appendChild(dialog);
-//     dialog.showModal();
-// }
+    const openDialog = async () => {
+        if (!dialogElement) {
+            dialogElement = document.createElement("dialog");
+            createRoot(dialogElement).render(
+                <Provider colorScheme="dark" theme={defaultTheme}>
+                    <Dialog>
+                        <sp-heading>Isso aqui é uma modal</sp-heading>
+                        <sp-divider></sp-divider>
+                        <Content>
+                            <sp-body>aaa</sp-body>
+                        </Content>
+                        <ButtonGroup >
+                            <sp-button>aaa</sp-button>
+                        </ButtonGroup>
+                    </Dialog>
+                </Provider>
+            );
+        }
+        document.body.appendChild(dialogElement);
+        dialogElement.showModal();
+        dialogElement.remove();
+    };
 
-// showModal();
+    return (
+        <ActionButton onClick={openDialog}>Check connectivity</ActionButton>
+    );
+}

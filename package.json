@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@adobe/react-spectrum": "^3.35.0",
+    "@react-aria/button": "^3.9.4",
     "@spectrum-web-components/color-wheel": "^0.39.4",
     "@spectrum-web-components/number-field": "^0.40.0",
     "@spectrum-web-components/reactive-controllers": "^0.39.4",
@@ -36,6 +38,8 @@
     "html-webpack-plugin": "^5.5.1",
     "http-server": "^14.0.0",
     "mini-css-extract-plugin": "^2.4.4",
+    "sass": "^1.77.2",
+    "sass-loader": "^14.2.1",
     "url-loader": "^4.1.1",
     "webpack": "^5.80.0",
     "webpack-bundle-analyzer": "^4.5.0",

@@ -867,8 +867,8 @@ export default function AppProvider({ children }) {
 
     const cores = {}
 
-    console.log("Selected Modules:", selectedModules)
-    console.log("Selected Modules:", copyValues)
+    // console.log("Selected Modules:", selectedModules)
+    // console.log("Selected Modules:", copyValues)
 
     return (
         <AppContext.Provider value={{

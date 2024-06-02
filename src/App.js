@@ -5,9 +5,10 @@ import { BannerSelector, BirdseedSelector, BrandSelector, ColorSelector, FooterS
 import EmailBuilder from './components/EmailBuilder.jsx';
 import CsvReader from './CsvReader.js';
 import TesteWriteFile from './TesteWriteFile.jsx';
-// import MyModal from './ShowModal.jsx';
-
-import { Theme } from "@swc-react/theme";
+import ShowModal from './showModal.jsx';
+import { Provider } from '@adobe/react-spectrum';
+import { defaultTheme } from '@adobe/react-spectrum';
+export const { dom, showAlert } = require("uxp");
 export const { core, app } = require('photoshop');
 export const { storage } = require('uxp');
 export const { batchPlay } = require('photoshop').action;
@@ -15,23 +16,26 @@ export const { batchPlay } = require('photoshop').action;
 import AppProvider from './context/AppProvider.js';
 
 function App() {
-  // <ShowModal />
+
   return (
     <AppProvider className="wrapper">
-      <CsvReader />
-      <BrandSelector />
-      <ColorSelector />
-      <SubjectLineSelector />
-      <HeaderSelector />
-      <FundingSelector />
-      <SkinnySelector />
-      <HeroSelector />
-      <PluginSelector />
-      <FpoSelector />
-      <BannerSelector />
-      <FooterSelector />
-      <BirdseedSelector />
-      <EmailBuilder />
+      <Provider colorScheme="light" theme={defaultTheme}>
+        <ShowModal />
+        <CsvReader />
+        <BrandSelector />
+        <ColorSelector />
+        <SubjectLineSelector />
+        <HeaderSelector />
+        <FundingSelector />
+        <SkinnySelector />
+        <HeroSelector />
+        <PluginSelector />
+        <FpoSelector />
+        <BannerSelector />
+        <FooterSelector />
+        <BirdseedSelector />
+        <EmailBuilder />
+      </Provider>
     </AppProvider>
   );
 }
