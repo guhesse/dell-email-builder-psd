@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import GroupLabel from "../../GroupLabel.jsx";
 import { useToggleState } from "../../../hook/useToogle.jsx";
-import { artboardBuild } from '../../Builder/Banner/artboardBuild.jsx';
 import useBannerContext from '../../../hook/useBannerContext.jsx';
 
 const artboardsArr = {
@@ -229,7 +228,7 @@ export default function ArtboardSelector() {
     const buildInfo = { 
         artboards 
     };
-    
+
     const [isOptionsOpen, toggleOptions] = useToggleState(true);
 
     const handleArtboardClick = (artboard) => {
@@ -274,7 +273,6 @@ export default function ArtboardSelector() {
                                 </sp-checkbox>
                             ))}
                         </sp-field-group>
-                        <sp-button onClick={() => artboardBuild(buildInfo)}>Criar Artbaord</sp-button>
                     </>
                 ) : (
                     <GroupLabel onClick={toggleOptions} type="closed" name="Artboards" size="s" />

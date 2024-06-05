@@ -63,10 +63,10 @@ export async function artboardBuild(buildInfo) {
                             name: "",
                             artboardRect: {
                                 _obj: "classFloatRect",
-                                top: currentY[row] + 1, // Atualizado para usar o Y atual da linha
-                                left: currentX[row] + 1, // Atualizado para usar o X atual da linha
-                                bottom: currentY[row] + height + 1,
-                                right: currentX[row] + width + 1
+                                top: currentY[row], // Atualizado para usar o Y atual da linha
+                                left: currentX[row], // Atualizado para usar o X atual da linha
+                                bottom: currentY[row] + height,
+                                right: currentX[row] + width
                             },
                             _options: {
                                 dialogOptions: "dontDisplay"
@@ -88,6 +88,122 @@ export async function artboardBuild(buildInfo) {
                             _options: {
                                 dialogOptions: "dontDisplay"
                             }
+                        },
+                        {
+                            _obj: "select",
+                            _target: [
+                                {
+                                    _ref: "layer",
+                                    _name: name
+                                }
+                            ],
+                            _options: {
+                                dialogOptions: "dontDisplay"
+                            }
+                        },
+                        {
+                            _obj: "make",
+                            _target: [
+                                {
+                                    _ref: "contentLayer"
+                                }
+                            ],
+                            using: {
+                                _obj: "contentLayer",
+                                type: {
+                                    _obj: "solidColorLayer",
+                                    color: {
+                                        _obj: "RGBColor",
+                                        red: 72,
+                                        grain: 72,
+                                        blue: 72
+                                    }
+                                },
+                                shape: {
+                                    _obj: "rectangle",
+                                    unitValueQuadVersion: 1,
+                                    top: {
+                                        _unit: "pixelsUnit",
+                                        _value: currentY[row], // Subtrai a posição Y da artboard
+                                    },
+                                    left: {
+                                        _unit: "pixelsUnit",
+                                        _value: currentX[row] // Subtrai a posição X da artboard
+                                    },
+                                    bottom: {
+                                        _unit: "pixelsUnit",
+                                        _value: currentY[row] + height // Subtrai a posição Y da artboard
+                                    },
+                                    right: {
+                                        _unit: "pixelsUnit",
+                                        _value: currentX[row] + width // Subtrai a posição X da artboard
+                                    },
+                                    topRight: {
+                                        _unit: "pixelsUnit",
+                                        _value: 0
+                                    },
+                                    topLeft: {
+                                        _unit: "pixelsUnit",
+                                        _value: 0
+                                    },
+                                    bottomLeft: {
+                                        _unit: "pixelsUnit",
+                                        _value: 0
+                                    },
+                                    bottomRight: {
+                                        _unit: "pixelsUnit",
+                                        _value: 0
+                                    }
+                                },
+                                strokeStyle: {
+                                    _obj: "strokeStyle",
+                                    strokeStyleVersion: 2,
+                                    strokeEnabled: true,
+                                    fillEnabled: false,
+                                    strokeStyleLineWidth: {
+                                        _unit: "pixelsUnit",
+                                        _value: 1
+                                    },
+                                    strokeStyleLineDashOffset: {
+                                        _unit: "pointsUnit",
+                                        _value: 0
+                                    },
+                                    strokeStyleMiterLimit: 100,
+                                    strokeStyleLineCapType: {
+                                        _enum: "strokeStyleLineCapType",
+                                        _value: "strokeStyleButtCap"
+                                    },
+                                    strokeStyleLineJoinType: {
+                                        _enum: "strokeStyleLineJoinType",
+                                        _value: "strokeStyleMiterJoin"
+                                    },
+                                    strokeStyleLineAlignment: {
+                                        _enum: "strokeStyleLineAlignment",
+                                        _value: "strokeStyleAlignInside"
+                                    },
+                                    strokeStyleScaleLock: false,
+                                    strokeStyleStrokeAdjust: false,
+                                    strokeStyleLineDashSet: [],
+                                    strokeStyleBlendMode: {
+                                        _enum: "blendMode",
+                                        _value: "normal"
+                                    },
+                                    strokeStyleOpacity: {
+                                        _unit: "percentUnit",
+                                        _value: 100
+                                    },
+                                    strokeStyleContent: {
+                                        _obj: "solidColorLayer",
+                                        color: {
+                                            _obj: "RGBColor",
+                                            red: 72,
+                                            grain: 72,
+                                            blue: 72
+                                        }
+                                    },
+                                    strokeStyleResolution: 72
+                                }
+                            },
                         }
                     ];
 
