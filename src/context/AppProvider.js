@@ -3,10 +3,10 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from './AppContext.js';
 import { storage } from '../App.js';
-import limitCharsPerLine from '../hook/charLimiter.jsx';
 
 export default function AppProvider({ children }) {
-
+    
+    const [route, setRoute] = useState('/banner');
     const [csvLoaded, setCsvLoaded] = useState(false);
     const [csvValues, setCsvValues] = useState({
         'Source File': '',
@@ -872,6 +872,9 @@ export default function AppProvider({ children }) {
 
     return (
         <AppContext.Provider value={{
+            route, 
+            setRoute,
+
             csvValues,
             setCsvValues,
             csvLoaded,
