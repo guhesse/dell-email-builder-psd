@@ -13,7 +13,7 @@ export default function BannerProvider({ children }) {
             let row;
             switch (true) {
                 case (ratio < 1):
-                    row = 5;
+                    row = 5; 
                     break;
                 case (ratio < 1.5):
                     row = 4;
@@ -52,6 +52,8 @@ export default function BannerProvider({ children }) {
     
         setSortedArtboards(newSortedArtboards);
     }, [artboards]);
+
+    console.log(artboards)
 
     return (
         <BannerContext.Provider value={{

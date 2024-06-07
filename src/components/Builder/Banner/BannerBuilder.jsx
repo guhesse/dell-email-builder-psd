@@ -1,13 +1,16 @@
 import React from 'react';
 import useBannerContext from "../../../hook/useBannerContext.jsx";
 import { artboardBuild } from "./artboardBuild.jsx";
+import useAppContext from '../../../hook/useAppContext.jsx';
 
 export default function BannerBuilder() {
 
     const { artboards, setArtboards } = useBannerContext();
+    const { colors } = useAppContext();
 
-    const buildInfo = { 
-        artboards 
+    const buildInfo = {
+        artboards,
+        colors
     };
 
     const handleBuild = async () => {

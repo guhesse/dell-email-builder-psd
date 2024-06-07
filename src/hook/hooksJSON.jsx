@@ -124,11 +124,37 @@ export function getTextProperty({ Name }) {
 
 export function getBounds({ Property, Name }) {
     Property = Property !== undefined ? Property : "boundingBox";
+    let targetLayer = Name !== undefined ?
+        { _ref: "layer", _name: Name } :
+        { _ref: "layer", _enum: "ordinal", _value: "targetEnum" };
+
     return {
         _obj: "get",
-        _target: [{ _property: Property },
-        { _ref: "layer", _name: Name },],
+        _target: [{ _property: Property }, targetLayer],
         _options: { dialogOptions: "dontDisplay" }
+    };
+}
+
+
+// ## Função para setar name de camada ## //
+
+export function setName({ Name }) {
+    return {
+        _obj: "set",
+        _target: [
+            {
+                _ref: "layer",
+                _enum: "ordinal",
+                _value: "targetEnum"
+            }
+        ],
+        to: {
+            _obj: "layer",
+            name: Name
+        },
+        _options: {
+            dialogOptions: "dontDisplay"
+        }
     };
 }
 
@@ -271,17 +297,22 @@ export function setOverlayColor({ Name, RedColor, GreenColor, BlueColor }) {
 }
 
 //  ##  Função para fazer offset  ## //
-// Necessário selecionar a camada antes de usar a função
 
 export function setOffset({ Name, Horizontal, Vertical }) {
     Horizontal = Horizontal !== undefined ? Horizontal : 0;
     Vertical = Vertical !== undefined ? Vertical : 0;
+    
+    let targetLayer = Name !== undefined ?
+        { _ref: "layer", _name: Name } :
+        { _ref: "layer", _enum: "ordinal", _value: "targetEnum" };
+
     return {
-        _obj: "move", _target: [{ _ref: "layer", _name: Name }],
+        _obj: "move",
+        _target: [targetLayer],
         to: {
             _obj: "offset",
-            horizontal: { _unit: "pixelsUnit", _value: Horizontal, },
-            vertical: { _unit: "pixelsUnit", _value: Vertical, }
+            horizontal: { _unit: "pixelsUnit", _value: Horizontal },
+            vertical: { _unit: "pixelsUnit", _value: Vertical }
         },
         _options: { dialogOptions: "dontDisplay" }
     };
@@ -438,6 +469,13 @@ export function alignGroupYTop() {
     return {
         _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSTops" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" },
     }
+}
+
+export function alignGroupTopLeftCorner() {
+    return [
+        { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSTops" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+        { _obj: "align", _target: [{ _ref: "layer", _enum: "ordinal", _value: "targetEnum" }], using: { _enum: "alignDistributeSelector", _value: "ADSLefts" }, alignToCanvas: false, _isCommand: false, _options: { dialogOptions: "dontDisplay" } },
+    ];
 }
 
 

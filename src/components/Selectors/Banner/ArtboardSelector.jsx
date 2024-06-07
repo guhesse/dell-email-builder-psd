@@ -4,6 +4,16 @@ import { useToggleState } from "../../../hook/useToogle.jsx";
 import useBannerContext from '../../../hook/useBannerContext.jsx';
 
 const artboardsArr = {
+    // 'MEDIO': {
+    //     width: 591,
+    //     height: 492,
+    //     ratio: 591 / 492,
+    // },
+    // 'GRANDE': {
+    //     width: 900,
+    //     height: 750,
+    //     ratio: 900 / 750,
+    // },
     '160x600': {
         width: 160,
         height: 600,
