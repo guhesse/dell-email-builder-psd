@@ -2,6 +2,8 @@ export default function calculateHeadlineFontSize(width, height, ratio) {
     let fontSize;
     let area = height * width;
 
+
+    let xSmallScreen = 100000;
     let smallScreen = 250000;
     let mediumScreen = 500000;
     let largeScreen = 1000000;
@@ -89,30 +91,157 @@ export default function calculateHeadlineFontSize(width, height, ratio) {
                     break;
             }
             break;
-        //     break;
-        // case (ratio < 1.5):
-        //     fontSize = (height * width) / (height * 10) * (width / height);
-        //     break;
-        // case (ratio <= 2):
-        //     fontSize = (height * width) / (height * 10) * ((width / height) / (width / height * 2.5));
-        //     break;
-        // case (ratio < 3):
-        //     fontSize = (height * width) / (height * 10) * ((width / height) / 4);
-        //     break;
-        // case (ratio <= 4):
-        //     fontSize = (height * width) / (height * 10) * ((width / height) / (width / height * 2.5));
-        //     break;
-        // case (ratio < 5):
-        //     fontSize = (height * width) / (height * 10) * ((width / height) / 10);
-        //     break;
-        // case (ratio <= 7):
-        //     fontSize = (height * width) / (height * 10) * ((width / height) / (width / height * 3));
-        //     break;
-        // case (ratio <= 11):
-        //     fontSize = (height * width) / (height * 10) * ((width / height) / (width / height * 3.5));
-        //     break;
+        case (ratio < 1.75):
+            switch (true) {
+                case (area < smallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.4);
+                    break;
+                case (area < mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.4);
+                    break;
+                case (area >= mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.4);
+                    break;
+            }
+            break;
+        case (ratio < 2):
+            switch (true) {
+                case (area < smallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.3);
+                    break;
+                case (area < mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.3);
+                    break;
+                case (area >= mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.3);
+                    break;
+            }
+            break;
+        case (ratio < 3):
+            switch (true) {
+                case (area < smallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.2);
+                    break;
+                case (area < mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.2);
+                    break;
+                case (area >= mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.2);
+                    break;
+            }
+            break;
+
+        case (ratio < 3.5):
+            switch (true) {
+                case (area < smallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.14);
+                    break;
+                case (area < mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.115);
+                    break;
+                case (area >= mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.13);
+                    break;
+            }
+            break;
+        case (ratio < 4):
+            switch (true) {
+                case (area < xSmallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.07);
+                    break;
+                case (area < smallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.1);
+                    break;
+                case (area < mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.1);
+                    break;
+                case (area >= mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.1);
+                    break;
+            }
+            break;
+        case (ratio < 5):
+            switch (true) {
+                case (area < xSmallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.08);
+                    break;
+                case (area < smallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.08);
+                    break;
+                case (area < mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.08);
+                    break;
+                case (area >= mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.08);
+                    break;
+            }
+            break;
+        case (ratio < 6):
+            switch (true) {
+                case (area < xSmallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.065);
+                    break;
+                case (area < smallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.065);
+                    break;
+                case (area < mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.065);
+                    break;
+                case (area >= mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.065);
+                    break;
+            }
+            break;
+        case (ratio < 7):
+            switch (true) {
+                case (area < xSmallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.05);
+                    break;
+                case (area < smallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.05);
+                    break;
+                case (area < mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.05);
+                    break;
+                case (area >= mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.05);
+                    break;
+            }
+            break;
+        case (ratio < 10):
+            switch (true) {
+                case (area < xSmallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.05);
+                    break;
+                case (area < smallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.05);
+                    break;
+                case (area < mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.05);
+                    break;
+                case (area >= mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.05);
+                    break;
+            }
+            break;
+        case (ratio >= 10):
+            switch (true) {
+                case (area < xSmallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.025);
+                    break;
+                case (area < smallScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.025);
+                    break;
+                case (area < mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.025);
+                    break;
+                case (area >= mediumScreen):
+                    fontSize = area / (height * 10) * (ratio * 0.025);
+                    break;
+            }
+            break;
         default:
-            fontSize = 30
+            fontSize = 10
             break;
     }
     return fontSize;

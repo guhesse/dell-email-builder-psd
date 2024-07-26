@@ -6,7 +6,6 @@ import { BannerSelector, BirdseedSelector, BrandSelector, ColorSelector, FooterS
 export default function EmailView() {
     return (
         <>
-            <ShowModal />
             <CsvReader />
             <BrandSelector />
             <ColorSelector />

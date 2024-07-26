@@ -6,7 +6,7 @@ import { storage } from '../App.js';
 
 export default function AppProvider({ children }) {
     
-    const [route, setRoute] = useState('/banner');
+    const [route, setRoute] = useState('/tools');
     const [csvLoaded, setCsvLoaded] = useState(false);
     const [csvValues, setCsvValues] = useState({
         'Source File': '',

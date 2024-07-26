@@ -1,6 +1,6 @@
 import useAppContext from '../hook/useAppContext.jsx';
 import BannerProvider from '../context/BannerProvider.js';
-import { EmailView, BannerView } from './Views.jsx';
+import { EmailView, BannerView, ToolsView } from './Views.jsx';
 
 export default function Router() {
     const { route } = useAppContext();
@@ -15,7 +15,11 @@ export default function Router() {
                 <BannerProvider>
                     <BannerView />
                 </BannerProvider>
-            )
+            );
+        case '/tools':
+            return (
+                <ToolsView />
+            );
         default:
             return (
                 <p>

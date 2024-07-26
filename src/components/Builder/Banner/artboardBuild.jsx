@@ -33,6 +33,7 @@ export async function artboardBuild(buildInfo) {
 
         let headlineCopy;
         let badgeCopy;
+        let subheadlineCopy;
 
         switch (true) {
             case (ratio < 0.5):
@@ -42,13 +43,27 @@ export async function artboardBuild(buildInfo) {
                 badgeCopy = limitCharsPerLine(
                     "Ofertas do consumidor", 15, "upper"
                 )
+                subheadlineCopy = limitCharsPerLine(
+                    "Tecnologia excepcional para que a sua startup alcance o potencial máximo", 22, "capitalized"
+                )
                 break;
-            case (ratio >= 1 && ratio < 1.5):
+            case (ratio >= 1 && ratio < 2):
                 headlineCopy = limitCharsPerLine(
                     "Descontos em tecnologia de ponta", 12, "capitalized"
                 )
                 badgeCopy = limitCharsPerLine(
                     "Ofertas do consumidor", 20, "upper"
+                )
+                subheadlineCopy = limitCharsPerLine(
+                    "Tecnologia excepcional para que a sua startup alcance o potencial máximo", 25, "capitalized"
+                )
+                break;
+            case (ratio >= 6):
+                headlineCopy = limitCharsPerLine(
+                    "Descontos em tecnologia de ponta", 35, "capitalized"
+                )
+                badgeCopy = limitCharsPerLine(
+                    "Ofertas do consumidor", 35, "upper"
                 )
                 break;
             default:
@@ -58,6 +73,9 @@ export async function artboardBuild(buildInfo) {
                 badgeCopy = limitCharsPerLine(
                     "Ofertas do consumidor", 25, "upper"
                 )
+                subheadlineCopy = limitCharsPerLine(
+                    "Tecnologia excepcional para que a sua startup alcance o potencial máximo", 40, "capitalized"
+                )
                 break;
         }
 
@@ -65,6 +83,8 @@ export async function artboardBuild(buildInfo) {
         const headlineSize = calculateHeadlineFontSize(width, height, ratio);
 
         const badgeSize = headlineSize * 0.45;
+
+        const subheadlineSize = headlineSize * 0.5;
 
         // Determina a linha com base na proporção
         let row;
@@ -270,241 +290,355 @@ export async function artboardBuild(buildInfo) {
 
                     await batchPlay(makeBorder, {});
 
-                    const makeBadge = [
-                        {
-                            _obj: "make",
-                            _target: [
-                                {
-                                    _ref: "textLayer"
-                                }
-                            ],
-                            using: {
-                                _obj: "textLayer",
-                                textKey: badgeCopy,
-                                bounds: {
-                                    _obj: "bounds",
-                                    left: {
-                                        _unit: "pointsUnit",
-                                        _value: 0,
-                                    },
-                                    top: {
-                                        _unit: "pointsUnit",
-                                        _value: 0,
-                                    },
-                                    right: {
-                                        _unit: "pointsUnit",
-                                        _value: 0
-                                    },
-                                    bottom: {
-                                        _unit: "pointsUnit",
-                                        _value: 0,
-                                    }
-                                },
-                                boundingBox: {
-                                    _obj: "boundingBox",
-                                    left: {
-                                        _unit: "pointsUnit",
-                                        _value: 0,
-                                    },
-                                    top: {
-                                        _unit: "pointsUnit",
-                                        _value: 0,
-                                    },
-                                    right: {
-                                        _unit: "pointsUnit",
-                                        _value: 0
-                                    },
-                                    bottom: {
-                                        _unit: "pointsUnit",
-                                        _value: 0,
-                                    }
-                                },
-                                textStyleRange: [
-                                    {
-                                        _obj: "textStyleRange",
-                                        from: 0,
-                                        to: Number.MAX_SAFE_INTEGER,
-                                        textStyle: {
-                                            _obj: "textStyle",
-                                            fontPostScriptName: "Roboto-Bold",
-                                            fontName: "Roboto",
-                                            fontStyleName: "Bold",
-                                            size: {
-                                                _unit: "pointsUnit",
-                                                _value: badgeSize
-                                            },
-                                            impliedFontSize: {
-                                                _unit: "pointsUnit",
-                                                _value: badgeSize
-                                            },
-                                            autoLeading: false,
-                                            leading: badgeSize,
-                                            tracking: 0,
-                                            fontCaps: {
-                                                _enum: "fontCaps",
-                                                _value: "allCaps"
-                                            },
-                                            color: {
-                                                _obj: "RGBColor",
-                                                red: tertiaryColor.r,
-                                                grain: tertiaryColor.g,
-                                                blue: tertiaryColor.b
-                                            },
-                                        }
-                                    }
-                                ],
-                            },
-                        },
-                        setName({
-                            Name: "Badge",
-                        }),
-                        getBounds({})
-                    ];
+                    // const makeBadge = [
+                    //     {
+                    //         _obj: "make",
+                    //         _target: [
+                    //             {
+                    //                 _ref: "textLayer"
+                    //             }
+                    //         ],
+                    //         using: {
+                    //             _obj: "textLayer",
+                    //             textKey: badgeCopy,
+                    //             bounds: {
+                    //                 _obj: "bounds",
+                    //                 left: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 },
+                    //                 top: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 },
+                    //                 right: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0
+                    //                 },
+                    //                 bottom: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 }
+                    //             },
+                    //             boundingBox: {
+                    //                 _obj: "boundingBox",
+                    //                 left: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 },
+                    //                 top: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 },
+                    //                 right: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0
+                    //                 },
+                    //                 bottom: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 }
+                    //             },
+                    //             textStyleRange: [
+                    //                 {
+                    //                     _obj: "textStyleRange",
+                    //                     from: 0,
+                    //                     to: Number.MAX_SAFE_INTEGER,
+                    //                     textStyle: {
+                    //                         _obj: "textStyle",
+                    //                         fontPostScriptName: "Roboto-Bold",
+                    //                         fontName: "Roboto",
+                    //                         fontStyleName: "Bold",
+                    //                         size: {
+                    //                             _unit: "pointsUnit",
+                    //                             _value: badgeSize
+                    //                         },
+                    //                         impliedFontSize: {
+                    //                             _unit: "pointsUnit",
+                    //                             _value: badgeSize
+                    //                         },
+                    //                         autoLeading: false,
+                    //                         leading: badgeSize,
+                    //                         tracking: 0,
+                    //                         fontCaps: {
+                    //                             _enum: "fontCaps",
+                    //                             _value: "allCaps"
+                    //                         },
+                    //                         color: {
+                    //                             _obj: "RGBColor",
+                    //                             red: tertiaryColor.r,
+                    //                             grain: tertiaryColor.g,
+                    //                             blue: tertiaryColor.b
+                    //                         },
+                    //                     }
+                    //                 }
+                    //             ],
+                    //         },
+                    //     },
+                    //     setName({
+                    //         Name: "Badge",
+                    //     }),
+                    //     getBounds({})
+                    // ];
+                    
 
-                    const { height: badgeHeight, width: badgeWidth, bottom: badgeBottom } = await getBoundsAndPositionNoProperty(makeBadge, "boundingBox", 2);
+                    // const { height: badgeHeight, width: badgeWidth, bottom: badgeBottom } = await getBoundsAndPositionNoProperty(makeBadge, "boundingBox", 2);
 
-                    const initBadgePos = [
-                        {
-                            _obj: "move", _target: [{
-                                _ref: "layer",
-                                _enum: "ordinal",
-                                _value: "targetEnum"
-                            }],
-                            to: {
-                                _obj: "offset",
-                                horizontal: { _unit: "pixelsUnit", _value: currentX[row] },
-                                vertical: { _unit: "pixelsUnit", _value: currentY[row] + badgeHeight }
-                            },
-                            _options: { dialogOptions: "dontDisplay" }
-                        },
-                    ]
-                    await batchPlay(initBadgePos, {});
+                    // const initBadgePos = [
+                    //     {
+                    //         _obj: "move", _target: [{
+                    //             _ref: "layer",
+                    //             _enum: "ordinal",
+                    //             _value: "targetEnum"
+                    //         }],
+                    //         to: {
+                    //             _obj: "offset",
+                    //             horizontal: { _unit: "pixelsUnit", _value: currentX[row] },
+                    //             vertical: { _unit: "pixelsUnit", _value: currentY[row] + badgeHeight }
+                    //         },
+                    //         _options: { dialogOptions: "dontDisplay" }
+                    //     },
+                    // ]
+                    // await batchPlay(initBadgePos, {});
 
-                    const resetBadgePos = alignGroupTopLeftCorner()
-                    await batchPlay(resetBadgePos, {});
+                    // const resetBadgePos = alignGroupTopLeftCorner()
+                    // await batchPlay(resetBadgePos, {});
 
-                    const makeHeadline = [
-                        {
-                            _obj: "make",
-                            _target: [
-                                {
-                                    _ref: "textLayer"
-                                }
-                            ],
-                            using: {
-                                _obj: "textLayer",
-                                textKey: headlineCopy,
-                                bounds: {
-                                    _obj: "bounds",
-                                    left: {
-                                        _unit: "pointsUnit",
-                                        _value: 0,
-                                    },
-                                    top: {
-                                        _unit: "pointsUnit",
-                                        _value: 0,
-                                    },
-                                    right: {
-                                        _unit: "pointsUnit",
-                                        _value: 0
-                                    },
-                                    bottom: {
-                                        _unit: "pointsUnit",
-                                        _value: 0,
-                                    }
-                                },
-                                boundingBox: {
-                                    _obj: "boundingBox",
-                                    left: {
-                                        _unit: "pointsUnit",
-                                        _value: 0,
-                                    },
-                                    top: {
-                                        _unit: "pointsUnit",
-                                        _value: 0,
-                                    },
-                                    right: {
-                                        _unit: "pointsUnit",
-                                        _value: 0
-                                    },
-                                    bottom: {
-                                        _unit: "pointsUnit",
-                                        _value: 0,
-                                    }
-                                },
-                                textStyleRange: [
-                                    {
-                                        _obj: "textStyleRange",
-                                        from: 0,
-                                        to: Number.MAX_SAFE_INTEGER,
-                                        textStyle: {
-                                            _obj: "textStyle",
-                                            fontPostScriptName: "Roboto-Bold",
-                                            fontName: "Roboto",
-                                            fontStyleName: "Light",
-                                            size: {
-                                                _unit: "pointsUnit",
-                                                _value: headlineSize
-                                            },
-                                            impliedFontSize: {
-                                                _unit: "pointsUnit",
-                                                _value: headlineSize
-                                            },
-                                            autoLeading: false,
-                                            leading: headlineSize,
-                                            tracking: 0,
-                                            fontCaps: {
-                                                _enum: "fontCaps",
-                                                _value: "normal"
-                                            },
-                                            color: {
-                                                _obj: "RGBColor",
-                                                red: tertiaryColor.r,
-                                                grain: tertiaryColor.g,
-                                                blue: tertiaryColor.b
-                                            },
-                                        }
-                                    }
-                                ],
-                            },
-                        },
-                        setName({
-                            Name: "Headline"
-                        }),
-                        getBounds({}),
-                    ];
+                    // const makeHeadline = [
+                    //     {
+                    //         _obj: "make",
+                    //         _target: [
+                    //             {
+                    //                 _ref: "textLayer"
+                    //             }
+                    //         ],
+                    //         using: {
+                    //             _obj: "textLayer",
+                    //             textKey: headlineCopy,
+                    //             bounds: {
+                    //                 _obj: "bounds",
+                    //                 left: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 },
+                    //                 top: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 },
+                    //                 right: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0
+                    //                 },
+                    //                 bottom: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 }
+                    //             },
+                    //             boundingBox: {
+                    //                 _obj: "boundingBox",
+                    //                 left: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 },
+                    //                 top: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 },
+                    //                 right: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0
+                    //                 },
+                    //                 bottom: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 }
+                    //             },
+                    //             textStyleRange: [
+                    //                 {
+                    //                     _obj: "textStyleRange",
+                    //                     from: 0,
+                    //                     to: Number.MAX_SAFE_INTEGER,
+                    //                     textStyle: {
+                    //                         _obj: "textStyle",
+                    //                         fontPostScriptName: "Roboto-Bold",
+                    //                         fontName: "Roboto",
+                    //                         fontStyleName: "Light",
+                    //                         size: {
+                    //                             _unit: "pointsUnit",
+                    //                             _value: headlineSize
+                    //                         },
+                    //                         impliedFontSize: {
+                    //                             _unit: "pointsUnit",
+                    //                             _value: headlineSize
+                    //                         },
+                    //                         autoLeading: false,
+                    //                         leading: headlineSize,
+                    //                         tracking: 0,
+                    //                         fontCaps: {
+                    //                             _enum: "fontCaps",
+                    //                             _value: "normal"
+                    //                         },
+                    //                         color: {
+                    //                             _obj: "RGBColor",
+                    //                             red: tertiaryColor.r,
+                    //                             grain: tertiaryColor.g,
+                    //                             blue: tertiaryColor.b
+                    //                         },
+                    //                     }
+                    //                 }
+                    //             ],
+                    //         },
+                    //     },
+                    //     setName({
+                    //         Name: "Headline"
+                    //     }),
+                    //     getBounds({}),
+                    // ];
 
-                    const { height: headlineHeight, width: headlineWidth } = await getBoundsAndPositionNoProperty(makeHeadline, "boundingBox", 2);
+                    // const { height: headlineHeight, width: headlineWidth } = await getBoundsAndPositionNoProperty(makeHeadline, "boundingBox", 2);
 
-                    const initHeadlinePos = [
-                        setOffset({
-                            Horizontal: currentX[row],
-                            Vertical: currentY[row] + badgeHeight
-                        })
-                    ]
+                    // const initHeadlinePos = [
+                    //     setOffset({
+                    //         Horizontal: currentX[row],
+                    //         Vertical: currentY[row] + badgeHeight
+                    //     })
+                    // ]
 
-                    await batchPlay(initHeadlinePos, {});
+                    // await batchPlay(initHeadlinePos, {});
 
-                    const resetHeadlinePos = alignGroupTopLeftCorner()
-                    await batchPlay(resetHeadlinePos, {});
+                    // const resetHeadlinePos = alignGroupTopLeftCorner()
+                    // await batchPlay(resetHeadlinePos, {});
 
+                    // let headlinePadding;
 
-                    let headlinePadding;
+                    // if (ratio < 0.5) {
+                    //     headlinePadding = badgeHeight * 1.75
+                    // } else {
+                    //     headlinePadding = badgeHeight * 2.5
+                    // }
 
-                    if (ratio < 0.5) {
-                        headlinePadding = badgeHeight * 1.75
-                    } else {
-                        headlinePadding = badgeHeight * 2.5
-                    }
+                    // const moveHeadline = [
+                    //     setOffset({
+                    //         Vertical: headlinePadding,
+                    //     })
+                    // ]
 
+                    // await batchPlay(moveHeadline, {});
 
-                    const moveHeadline = [
-                        setOffset({
-                            Vertical: headlinePadding,
-                        })
-                    ]
+                    // const makeSubheadline = [
+                    //     {
+                    //         _obj: "make",
+                    //         _target: [
+                    //             {
+                    //                 _ref: "textLayer"
+                    //             }
+                    //         ],
+                    //         using: {
+                    //             _obj: "textLayer",
+                    //             textKey: subheadlineCopy,
+                    //             bounds: {
+                    //                 _obj: "bounds",
+                    //                 left: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 },
+                    //                 top: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 },
+                    //                 right: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0
+                    //                 },
+                    //                 bottom: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 }
+                    //             },
+                    //             boundingBox: {
+                    //                 _obj: "boundingBox",
+                    //                 left: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 },
+                    //                 top: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 },
+                    //                 right: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0
+                    //                 },
+                    //                 bottom: {
+                    //                     _unit: "pointsUnit",
+                    //                     _value: 0,
+                    //                 }
+                    //             },
+                    //             textStyleRange: [
+                    //                 {
+                    //                     _obj: "textStyleRange",
+                    //                     from: 0,
+                    //                     to: Number.MAX_SAFE_INTEGER,
+                    //                     textStyle: {
+                    //                         _obj: "textStyle",
+                    //                         fontPostScriptName: "Roboto-Bold",
+                    //                         fontName: "Roboto",
+                    //                         fontStyleName: "Light",
+                    //                         size: {
+                    //                             _unit: "pointsUnit",
+                    //                             _value: subheadlineSize
+                    //                         },
+                    //                         impliedFontSize: {
+                    //                             _unit: "pointsUnit",
+                    //                             _value: subheadlineSize
+                    //                         },
+                    //                         autoLeading: false,
+                    //                         leading: subheadlineSize,
+                    //                         tracking: 0,
+                    //                         fontCaps: {
+                    //                             _enum: "fontCaps",
+                    //                             _value: "normal"
+                    //                         },
+                    //                         color: {
+                    //                             _obj: "RGBColor",
+                    //                             red: tertiaryColor.r,
+                    //                             grain: tertiaryColor.g,
+                    //                             blue: tertiaryColor.b
+                    //                         },
+                    //                     }
+                    //                 }
+                    //             ],
+                    //         },
+                    //     },
+                    //     setName({
+                    //         Name: "Subheadline"
+                    //     }),
+                    //     getBounds({}),
+                    // ];
 
-                    await batchPlay(moveHeadline, {});
+                    // const { height: subheadlineHeight, width: subheadlineWidth } = await getBoundsAndPositionNoProperty(makeSubheadline, "boundingBox", 2);
+
+                    // const initSubheadlinePos = [
+                    //     setOffset({
+                    //         Horizontal: currentX[row],
+                    //         Vertical: currentY[row] + subheadlineHeight
+                    //     })
+                    // ]
+
+                    // await batchPlay(initSubheadlinePos, {});
+
+                    // const resetSubheadlinePos = alignGroupTopLeftCorner()
+                    // await batchPlay(resetSubheadlinePos, {});
+
+                    // let subheadlinePadding = headlinePadding + headlineHeight + badgeHeight;
+
+                    // const moveSubheadline = [
+                    //     setOffset({
+                    //         Vertical: subheadlinePadding,
+                    //     })
+                    // ]
+
+                    // await batchPlay(moveSubheadline, {});
 
                     currentX[row] += width + 40; // Atualiza o X atual após a criação da artboard
 
