@@ -547,6 +547,9 @@ export default function AppProvider({ children }) {
         birdseed: null,
     });
 
+    console.log(selectedModules.brand);
+
+
     const [copyValues, setCopyValues] = useState({
         subject: {
             sl: '',

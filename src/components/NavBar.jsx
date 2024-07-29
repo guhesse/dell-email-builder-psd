@@ -1,17 +1,18 @@
 import useAppContext from '../hook/useAppContext.jsx';
 import ColorSelector from './Selectors/Email/ColorSelector.js';
+import NavColorSelector from './Selectors/Email/NavColorSelector.js';
+import NavBrandSelector from './Selectors/Email/NavBrandSelector.js';
 
 export default function Navbar() {
 
     const { route, setRoute } = useAppContext();
-
-    console.log(route)
 
     const fontStyles = {
         fontWeight: '400',
     }
 
     const navStyle = {
+        width: '100%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
@@ -24,7 +25,6 @@ export default function Navbar() {
 
     return (
         <div>
-            <ColorSelector />
             <div style={navStyle}>
                 <h3
                     style={route === '/email' ? selectedStyle : fontStyles}
@@ -41,6 +41,8 @@ export default function Navbar() {
                     onClick={() => setRoute('/tools')}>
                     Tools
                 </h3>
+                <NavBrandSelector />
+                <NavColorSelector />
             </div>
             <sp-divider style={{ marginBottom: '10px' }}></sp-divider>
         </div>

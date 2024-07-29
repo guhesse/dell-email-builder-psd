@@ -30,7 +30,7 @@ export default function ColorOrganizer() {
                     quiet
                     key={color.hex}
                     variant="secondary"
-                    style={{ backgroundColor: color.hex, color: "black", margin: "3px" }}
+                    style={{ fontSize: "0.75rem", backgroundColor: color.hex, color: "black", margin: "2px" }}
                     onClick={() => handleClick(color.value)}
                 >
                     {color.name}
