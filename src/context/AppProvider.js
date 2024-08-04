@@ -6,7 +6,7 @@ import { storage } from '../App.js';
 
 export default function AppProvider({ children }) {
     
-    const [route, setRoute] = useState('/tools');
+    const [route, setRoute] = useState('/email');
     const [csvLoaded, setCsvLoaded] = useState(false);
     const [csvValues, setCsvValues] = useState({
         'Source File': '',
@@ -547,9 +547,6 @@ export default function AppProvider({ children }) {
         birdseed: null,
     });
 
-    console.log(selectedModules.brand);
-
-
     const [copyValues, setCopyValues] = useState({
         subject: {
             sl: '',
@@ -596,10 +593,7 @@ export default function AppProvider({ children }) {
         },
     });
 
-    // Values e estados dos inputs
-
     const [selectedBrand, setSelectedBrand] = useState('dell');
-
 
     useEffect(() => {
 
@@ -853,20 +847,13 @@ export default function AppProvider({ children }) {
         csvValues['Birdseed 2'],
     ]);
 
-    // console.log("Valores que serão passados para os componentes:", {
-    //     // csvValues,
-    //     // subjectValues,
-    //     // selectedHeader,
-    //     // selectedBrand,
-    //     // selectedFpoSegment,
-    //     // selectedFpoValue,
-    //     // selectedBanner,
-    //     // selectedFooter,
-    //     // selectedBirdseed,
-    //     // selectedBirdseedCopy,
-    //     // birdseedCopyValues,
-    //     // birdseedDate
-    // });
+    console.log("Valores que serão passados para os componentes:", {
+        // csvValues,
+        // subjectValues,
+        // selectedModules,
+        // birdseedCopyValues,
+        // birdseedDate
+    });
 
     const cores = {}
 

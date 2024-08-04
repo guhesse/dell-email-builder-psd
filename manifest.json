@@ -39,20 +39,20 @@
         "default": "Dell Email Builder"
       },
       "minimumSize": {
-        "width": 300,
-        "height": 400
+        "width": 350,
+        "height": 450
       },
       "maximumSize": {
         "width": 2000,
         "height": 2000
       },
       "preferredDockedSize": {
-        "width": 300,
-        "height": 400
+        "width": 350,
+        "height": 750
       },
       "preferredFloatingSize": {
         "width": 300,
-        "height": 400
+        "height": 750
       },
       "icons": [
         {
