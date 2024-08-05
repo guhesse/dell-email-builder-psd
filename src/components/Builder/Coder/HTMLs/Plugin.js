@@ -1,5 +1,6 @@
-const Plugin = ({ selectedModules, copyValues, colors }) => {
+const Plugin = ({ params }) => {   
 
+    const { selectedModules, copyValues, colors } = params;
     let desktopPluginHTML = []
     let mobilePluginHTML = []
 

@@ -1,5 +1,5 @@
-const Banner = ({ selectedModules, copyValues, colors }) => {
-
+const Banner = ({ params }) => {
+	const { selectedModules, copyValues } = params;
     const banner = selectedModules.banner;
     const bannerCopy = copyValues.banner;
     const { headline, copy, cta } = bannerCopy;

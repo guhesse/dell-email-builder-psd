@@ -1,5 +1,6 @@
-const Header = ({ selectedModules, desktopFundingHTML }) => {
+const Header = ({ params, desktopFundingHTML }) => {
 
+    const { selectedModules } = params;
     const header = selectedModules.header
 
     let headerHTML = [];

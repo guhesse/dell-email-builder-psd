@@ -7,6 +7,11 @@ export async function getBoundsAndPosition(action, method = "", i = 1, property 
     return { position };
 }
 
+export async function getPosition(bounds, property, index, position, offset) {
+    const { position: pos } = await getBoundsAndPosition(bounds, property, index, position, offset);
+    return pos;
+}
+
 export async function getBoundsAndPositionNoProperty(action, method = "", i = 1) {
     const result = await batchPlay(action, {});
     const bounds = result[i][method];

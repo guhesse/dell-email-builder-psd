@@ -1,5 +1,5 @@
-const Hero = ({ selectedModules, copyValues, colors }) => {
-
+const Hero = ({ params }) => {
+    const { selectedModules, copyValues, colors } = params;
     const hero = selectedModules.hero;
     const { badge, headline, ot, subheadline, inlinePromo, specs, price, productName, productSupercharger, cta } = copyValues.hero;
 

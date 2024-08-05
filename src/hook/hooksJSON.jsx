@@ -1,6 +1,4 @@
-
-//  ##  Função para selecionar camadas  ## //
-
+import { getPosition } from "./getBoundsAndPosition.jsx";
 
 /**
  * Função para organizar as camadas ao final e definir a cor da etiqueta.
@@ -8,6 +6,25 @@
  * @param {string} options.Name - Nome da camada.
  * @returns {Array} Array de objetos representando as operações a serem realizadas.
  */
+
+
+
+export async function createSlice(name, bounds) {
+    const top = await getPosition(bounds, "bounds", 0, "top", 0);
+    const right = await getPosition(bounds, "bounds", 0, "right", 0);
+    const bottom = await getPosition(bounds, "bounds", 0, "bottom", 0);
+    const left = await getPosition(bounds, "bounds", 0, "left", 0);
+
+    return makeSlice({
+        Name: name,
+        Top: top,
+        Right: right,
+        Bottom: bottom,
+        Left: left
+    });
+}
+
+//  ##  Função para selecionar camadas  ## //
 
 export function selectLayer({ Name }) {
     return {
@@ -301,7 +318,7 @@ export function setOverlayColor({ Name, RedColor, GreenColor, BlueColor }) {
 export function setOffset({ Name, Horizontal, Vertical }) {
     Horizontal = Horizontal !== undefined ? Horizontal : 0;
     Vertical = Vertical !== undefined ? Vertical : 0;
-    
+
     let targetLayer = Name !== undefined ?
         { _ref: "layer", _name: Name } :
         { _ref: "layer", _enum: "ordinal", _value: "targetEnum" };

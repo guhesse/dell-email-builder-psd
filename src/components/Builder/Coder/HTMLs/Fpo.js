@@ -1,5 +1,5 @@
-const Fpo = ({ selectedModules, colors }) => {
-
+const Fpo = ({ params }) => {
+	const { colors, selectedModules } = params;
     const fpo = selectedModules.fpo
 
     let fpoHTML = [];
