@@ -15,13 +15,13 @@ export default function useCalculateTotalHeight(initialModulesHeight) {
             plugin: '',
             fpo: '',
             banner: '',
+            footer: '',
+            birdseed: '',
         });
 
-        let totalHeight = 90; // Inicia a altura total com 90, pois 'sl' sempre está presente
-        let currentModuleHeight = (modulesHeight[currentModule] / 2) || 0;
+        let totalHeight = 90;
 
-        // Lista dos módulos que devem ser considerados no cálculo
-        let modules;
+        let modules
 
         switch (currentModule) {
             case 'skinny':
@@ -36,10 +36,21 @@ export default function useCalculateTotalHeight(initialModulesHeight) {
             case 'fpo':
                 modules = ['skinny', 'hero', 'plugin', 'fpo'];
                 break;
-            default:
+            case 'banner':
                 modules = ['skinny', 'hero', 'plugin', 'fpo', 'banner'];
                 break;
+            case 'footer':
+                modules = ['skinny', 'hero', 'plugin', 'fpo', 'banner', 'footer'];
+                break;
+            case 'birdseed':
+                modules = ['skinny', 'hero', 'plugin', 'fpo', 'banner', 'footer', 'birdseed'];
+                break;
+            default:
+                modules = ['skinny', 'hero', 'plugin', 'fpo', 'banner', 'footer', 'birdseed'];
+                break;
         }
+
+        let currentModuleHeight = (modulesHeight[currentModule] / 2) || 0;
 
         modules.forEach(module => {
             if (selectedModules[module] && modulesHeight[module] !== null) {

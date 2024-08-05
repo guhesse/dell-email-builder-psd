@@ -6,12 +6,14 @@ export async function headerBuild(buildInfo) {
 
     const { modulesHeight, selectedModules } = buildInfo;
 
-    if (selectedModules.header === "" || selectedModules.header === null) {
+    const { header } = selectedModules;
+
+    if (header === "" || header === null) {
         console.warn('Header n&#xe3;o selecionado');
         modulesHeight.header = 0;
         return;
     }
-    const headerFilePath = `assets/headers/${selectedModules.header}.psd`;
+    const headerFilePath = `assets/headers/${header}.psd`;
 
     try {
         const fs = storage.localFileSystem;

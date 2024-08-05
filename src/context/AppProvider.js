@@ -3,10 +3,10 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from './AppContext.js';
 import { storage } from '../App.js';
-import limitCharsPerLine from '../hook/charLimiter.jsx';
 
 export default function AppProvider({ children }) {
-
+    
+    const [route, setRoute] = useState('/email');
     const [csvLoaded, setCsvLoaded] = useState(false);
     const [csvValues, setCsvValues] = useState({
         'Source File': '',
@@ -545,7 +545,6 @@ export default function AppProvider({ children }) {
         banner: null,
         footer: null,
         birdseed: null,
-        birdseedCopy: false
     });
 
     const [copyValues, setCopyValues] = useState({
@@ -594,35 +593,7 @@ export default function AppProvider({ children }) {
         },
     });
 
-    // Values e estados dos inputs
-
     const [selectedBrand, setSelectedBrand] = useState('dell');
-    const [selectedBanner, setSelectedBanner] = useState(null);
-    const [selectedFooter, setSelectedFooter] = useState(null);
-    const [selectedBirdseed, setSelectedBirdseed] = useState(null);
-    const [selectedBirdseedCopy, setSelectedBirdseedCopy] = useState(false);
-
-    const [bannerCopyValues, setBannerCopyValues] = useState({
-        bannerHeadlineValue: '',
-        bannerCopyValue: '',
-        bannerCtaValue: '',
-    })
-
-    const [birdseedValues, setBirdseedValues] = useState({
-        copy: '',
-        day: null,
-        month: null,
-        year: null
-    })
-
-    // const [birdseedCopyValues, setBirdseedCopyValues] = useState('');
-
-    // const [birdseedDate, setBirdseedDate] = useState({
-    //     selectedDay: null,
-    //     selectedMonth: null,
-    //     selectedYear: null,
-    // });
-
 
     useEffect(() => {
 
@@ -876,20 +847,13 @@ export default function AppProvider({ children }) {
         csvValues['Birdseed 2'],
     ]);
 
-    // console.log("Valores que serão passados para os componentes:", {
-    //     // csvValues,
-    //     // subjectValues,
-    //     // selectedHeader,
-    //     // selectedBrand,
-    //     // selectedFpoSegment,
-    //     // selectedFpoValue,
-    //     // selectedBanner,
-    //     // selectedFooter,
-    //     // selectedBirdseed,
-    //     // selectedBirdseedCopy,
-    //     // birdseedCopyValues,
-    //     // birdseedDate
-    // });
+    console.log("Valores que serão passados para os componentes:", {
+        // csvValues,
+        // subjectValues,
+        // selectedModules,
+        // birdseedCopyValues,
+        // birdseedDate
+    });
 
     const cores = {}
 
@@ -898,6 +862,9 @@ export default function AppProvider({ children }) {
 
     return (
         <AppContext.Provider value={{
+            route, 
+            setRoute,
+
             csvValues,
             setCsvValues,
             csvLoaded,
@@ -921,25 +888,6 @@ export default function AppProvider({ children }) {
 
             selectedBrand,
             setSelectedBrand,
-
-            selectedBanner,
-            setSelectedBanner,
-            bannerCopyValues,
-            setBannerCopyValues,
-
-            selectedFooter,
-            setSelectedFooter,
-
-            selectedBirdseed,
-            setSelectedBirdseed,
-            birdseedValues,
-            setBirdseedValues,
-            // selectedBirdseedCopy,
-            // setSelectedBirdseedCopy,
-            // birdseedCopyValues,
-            // setBirdseedCopyValues,
-            // birdseedDate,
-            // setBirdseedDate,
         }}>
             {children}
         </AppContext.Provider>

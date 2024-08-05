@@ -11,7 +11,7 @@ export async function fpoBuild(buildInfo) {
     var fpoCount = fpoValue.number
 
     
-    if (fpoCount === null || fpoCount === 0 || fpo === undefined) {
+    if (fpoCount === null || fpoCount === 0 ) {
         console.warn('Fpo n\u00e3o selecionado');
         modulesHeight.fpo = 0;
         return;
@@ -24,9 +24,9 @@ export async function fpoBuild(buildInfo) {
 
         let fpoFilePath;
         for (let i = 1; i <= fpoCount; i++) {
-            if (fpo !== "" || fpo !== null) {
+            if (fpo !== "" && fpo !== null) {
                 fpoFilePath = `assets/fpo/${fpo}/${i}.psd`;
-            } else {
+            } else if (fpo === null) {
                 fpoFilePath = `assets/fpo/sb/${i}.psd`;
             }
         }
