@@ -128,7 +128,7 @@ sp-menu-group span {
     margin-right: 10px;
 }
 
-.flexCenter{
+.flexCenter {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -337,4 +337,43 @@ sp-menu-group span {
 
 .new-group> :not(sp-label) {
     margin: 6px;
+}
+
+.toast-container {
+    position: fixed;
+    max-width: 280px;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.toast {
+    background-color: #333;
+    color: #fff;
+    margin-bottom: 5px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+.toast.success {
+    background-color: #28a745;
+}
+
+.toast.error {
+    background-color: #dc3545;
+}
+
+.toast.warn {
+    background-color: #ff9800;
 }

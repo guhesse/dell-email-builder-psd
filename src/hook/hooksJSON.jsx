@@ -121,16 +121,26 @@ export function getTextColor({ Name }) {
     }
 };
 
+export function getLayerKind({ Name }) {
+    return {
+        _obj: "get",
+        _target: [{ _property: "layerKind" },
+        { _ref: "layer", _name: Name },],
+        _options: { dialogOptions: "dontDisplay" }
+    }
+};
+
 
 
 //  ##  Função para pegar texto da Camada  ## //
 
-export function getTextProperty({ Name }) {
+export function getTextProperty({ Name, Dialog }) {
+    Dialog = Dialog !== undefined ? Dialog : "dontDisplay";
     return {
         _obj: "get",
         _target: [{ _property: "textKey" },
         { _ref: "layer", _name: Name },],
-        _options: { dialogOptions: "dontDisplay" }
+        _options: { dialogOptions: Dialog }
     }
 };
 

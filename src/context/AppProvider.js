@@ -535,17 +535,17 @@ export default function AppProvider({ children }) {
     const handleTertiaryColorChange = handleColorChange("tertiaryColor", colorsList, setColors);
 
     const [selectedModules, setSelectedModules] = useState({
-        header: null,
+        header: 'csb', //null
         brand: 'dell',
-        vf: null,
+        vf: 'win11', //null
         skinny: null,
-        hero: null,
-        plugin: null,
+        hero: 'hero1-lifestyle-product', //null
+        plugin: 'plugin', //null
         fpo: null,
         banner: null,
         vfbanner: null,
-        footer: null,
-        birdseed: null,
+        footer: 'csb-four-btn', //null	
+        birdseed: 'standard', //null
     });
 
     const [copyValues, setCopyValues] = useState({
@@ -853,17 +853,17 @@ export default function AppProvider({ children }) {
         csvValues['Birdseed 2'],
     ]);
 
-    console.log("Valores que serão passados para os componentes:", {
-        // csvValues,
-        // subjectValues,
-        // selectedModules,
-        // birdseedCopyValues,
-        // birdseedDate
-    });
+    // console.log("Valores que serão passados para os componentes:", {
+    //     // csvValues,
+    //     // subjectValues,
+    //     // selectedModules,
+    //     // birdseedCopyValues,
+    //     // birdseedDate
+    // });
 
     const cores = {}
 
-    console.log("Selected Modules:", selectedModules['vfbanner'])
+    // console.log("Selected Modules:", selectedModules['vfbanner'])
     // console.log("Selected Modules:", copyValues)
 
     return (

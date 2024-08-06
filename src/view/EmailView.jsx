@@ -6,7 +6,7 @@ import { BannerSelector, VfBannerSelector, BirdseedSelector, FooterSelector, Fpo
 import EmailCoder from '../components/Builder/Coder/EmailCoder.jsx';
 
 export default function EmailView() {
-    const [selectedCase, setSelectedCase] = useState("photoshop");
+    const [selectedCase, setSelectedCase] = useState("code");
 
     const handleCaseClick = (caseName) => {
         setSelectedCase(caseName);
