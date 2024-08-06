@@ -3,7 +3,7 @@ import { storage, batchPlay, core } from '../../../App.js';
 import useAppContext from '../../../hook/useAppContext.jsx';
 import { getBounds, makeSlice, hideLayer, showLayer, clearAllSlices } from '../../../hook/hooksJSON.jsx';
 import { getBoundsAndPosition } from '../../../hook/getBoundsAndPosition.jsx';
-import { Head, Header, Funding, Hero, Plugin, Subject, Fpo, Banner } from './HTMLs/Codes.js';
+import { Head, Header, Funding, Hero, Plugin, Subject, Fpo, Banner, VfBanner, Footer, Birdseed } from './HTMLs/Codes.js';
 import { getHeroContent, getPluginContent, getBannerContent } from './Content/Contents.js';
 
 export default function EmailCoder() {
@@ -24,6 +24,9 @@ export default function EmailCoder() {
 	const { desktopPluginHTML, mobilePluginHTML } = Plugin({ params });
 	const fpoHTML = Fpo({ params });
 	const bannerHTML = Banner({ params });
+	const vfBannerHTML = VfBanner({ params });
+	const footerHTML = Footer({ params });
+	const birdseedHTML = Bir({ params });
 
 	// async function getHeroColors() {
 
@@ -145,9 +148,10 @@ export default function EmailCoder() {
 		// });
 
 		const htmlContent = `
-
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 		${headHTML.join('\n')}
-
 <body bgcolor="#ffffff" style="margin:0; padding:0px;">
 
 <table role="presentation" align="center" width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -194,277 +198,11 @@ export default function EmailCoder() {
 		<td height="10"></td>
 	</tr>	
 
-
-	<!-- ### MCAFEE BANNER ### -->
-	<tr>
-	<td align="center" valign="top" style="padding:0px;">
-	<table dir="rtl" role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td align="center" style="padding:0px;">
-			<table width="100%" role="presentation" border="0" cellspacing="0" cellpadding="0">
-			<tr>
-				<th align="left" valign="top" class="stack">
-				<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td align="right" valign="middle" class="product-nopadding">
-							<a href=""  target="_blank">
-								<img src="images/XXXXXX_mcafee.jpg" alt="McAfee" border="0" style="display:block;" />
-							</a>
-						</td>
-					</tr>
-				</table>
-                </th>
-                <th bgcolor="#c32026" align="center" valign="top" class="stack">
-				<table dir="ltr" role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-					<td style="padding:0px 20px;" class="m-pb-20">
-					<table>
-						<tr>
-						<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; mso-line-height-rule:exactly; line-height:15px; font-weight:bold; color:#444444; letter-spacing:0em; padding-bottom:3px;" class="align-center">
-						<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td height="20" >&nbsp;</td>
-							</tr>
-							<tr>
-								<td valign="top" style="font-family: Arial, Helvetica, sans-serif;color:#ffffff;font-size:13px;padding-bottom:10px;" class="align-center">
-									<a href=""   target="_blank" style="outline:none; color:#ffffff; text-decoration:none;">
-										<strong>Invista em PCs bem protegidos.</strong>
-									</a>
-								</td>
-							</tr>
-							<tr>
-								<td style="font-family: Arial, Helvetica, sans-serif; font-size:12px;line-height:15px; color:#ffffff;" class="align-center">
-									<a href=""   target="_blank" style="outline:none; color:#ffffff; text-decoration:none;">
-										A Dell oferece McAfee Small Business Security para garantir a segurança da sua empresa.
-									</a>
-								</td>
-							</tr>
-							<tr>
-								<td height="10"></td>
-							</tr>
-							<tr>
-								<td class="align-center m-px-5 m-pt-15" valign="top">
-								<table role="presentation" align="left" border="0" cellpadding="0" cellspacing="0" class="wrap">
-									<tr>
-										<td valign="middle" align="center" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; mso-line-height-rule:exactly; line-height:16px; font-weight:700; color:#ffffff; letter-spacing:0.03em;" class="cta-button-white">
-											<a href="" target="_blank" style="color:#ffffff; border:2px solid #ffffff; text-decoration:none; padding:10px 10px; display:block;">
-												Saiba mais
-											</a>
-										</td>
-									</tr>
-								</table>
-								</td>
-							</tr>
-						</table>
-						</td>
-						</tr>
-					</table>
-					</td>
-					</tr>
-				</table>
-				</th>
-			</tr>
-			</table>
-			</td>
-		</tr>
-	</table>
-	</td>
-	</tr>
-	<!-- ### /END MCAFEE BANNER / ### --> 
-	
-
-	<!-- ### MICORSOFT SB BANNER ### -->
-	<tr>
-	<td align="center" valign="top" style="padding:0px;">
-	<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td align="center" style="padding:0px;">
-			<table width="100%" role="presentation" border="0" cellspacing="0" cellpadding="0">
-			<tr>
-				<th align="left" valign="middle" class="stack">
-					<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-						<tr>
-							<td align="center" valign="middle" class="product-padding-b15">
-								<a href=""  target="_blank">
-									<img src="images/XXXXXX_microsoft-sb.png" alt="Microsoft" border="0" style="display:block;" />
-								</a>
-							</td>
-						</tr>
-					</table>
-				</th>
-                <th align="center" valign="top" class="stack" style="padding:0 0px;">
-				<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td style="padding:0px 20px;" class="m-pb-20">
-					<table>
-						<tr>
-						<td align="left" style="font-family:Arial, Helvetica, sans-serif;" class="align-center">
-						<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td height="20" class="noneMobile">&nbsp;</td>
-							</tr>
-							<tr>
-								<td valign="top" style="font-family: Arial, Helvetica, sans-serif;color:#444444;font-size:18px; line-height: 22px; padding-bottom:5px;" class="align-center">
-									<a href=""   target="_blank" style="outline:none; color:#444444; text-decoration:none;">
-										Não se esqueça de adicionar o <br />
-										Office 2019, o essencial para criar.
-									</a>
-								</td>
-							</tr>
-							<tr>
-								<td style="font-family: Arial, Helvetica, sans-serif; font-size:11px;line-height:14px; color:#444444;" class="align-center">
-									<a href=""   target="_blank" style="outline:none; color:#444444; text-decoration:none;">
-										Os aplicativos clássicos do Office – Word, Excel, PowerPoint e OneNote – para criar e apresentar suas ideias.
-									</a>
-								</td>
-							</tr>
-							<tr>
-								<td height="10"></td>
-							</tr>
-							<tr>
-								<td class="align-center m-px-5 m-pt-15" valign="top">
-								<table role="presentation" align="left" border="0" cellpadding="0" cellspacing="0" class="wrap">
-									<tr>
-										<td valign="middle" align="center" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; mso-line-height-rule:exactly; line-height:16px; font-weight:700; color:#444444; letter-spacing:0.03em;" class="cta-button">
-											<a href="" target="_blank" style="color:#444444; border:2px solid #444444; text-decoration:none; padding:10px 10px; display:block;">
-												Saiba mais
-											</a>
-										</td>
-									</tr>
-								</table>
-								</td>
-							</tr>
-						</table>
-						</td>
-						</tr>
-					</table>
-					</td>
-				</tr>
-				</table>
-				</th>
-            </tr>
-			</table>
-			</td>
-		</tr>
-	</table>
-	</td>
-    </tr>
-	<!-- ### /END MICORSOFT SB BANNER / ### -->
-
+	${vfBannerHTML.join('\n')}
 
 	<!-- ### FOOTER ### -->
-	<!-- Buttons-->
-	<tr>
-	<td style="padding:30px 0px 30px;" align="center" valign="middle">
-	<table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" class="wrap">
-		<tr>
-			<th valign="top" style="box-sizing:border-box; padding:0 5px;" class="stack m-px-reset m-pb-10">
-			<table role="presentation" width="130" align="center" border="0" cellpadding="0" cellspacing="0" style="width:130px;" class="wrap">
-				<tr>
-					<td valign="middle" align="center" style="font-family:Arial, Helvetica, sans-serif; font-size:15px; mso-line-height-rule:exactly; line-height:17px; font-weight:700; color:#444444; letter-spacing:0.03em;" class="cta-button">
-						<a href="" target="_blank" style="color:#444444; border:2px solid #444444; text-decoration:none; padding:15px 20px; display:block;">
-							Notebooks
-						</a>
-					</td>
-				</tr>
-			</table>
-			</th>
-			<th valign="top" style="box-sizing:border-box; padding:0 5px;" class="stack m-px-reset m-pb-10">
-			<table role="presentation" width="130" align="center" border="0" cellpadding="0" cellspacing="0" style="width:130px;" class="wrap">
-				<tr>
-					<td valign="middle" align="center" style="font-family:Arial, Helvetica, sans-serif; font-size:15px; mso-line-height-rule:exactly; line-height:17px; font-weight:700; color:#444444; letter-spacing:0.03em;" class="cta-button">
-						<a href="" target="_blank" style="color:#444444; border:2px solid #444444; text-decoration:none; padding:15px 20px; display:block;">
-							Ofertas
-						</a>
-					</td>
-				</tr>
-			</table>
-			</th>
-			<th valign="top" style="box-sizing:border-box; padding:0 5px;" class="stack m-px-reset m-pb-10">
-			<table role="presentation" width="130" align="center" border="0" cellpadding="0" cellspacing="0" style="width:130px;" class="wrap">
-				<tr>
-					<td valign="middle" align="center" style="font-family:Arial, Helvetica, sans-serif; font-size:15px; mso-line-height-rule:exactly; line-height:17px; font-weight:700; color:#444444; letter-spacing:0.03em;" class="cta-button">
-						<a href="" target="_blank" style="color:#444444; border:2px solid #444444; text-decoration:none; padding:15px 20px; display:block;">
-							Desktops
-						</a>
-					</td>
-				</tr>
-			</table>
-			</th>
-			<th valign="top" style="box-sizing:border-box; padding:0 5px;" class="stack m-px-reset m-pb-10">
-			<table role="presentation" width="130" align="center" border="0" cellpadding="0" cellspacing="0" style="width:130px;" class="wrap">
-				<tr>
-					<td valign="middle" align="center" style="font-family:Arial, Helvetica, sans-serif; font-size:15px; mso-line-height-rule:exactly; line-height:17px; font-weight:700; color:#444444; letter-spacing:0.03em;" class="cta-button">
-						<a href="" target="_blank" style="color:#444444; border:2px solid #444444; text-decoration:none; padding:15px 20px; display:block;">
-							Acessórios
-						</a>
-					</td>
-				</tr>
-			</table>
-			</th>
-		</tr>
-	</table>
-	</td>
-	</tr>
-	
-	<!-- -------------- SOCIAL MEDIA ROW ------------------------------>		
-	<tr>	  
-	<td width="100%" align="center">
-	<table cellpadding="0" cellspacing="0">
-		<tr>
-		<td align="center">
-		<table cellpadding="0" cellspacing="0">
-			<tr>
-				<td class="social-icon" align="center" style="padding:0 5px;"><a href="" target="_blank" style="outline:none;"><img src="images/XXXXXX_icon-ig.png" alt="Instagram" style="border: 0;"/></a></td>
-				<td class="social-icon" align="center" style="padding:0 5px;"><a href="" target="_blank" style="outline:none;"><img src="images/XXXXXX_icon-twitter.png" alt="Twitter" style="border: 0;"/></a></td>
-				<td class="social-icon" align="center" style="padding:0 5px;"><a href="" target="_blank" style="outline:none;"><img src="images/XXXXXX_icon-facebook.png" alt="Facebook"  style="border: 0;"/></a></td> 
-				<td class="social-icon" align="center" style="padding:0 5px;"><a href="" target="_blank" style="outline:none;"><img src="images/XXXXXX_icon-li.png" alt="LinkedIn" style="border: 0;"/></a></td>  
-			</tr>
-		</table>
-		</td>
-		</tr>
-	</table>
-	</td>
-	</tr>
-	<!-- -------------- /END SOCIAL MEDIA ROW ------------------------------>
-
-
-	<tr>
-		<td height="10"></td>
-	</tr>
-
-
-	<tr>
-	<td valign="top" style="padding:20px;">
-	<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td align="center" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:15px; mso-line-height-rule:exactly; color:#444444; padding-top:0px;">
-				<a href=""  target="_blank" style="outline:none; color:#0076ce; text-decoration:none;">Gerencie suas preferências</a>&nbsp; | &nbsp;
-				<a href=""  target="_blank" style="outline:none; color:#0076ce; text-decoration:none;">Cancelar inscrição</a>&nbsp; | &nbsp;
-				<a href=""  target="_blank" style="outline:none; color:#0076ce; text-decoration:none;">Declaração de privacidade</a>
-				<br><br>
-			</td>
-		</tr>
-		<tr>
-			<td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:10px; line-height:14px; mso-line-height-rule:exactly; color:#444444; padding-top:0px;text-align: justify;">
-				<center>Para informações sobre suas preferências de e-mail, entre em contato conosco em <a href="mailto:Privacy@Dell.com"  target="_blank" style="outline:none; color:#0076ce; text-decoration:underline;">Privacy@Dell.com</a>.<br>
-				A sede global da Dell Technologies está localizada em One Dell Way, Round Rock, TX 78682, EUA.</center><br>
-
-				TEXT <a href=""  target="_blank" style="outline:none; color:#0076ce; text-decoration:underline;">www.dell.com.br</a>.
-				<br><br>
-
-				TEXT <a href=""  target="_blank" style="outline:none; color:#0076ce; text-decoration:underline;">www.dell.com.br/servicos</a>.
-				<br><br>
-
-				Empresa beneficiada pela Lei da Informática. Fotos meramente ilustrativas. PowerEdge, Vostro, Latitude, PowerVault, Precision, OptiPlex, XPS, Inspiron, Alienware, CompleteCare e ProSupport são marcas registradas da &copy; 2023 Dell Inc. Todos osdireitos reservados. Microsoft e Windows são marcas registradas da Microsoft Corporation nos EUA. Ultrabook, Celeron, Celeron Inside, Core Inside, Intel, Intel Logo, Intel Atom, Intel Atom Inside, Intel Core, Intel Inside, Intel Inside Logo, Intel vPro,Intel Evo, Pentium, Pentium Inside, vPro Inside, Xeon, Xeon Inside, Intel Agilex, Arria, Cyclone, Movidius, eASIC, Ethernet, Iris, MAX, Select Solutions, Si Photonics, Stratix, Tofino, and Intel Optane são marcas registradas da Intel Corporation e suassubsidiárias. &copy; 2023 Advanced Micro Devices, Inc. Todos os direitos reservados. A sigla AMD, o logotipo de seta da AMD e as combinações resultantes são marcas registradas da Advanced Micro Devices, Inc. &copy; 2023 NVIDIA, o logotipo NVIDIA,GeForce, GeForce RTX, GeForce RTX Super, GeForce GTX, GeForce GTX Super, GRID, SHIELD, Battery Boost, Reflex, DLSS, CUDA, FXAA, GameStream, G-SYNC, G-SYNC Ultimate, NVLINK, ShadowPlay, SLI, TXAA, PhysX, GeForce Experience, GeForce NOW, Maxwell, Pascal eTuring são marcas comerciais e/ou marcas registradas da NVIDIA Corporation nos EUA e em outros países.
-				<br><br>
-				
-				Dell Brasil / Av. Industrial Belgraf, 400 / Eldorado do Sul, RS / CEP 92990-000 / Brasil.<br>
-			</td>
-		</tr>		
-	</table>
-	</td>
-    </tr>
+	${footerHTML.join('\n')}
+	${birdseedHTML.join('\n')}
 	<!-- ### FOOTER END / ### -->
 
 

@@ -3,7 +3,7 @@ import useAppContext from "../../../hook/useAppContext.jsx";
 import useFormState from "../../../hook/useFormState.jsx";
 import StatusIcon from "../../Icons/StatusIcon.jsx";
 import BaseIcon from "../../Icons/BaseIcon.jsx";
-import GroupLabel from "../../GroupLabel.jsx";
+import GroupLabel from "../../Labels/GroupLabel.jsx";
 import useStatusIcon from "../../../functions/fieldStatusChecker.jsx";
 import { useToggleState } from "../../../hook/useToogle.jsx";
 

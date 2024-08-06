@@ -7,8 +7,6 @@ import { getPosition } from "./getBoundsAndPosition.jsx";
  * @returns {Array} Array de objetos representando as operações a serem realizadas.
  */
 
-
-
 export async function createSlice(name, bounds) {
     const top = await getPosition(bounds, "bounds", 0, "top", 0);
     const right = await getPosition(bounds, "bounds", 0, "right", 0);

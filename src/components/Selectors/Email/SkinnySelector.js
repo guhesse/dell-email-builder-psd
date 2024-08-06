@@ -4,7 +4,7 @@ import BaseIcon from "../../Icons/BaseIcon.jsx";
 import StatusIcon from "../../Icons/StatusIcon.jsx";
 import useStatusIcon from "../../../functions/fieldStatusChecker.jsx";
 import useFormState from "../../../hook/useFormState.jsx";
-import GroupLabel from "../../GroupLabel.jsx";
+import GroupLabel from "../../Labels/GroupLabel.jsx";
 import IconButton from "../../Icons/IconButton.jsx";
 import { useToggleState } from "../../../hook/useToogle.jsx";
 useToggleState

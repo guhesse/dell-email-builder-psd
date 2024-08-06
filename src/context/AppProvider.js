@@ -543,6 +543,7 @@ export default function AppProvider({ children }) {
         plugin: null,
         fpo: null,
         banner: null,
+        vfbanner: null,
         footer: null,
         birdseed: null,
     });
@@ -587,6 +588,11 @@ export default function AppProvider({ children }) {
             year: null
         },
         banner: {
+            headline: '',
+            copy: '',
+            cta: '',
+        },
+        vfbanner: {
             headline: '',
             copy: '',
             cta: '',
@@ -857,7 +863,7 @@ export default function AppProvider({ children }) {
 
     const cores = {}
 
-    // console.log("Selected Modules:", selectedModules)
+    console.log("Selected Modules:", selectedModules['vfbanner'])
     // console.log("Selected Modules:", copyValues)
 
     return (

@@ -1,7 +1,7 @@
 // Import de todas as fun\u00e7\u00f5es 
 
 import React from 'react';
-import Navbar from './components/NavBar.jsx';
+import Navbar from './components/Navbar/Navbar.jsx';
 export const { dom, showAlert, storage } = require("uxp");
 export const { core, app } = require('photoshop');
 export const { batchPlay } = require('photoshop').action;
