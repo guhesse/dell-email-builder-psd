@@ -4,7 +4,7 @@ import useFormState from '../../../hook/useFormState.jsx';
 import StatusIcon from '../../Icons/StatusIcon.jsx';
 import { useToggleState } from "../../../hook/useToogle.jsx";
 import BaseIcon from '../../Icons/BaseIcon.jsx';
-import GroupLabel from '../../GroupLabel.jsx';
+import GroupLabel from '../../Labels/GroupLabel.jsx';
 import useStatusIcon from '../../../functions/fieldStatusChecker.jsx';
 import IconButton from '../../Icons/IconButton.jsx';
 
@@ -42,7 +42,6 @@ export default function BannerSelector() {
     const { valid, handleFieldChange, handleBlur, initialState, tempFormState, resetFormState } = useFormState(setBannerCopy, bannerCopy, bannersArr);
 
     const { setStatusByField } = useStatusIcon();
-
     const [isOptionsOpen, toggleOptions] = useToggleState(false);
     const [isEditClicked, setIsEditClicked] = useToggleState(false);
 

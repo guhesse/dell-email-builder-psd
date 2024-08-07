@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import GroupLabel from "../../GroupLabel.jsx";
+import GroupLabel from "../../Labels/GroupLabel.jsx";
 import { useToggleState } from "../../../hook/useToogle.jsx";
 import useBannerContext from '../../../hook/useBannerContext.jsx';
 

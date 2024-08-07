@@ -7,8 +7,6 @@ import { getPosition } from "./getBoundsAndPosition.jsx";
  * @returns {Array} Array de objetos representando as operações a serem realizadas.
  */
 
-
-
 export async function createSlice(name, bounds) {
     const top = await getPosition(bounds, "bounds", 0, "top", 0);
     const right = await getPosition(bounds, "bounds", 0, "right", 0);
@@ -123,16 +121,26 @@ export function getTextColor({ Name }) {
     }
 };
 
+export function getLayerKind({ Name }) {
+    return {
+        _obj: "get",
+        _target: [{ _property: "layerKind" },
+        { _ref: "layer", _name: Name },],
+        _options: { dialogOptions: "dontDisplay" }
+    }
+};
+
 
 
 //  ##  Função para pegar texto da Camada  ## //
 
-export function getTextProperty({ Name }) {
+export function getTextProperty({ Name, Dialog }) {
+    Dialog = Dialog !== undefined ? Dialog : "dontDisplay";
     return {
         _obj: "get",
         _target: [{ _property: "textKey" },
         { _ref: "layer", _name: Name },],
-        _options: { dialogOptions: "dontDisplay" }
+        _options: { dialogOptions: Dialog }
     }
 };
 

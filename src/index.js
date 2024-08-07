@@ -13,6 +13,7 @@ governing permissions and limitations under the License.
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.js";
+import { ToastProvider } from "./hook/useToast.js";
 window.React = React;
 
 import { Theme } from "@swc-react/theme";
@@ -20,8 +21,10 @@ import { Theme } from "@swc-react/theme";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Theme theme="spectrum" scale="medium" color="light">
-      <App />
-    </Theme>
+    <ToastProvider>
+      <Theme theme="spectrum" scale="medium" color="light">
+        <App />
+      </Theme>
+    </ToastProvider>
   </React.StrictMode>
 );

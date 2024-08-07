@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useAppContext from '../../../hook/useAppContext.jsx';
 import BaseIcon from '../../Icons/BaseIcon.jsx';
-import GroupLabel from '../../GroupLabel.jsx';
+import GroupLabel from '../../Labels/GroupLabel.jsx';
 import StatusIcon from '../../Icons/StatusIcon.jsx';
 import useStatusIcon from '../../../functions/fieldStatusChecker.jsx';
 import { useToggleState } from '../../../hook/useToogle.jsx';

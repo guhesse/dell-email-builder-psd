@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import ShowModal from '../showModal.jsx';
-import EmailBuilder from '../components/EmailBuilder.jsx';
+import EmailBuilder from '../components/Builder/EmailPsd/EmailBuilder.jsx';
 import CsvReader from '../CsvReader.js';
-import { BannerSelector, BirdseedSelector, FooterSelector, FpoSelector, FundingSelector, HeaderSelector, HeroSelector, PluginSelector, SkinnySelector, SubjectLineSelector } from '../components/Selectors/Email/EmailSelectors.jsx';
+import { BannerSelector, VfBannerSelector, BirdseedSelector, FooterSelector, FpoSelector, FundingSelector, HeaderSelector, HeroSelector, PluginSelector, SkinnySelector, SubjectLineSelector } from '../components/Selectors/Email/EmailSelectors.jsx';
 import EmailCoder from '../components/Builder/Coder/EmailCoder.jsx';
 
 export default function EmailView() {
-    const [selectedCase, setSelectedCase] = useState("photoshop");
+    const [selectedCase, setSelectedCase] = useState("code");
 
     const handleCaseClick = (caseName) => {
         setSelectedCase(caseName);
@@ -52,6 +52,7 @@ export default function EmailView() {
                     <PluginSelector />
                     <FpoSelector />
                     <BannerSelector />
+                    <VfBannerSelector />
                     <FooterSelector />
                     <BirdseedSelector />
                     <EmailBuilder />

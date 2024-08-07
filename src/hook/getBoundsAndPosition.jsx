@@ -24,6 +24,20 @@ export async function getBoundsAndPositionNoProperty(action, method = "", i = 1)
     return { bounds, height, width, top, bottom, left, right };
 }
 
+export async function getLayerKindResult(action, i = 1) {
+    const result = await batchPlay(action, {});
+    
+    // Verifica se o índice existe no resultado
+    if (result[i] && result[i].layerKind !== undefined) {
+        const kind = result[i].layerKind;
+        return { kind: kind };
+    } else {
+        // Retorna um erro ou valor padrão se o índice ou layerKind não existir
+        return { kind: null, error: "layerKind não encontrado no índice fornecido" };
+    }
+}
+
+
 export async function getTextContent(action, i = 1) {
     const result = await batchPlay(action, {})
     const content = result[i].textKey.textKey;

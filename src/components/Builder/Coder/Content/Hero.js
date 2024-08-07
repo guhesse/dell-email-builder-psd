@@ -1,9 +1,10 @@
 import { core, batchPlay } from "../../../../App.js";
-import { clearAllSlices, getTextProperty, getBounds, makeSlice, selectLayer, convertToLayers, selectGroup, makeSmartObj } from "../../../../hook/hooksJSON.jsx";
-import { getBoundsAndPosition, getTextContent } from "../../../../hook/getBoundsAndPosition.jsx";
+import { clearAllSlices, getTextProperty, getBounds, makeSlice, selectLayer, convertToLayers, selectGroup, makeSmartObj, getLayerKind } from "../../../../hook/hooksJSON.jsx";
+import { getBoundsAndPosition, getLayerKindResult, getTextContent } from "../../../../hook/getBoundsAndPosition.jsx";
 
 export async function getHeroContent(params) {
     const { copyValues, setCopyValues, selectedModules } = params;
+
     const heroContentFunctions = {
         "hero1-lifestyle-product": {
             getImages: async () => {
@@ -92,14 +93,12 @@ export async function getHeroContent(params) {
             getContent: async () => {
                 const targetFunction = async (executionContext) => {
                     try {
-
                         if (copyValues.hero.subheadline === "" || copyValues.hero.subheadline === null) {
-
                             const getSubheadlineCopy = [
                                 getTextProperty({
                                     Name: "Subheadline",
                                 })
-                            ]
+                            ];
 
                             const { content: heroSubheadlineHTML } = await getTextContent(getSubheadlineCopy, 0);
 
@@ -114,38 +113,89 @@ export async function getHeroContent(params) {
 
                         if (copyValues.hero.cta === "" || copyValues.hero.cta === null) {
 
-                            const getHeroCtaCopy = [
-                                selectLayer({
+                            const getCtaLayerKind = [
+                                getLayerKind({
                                     Name: "Hero CTA"
-                                }),
-                                convertToLayers(),
-                                getTextProperty({
-                                    Name: "Hero CTA Copy",
-                                }),
-                                selectGroup({
-                                    FirstName: "Hero CTA",
-                                    LastName: "Hero CTA Border"
-                                }),
-                                makeSmartObj()
+                                })
                             ]
 
-                            const { content: heroCtaHTML } = await getTextContent(getHeroCtaCopy, 2);
+                            const { kind: HeroCtaKind } = await getLayerKindResult(getCtaLayerKind, 0);
 
-                            await setCopyValues(prevState => ({
-                                ...prevState,
-                                hero: {
-                                    ...prevState.hero,
-                                    cta: heroCtaHTML
+                            console.log("kind de CTA", HeroCtaKind)
+
+                            const getHeroCtaCopy = [];
+
+                            try {
+
+                                if (HeroCtaKind === 5) {
+                                    getHeroCtaCopy.push(
+                                        selectLayer({
+                                            Name: "Hero CTA"
+                                        }),
+                                        convertToLayers(),
+                                        getTextProperty({
+                                            Name: "Hero CTA Copy",
+                                            Dialog: "silent"
+                                        }),
+                                        selectGroup({
+                                            FirstName: "Hero CTA",
+                                            LastName: "Hero CTA Border"
+                                        }),
+                                        makeSmartObj()
+                                    );
+
+                                    const { content: heroCtaHTML } = await getTextContent(getHeroCtaCopy, 2);
+
+                                    console.log("Hero CTA Copy", heroCtaHTML);
+                                    await setCopyValues(prevState => ({
+                                        ...prevState,
+                                        hero: {
+                                            ...prevState.hero,
+                                            cta: heroCtaHTML
+                                        }
+                                    }));
+
+                                    console.log("Logo apos o primeiro if", getHeroCtaCopy)
+
+                                } else if (HeroCtaKind === 7) {
+                                    console.log("Layer Kind é 5, tomando ação alternativa.");
+                                    getHeroCtaCopy.push(
+                                        getTextProperty({
+                                            Name: "Hero CTA Copy",
+                                            Dialog: "silent"
+                                        }),
+                                        selectGroup({
+                                            FirstName: "Hero CTA",
+                                            LastName: "Hero CTA Border"
+                                        }),
+                                        makeSmartObj()
+                                    );
+
+                                    const { content: heroCtaHTML } = await getTextContent(getHeroCtaCopy, 0);
+
+                                    console.log("Hero CTA Copy", heroCtaHTML);
+                                    await setCopyValues(prevState => ({
+                                        ...prevState,
+                                        hero: {
+                                            ...prevState.hero,
+                                            cta: heroCtaHTML
+                                        }
+                                    }));
+
+                                } else {
+                                    console.log("Layer Kind não é 7 nem 5, nenhuma ação tomada.");
                                 }
-                            }));
+
+                            } catch (error) {
+                                console.error('Não foi possível obter a propriedade de texto "Hero CTA Copy". Usando "Hero CTA" como fallback.', error);
+                            }
+
+                            console.log('Hero recortado com sucesso!', 'color: #00EAADFF;');
                         }
-
-
-                        console.log('Hero recortado com sucesso!', 'color: #00EAADFF;');
                     } catch (error) {
-                        console.error('Não foi posssível recortar o Hero', error);
+                        console.error('Não foi possível recortar o Hero', error);
                     }
-                }
+                };
 
                 const options = {
                     commandName: 'Get All Hero Content',
@@ -153,7 +203,6 @@ export async function getHeroContent(params) {
                 };
 
                 await core.executeAsModal(targetFunction, options);
-
             },
         },
         "hero1-lifestyle": {
